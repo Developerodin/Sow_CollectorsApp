@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -7,13 +7,61 @@ import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-
+import { useAppContext } from '../../Context/AppContext';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export const MarketCard = (props) => {
     const navigation = useNavigation();
-   const {Title,Value,Img} = props
+   const {Id,Title,Value,Img,setModalVisible,setItemModelData,Category,setCart,Cart} = props
+   const [AddStatus,setAddStatus] = useState(false)
+   const {CartInStorage,setUpdate,update} = useAppContext();
+
   const handeViewDetail=()=>{
     navigation.navigate("Order Details")
   }
+
+  const handelAddClick =()=>{
+    setItemModelData({
+        id:Id,
+        title:Title,
+        value:Value,
+        image:Img,
+        category:Category,
+        Fun : ()=>{
+          setAddStatus(true)
+        }
+    })
+    setModalVisible(true);
+  }
+  const handelCartToStorage = async (Data)=>{
+    try {
+      const cartArrayJSON = JSON.stringify(Data);
+      await AsyncStorage.setItem('cart', cartArrayJSON);
+      setUpdate((prev)=>prev+1)
+      // console.log('Cart saved to AsyncStorage');
+    } catch (error) {
+      console.error('Error saving cart to AsyncStorage:', error);
+   }
+  }
+  const handelRemoveClick=()=>{
+    const updatedCart = CartInStorage.filter(item => item.id !== Id);
+    handelCartToStorage(updatedCart);
+    setAddStatus(false)
+  setCart(updatedCart);
+    
+  }
+
+  useEffect(()=>{
+    if(Cart.length === 0){
+      setAddStatus(false)
+    }
+    //  console.log("Market card=====>",Id,CartInStorage)
+    CartInStorage && CartInStorage.map((el)=>{
+      if(el.id === Id){
+        setAddStatus(true)
+      }
+      return "";
+    })
+  },[CartInStorage])
   return (
     <View style={{borderWidth:1,borderColor:"#C8C8C8",padding:10,backgroundColor:"#fff", marginTop:10,borderRadius:5}}>
     <Block  style={{flexDirection:"row"}}>
@@ -41,9 +89,16 @@ export const MarketCard = (props) => {
         </Block>
        
 
-        {/* <Block>
-        <Feather name="arrow-right" size={24} color="black" />
-        </Block> */}
+        <Block>
+          {/* {
+            AddStatus ? 
+            <Ionicons onPress={handelRemoveClick} name="ios-remove-circle" size={27} color="crimson" />
+            :
+       
+            <AntDesign onPress={handelAddClick} name="edit" size={24} color="#29BD7F" />
+          } */}
+        <AntDesign onPress={handelAddClick} name="edit" size={24} color="#29BD7F" />
+        </Block>
       </Block>
     </Block>
  

@@ -94,8 +94,8 @@ const Tabs = ({navigation}) => {
        
       />
 
-{/* <Tab.Screen
-        name="Rates"
+<Tab.Screen
+        name="My Rates"
         component={Market}
         options={{
           tabBarIcon: ({ color, size }) => (
@@ -105,7 +105,7 @@ const Tabs = ({navigation}) => {
           headerShown: false,
         }}
        
-      /> */}
+      />
       
 
 
@@ -137,7 +137,7 @@ const Tabs = ({navigation}) => {
       
        
       />
-{/* <Tab.Screen
+<Tab.Screen
         name="Inventory"
         component={Inventory}
         options={{
@@ -150,7 +150,7 @@ const Tabs = ({navigation}) => {
         }}
        
        
-      /> */}
+      />
 
 {/* <Tab.Screen
         name="Profile"
@@ -283,8 +283,8 @@ export default function App() {
 <NavigationContainer onLayout={onLayoutRootView} >
       {/* {
        isAppFirstLaunched !== null && Auth !== null && */}
-         {/* <Stack.Navigator initialRouteName={isAppFirstLaunched ? 'AppSlides' : Auth ? 'Tabs' : 'Login'}> */}
-         <Stack.Navigator initialRouteName={'AppSlides'}>
+         <Stack.Navigator initialRouteName={isAppFirstLaunched ? 'AppSlides' : Auth ? 'Tabs' : 'AppSlides'}>
+         {/* <Stack.Navigator initialRouteName={'AppSlides'}> */}
         {/* <Stack.Screen name="Home" component={Home}
         options={{
           headerShown: false,
@@ -315,9 +315,9 @@ export default function App() {
             headerShown: false,
           }}
         />
-         <Stack.Screen name="RegisterAs" component={RegisterAs}
+         <Stack.Screen name="Register As" component={RegisterAs}
           options={{
-            headerShown: false,
+            headerShown: true,
           }}
         />
         <Stack.Screen name="FillPersonalDetails" component={PersonalDetails}

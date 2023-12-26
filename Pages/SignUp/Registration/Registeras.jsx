@@ -6,6 +6,7 @@ const {width, height} = Dimensions.get('window');
 import Logo from "../../Images/Logo_1.png";
 import Collector from "../../Images/Collector.png";
 import Mediator from "../../Images/Mediator.png";
+import Factory from "../../Images/factory.jpg";
 import Wholesaler from "../../Images/Wholesaler.png";
 import { Feather } from '@expo/vector-icons';
 import { RegisterCard } from '../../../Components/Cards/RegisterCard';
@@ -23,35 +24,24 @@ export const RegisterAs = () => {
       
        <View style={{alignItems:"left",marginTop:35,width:width}}>
          
-       <View style={{alignItems:"center"}}>
-         <Image
-           source={Logo}
-           style={{resizeMode: 'contain'}}
-         />
-         </View>
-         
-   
-       
-     
-         <View style={{alignItems:"left",padding:10,justifyContent:"center"}}>
-         <Text style={{fontSize:32,fontWeight:400}}>Register as</Text>
-        
-         
-         </View>
    
        </View>
         
         <Block style={{padding:10}}>
-        <TouchableOpacity onPress={()=>handelCardClick(1)} style={{marginTop:10}}>
+        <TouchableOpacity onPress={()=>handelCardClick(1)} style={{marginTop:20}}>
            <RegisterCard Img={Collector} Title={"Scrap Collector"} SubTitle={"If you are a scrap collector"} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1)} style={{marginTop:10}}>
+       <TouchableOpacity onPress={()=>handelCardClick(1)} style={{marginTop:30}}>
            <RegisterCard Img={Wholesaler} Title={"Scrap Wholesaler"} SubTitle={"If you are a scrap Wholesaler"} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1)}style={{marginTop:10}}>
+       <TouchableOpacity onPress={()=>handelCardClick(1)}style={{marginTop:30}}>
            <RegisterCard Img={Mediator} Title={"Scrap Mediator"} SubTitle={"If you are a scrap Mediator"} />
+       </TouchableOpacity>
+
+       <TouchableOpacity onPress={()=>handelCardClick(1)}style={{marginTop:30}}>
+           <RegisterCard Img={Factory} Title={"Scrap Factory"} SubTitle={"If you are a scrap Factory"} />
        </TouchableOpacity>
 
 

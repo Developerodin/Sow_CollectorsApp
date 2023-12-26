@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "SOW:Collectors App",
-    "slug": "SOW:Collectors App",
+    "name": "SOW COLLECTORS APP",
+    "slug": "scraponwheels-collectors",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,19 +18,27 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": ["ACCESS_BACKGROUND_LOCATION"],
+      "config": {
+        "googleMaps": {
+          
+          "apiKey":"AIzaSyDj2Rwz6KiE4UWz60_y-aCP6PJJR3xQeVU"
+        }
+      },
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.akshaypareek_01.SOW:Collectors App"
+      "package": "com.scraponwheels_collectors.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "f9d21c53-fe1c-44fa-a131-138e84bef089"
+        "projectId": "844f772d-56de-47f3-8518-ff81b0857d49"
       }
-    }
+    },
+    "owner": "akshaypareek_01"
   }
 }

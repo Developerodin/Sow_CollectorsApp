@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
+import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput,Modal } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
 import { Ionicons } from '@expo/vector-icons'; 
@@ -7,12 +7,16 @@ import { AntDesign } from '@expo/vector-icons';
 import DynamicInputField from '../../Components/DynamicInput/DynamicInputField ';
 import { OTPModel } from '../../Components/Model/OTPModel';
 import { ToastAndroid } from 'react-native';
+import { NavigationMap } from '../../Components/Maps/NavigationMap';
+import { useNavigation } from "@react-navigation/native";
 const {width, height} = Dimensions.get('window');
 
 export const PendingOrderDetails = () => {
+  const navigation = useNavigation();
   const [inputFields, setInputFields] = useState([{ value: '', category: 'Category 1' }]);
   const [modalVisible,setModalVisible] = useState(false)
   const [orderCompleteStatus,setOrderCompleteStatus] = useState(false)
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const addInputField = () => {
     const updatedInputFields = [...inputFields, { value: '', category: 'Category 1' }];
     setInputFields(updatedInputFields);
@@ -22,7 +26,9 @@ export const PendingOrderDetails = () => {
     console.log("Values",inputFields )
     setModalVisible(true);
   }
-
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
   const handelComplete =(otp)=>{
    console.log("OTP =>",otp);
     if(otp === ""){
@@ -47,7 +53,10 @@ export const PendingOrderDetails = () => {
     
 
     <Block style={[styles.border,{width:"100%",height:300,justifyContent:"center",alignItems:"center"}]}>
+      <TouchableOpacity onPress={toggleModal}>
       <Text style={{fontSize:24}}>Map</Text>
+      </TouchableOpacity>
+      
     </Block>
 
      
@@ -120,6 +129,143 @@ export const PendingOrderDetails = () => {
     </Block>
 
     <OTPModel modalVisible ={modalVisible} setModalVisible={setModalVisible} handelComplete={handelComplete} orderCompleteStatus={orderCompleteStatus} />
+    
+    <Modal visible={isModalVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+          <NavigationMap navigation={navigation} />
+
+          <Block
+            style={{
+              backgroundColor: "#fff",
+              flexDirection: "row",
+              justifyContent: "left",
+              alignItems: "center",
+              height: 50,
+            }}
+          >
+            <Ionicons
+              onPress={toggleModal}
+              name="arrow-back-circle"
+              style={{ marginLeft: 10 }}
+              size={30}
+              color="#65be34"
+            />
+            <Text style={{ fontSize: 18, fontWeight: 500, marginLeft: 10 }}>
+              Direction
+            </Text>
+          </Block>
+
+          {/* {SelectedAddressFromMap && (
+            <Block
+              style={{
+                padding: 11,
+                backgroundColor: "#fff",
+                height: 200,
+                position: "absolute",
+                bottom: 0,
+                width: width,
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+              }}
+            >
+              <Block>
+                <Text
+                  style={{
+                    color: "grey",
+                    fontSize: 13,
+                    fontWeight: 500,
+                    letterSpacing: 1,
+                  }}
+                >
+                  SELECT PICKUP LOCATION
+                </Text>
+              </Block>
+
+              {SelectedAddressFromMap.name !== "null" ? (
+                <Block>
+                  <Block
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      marginTop:2,
+                    }}
+                  >
+                    <Block
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "left",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Ionicons name="md-location" size={24} color="crimson" />
+                      <Text
+                        style={{
+                          fontSize:16,
+                          fontWeight: "bold",
+                          letterSpacing: 1,
+                          marginLeft: 5,
+                        }}
+                      >
+                        {SelectedAddressFromMap.street}
+                      </Text>
+                    </Block>
+
+                    <Block>
+                      <Button
+                        color="#65be34"
+                        size={"small"}
+                        style={{ width: 80, height: 26 }}
+                      >
+                        CHANGE
+                      </Button>
+                    </Block>
+                  </Block>
+                  <Block left style={{ width: width * 0.7, marginTop: 0 }}>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 400,
+                        letterSpacing: 1,
+                      }}
+                    >
+                      {SelectedAddressFromMap.name},
+                      {SelectedAddressFromMap.district}
+                    </Text>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        fontWeight: 400,
+                        letterSpacing: 1,
+                        marginTop: 4,
+                      }}
+                    >
+                      {SelectedAddressFromMap.city},
+                      {SelectedAddressFromMap.region}{" "}
+                      {SelectedAddressFromMap.postalCode},
+                      {SelectedAddressFromMap.country}
+                    </Text>
+                  </Block>
+                </Block>
+              ) : (
+                <Block></Block>
+              )}
+
+              <Block style={[styles2.AlignCenter, { marginTop: 10 }]}>
+                <Button
+                  onPress={saveAddress}
+                  color="#65be34"
+                  style={{ width: width * 0.9 }}
+                >
+                  CONFIRM LOCATION
+                </Button>
+              </Block>
+            </Block>
+          )} */}
+
+        
+        </View>
+      </Modal>
     </ScrollView>
    </View>
   )
@@ -145,6 +291,9 @@ const styles = StyleSheet.create({
       // paddingTop: StatusBar.currentHeight,
       padding:10,
       
+    },
+    modalContainer: {
+      flex: 1,
     },
     tabItem: {
       flex: 1,

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
+import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated} from 'react-native'
 import { StatusBar } from 'expo-status-bar';
-import { Block, Text, Input, theme, Button } from "galio-framework";
+import { Block, Text, Input, theme } from "galio-framework";
 
 import { AntDesign } from '@expo/vector-icons';
 const {width, height} = Dimensions.get('window');
@@ -13,6 +13,13 @@ import { ToastAndroid } from 'react-native';
 import axios from 'axios';
 import LottieView from 'lottie-react-native';
 import { useNavigation } from '@react-navigation/native';
+import Logo from "../../Images/Logo_1.png";
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
+import { TextInput, Button } from "@react-native-material/core";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import * as ImagePicker from 'expo-image-picker';
+
 const scrapData = [
   {
     title: 'Plastic',
@@ -79,6 +86,47 @@ const scrapData = [
 
 
 export const VerificationDetails = () => {
+
+  const [PanFront, setPanFront] = useState(null);
+  const [PanBack, setPanBack] = useState(null);
+  const [AddharFront, setAddharFront] = useState(null);
+  const [AddharBack, setAddharBack] = useState(null);
+  const [isFocused, setIsFocused] = useState({
+    ForPan:false,
+    ForAdharName:false,
+    ForAdharNumber:false,
+    ForAdharAddress:false
+  });
+  const customStyle ={
+    Card1: {
+    
+      borderRadius:5,
+      padding:10,
+      backgroundColor:"#fff",
+      elevation:isFocused.ForPan ? 4 : 0
+    },
+    Card2: {
+    
+      borderRadius:5,
+      padding:10,
+      backgroundColor:"#fff",
+      elevation:isFocused.ForAdharName ? 4 : 0
+    },
+    Card3: {
+    
+      borderRadius:5,
+      padding:10,
+      backgroundColor:"#fff",
+      elevation:isFocused.ForAdharNumber ? 4 : 0
+    },
+    Card4: {
+    
+      borderRadius:5,
+      padding:10,
+      backgroundColor:"#fff",
+      elevation:isFocused.ForAdharAddress ? 4 : 0
+    },
+  }
   const navigation = useNavigation();
   const animationRef = useRef(null);
  const [showPAN,setShowPAN] = useState(true)
@@ -99,12 +147,31 @@ const [AddharformData, setAddharFormData] = useState({
   Address:""
 });
 const [PANresponse, setPANResponse] = useState(null);
+const [expanded, setExpanded] = useState(false);
 const handlePANInputChange = (fieldName, value) => {
 
   setPANFormData((prevData) => ({
     ...prevData,
     [fieldName]: value,
   }));
+};
+
+const handleFocus = (Name) => {
+  setIsFocused((prevState) => ({
+    ForPan: Name === "pan",
+    ForAdharName: Name === "aname",
+    ForAdharNumber: Name === "anumber",
+    ForAdharAddress: Name === "aaddress"
+  }));
+
+};
+
+const handleBlur = (Name) => {
+  setIsFocused((prevState) => ({
+    ...prevState,
+    [Name]: false
+  }));
+  
 };
 
 const handleAddharInputChange = (fieldName, value) => {
@@ -210,6 +277,44 @@ handelSubmitPANData()
   
  }
  
+ const toggleAccordion = () => {
+  setExpanded(!expanded);
+};
+
+const showImagePicker = async (sourceType,Name) => {
+  let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+  if (permissionResult.granted === false) {
+    alert('Permission to access the gallery is required!');
+    return;
+  }
+
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+    sourceType: sourceType,
+  });
+
+  if (!result.canceled) {
+
+    if(Name === "PanFront"){
+      setPanFront(result.uri);
+    }
+    if(Name === "PanBack"){
+      setPanBack(result.uri);
+    }
+    if(Name === "AddharFront"){
+      setAddharFront(result.uri);
+    }
+    if(Name === "AddharBack"){
+      setAddharBack(result.uri);
+    }
+  }
+};
+
+
  
 
   useEffect(() => {
@@ -230,11 +335,11 @@ handelSubmitPANData()
        <Block style={[styles.Center,{padding:10,borderBottomWidth:0.5,borderColor:"grey",marginTop:30}]}>
 
         <Block style={{padding:5,width:70}}>
-          <Block center style={{borderWidth:1,borderColor:`${PANDone ? "blue" : "grey"}`,borderRadius:100,width:30,height:30,flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:`${PANDone ? "lightblue" : "#fff"}`}}>
+          <Block center style={{borderWidth:1,borderColor:`${PANDone ? "#fff" : "grey"}`,borderRadius:100,width:30,height:30,flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:`${PANDone ? "#65be34" : "#fff"}`}}>
            
            {
              PANDone ? 
-             <Entypo name="check" size={17} color="blue" />
+             <Entypo name="check" size={17} color="#fff" />
              :
              <Text style={{fontSize:16,fontWeight:500}}>1</Text>
            }
@@ -243,41 +348,41 @@ handelSubmitPANData()
           </Block>
 
           <Block>
-            <Text center style={{fontSize:14,fontWeight:500,marginTop:3}}>PAN</Text>
+            <Text center style={{fontSize:12,fontWeight:500,marginTop:3}}>Pan</Text>
           </Block>
         </Block>
         
-        <Block style={{borderWidth:1,width:50,borderColor:`${PANDone ? "blue" : "grey"}`,marginTop:-20}}>
+        <Block style={{borderWidth:1,width:50,borderColor:`${PANDone ? "#65be34" : "grey"}`,marginTop:-20}}>
 
         </Block>
         <Block style={{padding:5,width:70}}>
-        <Block center style={{borderWidth:1,borderColor:`${AddharDone ? "blue" : "grey"}`,borderRadius:100,width:30,height:30,flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:`${AddharDone ? "lightblue" : "#fff"}`}}>
+        <Block center style={{borderWidth:1,borderColor:`${AddharDone ? "#fff" : "grey"}`,borderRadius:100,width:30,height:30,flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:`${AddharDone ? "#65be34" : "#fff"}`}}>
            
            {
              AddharDone ? 
-             <Entypo name="check" size={17} color="blue" />
+             <Entypo name="check" size={17} color="#fff" />
              :
-             <Text style={{fontSize:16,fontWeight:500}}>2</Text>
+             <Text style={{fontSize:14,fontWeight:500}}>2</Text>
            }
            
             
           </Block>
 
           <Block>
-            <Text center style={{fontSize:14,fontWeight:500,marginTop:3}}>ADDHAR</Text>
+            <Text center style={{fontSize:12,fontWeight:500,marginTop:3}}>Addhar</Text>
           </Block>
         </Block>
 
-        <Block style={{borderWidth:1,width:50,borderColor:`${AddharDone ? "blue" : "grey"}`,marginTop:-20}}>
+        <Block style={{borderWidth:1,width:50,borderColor:`${AddharDone ? "#65be34" : "grey"}`,marginTop:-20}}>
 
           </Block>
 
         <Block style={{padding:5,width:70}}>
-        <Block center style={{borderWidth:1,borderColor: "grey",borderRadius:100,width:30,height:30,flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:`${AddharDone ? "lightblue" : "#fff"}`}}>
+        <Block center style={{borderWidth:1,borderColor:`${AddharDone ? "#fff" : "grey"}`,borderRadius:100,width:30,height:30,flexDirection:"row",justifyContent:"center",alignItems:"center",backgroundColor:`${AddharDone ? "#65be34" : "#fff"}`}}>
            
         {
              AddharDone ? 
-             <Entypo name="check" size={17} color="blue" />
+             <Entypo name="check" size={17} color="#fff" />
              :
              <Text style={{fontSize:16,fontWeight:500}}>3</Text>
            }
@@ -287,7 +392,7 @@ handelSubmitPANData()
           </Block>
 
           <Block>
-            <Text center style={{fontSize:14,fontWeight:500,marginTop:3}}>Success</Text>
+            <Text center style={{fontSize:12,fontWeight:500,marginTop:3}}>Success</Text>
           </Block>
         </Block>
 
@@ -300,16 +405,86 @@ handelSubmitPANData()
         {
           showPAN &&  <Block style={{ padding: 10 }}>
           <Block style={{ marginTop: 20 }}>
-            <Block style={{ flexDirection: "row", alignItems: "center" }}>
-              <MaterialIcons name="location-city" size={20} color="black" />
-              <Text style={{ fontSize: 20, fontWeight: 500, marginLeft: 6 }}>PAN Card No.</Text>
+         
+          <Block style={{marginTop:20}}>
+   <View style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:15}}>
+      <TouchableOpacity  activeOpacity={0.7} onPress={toggleAccordion}>
+        <Block style={styles.Space_Between}>
+          <Block style={{flexDirection:"row",alignItems:"center"}}>
+          <FontAwesome5 name="image" size={24} color="#65be34" style={{marginRight:10}} />
+          <Text style={{fontSize:16,fontWeight:500}}>Uplode Pan Card Images</Text>
+          </Block>
+
+          <Block>
+            {
+              expanded ? <MaterialIcons name="keyboard-arrow-up" size={28} color="black" /> 
+              :
+              <MaterialIcons name="keyboard-arrow-down" size={28} color="black" />
+            }
+          
+
+          
+          </Block>
+         
+        </Block>
+      </TouchableOpacity>
+      {expanded && (
+        <View style={{flexDirection:"row",marginTop:20,justifyContent:"space-around"}}>
+          
+         <Block  style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,elevation:8,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+         <Block>
+         <Text style={{fontSize:12,fontWeight:500}}>Front *</Text>
+        
+         {
+          PanFront === null &&   <FontAwesome5 onPress={() => showImagePicker('camera',"PanFront")} name="image" size={28} color="grey"  /> 
+         }
+         
+         
+          {PanFront && <Image source={{ uri: PanFront }} style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}} />}
+         </Block>
+         
+         </Block>
+
+         <Block style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,elevation:8,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+         <Block>
+         <Text style={{fontSize:12,fontWeight:500}}>Back *</Text>
+         {
+          PanBack === null &&   <FontAwesome5 onPress={() => showImagePicker('camera',"PanBack")} name="image" size={28} color="grey"  /> 
+         }
+         
+         
+          {PanBack && <Image source={{ uri: PanBack }} style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}} />}
+         </Block>
+         </Block>
+         
+          
+        </View>
+      )}
+    </View>
+   
+
             </Block>
-            <Block>
-              <Input
-                value={PANformData.PANNo}
-                onChangeText={(text) => handlePANInputChange("PANNo", text)}
-              />
-            </Block>
+            <Block style={[ customStyle.Card1,{marginTop:60}]}>
+                <TextInput
+
+        variant="standard"
+        
+        label="PAN CARD NUMBER"
+        leading={(props) => <Icon name={isFocused.ForPan ? 'bank' : 'bank'} {...props} />}
+        value={PANformData.PANNo}
+        onChangeText={(text) => handlePANInputChange("PANNo", text)}
+        onFocus={()=>handleFocus("pan")}
+        onBlur={()=>handleBlur("ForPan")}
+        color={ 'white'}
+        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
+        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
+        
+      />
+                </Block>
+
+
+           
+            
           </Block>
     
           {/* {
@@ -348,46 +523,128 @@ handelSubmitPANData()
         {
           showAddhar && <Block style={{padding:10}}>
 
+<Block style={{marginTop:20}}>
+   <View style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:15}}>
+      <TouchableOpacity  activeOpacity={0.7} onPress={toggleAccordion}>
+        <Block style={styles.Space_Between}>
+          <Block style={{flexDirection:"row",alignItems:"center"}}>
+          <FontAwesome5 name="image" size={24} color="#65be34" style={{marginRight:10}} />
+          <Text style={{fontSize:16,fontWeight:500}}>Uplode Addhar Card Images</Text>
+          </Block>
+
+          <Block>
+            {
+              expanded ? <MaterialIcons name="keyboard-arrow-up" size={28} color="black" /> 
+              :
+              <MaterialIcons name="keyboard-arrow-down" size={28} color="black" />
+            }
+          
+
+          
+          </Block>
+         
+        </Block>
+      </TouchableOpacity>
+      {expanded && (
+        <View style={{flexDirection:"row",marginTop:20,justifyContent:"space-around"}}>
+          
+         <Block  style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,elevation:8,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+         <Block>
+         <Text style={{fontSize:12,fontWeight:500}}>Front *</Text>
+        
+         {
+          AddharFront === null &&   <FontAwesome5 onPress={() => showImagePicker('camera',"AddharFront")} name="image" size={28} color="grey"  /> 
+         }
+         
+         
+          {AddharFront && <Image source={{ uri: AddharFront }} style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}} />}
+         </Block>
+         
+         </Block>
+
+         <Block style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,elevation:8,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+         <Block>
+         <Text style={{fontSize:12,fontWeight:500}}>Back *</Text>
+         {
+          AddharBack === null &&   <FontAwesome5 onPress={() => showImagePicker('camera',"AddharBack")} name="image" size={28} color="grey"  /> 
+         }
+         
+         
+          {AddharBack && <Image source={{ uri: AddharBack }} style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}} />}
+         </Block>
+         </Block>
+         
+          
+        </View>
+      )}
+    </View>
+   
+
+            </Block>
 <Block style={{marginTop:40}}>
-            <Block style={{flexDirection:"row",alignItems:"center"}}>
-            <FontAwesome name="bank" size={16} color="black" />
-            <Text style={{fontSize:20,fontWeight:500,marginLeft:6}}>Name</Text>
-            </Block>
-            <Block>
-            <Input
-                 value={AddharformData.Name}
-                 onChangeText={(text) => handleAddharInputChange("Name", text)}
-                />
-            </Block>
+          
+            <Block style={[ customStyle.Card2]}>
+                <TextInput
+
+        variant="standard"
+        
+        label="Name"
+        leading={(props) => <Icon name={isFocused.ForAdharName ? 'account-circle' : 'account'} {...props} />}
+        value={AddharformData.Name}
+        onChangeText={(text) => handleAddharInputChange("Name", text)}
+        onFocus={()=>handleFocus("aname")}
+        onBlur={()=>handleBlur("ForAdharName")}
+        color={ 'white'}
+        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
+        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
+        
+      />
+                </Block>
         </Block>
 
-               <Block style={{marginTop:20}}>
-            <Block style={{flexDirection:"row",alignItems:"center"}}>
-            <FontAwesome name="bank" size={16} color="black" />
-            <Text style={{fontSize:20,fontWeight:500,marginLeft:6}}>Addhar Card Number</Text>
-            </Block>
-            <Block>
-                <Input
-                 value={AddharformData.AdhharNo}
-                 onChangeText={(text) => handleAddharInputChange("AdhharNo", text)}
-                />
-            </Block>
+               <Block style={{marginTop:40}}>
+           
+            <Block style={[ customStyle.Card3]}>
+                <TextInput
+
+        variant="standard"
+        
+        label="Addhar Number"
+        leading={(props) => <Icon name={isFocused.ForAdharNumber ? 'bank' : 'bank'} {...props} />}
+        value={AddharformData.AdhharNo}
+        onChangeText={(text) => handleAddharInputChange("AdhharNo", text)}
+        onFocus={()=>handleFocus("anumber")}
+        onBlur={()=>handleBlur("ForAdharNumber")}
+        color={ 'white'}
+        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
+        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
+        
+      />
+                </Block>
         </Block>
 
        
 
 
-        <Block style={{marginTop:20}}>
-            <Block style={{flexDirection:"row",alignItems:"center"}}>
-            <FontAwesome name="bank" size={16} color="black" />
-            <Text style={{fontSize:20,fontWeight:500,marginLeft:6}}>Address</Text>
-            </Block>
-            <Block>
-            <Input
-                 value={AddharformData.Address}
-                 onChangeText={(text) => handleAddharInputChange("Address", text)}
-                />
-            </Block>
+        <Block style={{marginTop:40}}>
+           
+            <Block style={[ customStyle.Card4]}>
+                <TextInput
+
+        variant="standard"
+        
+        label="Addhar Address"
+        leading={(props) => <Icon name={isFocused.ForAdharAddress ? 'bank' : 'bank'} {...props} />}
+        value={AddharformData.Address}
+        onChangeText={(text) => handleAddharInputChange("Address", text)}
+        onFocus={()=>handleFocus("aaddress")}
+        onBlur={()=>handleBlur("ForAdharAddress")}
+        color={ 'white'}
+        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
+        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
+        
+      />
+                </Block>
         </Block>
 
         {/* <Block style={{marginTop:20}}>
@@ -422,30 +679,62 @@ handelSubmitPANData()
         
         <Block style={[styles.Center]}>
           {
-           (showPAN && isPANVerify) &&  <Button onPress={handelSubmitPANData} color='black'>
-           SUBMIT PAN DATA
-           </Button> 
+           (showPAN && isPANVerify) && 
+          
+             <Button
+             title="SUBMIT PAN DATA"
+             color="#65be34"
+             style={{ width: 150, padding: 5 }}
+             onPress={handelSubmitPANData}
+             trailing={(props) => <Icon name="send" {...props} />}
+             tintColor="#fff"
+           />
            
           }
           {
            (showPAN && !isPANVerify) &&
-            <Button onPress={VerifyPAN} color='black'>
-            Verify Pan
-            </Button>
+           <Block right style={{width:width*0.9}}>
+             <Button
+           title="Verify Pan"
+           color="#65be34"
+           style={{ width: 150, padding: 5,marginTop:50 }}
+           onPress={VerifyPAN}
+           trailing={(props) => <Icon name="send" {...props} />}
+           tintColor="#fff"
+         />
+            </Block>
+          
+          
           }
 
 {
           showAddhar && 
-          <Button onPress={handelSubmitAddharData} color='black'>
-              SUBMIT
-              </Button>
+          <Block right style={{width:width*0.9,marginTop:30,marginBottom:60}}>
+                    <Button
+                title="SUBMIT"
+                color="#65be34"
+                style={{ width: 150, padding: 5 }}
+                onPress={handelSubmitAddharData}
+                trailing={(props) => <Icon name="send" {...props} />}
+                tintColor="#fff"
+              />
+            </Block>
+              
         }
 
 {
           showSuccess && 
-          <Button onPress={handelSuccess} color='black'>
-               Done
-              </Button>
+          
+
+              
+<Button
+title="Done"
+color="#65be34"
+style={{ width: 150, padding: 5 }}
+onPress={handelSuccess}
+trailing={(props) => <Icon name="send" {...props} />}
+tintColor="#fff"
+/>
         }
       </Block>
 

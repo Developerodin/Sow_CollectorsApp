@@ -7,20 +7,20 @@ import { Feather } from '@expo/vector-icons';
 export const RegisterCard = (props) => {
     const {Img,Title,SubTitle} = props
   return (
-    <View style={{borderWidth:1,borderColor:"#DCDCDC"}}>
-        <Block style={[styles.Space_Around,{marginTop:50,marginBottom:50}]}>
+    <View style={{borderRadius:20}}>
+        <Block style={[styles.Space_Around,{marginTop:40,marginBottom:20}]}>
         <Block>
-            <Image source={Img} />
+            <Image style={{width:60, height:60}} source={Img} />
         </Block>
 
         <Block>
-            <Text style={{fontSize:32,fontWeight:500}}>{Title}</Text>
-            <Text style={{fontSize:16,fontWeight:300}}>{SubTitle}</Text>
-            <Text style={{fontSize:16,fontWeight:500}}>Tap Here !</Text>
+            <Text style={{fontSize:20,fontWeight:500}}>{Title}</Text>
+            <Text style={{fontSize:14,fontWeight:300}}>{SubTitle}</Text>
+            <Text style={{fontSize:14,fontWeight:500}}>Tap Here !</Text>
         </Block>
 
         <Block>
-        <Feather name="arrow-right" size={34} color="black" style={{marginLeft:10}} />
+        <Feather name="arrow-right" size={24} color="black" style={{marginLeft:10}} />
         </Block>
         </Block>
        

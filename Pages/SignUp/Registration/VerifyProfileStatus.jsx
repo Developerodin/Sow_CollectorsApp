@@ -37,11 +37,11 @@ export const VerifyProfileStatus = () => {
          </View>
      
          <View style={{alignItems:"left",padding:10,justifyContent:"center"}}>
-         <Text style={{fontSize:32,fontWeight:400}}>We are currently verifying your profile !</Text>
+         <Text style={{fontSize:25,fontWeight:400}}>We are currently verifying your profile !</Text>
         
          <Block >
-         <Text style={{fontSize:24,fontWeight:400,marginTop:30}}>Aman Gupta</Text>
-         <Text style={{fontSize:16,fontWeight:400,marginTop:15}}>It may take 2-7 days. Thank you for your patience</Text>
+         <Text style={{fontSize:24,fontWeight:400,marginTop:10}}>Aman Gupta</Text>
+         <Text style={{fontSize:14,fontWeight:400,marginTop:15}}>It may take 2-7 days. Thank you for your patience</Text>
            {/* <Image source={Line1} style={{marginTop:10}} /> */}
    
            
@@ -53,7 +53,7 @@ export const VerifyProfileStatus = () => {
    
        <Block style={{marginBottom:30}}>
           
-           <Block style={[styles.Center,{marginTop:20}]} >
+           <Block style={[styles.Center,{marginTop:50}]} >
          
                
                  <TouchableOpacity
@@ -68,7 +68,7 @@ export const VerifyProfileStatus = () => {
                    ]}
                    onPress={handelProceed}
                    >
-                    <AntDesign name="arrowleft" size={24} color="black" style={{marginRight:10}} />
+                    {/* <AntDesign name="arrowleft" size={24} color="black" style={{marginRight:10}} /> */}
                    <Text
                      style={{
                        fontWeight:500,

@@ -21,6 +21,9 @@ import { View, TextInput, StyleSheet } from 'react-native';
 
   const handleKeyPress = (event, index) => {
     if (event.nativeEvent.key === 'Backspace' && index > 0 && otp[index] === '') {
+      const newOtp = [...otp];
+    newOtp[index-1] = "";
+    setOtp(newOtp);
       otpInputs.current[index - 1].focus();
     }
   };
@@ -29,6 +32,7 @@ import { View, TextInput, StyleSheet } from 'react-native';
     <View style={styles.container}>
       {otp.map((value, index) => (
         <TextInput
+        
           key={index}
           style={styles.input}
           value={value}
@@ -37,6 +41,8 @@ import { View, TextInput, StyleSheet } from 'react-native';
           keyboardType="numeric"
           maxLength={1}
           ref={(ref) => (otpInputs.current[index] = ref)}
+          
+          secureTextEntry={true}
         />
       ))}
     </View>
@@ -46,12 +52,13 @@ import { View, TextInput, StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'left',
+    marginLeft:-10
   },
   input: {
-    width: 80,
-    height: 50,
-    fontSize: 44,
+    width: 60,
+    height: 30,
+    fontSize:27,
     textAlign: 'center',
     borderBottomWidth: 1,
     borderColor: 'black',

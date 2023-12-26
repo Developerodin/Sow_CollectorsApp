@@ -1,12 +1,23 @@
 import React, { useRef, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
+import { FlatList, SafeAreaView, StyleSheet,ScrollView,Modal, 
+   View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
-
+import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons';
 import { Header } from '../../Components/Header/Header';
+import StockInputField from '../../Components/AddStockInput/StockInputField ';
 const {width, height} = Dimensions.get('window');
 export const Inventory = () => {
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [inputFields, setInputFields] = useState([{ value: '', category: 'Category 1' }]);
+  const addInputField = () => {
+    const updatedInputFields = [...inputFields, { value: '', category: 'Category 1' }];
+    setInputFields(updatedInputFields);
+  };
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
   return (
     <View style={styles.container}>
     <Header/>
@@ -17,40 +28,40 @@ export const Inventory = () => {
      
       <Block style={{marginTop:20}}>
         <Text style={{fontSize:32,fontWeight:500}}>Inventory</Text>
-        <Text style={{fontSize:20,fontWeight:400,color:"#797979"}}>Time To Stock Up!</Text>
+        <Text style={{fontSize:14,fontWeight:400,color:"#797979"}}>Time To Stock Up!</Text>
       </Block>
 
       <Block style={{marginTop:50,borderWidth:1,borderColor:"#DCDCDC",padding:15,backgroundColor:"#FFFFFF"}}>
 
         <Block>
         <Block >
-          <Text style={{fontSize:28,fontWeight:400}}>Total Stock Value</Text>
+          <Text style={{fontSize:21,fontWeight:500}}>Total Stock Value</Text>
         
         </Block>
 
         <Block style={[styles.Space_Between,{marginTop:30}]}>
            <Block>
-            <Text style={{fontSize:24}}>Amount</Text>
+            <Text style={{fontSize:20}}>Amount</Text>
            </Block>
 
            <Block>
-            <Text style={{fontSize:32}}>₹ 42,300</Text>
+            <Text style={{fontSize:20}}>₹ 42,300</Text>
            </Block>
         </Block>
 
-        <Block style={[styles.Space_Between,{marginTop:30}]}>
+        <Block style={[styles.Space_Between,{marginTop:15}]}>
            <Block>
-            <Text style={{fontSize:24}}>Weight</Text>
+            <Text style={{fontSize:20}}>Weight</Text>
            </Block>
 
            <Block>
-            <Text style={{fontSize:32}}>105 Kgs</Text>
+            <Text style={{fontSize:20}}>105 Kgs</Text>
            </Block>
         </Block>
 
 
         <Block style={[{marginTop:30},styles.Center]}>
-    <Button color='black' style={{width:"100%"}}>View Details</Button>
+    <Button color='black' >View Details</Button>
     </Block>
 
         </Block>
@@ -60,7 +71,7 @@ export const Inventory = () => {
 
       <Block style={{marginTop:20, marginBottom:60}}>
       <Block style={[styles.Center]}>
-    <Button color='white' style={{borderWidth:1,width:"100%",borderColor:"#C8C8C8",height:60,backgroundColor:"#00BC84"}}>
+    <Button onPress={toggleModal} color='white' style={{borderWidth:1,width:width*0.9,borderColor:"#C8C8C8",backgroundColor:"#00BC84"}}>
               <Text style={{fontSize:20,fontWeight:400,color:"#fff"}}>
               Add Stock
               </Text>
@@ -69,7 +80,7 @@ export const Inventory = () => {
     </Block>
 
     <Block style={[styles.Center]}>
-    <Button color='white' style={{borderWidth:1,width:"100%",borderColor:"#E02D2D",height:60}}>
+    <Button color='white' style={{borderWidth:1,width:width*0.9,borderColor:"#E02D2D"}}>
               <Text style={{fontSize:20,fontWeight:400,color:"#E02D2D"}}>
               Remove Stock
               </Text>
@@ -82,6 +93,56 @@ export const Inventory = () => {
      
 
        </Block>
+
+
+       <Modal visible={isModalVisible} animationType="slide">
+        <View style={styles.modalContainer}>
+         
+
+          <Block
+            style={{
+              backgroundColor: "#fff",
+              flexDirection: "row",
+              justifyContent: "left",
+              alignItems: "center",
+              height: 50,
+            }}
+          >
+            <Ionicons
+              onPress={toggleModal}
+              name="arrow-back-circle"
+              style={{ marginLeft: 10 }}
+              size={30}
+              color="#65be34"
+            />
+            <Text style={{ fontSize: 18, fontWeight: 500, marginLeft: 10 }}>
+              Add Stock
+            </Text>
+          </Block>
+
+           <Block style={{marginTop:30}}>
+           <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:10,backgroundColor:"#fff", marginTop:10,borderRadius:10}}>
+    <Block style={styles.Space_Between}>
+      <Text style={{fontSize:20}}>Enter Stock</Text>
+
+      <Ionicons onPress={addInputField} name="add-circle-outline" size={30} color="black" />
+    </Block>
+
+         
+     
+    </Block>
+           </Block>
+
+           <Block center>
+    <StockInputField
+  inputFields={inputFields}
+  setInputFields={setInputFields}
+/>
+    </Block>
+        
+        </View>
+      </Modal>
+
         </ScrollView>
     </View>
   )
@@ -91,6 +152,9 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor:"#FFF",
   
+    },
+    modalContainer: {
+      flex: 1,
     },
     inputContainer: {
       width: '100%',

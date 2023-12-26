@@ -16,14 +16,16 @@ import { Entypo } from '@expo/vector-icons';
 import { Foundation } from '@expo/vector-icons';  
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import { useAppContext } from '../../Context/AppContext';
 export const Profile = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
   const [visible, setVisible] = useState(false);
+  const {CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion} = useAppContext()
   const ProfileTabs=[
     
     // {icon:<FontAwesome name="address-book" size={24} color="#2dd36f" />,title:"Manage Address",link:"Address",color:"dark"},
-    {icon:<MaterialIcons name="attach-money" size={24} color="#2dd36f" />,title:"Transaction History",link:"Orders"},
+
     {icon:<FontAwesome name="history" size={24} color="#989aa2" />,title:"Order History",link:"Orders"},
     {icon:<MaterialIcons name="pending-actions" size={24} color="#62ceff" />,title:"Pending Orders",link:"Orders"},
     {icon:<FontAwesome name="building" size={24} color="#4854e0" />,title:"About Comapny",link:"About Company"},
@@ -37,6 +39,18 @@ export const Profile = () => {
   const handeClick=(link)=>{
     navigation.navigate(link)
   }
+  const handelSellScrap =()=>{
+    navigation.navigate("Schedule Pickup")
+ }
+ const handelCloseCartInfo =()=>{
+  if(CartInStorage.length > 0){
+    setTimeout(()=>{
+      setShowCartSuggestion(true);
+    },5000)
+  }
+  setShowCartSuggestion(false);
+ 
+ }
 
   const handleShare = async () => {
     try {
@@ -110,7 +124,7 @@ export const Profile = () => {
           
 
            <Block  style={{marginTop:20}}>
-            <Text center style={{fontSize:20,fontWeight:"500"}}>Vinod</Text>
+            <Text center style={{fontSize:20,fontWeight:"500"}}>Ronak Vaya</Text>
             <Block center >
            <Button onPress={() => showImagePicker('camera')} color='#0F2C59'>
            
@@ -164,6 +178,7 @@ export const Profile = () => {
        
      </Block>
      </ScrollView >
+
   </View>
   )
 }
