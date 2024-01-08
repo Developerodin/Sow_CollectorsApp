@@ -42,9 +42,10 @@ const StockInputField = ({ addInputField, inputFields, setInputFields, categorie
   return (
     <View>
       {inputFields.map((input, index) => (
-  <View  style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:30,borderRadius:10,width:width*0.9}} key={index}>
-    <Block right style={{marginTop:-20,marginRight:-22}}>
-    <Ionicons onPress={() => handleRemoveItem(index)} name="ios-remove-circle-outline" size={24} color="red" />
+  <View  style={{backgroundColor:"#fff", marginTop:30,borderRadius:5,width:width*0.9}} key={index}>
+    <Block right style={{marginTop:-20,marginRight:-20}}>
+
+    <Ionicons onPress={() => handleRemoveItem(index)} name="close-circle" size={26} color="red" />
     </Block>
    
 <Block >

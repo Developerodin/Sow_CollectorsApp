@@ -106,6 +106,7 @@ export const Inventory = () => {
               justifyContent: "left",
               alignItems: "center",
               height: 50,
+
             }}
           >
             <Ionicons
@@ -120,12 +121,12 @@ export const Inventory = () => {
             </Text>
           </Block>
 
-           <Block style={{marginTop:30}}>
-           <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:10,backgroundColor:"#fff", marginTop:10,borderRadius:10}}>
+           <Block style={{marginTop:10,padding:10}}>
+           <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:10,backgroundColor:"orange", marginTop:10,borderRadius:10}}>
     <Block style={styles.Space_Between}>
-      <Text style={{fontSize:20}}>Enter Stock</Text>
+      <Text style={{fontSize:20,color:"#fff"}}>Enter Stock</Text>
 
-      <Ionicons onPress={addInputField} name="add-circle-outline" size={30} color="black" />
+      <Ionicons onPress={addInputField} name="add-circle-outline" size={30} color="white" />
     </Block>
 
          
@@ -154,7 +155,9 @@ const styles = StyleSheet.create({
   
     },
     modalContainer: {
-      flex: 1,
+      flex: 1
+      
+      
     },
     inputContainer: {
       width: '100%',

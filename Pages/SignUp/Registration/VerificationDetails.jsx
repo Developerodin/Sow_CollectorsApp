@@ -19,6 +19,8 @@ import { Feather } from '@expo/vector-icons';
 import { TextInput, Button } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from 'expo-image-picker';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Base_url } from '../../../Config/BaseUrl';
 
 const scrapData = [
   {
@@ -148,6 +150,7 @@ const [AddharformData, setAddharFormData] = useState({
 });
 const [PANresponse, setPANResponse] = useState(null);
 const [expanded, setExpanded] = useState(false);
+const [DocumentsImages,setDocumentsImages] = useState([])
 const handlePANInputChange = (fieldName, value) => {
 
   setPANFormData((prevData) => ({
@@ -263,8 +266,81 @@ handelSubmitPANData()
   }
   setAddharDone(true)
   setShowAddhar(false)
-  setShowSuccess(true)
+  SubmitSigupData()
+  
  }
+
+const SubmitSigupData= async()=>{
+  
+  const RegisterAs = await AsyncStorage.getItem('RegisterAs') || null;
+  const Details = await AsyncStorage.getItem('Details') || null;
+  const Mobile = await AsyncStorage.getItem('Mobile') || null;
+  const userDetails = JSON.parse(Details)
+  // console.log("Post req",DocumentsImages)
+
+  // const Data= {
+  //   "RegisterAs": RegisterAs,
+  //   "pan_Number":PANformData.PANNo,
+  //   "adhar_Number":AddharformData.AdhharNo,
+  //   "address":AddharformData.Address,
+  //   "name":AddharformData.Name,
+  // }
+  const Adhar = JSON.stringify(AddharformData);
+  const UserData = {
+    name: userDetails.name,
+    gender: 'Male',
+    email: userDetails.email ,
+    password: '1234',
+    mobile: Mobile,
+    dob: '1990-01-01',
+    Address: '123 Main St',
+    city: userDetails.city,
+    pincode: '12345',
+    country: 'India',
+    registerAs: RegisterAs,
+    panNo:PANformData.PANNo,
+    adharData:Adhar,
+    images:[PanFront,PanBack]
+  };
+  
+     try {
+      const response = await axios.post(`${Base_url}b2b`, UserData);
+      if (response.status === 201) {
+           if(response.data){
+      ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);
+      setShowSuccess(true);
+
+     }
+       else {
+        console.error("Error creating product:", response);
+      }
+    }
+    } catch (error) {
+            ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
+    
+     setShowPAN(true);
+      console.error("Error:", error);
+    }
+
+  // try {
+  //   const response = await axios.post(`${Base_url}b2b`, formData); // Update the API endpoint accordingly
+  //   console.log("Res ==>",response.data);
+  //   if(response.data){
+  //     ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);
+  //     setShowSuccess(true);
+
+  //   }
+    
+  // } catch (error) {
+  //   console.error('Error creating user:', error);
+    
+  //     ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
+    
+  //   setShowPAN(true);
+  // }
+
+}
+
 
  const handelSuccess =()=>{
   setPANDone(false)
@@ -272,16 +348,17 @@ handelSubmitPANData()
   setShowAddhar(false)
   setAddharDone(false)
   setShowSuccess(false)
-
+  
   navigation.navigate("VerifyProfileStatus")
   
  }
+
  
  const toggleAccordion = () => {
   setExpanded(!expanded);
 };
 
-const showImagePicker = async (sourceType,Name) => {
+const showImagePicker = async (sourceType, name) => {
   let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
 
   if (permissionResult.granted === false) {
@@ -297,22 +374,35 @@ const showImagePicker = async (sourceType,Name) => {
     sourceType: sourceType,
   });
 
-  if (!result.canceled) {
+  console.log("Result image  ", result);
 
-    if(Name === "PanFront"){
-      setPanFront(result.uri);
+  if (!result.canceled) {
+    if(name === "PanFront"){
+      setPanFront(result.assets[0].uri);
     }
-    if(Name === "PanBack"){
-      setPanBack(result.uri);
+    if(name === "PanBack"){
+      setPanBack(result.assets[0].uri);
     }
-    if(Name === "AddharFront"){
-      setAddharFront(result.uri);
+    if(name === "AddharFront"){
+      setAddharFront(result.assets[0].uri);
     }
-    if(Name === "AddharBack"){
-      setAddharBack(result.uri);
+    if(name === "AddharBack"){
+      setAddharBack(result.assets[0].uri);
     }
+    // Assuming you have a state variable like imagesState to store the image data
+    setDocumentsImages(prevState => [
+      ...prevState,
+      {
+        uri: result.assets[0].uri,
+        name: name,
+      },
+    ]);
   }
 };
+
+
+
+
 
 
  
@@ -431,7 +521,7 @@ const showImagePicker = async (sourceType,Name) => {
       {expanded && (
         <View style={{flexDirection:"row",marginTop:20,justifyContent:"space-around"}}>
           
-         <Block  style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,elevation:8,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+         <Block  style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,elevation:0,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
          <Block>
          <Text style={{fontSize:12,fontWeight:500}}>Front *</Text>
         
@@ -440,12 +530,12 @@ const showImagePicker = async (sourceType,Name) => {
          }
          
          
-          {PanFront && <Image source={{ uri: PanFront }} style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}} />}
+          {PanFront && <Image source={{ uri: PanFront }} style={{resizeMode: 'contain',width:100,height:100}} />}
          </Block>
          
          </Block>
 
-         <Block style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,elevation:8,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+         <Block style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
          <Block>
          <Text style={{fontSize:12,fontWeight:500}}>Back *</Text>
          {
@@ -453,7 +543,7 @@ const showImagePicker = async (sourceType,Name) => {
          }
          
          
-          {PanBack && <Image source={{ uri: PanBack }} style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}} />}
+          {PanBack && <Image source={{ uri: PanBack }} style={{resizeMode: 'contain',width:100,height:100}} />}
          </Block>
          </Block>
          
@@ -548,21 +638,21 @@ const showImagePicker = async (sourceType,Name) => {
       {expanded && (
         <View style={{flexDirection:"row",marginTop:20,justifyContent:"space-around"}}>
           
-         <Block  style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,elevation:8,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+         <Block  style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
          <Block>
          <Text style={{fontSize:12,fontWeight:500}}>Front *</Text>
-        
+         
          {
           AddharFront === null &&   <FontAwesome5 onPress={() => showImagePicker('camera',"AddharFront")} name="image" size={28} color="grey"  /> 
          }
          
          
-          {AddharFront && <Image source={{ uri: AddharFront }} style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}} />}
+          {AddharFront && <Image source={{ uri: AddharFront }} style={{resizeMode: 'contain',width:100,height:100}} />}
          </Block>
          
          </Block>
 
-         <Block style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,elevation:8,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+         <Block style={{width:100,height:100,backgroundColor:"#fff",borderRadius:10,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
          <Block>
          <Text style={{fontSize:12,fontWeight:500}}>Back *</Text>
          {
@@ -570,7 +660,7 @@ const showImagePicker = async (sourceType,Name) => {
          }
          
          
-          {AddharBack && <Image source={{ uri: AddharBack }} style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}} />}
+          {AddharBack && <Image source={{ uri: AddharBack }} style={{resizeMode: 'contain',width:100,height:100}} />}
          </Block>
          </Block>
          

@@ -10,7 +10,7 @@ import { Entypo } from '@expo/vector-icons';
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Home } from "./Pages/Home/Home";
 import { Invoice } from "./Pages/Invoices/Invoice";
-import { Market } from "./Pages/Market/Market";
+import { MyRates } from "./Pages/My Rates/MyRates";
 import { Profile } from "./Pages/Profile/Profile";
 import {AppSlides} from "./Pages/OnBoarding/AppSlides/AppSlides";
 import { Orders } from "./Pages/Orders/Orders";
@@ -38,6 +38,9 @@ import { Address } from './Pages/Profile/ProfileTabs/Address/Address';
 import { VerifyProfile, VerifyProfileStatus } from './Pages/SignUp/Registration/VerifyProfileStatus';
 import { VerificationDetails } from './Pages/SignUp/Registration/VerificationDetails';
 import { PendingOrderDetails } from './Pages/Orders/PendingOrderDetails';
+import { AntDesign } from '@expo/vector-icons'; 
+import { Market } from './Pages/Market/Market';
+import { RateDetails } from './Pages/Market/RateDetails';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -81,6 +84,19 @@ const Tabs = ({navigation}) => {
      
       />
       <Tab.Screen
+        name="Market"
+        component={Market}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+          
+            <MaterialCommunityIcons name="tag-outline" size={size} color={color} />
+          ),
+          headerShown: false,
+        }}
+      
+       
+      />
+      <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
@@ -96,11 +112,12 @@ const Tabs = ({navigation}) => {
 
 <Tab.Screen
         name="My Rates"
-        component={Market}
+        component={MyRates}
         options={{
           tabBarIcon: ({ color, size }) => (
            
-            <MaterialCommunityIcons name="tag-outline" size={size} color={color} />
+            
+            <AntDesign name="barschart" size={size} color={color} />
           ),
           headerShown: false,
         }}
@@ -152,6 +169,8 @@ const Tabs = ({navigation}) => {
        
       />
 
+
+
 {/* <Tab.Screen
         name="Profile"
         component={Profile}
@@ -187,9 +206,9 @@ const Tabs = ({navigation}) => {
         
        
       /> */}
-      {/* <Tab.Screen
+       {/* <Tab.Screen
         name="Wallet"
-        component={ Wallet}
+        component={ Market}
         options={{
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="md-wallet" size={size} color={color} />
@@ -207,7 +226,7 @@ const Tabs = ({navigation}) => {
 
        
        
-      /> */}
+      />  */}
       
     </Tab.Navigator>
 
@@ -299,6 +318,12 @@ export default function App() {
         />
 
 <Stack.Screen name="Order Details" component={OrderDetail}
+          options={{
+            headerShown: true,
+          }}
+        />
+
+<Stack.Screen name="Rate Details" component={RateDetails}
           options={{
             headerShown: true,
           }}

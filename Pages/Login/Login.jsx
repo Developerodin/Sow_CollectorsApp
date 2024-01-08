@@ -77,7 +77,24 @@ export const Login = ({ navigation }) => {
     }
   };
 
+  const saveMobileNumber = async () => {
+    try {
+      // You can use any key you like to store the authentication status
+      const key = 'Mobile';
+      const value = formData.phoneNumber; // Replace with your actual authentication status
+  
+      // Use AsyncStorage to save the authentication status
+      await AsyncStorage.setItem(key, value);
+      console.log('Mobile saved successfully.');
+    } catch (error) {
+      console.error('Error saving Mobile:', error);
+    }
+  };
+
+
+
   const handelOtpComplete = () => {
+    saveMobileNumber()
     if (otp === "1234") {
       saveAuthStatus()
       handelPreviousUser();

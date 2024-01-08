@@ -11,10 +11,25 @@ import Wholesaler from "../../Images/Wholesaler.png";
 import { Feather } from '@expo/vector-icons';
 import { RegisterCard } from '../../../Components/Cards/RegisterCard';
 import { useNavigation } from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export const RegisterAs = () => {
   const navigation = useNavigation()
-    const handelCardClick=(id)=>{
+  const [Selected,setSelected] = useState()
+  const saveRegisterDetails = async (title) => {
+    try {
+      // You can use any key you like to store the authentication status
+      const key = 'RegisterAs';
+      const value = title
+      await AsyncStorage.setItem(key, value);
+      console.log('RegisterAs Details saved successfully.');
+    } catch (error) {
+      console.error('Error saving RegisterAs Details :', error);
+    }
+  };
+    const handelCardClick=(id,title)=>{
+      console.log("Title",title)
+      setSelected(title);
+      saveRegisterDetails(title)
         navigation.navigate("FillPersonalDetails")
     }
   return (
@@ -28,19 +43,19 @@ export const RegisterAs = () => {
        </View>
         
         <Block style={{padding:10}}>
-        <TouchableOpacity onPress={()=>handelCardClick(1)} style={{marginTop:20}}>
+        <TouchableOpacity onPress={()=>handelCardClick(1,"Scrap Collector")} style={{marginTop:20}}>
            <RegisterCard Img={Collector} Title={"Scrap Collector"} SubTitle={"If you are a scrap collector"} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1)} style={{marginTop:30}}>
+       <TouchableOpacity onPress={()=>handelCardClick(1,"Scrap Wholesaler")} style={{marginTop:30}}>
            <RegisterCard Img={Wholesaler} Title={"Scrap Wholesaler"} SubTitle={"If you are a scrap Wholesaler"} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1)}style={{marginTop:30}}>
+       <TouchableOpacity onPress={()=>handelCardClick(1,"Scrap Mediator")}style={{marginTop:30}}>
            <RegisterCard Img={Mediator} Title={"Scrap Mediator"} SubTitle={"If you are a scrap Mediator"} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1)}style={{marginTop:30}}>
+       <TouchableOpacity onPress={()=>handelCardClick(1,"Scrap Factory")}style={{marginTop:30}}>
            <RegisterCard Img={Factory} Title={"Scrap Factory"} SubTitle={"If you are a scrap Factory"} />
        </TouchableOpacity>
 

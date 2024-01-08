@@ -15,6 +15,7 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import LottieView from "lottie-react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Keyboard } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import CheckBox from 'react-native-check-box';
 
 export const PersonalDetails = () => {
@@ -58,8 +59,24 @@ export const PersonalDetails = () => {
     const toggleCheckbox = () => {
       setIsChecked(!isChecked);
     };
+
+    const savePersonalDetails = async () => {
+      try {
+        // You can use any key you like to store the authentication status
+        const key = 'Details';
+        const value = JSON.stringify(formData) // Replace with your actual authentication status
+    
+        // Use AsyncStorage to save the authentication status
+        await AsyncStorage.setItem(key, value);
+        console.log('Details saved successfully.');
+      } catch (error) {
+        console.error('Error saving Details :', error);
+      }
+    };
     const handelPersonalDetailSubmit=()=>{
         // setShowShopDetails(true);
+        console.log("Details",formData);
+        savePersonalDetails()
         navigation.navigate("VerificationDetails")
     }
 
@@ -228,7 +245,7 @@ export const PersonalDetails = () => {
         onFocus={()=>handleFocus("name")}
         onBlur={()=>handleBlur("ForName")}
         color={ 'white'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
+        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
       />
@@ -251,7 +268,7 @@ export const PersonalDetails = () => {
         onFocus={()=>handleFocus("email")}
         onBlur={()=>handleBlur("ForEmail")}
         color={ 'white'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
+        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
       />
@@ -271,7 +288,7 @@ export const PersonalDetails = () => {
         onFocus={()=>handleFocus("city")}
         onBlur={()=>handleBlur("ForCity")}
         color={ 'white'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
+        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
       />
