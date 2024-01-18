@@ -41,6 +41,8 @@ import { PendingOrderDetails } from './Pages/Orders/PendingOrderDetails';
 import { AntDesign } from '@expo/vector-icons'; 
 import { Market } from './Pages/Market/Market';
 import { RateDetails } from './Pages/Market/RateDetails';
+import { OrderStatus } from './Pages/Market/OrderStatus';
+import { InCommingOrderDetails } from './Pages/Orders/InCommingOrderDetails';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -154,7 +156,7 @@ const Tabs = ({navigation}) => {
       
        
       />
-<Tab.Screen
+{/* <Tab.Screen
         name="Inventory"
         component={Inventory}
         options={{
@@ -167,7 +169,7 @@ const Tabs = ({navigation}) => {
         }}
        
        
-      />
+      /> */}
 
 
 
@@ -302,7 +304,7 @@ export default function App() {
 <NavigationContainer onLayout={onLayoutRootView} >
       {/* {
        isAppFirstLaunched !== null && Auth !== null && */}
-         <Stack.Navigator initialRouteName={isAppFirstLaunched ? 'AppSlides' : Auth ? 'Tabs' : 'AppSlides'}>
+         <Stack.Navigator initialRouteName={isAppFirstLaunched ? 'AppSlides' : Auth ? 'Tabs' : 'Login'}>
          {/* <Stack.Navigator initialRouteName={'AppSlides'}> */}
         {/* <Stack.Screen name="Home" component={Home}
         options={{
@@ -329,8 +331,19 @@ export default function App() {
           }}
         />
 
+<Stack.Screen name="Order Status" component={OrderStatus}
+          options={{
+            headerShown: true,
+          }}
+        />
+
 
 <Stack.Screen name="Pending Order" component={PendingOrderDetails}
+          options={{
+            headerShown: true,
+          }}
+        />
+        <Stack.Screen name="In Comming Orders" component={InCommingOrderDetails}
           options={{
             headerShown: true,
           }}

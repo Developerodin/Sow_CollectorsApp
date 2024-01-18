@@ -11,7 +11,7 @@ import { useAppContext } from '../../Context/AppContext';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const MarketCard = (props) => {
     const navigation = useNavigation();
-   const {Id,Title,Value,Img,setModalVisible,setItemModelData,Category,setCart,Cart} = props
+   const {Id,Index,Title,Value,Img,setModalVisible,setItemModelData,Category,setCart,Cart} = props
    const [AddStatus,setAddStatus] = useState(false)
    const {CartInStorage,setUpdate,update} = useAppContext();
 
@@ -22,6 +22,7 @@ export const MarketCard = (props) => {
   const handelAddClick =()=>{
     setItemModelData({
         id:Id,
+        index:Index,
         title:Title,
         value:Value,
         image:Img,

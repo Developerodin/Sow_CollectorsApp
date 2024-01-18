@@ -8,10 +8,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export const PendingOrderCard = ({data}) => {
+export const InCommingOrderCard = ({data}) => {
   const navigation = useNavigation();
   const handeViewDetail=()=>{
-    navigation.navigate("Pending Order",{id:data._id})
+    navigation.navigate("In Comming Orders",{id:data._id})
   }
     // const {Img,Title,SubTitle} = props
   return (
@@ -19,7 +19,7 @@ export const PendingOrderCard = ({data}) => {
       <Block>
         <Block style={[styles.displayF]}>
         <Ionicons name="person" size={18} color="black" />
-        <Text style={[styles.text1]} >{data.to.name}</Text>
+        <Text style={[styles.text1]} >{data.from.name}</Text>
         </Block>
 
         <Block style={{marginTop:15}}>

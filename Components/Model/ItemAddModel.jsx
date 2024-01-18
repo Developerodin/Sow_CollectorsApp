@@ -1,233 +1,175 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, StyleSheet, Pressable, View, Dimensions,Image } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import {
+  StyleSheet,
+  View,
+  Dimensions,
+  Image,
+} from "react-native";
+import { Block, Text, Input, theme,Button } from "galio-framework";
 
-import { useAppContext } from "../../Context/AppContext";
-
-import { AntDesign } from "@expo/vector-icons";
-import { Block, Text, Input, theme } from "galio-framework";
-import { NavigationActions } from "@react-navigation/native";
-import { StatusBar } from "expo-status-bar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import PhoneInput from "react-native-phone-number-input";
 import { Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+
 import Modal from "react-native-modal";
-import axios from "axios";
-import { TextInput, Button } from "@react-native-material/core";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import { ToastAndroid } from "react-native";
+
+import { TextInput } from "@react-native-material/core";
+
 
 const { width, height } = Dimensions.get("screen");
-export const ItemAddModel = ({setItemAddStatus,setCart,modalVisible,ItemModelData,setModalVisible,handelComplete,orderCompleteStatus}) => {
-  const navigation = useNavigation();
+export const ItemAddModel = ({
+  modalVisible,
+  ItemModelData,
+  setModalVisible,
+  handelComplete,
+  handelDelete
+}) => {
+
   const animationRef = useRef(null);
 
-  const handelModelClose = () => {
-    // console.log("Model CLick");
-    setModalVisible(!modalVisible);
-  };
-  const toggleModal = () => {
-    setModalVisible(!modalVisible);
-  };
+ 
+  const [formData, setFormData] = useState({
+    name:ItemModelData.title,
+    price: ItemModelData.value,
+    unit: "Kg",
+  });
 
-  const phoneInput = useRef(null);
-  const initalValuesForm = {
-    price:"50",
-    qty:"Kg"
-  }
-  const [formData, setFormData] = useState(initalValuesForm);
-  const [otp, setOtp] = useState("");
-  const [mobileNumber, setmobileNumber] = useState();
-  const [formattedValue, setFormattedValue] = useState("");
-  const [errorMessage, setErrorMessage] = useState("");
-  const [Loading,setLoading] = useState(false);
-  const [TotalAmount,setTotalAmount] = useState(0);
-  const {CartInStorage,setUpdate} = useAppContext();
-  
+
   useEffect(() => {
+    // console.log(ItemModelData)
     animationRef.current?.play();
 
     // Or set a specific startFrame and endFrame with:
     animationRef.current?.play(10, 80);
   }, []);
-  const handleInputChange = (field, value) => {
-   
-    setFormData({ ...formData, [field]: value });
-    if(field === "value"){
-      const IntValue = parseInt(value) * parseInt(ItemModelData.value) ;
-      
-      setTotalAmount(IntValue)
-    }
+
+  const handleInputChange = (name, value) => {
+    setFormData({ ...formData, [name]: value });
+  
   };
 
-  const handleOtpComplete = (otp) => {
-    console.log("OTP entered:", otp);
-    setOtp(otp);
-    // You can perform any actions with the completed OTP here
+  const handelClose = () => {
+    setModalVisible(false);
+    // setFormData(initalValuesForm);
   };
 
-  const setMobileNumber = () => {
-    console.log("true");
-    if (formData.number.length >= 10) {
-      setmobileNumber(true);
-      setErrorMessage("");
-    } else {
-      setErrorMessage("Enter A Valid Mobile Number");
-      setTimeout(() => {
-        setErrorMessage("");
-      }, 2000);
-    }
-  };
-
-  const handeOtpBack = () => {
-    setmobileNumber(false);
-  };
-  const handleSkip = () => {
-    console.log("Handel SKip");
-    navigation.navigate("Tabs"); // Navigate to Tabs and specify the Home tab
-  };
-
-  const handleOtpFill = (otp) => {
-    console.log("OTP entered:", otp);
-    setOtp(otp);
-  };
-  const handelCartToStorage = async (Data)=>{
-    try {
-      const cartArrayJSON = JSON.stringify(Data);
-      await AsyncStorage.setItem('cart', cartArrayJSON);
-      setUpdate((prev)=>prev+1)
-      // console.log('Cart saved to AsyncStorage');
-    } catch (error) {
-      console.error('Error saving cart to AsyncStorage:', error);
-   }
-  }
-  const handelDone = ()=>{
-
-    if(TotalAmount > 0){
-      const Data ={
-        id:ItemModelData.id,
-        title:ItemModelData.title,
-        value:ItemModelData.value,
-        image:ItemModelData.image,
-        category:ItemModelData.category,
-        totalValue:TotalAmount,
-        Weight:formData.value
-        }
-        ItemModelData.Fun()
-        setModalVisible(false)
-        setCart((prev)=>[...prev,Data]);
-        const ItemData = [...CartInStorage,Data]
-        handelCartToStorage(ItemData)
-        setTotalAmount(0);
-        setFormData(initalValuesForm)
-    }
-   else{
-    ToastAndroid.show("Please Enter A Value", ToastAndroid.SHORT);
-   }
-    
-    
-  }
-
-  const handelClose=()=>{
-    setModalVisible(false)
-    setTotalAmount(0);
-        setFormData(initalValuesForm)
-  }
-
-  useEffect(()=>{
-    setFormData({
-      price:ItemModelData.value,
-      qty:"Kg"
-    })
-  },[])
   return (
     <Modal
-    // propagateSwipe={true}
-        animationType="slide"
-        transparent={true}
-        isVisible={modalVisible}
-        onSwipeComplete={() => setModalVisible(false)}
-        backdropOpacity={0.1}
-        onBackdropPress={() => setModalVisible(false)}
-        swipeDirection={[ "down"]}
-        style={styles.viewHalf}
-      >
    
+      animationType="slide"
+      transparent={true}
+      isVisible={modalVisible}
+      onSwipeComplete={() => setModalVisible(false)}
+      backdropOpacity={0.1}
+      onBackdropPress={() => setModalVisible(false)}
+      swipeDirection={["down"]}
+      style={styles.viewHalf}
+    >
       <View style={[styles.centeredView]}>
-      <View style={styles.modalView}>
-          
-           <Block right style={{width:width*0.8}}>
-           <Ionicons onPress={handelClose} name="close-circle" size={24} color="#65be34" />
-            </Block> 
-  
-          <Block style={{ marginTop:10,flexDirection:"row",justifyContent:"left",alignItems:"start",width:width*0.9,padding:10}}>
-          <Image
-    
-    source={{uri:ItemModelData.image}}
-    style={{resizeMode: 'contain',width:30,height:30,marginRight:10}}
-  />
-              <Text style={{fontSize:20}}>{ItemModelData.title} {"( ₹"+ItemModelData.value+" / KG)"}</Text>
-        
-              
-            </Block>
-            
-            <Block style={{ marginTop:20,flexDirection:"row",justifyContent:"left",alignItems:"start",width:width*0.9,padding:10}}>
-                 
-                 <Block>
-                 <TextInput
+        <View style={styles.modalView}>
+          <Block right style={{ width: width * 0.8 }}>
+            <Ionicons
+              onPress={handelClose}
+              name="close-circle"
+              size={24}
+              color="#65be34"
+            />
+          </Block>
 
-variant="standard"
-keyboardType="numeric"
-label="Price"
+          <Block
+            style={{
+              marginTop: 10,
+              flexDirection: "row",
+              justifyContent: "left",
+              alignItems: "start",
+              width: width * 0.9,
+              padding: 10,
+            }}
+          >
+            <Image
+              source={{ uri: ItemModelData.image }}
+              style={{
+                resizeMode: "contain",
+                width: 30,
+                height: 30,
+                marginRight: 10,
+              }}
+            />
+            <Text style={{ fontSize: 20 }}>
+              {ItemModelData.title} {"( ₹" + ItemModelData.value + " / KG)"}
+            </Text>
+          </Block>
 
-value={formData.value}
-onChangeText={(text) => handleInputChange("value", text)}
-color={ 'grey'}
-inputStyle={{ borderWidth: 0, paddingBottom:0,color:"black",fontSize:20,letterSpacing:3 }}
-// inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-style={{width:200}}
-/>
-                 </Block>
-         
-                 <Block>
-                 <TextInput
-
-variant="standard"
-keyboardType="numeric"
-label="Per"
-value={"Kg"}
-onChangeText={(text) => handleInputChange("qty", text)}
-color={ 'grey'}
-inputStyle={{ borderWidth: 0, paddingBottom:0,color:"black",fontSize:20,letterSpacing:3 }}
-// inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-style={{width:80,marginLeft:10}}
-/>
-                 </Block>
-        
-              
-            </Block>
-
-           
-           
-
-          
-            <Block style={{position:"absolute",bottom:30}}>
-              {/* <Button onPress={()=>handelDone(otp)} color="success"> Done</Button> */}
-              <Button
-                  title="Update"
-                  color="#65be34"
-                  style={{ width: 150, padding: 5 }}
-                  onPress={()=>handelDone()}
+          <Block
+            style={{
+              marginTop: 20,
+              flexDirection: "row",
+              justifyContent: "left",
+              alignItems: "start",
+              width: width * 0.9,
+              padding: 10,
+            }}
+          >
+            <Block>
+              <TextInput
+                variant="standard"
                 
-                  tintColor="#fff"
-                />
+                label="Price"
+                value={formData.value}
+                onChangeText={(text) => handleInputChange("price", text)}
+                color={"grey"}
+                inputStyle={{
+                  borderWidth: 0,
+                  paddingBottom: 0,
+                  color: "black",
+                  fontSize: 20,
+                  letterSpacing: 3,
+                }}
+                // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
+                style={{ width: 200 }}
+              />
             </Block>
 
-         
+            <Block>
+              <TextInput
+                variant="standard"
+                keyboardType="numeric"
+                label="Per"
+                value={"Kg"}
+                onChangeText={(text) => handleInputChange("unit", text)}
+                color={"grey"}
+                inputStyle={{
+                  borderWidth: 0,
+                  paddingBottom: 0,
+                  color: "black",
+                  fontSize: 20,
+                  letterSpacing: 3,
+                }}
+                // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
+                style={{ width: 80, marginLeft: 10 }}
+              />
+            </Block>
+          </Block>
+
+          <Block style={{flexDirection:"row",marginTop:20}}>
+            {/* <Button onPress={()=>handelDone(otp)} color="success"> Done</Button> */}
+            <Button
+             
+              
+              color="crimson"
+              onPress={() => handelDelete(ItemModelData.index)}
+           
+              size="small"
+            > Delete</Button>
+
+            <Button
+            color="teal"
+             
+             onPress={() => handelComplete(formData)}
+          
+             size="small"
+           > Update</Button>
+           
+          </Block>
         </View>
-       
-        
       </View>
 
       {/* <View style={styles.content}>
@@ -243,10 +185,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     margin: 0,
   },
-  lottie:{
-    width:250,
-    height:250
-    },
+  lottie: {
+    width: 250,
+    height: 250,
+  },
   content: {
     backgroundColor: "white",
     padding: 22,
@@ -268,8 +210,8 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     backgroundColor: "white",
-     borderRadius:10,
-    padding:20,
+    borderRadius: 10,
+    padding: 20,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -279,7 +221,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: width*0.9,
+    width: width * 0.9,
     height: height - 500,
   },
   button: {
@@ -313,7 +255,7 @@ const styles2 = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
   },
-  
+
   AlignCenter: {
     flexDirection: "row",
     justifyContent: "center",

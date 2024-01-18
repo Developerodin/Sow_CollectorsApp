@@ -29,6 +29,8 @@ import { AntDesign } from "@expo/vector-icons";
 import LottieView from "lottie-react-native";
 import { Keyboard } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
+import { Base_url } from "../../Config/BaseUrl";
 export const Login = ({ navigation }) => {
   const initalValuesForm = {
     phoneNumber: "",
@@ -92,15 +94,15 @@ export const Login = ({ navigation }) => {
   };
 
 
-
   const handelOtpComplete = () => {
     saveMobileNumber()
-    if (otp === "1234") {
-      saveAuthStatus()
-      handelPreviousUser();
-    } else {
-      handelNewUser();
-    }
+    loginWithOTP()
+    // if (otp === "1234") {
+    //   saveAuthStatus()
+    //   handelPreviousUser();
+    // } else {
+    //   handelNewUser();
+    // }
   };
 
   const handelPreviousUser = () => {
@@ -122,7 +124,8 @@ export const Login = ({ navigation }) => {
       ToastAndroid.show("Please Provide Mobile Number", ToastAndroid.SHORT);
       return;
     }
-    setOTPShow(true);
+    generateOTP()
+    
   };
 
   const handelBack = () => {
@@ -150,7 +153,46 @@ export const Login = ({ navigation }) => {
       useNativeDriver: false,
     }).start();
   };
+
+  const generateOTP = async () => {
+    try {
+      const response = await axios.post(`${Base_url}api/b2b/generate-otp`, { mobile_number: formData.phoneNumber });
+      // handelNewUser();
+      console.log(response.data.message);
+      ToastAndroid.show("Otp send to mobile number", ToastAndroid.SHORT);
+      setOTPShow(true);
+    } catch (error) {
+      console.error('Error:', error);
+      ToastAndroid.show("Try After Some Time", ToastAndroid.SHORT);
+      console.log('Failed to generate OTP. Please try again.');
+    }
+  };
+
+  const loginWithOTP = async () => {
+    try {
+      const response = await axios.post(`${Base_url}api/b2b/login-with-otp`, { mobile_number: formData.phoneNumber, otp: otp });
+     
+        if(response.data.message === "Login successful"){
+          const User = JSON.stringify(response.data.data)
+          await AsyncStorage.setItem("userDetails", User);
+          saveAuthStatus()
+          handelPreviousUser();
+          console.log("res =>",response.data.data);
+        }
+
+        if(response.data.message === "User not found") {
+          handelNewUser()
+        }
+
+      
+    } catch (error) {
+      console.error('Error:', error);
+      console.log('Failed to login. Please try again.');
+    }
+  };
+
   const animationRef = useRef(null);
+
   useEffect(() => {
     animationRef.current?.play();
 
@@ -173,6 +215,7 @@ export const Login = ({ navigation }) => {
       keyboardDidHideListener.remove();
     };
   }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar hidden={true} />
@@ -233,7 +276,7 @@ export const Login = ({ navigation }) => {
                     marginTop:10
                   }}
                 >
-                  OTP Sent to +91 902 496 7391
+                  OTP Sent to +91 {formData.phoneNumber}
                 </Text>
               
                 <Block

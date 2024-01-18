@@ -286,6 +286,9 @@ const SubmitSigupData= async()=>{
   //   "name":AddharformData.Name,
   // }
   const Adhar = JSON.stringify(AddharformData);
+  const SubCategoryData = [
+    {name:"test",price:"20",unit:"kg"}
+  ]
   const UserData = {
     name: userDetails.name,
     gender: 'Male',
@@ -300,8 +303,32 @@ const SubmitSigupData= async()=>{
     registerAs: RegisterAs,
     panNo:PANformData.PANNo,
     adharData:Adhar,
-    images:[PanFront,PanBack]
+    images:[],
+    category:"Electronic",
+    sub_category:JSON.stringify(SubCategoryData)
   };
+
+  const formData = new FormData();
+      formData.append("name", userDetails.name);
+      formData.append("gender", 'Male');
+      formData.append("email", userDetails.email);
+      formData.append("category", "Electronic");
+      formData.append("password", '1234');
+      formData.append("mobile", Mobile);
+      formData.append("dob", '1990-01-01');
+      formData.append("Address", '123 Main St');
+      formData.append("city", userDetails.city);
+      formData.append("pincode", '12345');
+      formData.append("country", 'India');
+      formData.append("panNo",PANformData.PANNo);
+      formData.append("registerAs",RegisterAs);
+      
+      formData.append("sub_category",JSON.stringify(SubCategoryData));
+      
+      formData.append("adharData",Adhar)
+    
+  
+      formData.append("images", []);
   
      try {
       const response = await axios.post(`${Base_url}b2b`, UserData);

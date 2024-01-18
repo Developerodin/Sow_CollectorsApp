@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -9,36 +9,112 @@ import { OrdersCard } from '../../Components/Cards/OrdersCard';
 const {width, height} = Dimensions.get('window');
 import { TabView, SceneMap } from 'react-native-tab-view';
 import { PendingOrderCard } from '../../Components/Cards/PendingOrderCard';
-const FirstRoute = () => (
-  <ScrollView style={{flex:1}}>
-   
-    <Block style={{padding:10,marginBottom:60}}>
-         
-         <PendingOrderCard />
-           
-         <PendingOrderCard />
-        
-        
-        </Block>
-        </ScrollView>
-);
-const SecondRoute = () => (
-  <ScrollView style={{flex:1}}>
-   
-    <Block style={{padding:10,marginBottom:60}}>
-         
-         <OrdersCard />
-           
-         <OrdersCard />
-         <OrdersCard />
-        
-        </Block>
-        </ScrollView>
-);
+import { Base_url } from '../../Config/BaseUrl';
+import axios from 'axios';
+import { useAppContext } from '../../Context/AppContext';
+import { InCommingOrderCard } from '../../Components/Cards/InCommingOrderCard';
+
+
+
 export const Orders = () => {
+  const {  userDetails } = useAppContext();
   const [index, setIndex] = useState(0);
+  const [orders, setOrders] = useState([]);
+  const [InCommingOrders, setInCommingOrders] = useState([]);
+  const [pendingOrders,setPendingOrders] = useState([]);
+  const [completedOrders,setCompletedOrders] = useState([]);
+  const [InCommingpendingOrders,setInCommingPendingOrders] = useState([]);
+  const [InCommingcompletedOrders,setInCommingCompletedOrders] = useState([]);
   const handleIndexChange = (newIndex) => setIndex(newIndex);
+
+  const getOrders = async () => {
+    try {
+      const response = await axios.get(`${Base_url}api/b2b_orders/from/${userDetails._id}`);
+      const data = response.data;
+      //  console.log("orders ==>",response.data);
+      // Assuming the response contains an 'orders' property
+      const Orders = data.orders
+      setOrders(Orders);
+      const PendingOrders = Orders.filter((el)=>{
+        return el.status === "pending"
+      })
+      const CompletedOrders = Orders.filter((el)=>{
+        return el.status === "completed"
+      })
+      setPendingOrders(PendingOrders);
+      setCompletedOrders(CompletedOrders);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+  const getInCommingOrders = async () => {
+    try {
+      const response = await axios.get(`${Base_url}api/b2b_orders/to/${userDetails._id}`);
+      const data = response.data;
+       console.log("orders incoming ==>",response.data);
+      // Assuming the response contains an 'orders' property
+      const Orders = data.orders
+      setInCommingOrders(Orders);
+      const PendingOrders = Orders.filter((el)=>{
+        return el.status === "pending"
+      })
+      const CompletedOrders = Orders.filter((el)=>{
+        return el.status === "completed"
+      })
+      setInCommingPendingOrders(PendingOrders);
+      setInCommingCompletedOrders(CompletedOrders);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+  const ZeroRoute = () => (
+    <ScrollView style={{flex:1}}>
+     
+      <Block style={{padding:10,marginBottom:60}}>
+           {
+           InCommingpendingOrders && InCommingpendingOrders.map((el,index)=>{
+              return    <InCommingOrderCard key={index} data={el} />
+            })
+           }
+        
+
+          </Block>
+          </ScrollView>
+  );
+  const FirstRoute = () => (
+    <ScrollView style={{flex:1}}>
+     
+      <Block style={{padding:10,marginBottom:60}}>
+           {
+           pendingOrders && pendingOrders.map((el,index)=>{
+              return    <PendingOrderCard key={index} data={el} />
+            })
+           }
+        
+
+          </Block>
+          </ScrollView>
+  );
+  const SecondRoute = () => (
+    <ScrollView style={{flex:1}}>
+     
+      <Block style={{padding:10,marginBottom:60}}>
+           
+           {
+            completedOrders && completedOrders.map((el,index)=>{
+              return  <OrdersCard key={index} data={el} />
+            })
+           }
+          
+          
+          </Block>
+          </ScrollView>
+  );
+
   const routes = [
+    {key:"zero",title:"In Comming"},
     { key: 'first', title: 'Pending' },
     { key: 'second', title: 'Completed' },
   ];
@@ -62,7 +138,7 @@ export const Orders = () => {
 
         const textStyles = [
          
-          { color: textColor,fontWeight:"bold",fontSize:16 },
+          { color: textColor,fontWeight:"bold",fontSize:14 },
         ];
 
         return (
@@ -71,7 +147,7 @@ export const Orders = () => {
             key={i}
             style={tabStyle}
             onPress={() => setIndex(i)}>
-            <Animated.Text style={[textStyles,{fontSize:20}]}>{route.title}</Animated.Text>
+            <Animated.Text style={[textStyles,{fontSize:16}]}>{route.title}</Animated.Text>
           </TouchableOpacity>
         );
       })}
@@ -80,9 +156,17 @@ export const Orders = () => {
   };
 
   const renderScene = SceneMap({
+    zero:ZeroRoute,
     first: FirstRoute,
     second: SecondRoute,
   });
+
+ useEffect(()=>{
+  getOrders();
+  getInCommingOrders()
+ },[])
+
+
   return (
     <View style={styles.container}>
     <Header/>

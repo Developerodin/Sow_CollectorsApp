@@ -7,11 +7,11 @@ import { Feather } from '@expo/vector-icons';
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-export const OrdersCard = (props) => {
+export const OrdersCard = ({data}) => {
   const navigation = useNavigation();
 
   const handeViewDetail=()=>{
-    navigation.navigate("Order Details")
+    navigation.navigate("Order Details",{id:data._id})
   }
     // const {Img,Title,SubTitle} = props
   return (
@@ -19,22 +19,22 @@ export const OrdersCard = (props) => {
       <Block>
         <Block style={[styles.displayF]}>
         <Ionicons name="person" size={18} color="black" />
-        <Text style={[styles.text1]} >Ankit Dixit</Text>
+        <Text style={[styles.text1]} >{data.to.name}</Text>
         </Block>
 
         <Block style={{marginTop:15}}>
           <Text style={{fontSize:18,fontWeight:400}}>Estimated Value</Text>
-          <Text style={{fontSize:20,fontWeight:500,marginTop:3}}>₹ 45,000</Text>
+          <Text style={{fontSize:20,fontWeight:500,marginTop:3}}>₹ {data.totalAmount}</Text>
         </Block>
 
         <Block style={[styles.displayF,{marginTop:10}]}>
         <AntDesign name="calendar" size={20} color="black" />
-        <Text style={[styles.text1]} >Pickup Date : <Text style={{color:"#6096FF"}}>20 March 2023</Text> </Text>
+        <Text style={[styles.text1]} >Order Date : <Text style={{color:"#6096FF"}}>{new Date(data.orderDate).toLocaleDateString('en-GB')}</Text> </Text>
         </Block>
 
         <Block style={[styles.displayF,{marginTop:10}]}>
         <Ionicons name="location" size={20} color="black" />
-        <Text style={[styles.text1]} >Pickup Location : 302039 </Text>
+        <Text style={[styles.text1]} >Pickup Location : {data.from.Address}, {data.from.pincode}, {data.from.city}, {data.from.country} </Text>
         </Block>
 
         <Block style={[styles.Center]} >

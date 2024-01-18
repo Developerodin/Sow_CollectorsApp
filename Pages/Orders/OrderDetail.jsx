@@ -1,19 +1,45 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
 
 import { AntDesign } from '@expo/vector-icons';
-
+import axios from 'axios';
+import { Base_url } from '../../Config/BaseUrl';
+import { Feather } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
 const {width, height} = Dimensions.get('window');
 
-export const OrderDetail = () => {
+export const OrderDetail = ({route}) => {
+  const { id } = route.params;
+  const [orderDetails,setOrderDetails] = useState(null)
+  const getOrdersById = async () => {
+    try {
+      const response = await axios.get(`${Base_url}api/b2b_orders/${id}`);
+      const data = response.data;
+       console.log("orders by id ==>",response.data);
+      // Assuming the response contains an 'orders' property
+      
+      setOrderDetails(data);
+      
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+  useEffect(()=>{
+    getOrdersById()
+  },[])
   return (
    <View style={styles.container}>
     <ScrollView>
 
    
     <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:10}}>
+    
+    
+    
+    
      <Block >
         <Block style={styles.Space_Between}>
          <Text style={styles.text1}>Category</Text>
@@ -55,18 +81,26 @@ export const OrderDetail = () => {
          <Text style={styles.text1}>Pick Up Location</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:20}}>Plot Number 116, Lane Number 4, Rathore Nagar, Vaishali Nagar</Text>
+        <Text style={{fontSize:20}}>{orderDetails && orderDetails.from.Address}, {orderDetails && orderDetails.from.pincode}, {orderDetails && orderDetails.from.city} </Text>
         </Block>
         
      </Block>
 
+     
+
+
      <Block style={{marginTop:20}} >
         <Block>
-         <Text style={[styles.text1,{color:"#4B4B4B"}]}>PIN 302021</Text>
+         <Text style={styles.text1}>Order Collector</Text>
         </Block>
-        <Block style={{marginTop:10,flexDirection:"row", alignItems:"center"}}>
-        <Text style={[styles.text1,{color:"#040404"}]}>District Jaipur</Text>
-        <Text style={[styles.text1,{color:"#040404",marginLeft:30}]}>State Rajasthan</Text>
+        <Block style={{marginTop:10}}>
+        <Text style={{fontSize:16}}> <Entypo name="user" size={14}  color="black" />  {orderDetails && orderDetails.to.name}</Text>
+        </Block>
+        <Block style={{marginTop:10}}>
+        <Text style={{fontSize:16}}> <Feather name="phone" size={14} color="black" />  +91 {orderDetails && orderDetails.to.mobile}</Text>
+        </Block>
+        <Block style={{marginTop:10}}>
+        <Text style={{fontSize:16}}> <AntDesign name="infocirlceo" size={14} color="black" />  {orderDetails && orderDetails.to.registerAs}</Text>
         </Block>
         
      </Block>
@@ -76,20 +110,12 @@ export const OrderDetail = () => {
          <Text style={styles.text1}>Pick Up Date</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={styles.text2}>03 Mar 2023</Text>
+        <Text style={styles.text2}>{orderDetails && new Date(orderDetails.orderDate).toLocaleDateString('en-GB')}</Text>
         </Block>
         
      </Block>
     </Block>
 
-    <Block style={[{marginTop:30},styles.Center]}>
-    <Button color='white' style={{borderWidth:1,width:"100%",borderColor:"#C8C8C8",height:63}}>
-              <Text style={{fontSize:20,fontWeight:400}}>
-              Cancel Order
-              </Text>
-            
-              </Button>
-    </Block>
     </ScrollView>
    </View>
   )

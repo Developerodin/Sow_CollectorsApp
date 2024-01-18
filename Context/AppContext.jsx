@@ -4,6 +4,7 @@ import React, { createContext, useContext, useEffect, useState } from 'react';
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+  const [userDetails,setuserDetails] = useState({})
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedTabs,setSelectedTabs]=useState("Home");
@@ -29,12 +30,22 @@ export const AppProvider = ({ children }) => {
     const isLoggedIn = await AsyncStorage.getItem('Auth');
     if(isLoggedIn === true || isLoggedIn === "true"){
         setIsLoggedIn(true);
-        
+        getCurrentUser();
     }
     else{
         setIsLoggedIn(false)
         // setModalVisible(true)
     }
+}
+
+const getCurrentUser=async()=>{
+  const user = await AsyncStorage.getItem('userDetails');
+  const ParseUser = JSON.parse(user)
+  if(user){
+    setuserDetails(ParseUser);
+      
+  }
+ 
 }
 
 const getCartFromAsyncStorage = async () => {
@@ -90,7 +101,7 @@ setShowCartSuggestion(true)
 //   },[selectedTabs])
 
   return (
-    <AppContext.Provider value={{SelectedAddressFromMap,setSelectedAddressFromMap,CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion,Cart,setCart,update,setUpdate,toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible ,selectedMarker, setSelectedMarker,isMarkerModalVisible, setMarkerModalVisible,selectedTabs,setSelectedTabs, isLoggedIn, toggleLogin,modalVisible,setModalVisible,isLoggedIn,setIsLoggedIn }}>
+    <AppContext.Provider value={{userDetails,SelectedAddressFromMap,setSelectedAddressFromMap,CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion,Cart,setCart,update,setUpdate,toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible ,selectedMarker, setSelectedMarker,isMarkerModalVisible, setMarkerModalVisible,selectedTabs,setSelectedTabs, isLoggedIn, toggleLogin,modalVisible,setModalVisible,isLoggedIn,setIsLoggedIn }}>
       {children}
     </AppContext.Provider>
   );

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput,Modal } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -9,14 +9,36 @@ import { OTPModel } from '../../Components/Model/OTPModel';
 import { ToastAndroid } from 'react-native';
 import { NavigationMap } from '../../Components/Maps/NavigationMap';
 import { useNavigation } from "@react-navigation/native";
+import axios from 'axios';
+import { Base_url } from '../../Config/BaseUrl';
+import { Feather } from '@expo/vector-icons';
+import { Entypo } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 const {width, height} = Dimensions.get('window');
 
-export const PendingOrderDetails = () => {
+export const PendingOrderDetails = ({route}) => {
+  const { id } = route.params;
   const navigation = useNavigation();
+  const [orderDetails,setOrderDetails] = useState(null)
   const [inputFields, setInputFields] = useState([{ value: '', category: 'Category 1' }]);
   const [modalVisible,setModalVisible] = useState(false)
   const [orderCompleteStatus,setOrderCompleteStatus] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false);
+
+  const getOrdersById = async () => {
+    try {
+      const response = await axios.get(`${Base_url}api/b2b_orders/${id}`);
+      const data = response.data;
+       console.log("orders by id ==>",response.data);
+      // Assuming the response contains an 'orders' property
+      
+      setOrderDetails(data);
+      
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
   const addInputField = () => {
     const updatedInputFields = [...inputFields, { value: '', category: 'Category 1' }];
     setInputFields(updatedInputFields);
@@ -24,7 +46,7 @@ export const PendingOrderDetails = () => {
 
   const handelSubmit =()=>{
     console.log("Values",inputFields )
-    setModalVisible(true);
+    // setModalVisible(true);
   }
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -43,6 +65,10 @@ export const PendingOrderDetails = () => {
    }
 
   }
+
+  useEffect(()=>{
+    getOrdersById()
+  },[])
   
   return (
    <View style={styles.container}>
@@ -50,52 +76,84 @@ export const PendingOrderDetails = () => {
 
    
     <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:10}}>
-    
+    <Block style={styles.Space_Between}>
+         <Text style={{fontSize:20,color:"grey"}}>status</Text>
+         <Button  style={{backgroundColor:"crimson",borderRadius:10}}>
+              <Text style={{fontSize:16,fontWeight:400,color:"#fff"}}>
+              Pending
+              </Text>
+            
+              </Button>
+        </Block>
+    <Block style={{marginTop:20}} >
+        <Block>
+         <Text style={styles.text1}>Order Collector</Text>
+        </Block>
+        <Block style={{marginTop:10}}>
+        <Text style={{fontSize:16}}> <Entypo name="user" size={14}  color="black" />  {orderDetails && orderDetails.to.name}</Text>
+        </Block>
+        <Block style={{marginTop:10}}>
+        <Text style={{fontSize:16}}> <Feather name="phone" size={14} color="black" />  +91 {orderDetails && orderDetails.to.mobile}</Text>
+        </Block>
+        <Block style={{marginTop:10}}>
+        <Text style={{fontSize:16}}> <AntDesign name="infocirlceo" size={14} color="black" />  {orderDetails && orderDetails.to.registerAs}</Text>
+        </Block>
+        
+     </Block>
 
-    <Block style={[styles.border,{width:"100%",height:300,justifyContent:"center",alignItems:"center"}]}>
-      <TouchableOpacity onPress={toggleModal}>
-      <Text style={{fontSize:24}}>Map</Text>
-      </TouchableOpacity>
-      
-    </Block>
-
-     
-
-    
+     <Block style={{marginTop:20}} >
+        <Block>
+         <Text style={styles.text1}>Order Details</Text>
+        </Block>
+        <Block style={{marginTop:10}}>
+        <Text style={{fontSize:16}}> Qty :  {orderDetails && orderDetails.details.quantity} Kg</Text>
+        </Block>
+        <Block style={{marginTop:10}}>
+        <Text style={{fontSize:16}}> Category :  {orderDetails && orderDetails.details.category}</Text>
+        </Block>
+        <Block style={{marginTop:10}}>
+        <Text style={{fontSize:16}}> Sub category : {orderDetails && orderDetails.details.sub_category}</Text>
+        </Block>
+       
+        <Block style={{marginTop:10}}>
+        <Text style={{fontSize:16}}> Amount :  ₹ {orderDetails && orderDetails.totalAmount}</Text>
+        </Block>
+        
+     </Block>
 
      <Block style={{marginTop:20}} >
         <Block>
          <Text style={styles.text1}>Pick Up Location</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:20}}>Plot Number 116, Lane Number 4, Rathore Nagar, Vaishali Nagar</Text>
+        <Text style={{fontSize:20}}>{orderDetails && orderDetails.from.Address}, {orderDetails && orderDetails.from.pincode}, {orderDetails && orderDetails.from.city}</Text>
         </Block>
         
      </Block>
 
-     <Block style={{marginTop:20}} >
-        <Block>
-         <Text style={[styles.text1,{color:"#4B4B4B"}]}>PIN 302021</Text>
-        </Block>
-        <Block style={{marginTop:10,flexDirection:"row", alignItems:"center"}}>
-        <Text style={[styles.text1,{color:"#040404"}]}>District Jaipur</Text>
-        <Text style={[styles.text1,{color:"#040404",marginLeft:30}]}>State Rajasthan</Text>
-        </Block>
-        
-     </Block>
 
      <Block style={{marginTop:20}} >
-        <Block>
-         <Text style={styles.text1}>Pick Up Date</Text>
+
+      <Block >
+      <Block>
+         <Text style={styles.text1}>Booked Date</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={styles.text2}>03 Mar 2023</Text>
+        <Text style={styles.text2}>{orderDetails && new Date(orderDetails.orderDate).toLocaleDateString('en-GB')}</Text>
         </Block>
+      </Block>
+       
+
+        {/* <Block right>
+    <Button size={"small"} color='teal' onPress={toggleModal}>
+     Address
+    </Button>
+        </Block> */}
         
      </Block>
     </Block>
 
-    <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:10}}>
+    {/* <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:10}}>
     <Block style={styles.Space_Between}>
       <Text style={{fontSize:20}}>List Down Items</Text>
 
@@ -110,20 +168,20 @@ export const PendingOrderDetails = () => {
     </Block>
          
      
-    </Block>
+    </Block> */}
 
 
     <Block style={[{marginTop:30,marginBottom:30},styles.Center]}>
-    <Button  color='black' onPress={handelSubmit} style={{height:63}}>
+    {/* <Button  color='black' onPress={handelSubmit} style={{height:63}}>
               
               Submit
              
             
-              </Button>
-    <Button color='white' style={{borderWidth:1,borderColor:"#C8C8C8",height:63}}>
-              <Text style={{fontSize:20,fontWeight:400}}>
+              </Button> */}
+    <Button color='black'  style={{height:63}}>
+             
               Cancel Order
-              </Text>
+             
             
               </Button>
     </Block>

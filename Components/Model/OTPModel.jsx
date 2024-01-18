@@ -167,7 +167,7 @@ export const OTPModel = ({modalVisible,setModalVisible,handelComplete,orderCompl
           <Block style={{ marginTop: 10, width: width }}>
               
 
-          <Block  style={{flex:1,marginTop:30}}>
+          <Block center  style={{flex:1,marginTop:30}}>
         <OTPInput length={4} onComplete={handleOtpFill} />
         </Block>
               
