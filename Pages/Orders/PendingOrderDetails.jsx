@@ -77,7 +77,7 @@ export const PendingOrderDetails = ({route}) => {
    
     <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:10}}>
     <Block style={styles.Space_Between}>
-         <Text style={{fontSize:20,color:"grey"}}>status</Text>
+         <Text style={{fontSize:20,color:"grey"}}>OTP :{orderDetails && orderDetails.otp}</Text>
          <Button  style={{backgroundColor:"crimson",borderRadius:10}}>
               <Text style={{fontSize:16,fontWeight:400,color:"#fff"}}>
               Pending

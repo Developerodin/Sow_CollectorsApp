@@ -21,7 +21,8 @@ export const Profile = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
   const [visible, setVisible] = useState(false);
-  const {CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion} = useAppContext()
+
+  const {userDetails,CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion} = useAppContext()
   const ProfileTabs=[
     
     // {icon:<FontAwesome name="address-book" size={24} color="#2dd36f" />,title:"Manage Address",link:"Address",color:"dark"},
@@ -131,7 +132,7 @@ export const Profile = () => {
           
 
            <Block  style={{marginTop:20}}>
-            <Text center style={{fontSize:20,fontWeight:"500"}}>Ronak Vaya</Text>
+            <Text center style={{fontSize:20,fontWeight:"500"}}>{userDetails && userDetails.name}</Text>
             <Block center >
            <Button onPress={() => showImagePicker('camera')} color='#0F2C59'>
            
@@ -147,7 +148,7 @@ export const Profile = () => {
         </Block>
 
 
-        <Block style={{marginTop:20,borderWidth:1,borderColor:"#DCDCDC",padding:15,backgroundColor:"#96DE20",paddingBottom:20,borderRadius:7,elevation:2}}>
+        {/* <Block style={{marginTop:20,borderWidth:1,borderColor:"#DCDCDC",padding:15,backgroundColor:"#96DE20",paddingBottom:20,borderRadius:7,elevation:2}}>
 
 <Block>
   <Block>
@@ -162,7 +163,7 @@ export const Profile = () => {
 
 </Block>
 
-</Block>
+</Block> */}
 
         <Block style={{marginTop:10}}>
           {

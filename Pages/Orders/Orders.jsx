@@ -62,7 +62,7 @@ export const Orders = () => {
       const CompletedOrders = Orders.filter((el)=>{
         return el.status === "completed"
       })
-      setInCommingPendingOrders(PendingOrders);
+      setInCommingPendingOrders(Orders);
       setInCommingCompletedOrders(CompletedOrders);
     } catch (error) {
       console.error('Error fetching orders:', error);

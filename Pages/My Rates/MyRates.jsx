@@ -152,7 +152,7 @@ export const MyRates = () => {
         id: subCategory._id,
         title: subCategory.name,
         value: subCategory.price,
-        image: "https://cdn-icons-png.flaticon.com/512/3520/3520812.png", // Replace with the actual image URL
+        image: "https://tse4.mm.bing.net/th?id=OIP.OQh1ykyaCVyCvt2aNHJ-LwHaHa&pid=Api&P=0&h=220", // Replace with the actual image URL
         category: response.data.category,
       }));
       setData(transformedData);

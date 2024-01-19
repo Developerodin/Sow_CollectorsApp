@@ -39,7 +39,7 @@ export const InCommingOrderDetails = ({ route }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [orderCompleteStatus, setOrderCompleteStatus] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [quantityCollected, setquantityCollected] = useState(0);
+  const [quantityCollected, setquantityCollected] = useState(10);
   const [update,setupdate] = useState(0)
   const getOrdersById = async () => {
     try {
@@ -89,12 +89,12 @@ export const InCommingOrderDetails = ({ route }) => {
   };
   
   const handelComplete = (otp) => {
-    console.log("OTP =>", otp);
+    console.log("OTP =>", otp,orderDetails._id);
     if (otp === "") {
       ToastAndroid.show("OTP Required", ToastAndroid.SHORT);
       return;
     }
-    if (otp === "1234") {
+    if (orderDetails && otp === orderDetails.otp) {
         
         handleOrderUpdate(orderDetails._id,"completed",quantityCollected)
         setModalVisible(false)
@@ -133,7 +133,7 @@ export const InCommingOrderDetails = ({ route }) => {
             {orderDetails && orderDetails.status === "completed" && (
               <Button style={{ backgroundColor: "teal", borderRadius: 10 }}>
                 <Text style={{ fontSize: 16, fontWeight: 400, color: "#fff" }}>
-                  Pending
+                completed
                 </Text>
               </Button>
             )}
@@ -249,15 +249,18 @@ export const InCommingOrderDetails = ({ route }) => {
          
      
     </Block> */}
+    {
+     orderDetails && orderDetails.status === "pending" &&  <Block style={[{ marginTop: 30, marginBottom: 30 }, styles.Center]}>
+      <Button color="teal" onPress={handelSubmit} style={{ height: 63 }}>
+        Mark Complete
+      </Button>
+      <Button color="black" style={{ height: 63 }}>
+        Cancel Order
+      </Button>
+    </Block>
+    }
 
-        <Block style={[{ marginTop: 30, marginBottom: 30 }, styles.Center]}>
-          <Button color="teal" onPress={handelSubmit} style={{ height: 63 }}>
-            Mark Complete
-          </Button>
-          <Button color="black" style={{ height: 63 }}>
-            Cancel Order
-          </Button>
-        </Block>
+       
 
         <OTPModel
           modalVisible={modalVisible}
