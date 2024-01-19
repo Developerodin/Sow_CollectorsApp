@@ -17,6 +17,7 @@ import { Foundation } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { useAppContext } from '../../Context/AppContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 export const Profile = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
@@ -79,7 +80,7 @@ export const Profile = () => {
   } catch (error) {
     console.error('Error clearing AsyncStorage:', error);
   }
-   navigation.navigate("/")
+  navigation.navigate("Login")
   }
 
   const handelRateAppliction=()=>{
