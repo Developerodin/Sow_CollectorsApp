@@ -17,7 +17,7 @@ import { InCommingOrderCard } from '../../Components/Cards/InCommingOrderCard';
 
 
 export const Orders = () => {
-  const {  userDetails } = useAppContext();
+  const {  userDetails,update } = useAppContext();
   const [index, setIndex] = useState(0);
   const [orders, setOrders] = useState([]);
   const [InCommingOrders, setInCommingOrders] = useState([]);
@@ -161,10 +161,11 @@ export const Orders = () => {
     second: SecondRoute,
   });
 
+
  useEffect(()=>{
   getOrders();
   getInCommingOrders()
- },[])
+ },[update])
 
 
   return (

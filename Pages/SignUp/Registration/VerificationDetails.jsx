@@ -291,45 +291,24 @@ const SubmitSigupData= async()=>{
   ]
   const UserData = {
     name: userDetails.name,
-    gender: 'Male',
+    gender:userDetails.gender ,
     email: userDetails.email ,
     password: '1234',
     mobile: Mobile,
-    dob: '1990-01-01',
-    Address: '123 Main St',
+    Address: userDetails.address,
     city: userDetails.city,
-    pincode: '12345',
+    pincode: userDetails.pincode,
     country: 'India',
     registerAs: RegisterAs,
     panNo:PANformData.PANNo,
     adharData:Adhar,
     images:[],
-    category:"Electronic",
+    category:userDetails.category,
     sub_category:JSON.stringify(SubCategoryData)
   };
 
-  const formData = new FormData();
-      formData.append("name", userDetails.name);
-      formData.append("gender", 'Male');
-      formData.append("email", userDetails.email);
-      formData.append("category", "Electronic");
-      formData.append("password", '1234');
-      formData.append("mobile", Mobile);
-      formData.append("dob", '1990-01-01');
-      formData.append("Address", '123 Main St');
-      formData.append("city", userDetails.city);
-      formData.append("pincode", '12345');
-      formData.append("country", 'India');
-      formData.append("panNo",PANformData.PANNo);
-      formData.append("registerAs",RegisterAs);
-      
-      formData.append("sub_category",JSON.stringify(SubCategoryData));
-      
-      formData.append("adharData",Adhar)
-    
   
-      formData.append("images", []);
-  
+  // console.log("Data of user ====>",UserData)
      try {
       const response = await axios.post(`${Base_url}b2b`, UserData);
       if (response.status === 201) {
@@ -426,13 +405,6 @@ const showImagePicker = async (sourceType, name) => {
     ]);
   }
 };
-
-
-
-
-
-
- 
 
   useEffect(() => {
     

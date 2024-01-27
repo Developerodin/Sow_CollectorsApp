@@ -42,17 +42,44 @@ export const Market = () => {
   const Category = ["Glass", "Electronic"];
   const { update, userDetails } = useAppContext();
   const [expanded, setExpanded] = useState(false);
+  const [expanded4, setExpanded4] = useState(false);
   const [CityExpand, setCityExpand] = useState(false);
   const [Timeexpanded, setTimeExpanded] = useState(false);
   const [Addressexpanded, setAddressExpanded] = useState(false);
 
   const [selectedCity, setselectedCity] = useState("");
   const [selectedCategory, setselectedCategory] = useState("");
+  const [selectedSubCategory, setselectedSubCategory] = useState("");
   const [AllVendorsData, setVendorsData] = useState([]);
   const [CollectorsData, setCollectorsData] = useState([]);
   const [WholesalersData, setWholesalersData] = useState([]);
   const [MediatorsData, setMediatorsData] = useState([]);
   const [FactoryData, setFactoryData] = useState([]);
+  const [CategoriesData, setCategoriesData] = useState([]);
+  const [SelectedSubCategoriesData, setSelectedSubCategoriesData] = useState([]);
+  const [refreshData,setRefreshData] = useState(0)
+  const getCategories = async () => {
+    try {
+      const response = await axios.get(`${Base_url}api/category`);
+      setCategoriesData(response.data);
+      console.log("Categories all", response.data)
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  };
+
+  const getCategoryById = async (id) => {
+    try {
+      const response = await axios.get(`${Base_url}api/category/${id}`);
+      // setUpdate((prev) =>prev+1)
+      setSelectedSubCategoriesData(response.data[0].sub_category)
+      console.log("SubCategory data", response.data[0].sub_category)
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  };
 
   const handeViewDetail = (id,value) => {
     navigation.navigate("Rate Details", { itemId: id,index : value });
@@ -60,6 +87,9 @@ export const Market = () => {
 
   const toggleAccordion = () => {
     setExpanded(!expanded);
+  };
+  const toggleAccordion4 = () => {
+    setExpanded4(!expanded4);
   };
   const toggleCityAccordion = () => {
     setCityExpand(!CityExpand);
@@ -70,9 +100,20 @@ export const Market = () => {
     setselectedCity(data);
     toggleCityAccordion();
   };
-  const handelCategory = (data) => {
+  const handelCategory = (data,id) => {
     setselectedCategory(data);
+    if(id !== "0"){
+      getCategoryById(id)
+    }
+    setselectedSubCategory("")
+    setSelectedSubCategoriesData([])
     toggleAccordion();
+  };
+
+  const handelSubCategory = (data) => {
+    setselectedSubCategory(data);
+  
+    toggleAccordion4();
   };
 
   const fetchB2BUser = async () => {
@@ -83,7 +124,7 @@ export const Market = () => {
         const fetchedB2BUsers = response.data;
         // setCategories(fetchedCategories);
 
-        // console.log("Fetch users == >", fetchedB2BUsers);
+        console.log("Fetch users == >", fetchedB2BUsers);
 
         setVendorsData(fetchedB2BUsers);
         const MediatorsData = fetchedB2BUsers.filter((el) => {
@@ -114,31 +155,97 @@ export const Market = () => {
     }
   }; 
 
+  const filterData = (category, subCategory, city) => {
+    // Filter data based on selectedCategory, selectedSubCategory, and selectedCity
+    let filteredData = AllVendorsData;
+ 
+    filteredData = filteredData.filter((vendor) => vendor.category === category && vendor.sub_category.includes(subCategory) && vendor.city.toLowerCase() === city.toLowerCase() );
+ 
+  
+    // if (subCategory) {
+    //   filteredData = filteredData.filter((vendor) =>
+    //     vendor.sub_category.includes(subCategory)
+    //   );
+    // }
+  
+    // if (city) {
+    //   filteredData = filteredData.filter((vendor) => vendor.city.toLowerCase() === city.toLowerCase());
+    // }
+
+    const MediatorsData = filteredData.filter((el) => {
+      return el.registerAs === "Mediators";
+    });
+
+    const WholesalersData = filteredData.filter((el) => {
+      return el.registerAs === "Wholesalers";
+    });
+
+    const FactoryData = filteredData.filter((el) => {
+      return el.registerAs === "Factory";
+    });
+
+    const CollectorsData = filteredData.filter((el) => {
+      return el.registerAs === "Collectors";
+    });
+
+    setMediatorsData(MediatorsData);
+    setWholesalersData(WholesalersData);
+    setFactoryData(FactoryData);
+    setCollectorsData(CollectorsData);
+  
+    return filteredData;
+  };
+
+  const resetFilterData = ()=>{
+ 
+    setselectedCategory("");
+    setselectedSubCategory("")
+    setselectedCity("")
+    setRefreshData((prev)=>prev+1)
+    return ;
+  }
+
   useEffect(() => {
     fetchB2BUser();
+    getCategories()
     console.log("User Data ", userDetails);
-  }, [update]);
+  }, [refreshData,update]);
+
+
+  useEffect(()=>{
+    console.log("Selected Data",selectedCategory,selectedSubCategory,selectedCity)
+    filterData(selectedCategory,selectedSubCategory,selectedCity);
+  },[selectedCity])
+         
+  const uniqueCitySet = new Set();
 
   return (
     <View style={styles.container}>
       <Header />
       <ScrollView style={{ flex: 1, backgroundColor: "#F1F1F1" }}>
         <Block style={{ padding: 10 }}>
-          <Block>
-            <Block>
-              <Text style={{ fontSize: 28, marginTop: 20 }}>
+          <Block style={{borderBottomWidth:1,paddingBottom:20,borderColor:"#E4E4E4"}}>
+            <Block style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}>
+              <Text style={{ fontSize: 23, marginTop: 20 }}>
                 Live Market Rates
               </Text>
+
+              <Block style={{marginTop:18}}>
+                <TouchableOpacity >
+                <Ionicons name="refresh" size={24} color="crimson" onPress={resetFilterData} />
+                </TouchableOpacity>
+              
+              </Block>
             </Block>
             <Block style={{ marginTop: 20 }}>
               <View
                 style={{
                   borderWidth: 1,
-                  borderColor: "#C8C8C8",
-                  padding: 15,
+                  borderColor: "#E4E4E4",
+                  padding: 10,
                   backgroundColor: "#fff",
-                  marginTop: 10,
-                  borderRadius: 5,
+            
+                  borderRadius: 10,
                 }}
               >
                 <TouchableOpacity activeOpacity={0.7} onPress={toggleAccordion}>
@@ -175,25 +282,29 @@ export const Market = () => {
                     <Block style={[styles.Space_Between, { marginTop: 10 }]}>
                       <TouchableOpacity
                         activeOpacity={0.6}
-                        onPress={() => handelCategory("")}
+                        onPress={() => handelCategory("","0")}
                       >
                         <Text style={{ fontSize: 20 }}>None</Text>
                       </TouchableOpacity>
                     </Block>
-                    {Category.map((el, index) => {
-                      return (
-                        <Block
+                    {CategoriesData.map((el, index) => {
+                      
+                     
+                         return (
+                          <Block
                           key={index}
                           style={[styles.Space_Between, { marginTop: 10 }]}
                         >
                           <TouchableOpacity
                             activeOpacity={0.6}
-                            onPress={() => handelCategory(el)}
+                            onPress={() => handelCategory(el.name,el._id)}
                           >
-                            <Text style={{ fontSize: 20 }}>{el}</Text>
+                            <Text style={{ fontSize: 20 }}>{el.name}</Text>
                           </TouchableOpacity>
                         </Block>
-                      );
+                         );
+                     
+                    
                     })}
                   </View>
                 )}
@@ -204,11 +315,85 @@ export const Market = () => {
               <View
                 style={{
                   borderWidth: 1,
-                  borderColor: "#C8C8C8",
-                  padding: 15,
+                  borderColor: "#E4E4E4",
+                  padding: 10,
                   backgroundColor: "#fff",
-                  marginTop: 10,
-                  borderRadius: 5,
+               
+                  borderRadius: 10,
+                }}
+              >
+                <TouchableOpacity activeOpacity={0.7} onPress={toggleAccordion4}>
+                  <Block style={styles.Space_Between}>
+                    <Block
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Text style={{ fontSize: 20 }}>
+                        {selectedSubCategory !== ""
+                          ? selectedSubCategory
+                          : "Select Sub Category"}
+                      </Text>
+                    </Block>
+
+                    <Block>
+                      {expanded4 ? (
+                        <MaterialIcons
+                          name="keyboard-arrow-up"
+                          size={28}
+                          color="black"
+                        />
+                      ) : (
+                        <MaterialIcons
+                          name="keyboard-arrow-down"
+                          size={28}
+                          color="black"
+                        />
+                      )}
+                    </Block>
+                  </Block>
+                </TouchableOpacity>
+                {expanded4 && (
+                  <View style={{ marginTop: 20 }}>
+                    <Block style={[styles.Space_Between, { marginTop: 10 }]}>
+                      <TouchableOpacity
+                        activeOpacity={0.6}
+                        onPress={() => handelSubCategory("")}
+                      >
+                        <Text style={{ fontSize: 20 }}>None</Text>
+                      </TouchableOpacity>
+                    </Block>
+                    {SelectedSubCategoriesData && SelectedSubCategoriesData.map((el, index) => {
+                      
+                     
+                         return (
+                          <Block
+                          key={index}
+                          style={[styles.Space_Between, { marginTop: 10 }]}
+                        >
+                          <TouchableOpacity
+                            activeOpacity={0.6}
+                            onPress={() => handelSubCategory(el.name)}
+                          >
+                            <Text style={{ fontSize: 20 }}>{el.name}</Text>
+                          </TouchableOpacity>
+                        </Block>
+                         );
+                     
+                    
+                    })}
+                  </View>
+                )}
+              </View>
+            </Block>
+
+            <Block style={{ marginTop: 20 }}>
+              <View
+                style={{
+                  borderWidth: 1,
+                  borderColor: "#E4E4E4",
+                  padding: 10,
+                  backgroundColor: "#fff",
+                 
+                  borderRadius: 10,
                 }}
               >
                 <TouchableOpacity
@@ -251,20 +436,31 @@ export const Market = () => {
                         <Text style={{ fontSize: 20 }}>None</Text>
                       </TouchableOpacity>
                     </Block>
-                    {City.map((el, index) => {
-                      return (
-                        <Block
+                    {AllVendorsData.map((el, index) => {
+                       const lowerCaseCity = el.city.toLowerCase();
+
+                       // Check if the lowercased category is not in the set, then add it to the set and render the JSX
+                       if (!uniqueCitySet.has(lowerCaseCity)) {
+                        uniqueCitySet.add(lowerCaseCity);
+                     
+                         return (
+                          <Block
                           key={index}
                           style={[styles.Space_Between, { marginTop: 10 }]}
                         >
                           <TouchableOpacity
                             activeOpacity={0.6}
-                            onPress={() => handelCity(el)}
+                            onPress={() => handelCity(el.city)}
                           >
-                            <Text style={{ fontSize: 20 }}>{el}</Text>
+                            <Text style={{ fontSize: 20 }}>{el.city.toLowerCase()}</Text>
                           </TouchableOpacity>
                         </Block>
-                      );
+                         );
+                       } else {
+                         // If the lowercased category is already in the set, return null (no rendering)
+                         return null;
+                       }
+                     
                     })}
                   </View>
                 )}
@@ -274,60 +470,63 @@ export const Market = () => {
 
           <Block>
             {
-              userDetails.registerAs === "Collectors" &&
+              userDetails.registerAs === "Collectors" && WholesalersData && (WholesalersData.length > 0 ?
                 WholesalersData.map((el, index) => {
                   return el.sub_category.length > 0 && el.sub_category.map((item,index)=>{
                     return  <TouchableOpacity key={index} onPress={()=>handeViewDetail(el._id,index)}>
-                    <MarketRatesCard Title={item.name} Value={item.price} />
+                    <MarketRatesCard Title={el.name} Value={item.price} />
                   </TouchableOpacity>
               } 
                
               );
                 })
-              // :
-              // <Block>
-              //   <Text style={{ fontSize: 18, marginTop: 20 }}>
-              //       No Wholesalers Data
-              //     </Text>
-              // </Block>
+              :
+              <Block center>
+                <Text style={{ fontSize: 18, marginTop: 30 }}>
+                    No Wholesalers Data
+                  </Text>
+              </Block>
+              )
             }
 
             {
-              userDetails.registerAs === "Wholesalers" && MediatorsData && MediatorsData.length>0 &&
+              userDetails.registerAs === "Wholesalers" && MediatorsData && (MediatorsData.length>0 ?
                 MediatorsData.map((el, index) => {
                   return el.sub_category.length > 0 && el.sub_category.map((item,index)=>{
                         return  <TouchableOpacity key={index} onPress={()=>handeViewDetail(el._id,index)}>
-                        <MarketRatesCard Title={item.name} Value={item.price} />
+                        <MarketRatesCard Title={el.name} Value={item.price} />
                       </TouchableOpacity>
                   } 
                    
                   );
                 })
-              // :
-              // <Block>
-              //   <Text style={{ fontSize: 18, marginTop: 20 }}>
-              //       No Mediators Data
-              //     </Text>
-              // </Block>
+              :
+              <Block center>
+                <Text style={{ fontSize: 18, marginTop: 30 }}>
+                    No Mediators Data
+                  </Text>
+              </Block>
+              )
             }
 
             {
-              userDetails.registerAs === "Mediators" &&
+              userDetails.registerAs === "Mediators" && (FactoryData.length > 0 ?
                 FactoryData.map((el, index) => {
                   return el.sub_category.length > 0 && el.sub_category.map((item,index)=>{
                     return  <TouchableOpacity key={index} onPress={()=>handeViewDetail(el._id,index)}>
-                    <MarketRatesCard Title={item.name} Value={item.price} />
+                    <MarketRatesCard Title={el.name} Value={item.price} />
                   </TouchableOpacity>
               } 
                
               );
                 })
-              // :
-              // <Block>
-              //   <Text style={{ fontSize: 18, marginTop: 20 }}>
-              //       No Factory Data
-              //     </Text>
-              // </Block>
+              :
+              <Block center>
+                <Text style={{ fontSize: 18, marginTop: 30 }}>
+                    No Factory Data
+                  </Text>
+              </Block>
+              )
             }
           </Block>
         </Block>

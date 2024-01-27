@@ -26,7 +26,7 @@ import Modal from "react-native-modal";
 import axios from "axios";
 import { Base_url } from "../../Config/BaseUrl";
 import { TextInput } from "@react-native-material/core";
-
+import {Picker} from '@react-native-picker/picker';
 export const MyRates = () => {
   const navigation = useNavigation();
   const { userDetails } = useAppContext();
@@ -39,14 +39,14 @@ export const MyRates = () => {
   const [AddSubmodalVisible, setAddSubModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [ItemAddStatus, setItemAddStatus] = useState(false);
-  const [CategoryData, setCategoryData] = useState({});
+  const [CategoryData, setCategoryData1] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [update, setupdate] = useState(0);
   const [subAddForm, setsubAddForm] = useState({
     name: "",
     price: "",
-    unit: "",
+    unit: "Kg",
   });
   const initalModelData = {
     id: "",
@@ -61,6 +61,7 @@ export const MyRates = () => {
     Cart,
     setCart,
   } = useAppContext();
+  const [CategoriesData, setCategoriesData] = useState([]);
   const filterItems = (category) => {
     let filteredItems = data;
 
@@ -83,7 +84,9 @@ export const MyRates = () => {
     subcategoryIndex,
     subcategoryData
   ) => {
-    console.log("Update Subcategory ========>");
+    console.log("Update Subcategory ========>",userId,
+    subcategoryIndex,
+    subcategoryData);
     try {
       const response = await axios.patch(
         `${Base_url}api/b2b/${userId}/subcategories/${subcategoryIndex}`,
@@ -119,7 +122,13 @@ export const MyRates = () => {
       userDetails._id,
       ItemModelData.index
     );
-    updateSubcategoryByIndex(userDetails._id, ItemModelData.index, Data);
+    const UpdatedData = {
+      name:ItemModelData.title,
+      price:Data.price,
+      unit:Data.unit
+
+    }
+    updateSubcategoryByIndex(userDetails._id, ItemModelData.index, UpdatedData);
     setModalVisible(false);
   };
 
@@ -128,7 +137,7 @@ export const MyRates = () => {
     setsubAddForm({
       name: "",
       price: "",
-      unit: "",
+      unit: "Kg",
     })
     handelSubCategoryModelClose();
     // console.log("Data after submit =>",subAddForm)
@@ -156,7 +165,7 @@ export const MyRates = () => {
         category: response.data.category,
       }));
       setData(transformedData);
-      setCategoryData(response.data);
+      setCategoryData1(response.data);
       setLoading(false);
     } catch (error) {
       console.log("error", error);
@@ -181,6 +190,18 @@ export const MyRates = () => {
     }
   };
 
+  const getCategories = async () => {
+      
+    try {
+      const response = await axios.get(`${Base_url}api/category`);
+      setCategoriesData(response.data);
+      console.log("Categories all", response.data)
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  };
+
   useEffect(() => {
     setFilteredData(
       data.filter((item) =>
@@ -195,6 +216,10 @@ export const MyRates = () => {
   useEffect(() => {
     fetchCategoryData(userDetails._id);
   }, [update]);
+
+  useEffect(()=>{
+    getCategories()
+  },[update])
 
   return (
     <View style={styles.container}>
@@ -325,13 +350,35 @@ export const MyRates = () => {
             </Block>
 
             <View style={{ width: "100%", height: "100%", marginTop: 15 }}>
-              <TextInput
+              {/* <TextInput
                 variant="outlined"
-                keyboardType="numeric"
+            
                 label="Name"
                 value={subAddForm.name}
                 onChangeText={(text) => handleSubAddInputChange("name", text)}
-              />
+              /> */}
+              <Block style={{borderWidth:1,borderColor:"grey"}}>
+              <Picker
+          selectedValue={subAddForm.name}
+          onValueChange={(itemValue) => handleSubAddInputChange('name', itemValue)}
+          style={{ color: 'black', height: 50, fontSize: 18 }}
+        >
+          <Picker.Item label="Select Sub Category" value="" />
+          {
+            CategoriesData && CategoriesData.map((el,index)=>{
+              if(userDetails.category === el.name){
+               return  el &&  el.sub_category.map((item,index)=>{
+                  return <Picker.Item key={index} label={item.name} value={item.name} />
+                })
+              }
+              
+            })
+          }
+         
+          
+        </Picker>
+              </Block>
+             
 
               <TextInput
                 variant="outlined"
@@ -342,14 +389,15 @@ export const MyRates = () => {
                 style={{ marginTop: 20 }}
               />
 
-              <TextInput
+              {/* <TextInput
                 variant="outlined"
-                keyboardType="numeric"
+                
                 label="Unit"
                 value={subAddForm.unit}
                 onChangeText={(text) => handleSubAddInputChange("unit", text)}
                 style={{ marginTop: 20 }}
-              />
+              /> */}
+              
               <Block center style={{ marginTop: 30 }}>
                 <Button
                   size={"small"}
@@ -559,7 +607,7 @@ const styles2 = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: width * 0.9,
-    height: height - 400,
+    height: height - 460,
   },
   button: {
     borderRadius: 20,

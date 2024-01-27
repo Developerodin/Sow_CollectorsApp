@@ -47,20 +47,6 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Tabs = ({navigation}) => {
-  
-
-  // const handleTabPress = async (e,tabName) => {
-  //   console.log("tab pressed: " + tabName)
-  //   if (tabName !== 'Home' && !isLoggedIn) {
-  //     e.preventDefault();
-  //     setSelectedTabs(tabName);
-  //     setModalVisible(true);
-  //   } else {
-      
-  //     setModalVisible(false);
-  //     setSelectedTabs(tabName);
-  //   }
-  // }
   return (
  
 <Tab.Navigator

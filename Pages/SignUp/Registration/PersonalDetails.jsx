@@ -16,17 +16,26 @@ import LottieView from "lottie-react-native";
 import { AntDesign } from "@expo/vector-icons";
 import { Keyboard } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FontAwesome5 } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {Picker} from '@react-native-picker/picker';
+import axios from 'axios';
+import { Base_url } from '../../../Config/BaseUrl';
+import { ToastAndroid } from "react-native";
 // import CheckBox from 'react-native-check-box';
 
 export const PersonalDetails = () => {
     const navigation= useNavigation()
     const [formData, setFormData] = useState({
+      gender:"",
+      pincode:"",
       email: "",
       name:"",
-      city:""
+      city:"",
+      category:"",
+      address:""
     });
-    const [showShopDetails,setShowShopDetails]= useState(false);
-    const [isChecked, setIsChecked] = useState(false);
+    const [CategoriesData, setCategoriesData] = useState([]);
     const [isFocused, setIsFocused] = useState({
       ForName:false,
       ForEmail:false,
@@ -56,9 +65,6 @@ export const PersonalDetails = () => {
         elevation:isFocused.ForCity ? 4 : 0
       },
     }
-    const toggleCheckbox = () => {
-      setIsChecked(!isChecked);
-    };
 
     const savePersonalDetails = async () => {
       try {
@@ -74,6 +80,12 @@ export const PersonalDetails = () => {
       }
     };
     const handelPersonalDetailSubmit=()=>{
+      const emptyField = Object.keys(formData).find(key => formData[key] === "");
+
+      if (emptyField) {
+        ToastAndroid.show(`Please provide ${emptyField}`, ToastAndroid.SHORT);
+        return ;
+      }
         // setShowShopDetails(true);
         console.log("Details",formData);
         savePersonalDetails()
@@ -86,30 +98,19 @@ export const PersonalDetails = () => {
         [fieldName]: value,
       }));
     };
-
-    const handelShopDetails=()=>{
-        navigation.navigate("UplodeShopImage")
-    }
-
-    const handleFocus = (Name) => {
-      setIsFocused((prevState) => ({
-        ForName: Name === "name",
-        ForEmail: Name === "email",
-        ForCity: Name === "city"
-      }));
-   
-    };
-  
-    const handleBlur = (Name) => {
-      setIsFocused((prevState) => ({
-        ...prevState,
-        [Name]: false
-      }));
-      
-    };
-
     const handelBack = () => {
       navigation.navigate("Login")
+    };
+    const getCategories = async () => {
+      
+      try {
+        const response = await axios.get(`${Base_url}api/category`);
+        setCategoriesData(response.data);
+        console.log("Categories all", response.data)
+        return response.data;
+      } catch (error) {
+        throw error.response.data;
+      }
     };
 
     useEffect(() => {
@@ -127,6 +128,10 @@ export const PersonalDetails = () => {
         keyboardDidHideListener.remove();
       };
     }, []);
+
+    useEffect(()=>{
+      getCategories()
+    },[])
   return (
     <View style={styles.container}>
     <StatusBar style="dark" />
@@ -148,103 +153,21 @@ export const PersonalDetails = () => {
             
           </Block>
 }
-         <Block center style={{marginTop:20}}>
-              <LottieView
-                style={styles.lottie}
-                source={require("../../../assets/Animations/Animation - 1698917253840.json")}
-                autoPlay
-                loop
-              />
-            </Block>
-   
-       
-     
-         <View style={{alignItems:"left",padding:10,justifyContent:"center"}}>
-         {/* {
-        showShopDetails ?
-         <Text style={{fontSize:24,fontWeight:500}}>Enter Shop Details</Text>
-         : */}
-         {/* <Text style={{fontSize:24,fontWeight:500}}>Enter Details</Text> */}
-{/* } */}
-        
-        {/* <Block style={[styles.Space_Between,{marginTop:30}]}>
-            <Text style={{fontSize:14,fontWeight:500}}>Registering As: <Text style={{color:"#EA5932"}}>Scrap Collector</Text> </Text>
-            <Text style={{fontSize:14,fontWeight:500,color:"#6096FF"}} >change</Text>
-        </Block> */}
-         
-         </View>
    
        </View>
 
-       {/* {
-        showShopDetails ?
         <Block style={{padding:10}}>
-          
-
         <Block style={{marginTop:20}}>
-            <Block style={{flexDirection:"row",alignItems:"center"}}>
-            <Entypo name="shop" size={20}  color="black" />
-            <Text style={{fontSize:20,fontWeight:500,marginLeft:6}}>Enter Shop Name</Text>
-            </Block>
-            <Block>
-                <Input/>
-            </Block>
-        </Block>
-
-        <Block style={{marginTop:20}}>
-            <Block style={{flexDirection:"row",alignItems:"center"}}>
-            <FontAwesome name="vcard-o" size={20} color="black" />
-         
-            <Text style={{fontSize:20,fontWeight:500,marginLeft:6}}>Enter Udhyam Adhar No.</Text>
-            </Block>
-            <Block>
-                <Input/>
-            </Block>
-        </Block>
-
-        <Block style={{marginTop:20}}>
-            <Block style={{flexDirection:"row",alignItems:"center"}}>
-            <FontAwesome name="credit-card" size={20} color="black" />
-            <Text style={{fontSize:20,fontWeight:500,marginLeft:6}}>Enter GST No..</Text>
-            </Block>
-            <Block>
-                <Input/>
-            </Block>
-        </Block>
-        <Block style={{marginTop:20}}>
-            <Block style={{flexDirection:"row",alignItems:"center"}}>
-            <Ionicons name="location-sharp" size={20} color="black" />
-            <Text style={{fontSize:20,fontWeight:500,marginLeft:6}}>Enter Shop Address</Text>
-            </Block>
-            <Block>
-                <Input/>
-            </Block>
-        </Block>
-       </Block>
-        : */}
-        <Block style={{padding:10}}>
-          
-
-        <Block style={{marginTop:20}}>
-            {/* <Block style={{flexDirection:"row",alignItems:"center"}}>
-            <Ionicons name="person" size={18} color="black" />
-            <Text style={{fontSize:20,fontWeight:500,marginLeft:6}}>Enter Name</Text>
-            </Block>
-            <Block>
-                <Input/>
-            </Block> */}
-<Block style={[ customStyle.Card1,{marginTop:20}]}>
+<Block style={[ customStyle.Card1]}>
                 <TextInput
 
         variant="standard"
         
         label="Name"
-        leading={(props) => <Icon name={isFocused.ForName ? 'account-circle' : 'account'} {...props} />}
+        leading={(props) => <Icon name={'account'} {...props} />}
         value={formData.name}
         onChangeText={(text) => handleInputChange("name", text)}
-        onFocus={()=>handleFocus("name")}
-        onBlur={()=>handleBlur("ForName")}
-        color={ 'white'}
+        color={ 'grey'}
         inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
@@ -253,21 +176,39 @@ export const PersonalDetails = () => {
             
         </Block>
 
-      
+        <Block style={{marginTop:10,padding:10}}>
+<Block style={[{borderBottomWidth:1,borderColor:"grey",flexDirection:"row",alignItems:"center"}]}>
+  <Block style={{width:"6%"}}>
+  <MaterialCommunityIcons name="gender-male" size={24} color="grey" />
+  </Block>
+<Block style={{width:"95%"}} >
+<Picker
+          selectedValue={formData.gender}
+          onValueChange={(itemValue) => handleInputChange('gender', itemValue)}
+          style={{ color: 'black', height: 50, fontSize: 18 }}
+        >
+          <Picker.Item label="Select Gender" value="" />
+          <Picker.Item label="Male" value="male" />
+          <Picker.Item label="Female" value="female" />
+          <Picker.Item label="Other" value="other" />
+        </Picker>
+</Block>
 
-        <Block style={{marginTop:30}}>
+                </Block>
+            
+        </Block>
+
+        <Block style={{marginTop:20}}>
         <Block style={[ customStyle.Card2]}>
                 <TextInput
 
         variant="standard"
         keyboardType="email-address"
         label="Email"
-        leading={(props) => <Icon name={isFocused.ForEmail ? 'mail' : 'email'} {...props} />}
+        leading={(props) => <Icon name={'email'} {...props} />}
         value={formData.email}
         onChangeText={(text) => handleInputChange("email", text)}
-        onFocus={()=>handleFocus("email")}
-        onBlur={()=>handleBlur("ForEmail")}
-        color={ 'white'}
+        color={ 'grey'}
         inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
@@ -275,19 +216,45 @@ export const PersonalDetails = () => {
                 </Block>
         </Block>
 
-        <Block style={{marginTop:30}}>
+       
+
+        <Block style={{marginTop:10,padding:10}}>
+<Block style={[{borderBottomWidth:1,borderColor:"grey",flexDirection:"row",alignItems:"center"}]}>
+  <Block style={{width:"6%"}}>
+  <MaterialIcons name="category" size={24} color="grey" />
+  </Block>
+<Block style={{width:"95%"}} >
+<Picker
+          selectedValue={formData.category}
+          onValueChange={(itemValue) => handleInputChange('category', itemValue)}
+          style={{ color: 'black', height: 50, fontSize: 18 }}
+        >
+          <Picker.Item label="Select Category" value="" />
+          {
+            CategoriesData && CategoriesData.map((el,index)=>{
+              return  <Picker.Item key={index} label={el.name} value={el.name} />
+            })
+          }
+         
+          
+        </Picker>
+</Block>
+
+                </Block>
+            
+        </Block>
+
+        <Block style={{marginTop:20}}>
         <Block style={[ customStyle.Card3]}>
                 <TextInput
 
         variant="standard"
         keyboardType="default"
-        label="City"
-        leading={(props) => <Icon name={isFocused.ForCity ? 'map-marker' : 'city'} {...props} />}
-        value={formData.city}
-        onChangeText={(text) => handleInputChange("city", text)}
-        onFocus={()=>handleFocus("city")}
-        onBlur={()=>handleBlur("ForCity")}
-        color={ 'white'}
+        label="Address"
+        leading={(props) =>  <FontAwesome5 name="address-book" {...props} />}
+        value={formData.address}
+        onChangeText={(text) => handleInputChange("address", text)}
+        color={ 'grey'}
         inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
@@ -295,14 +262,49 @@ export const PersonalDetails = () => {
                 </Block>
         </Block>
 
+        <Block style={[{marginTop:20},styles.Space_Between]}>
+    
+        <Block style={[ customStyle.Card3,{width:"48%"}]}>
+                <TextInput
+
+        variant="standard"
+        keyboardType="numeric"
+        label="Pin Code"
+        leading={(props) => <Icon name={ 'city'} {...props} />}
+        value={formData.pincode}
+        onChangeText={(text) => handleInputChange("pincode", text)}
+        color={ 'grey'}
+        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
+        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
+        
+      />
+                </Block>
       
        
+        <Block style={[ customStyle.Card3,{width:"48%"}]}>
+                <TextInput
+
+        variant="standard"
+        keyboardType="default"
+        label="City"
+        leading={(props) => <Icon name={ 'city'} {...props} />}
+        value={formData.city}
+        onChangeText={(text) => handleInputChange("city", text)}
+        color={ 'grey'}
+        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
+        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
+        
+      />
+                </Block>
+       
+        </Block>
+
        </Block>
     {/* } */}
 
       
         
-    <Block right style={[{ padding: 20, marginTop: 10 }]}>
+    <Block right style={[{ padding: 20, marginTop: 20 }]}>
              
                 <Button
                   title="Proceed"
@@ -410,69 +412,4 @@ const styles = StyleSheet.create({
         width: width,
       },
   
-    });
-  
-    const styles2 = StyleSheet.create({
-      container: {
-        flex: 1,
-        backgroundColor: "#fff",
-      },
-      AlignCenter: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      Space_Around: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-      },
-      Space_Between: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-      },
-      title: {
-        fontSize: 20,
-        fontWeight: "bold",
-        marginBottom: 20,
-      },
-      input: {
-        width: "100%",
-        height: 40,
-        borderColor: "grey",
-        borderBottomWidth: 0.5,
-        marginBottom: 20,
-        paddingHorizontal: 10,
-      },
-      error: {
-        color: "red",
-        marginTop: 10,
-      },
-      borderView: {
-        borderWidth: 1,
-        borderColor: "red",
-        height: 100,
-        width: 100,
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      bottomBlock: {
-        position: "absolute",
-        bottom: 0,
-        width: "100%",
-      },
-      textContainer: {
-        position: "absolute",
-        bottom: 40, // Adjust as needed
-        left: 0,
-        right: 0,
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      text: {
-        color: "white",
-        fontSize: 16,
-        fontWeight: "bold",
-      },
     });

@@ -14,7 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 export const RateDetails = ({ route }) => {
   const navigation = useNavigation();
   const { itemId,index } = route.params;
-  const { update, userDetails } = useAppContext();
+  const { update, userDetails,setUpdate } = useAppContext();
  const [details,setDetails] = useState(null);
  const [weight, setWeight] = useState('');
  const [TotalAmount, setTotalAmount] = useState('')
@@ -40,6 +40,7 @@ const createOrder = async (from, to, details, totalAmount) => {
   try {
     const response = await axios.post(`${Base_url}api/b2b_orders`, { from, to, details, totalAmount });
     navigation.navigate("Order Status", { status: "success" });
+    setUpdate((prev)=>prev+1)
     return response.data;
   } catch (error) {
     navigation.navigate("Order Status", { status: "fail" });

@@ -10,7 +10,8 @@ import {
   Image,
   Animated,
   KeyboardAvoidingView,
-  Easing 
+  Easing ,
+  ActivityIndicator
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Block, Text, Input, theme } from "galio-framework";
@@ -40,6 +41,7 @@ export const Login = ({ navigation }) => {
   const [otp, setOtp] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+  const [loading,setLoading] = useState(false);
   const scaleValue = new Animated.Value(1);
 
   const customStyle ={
@@ -106,6 +108,7 @@ export const Login = ({ navigation }) => {
   };
 
   const handelPreviousUser = () => {
+    saveMobileNumber()
     setFormData(initalValuesForm);
     setOTPShow(false)
     setOtp("")
@@ -113,6 +116,7 @@ export const Login = ({ navigation }) => {
   };
 
   const handelNewUser = () => {
+    saveMobileNumber()
     setFormData(initalValuesForm);
     setOTPShow(false)
     setOtp("")
@@ -155,23 +159,32 @@ export const Login = ({ navigation }) => {
   };
 
   const generateOTP = async () => {
+    setLoading(true)
     try {
       const response = await axios.post(`${Base_url}api/b2b/generate-otp`, { mobile_number: formData.phoneNumber });
       // handelNewUser();
       console.log(response.data.message);
+      setLoading(false);
+      if( response.data.message === "User not found"){
+        handelNewUser()
+        return ;
+      }
       ToastAndroid.show("Otp send to mobile number", ToastAndroid.SHORT);
       setOTPShow(true);
+
     } catch (error) {
       console.error('Error:', error);
       ToastAndroid.show("Try After Some Time", ToastAndroid.SHORT);
+      setLoading(false);
       console.log('Failed to generate OTP. Please try again.');
     }
   };
 
   const loginWithOTP = async () => {
+    setLoading(true)
     try {
       const response = await axios.post(`${Base_url}api/b2b/login-with-otp`, { mobile_number: formData.phoneNumber, otp: otp });
-     
+      setLoading(false)
         if(response.data.message === "Login successful"){
           const User = JSON.stringify(response.data.data)
           await AsyncStorage.setItem("userDetails", User);
@@ -186,6 +199,7 @@ export const Login = ({ navigation }) => {
 
       
     } catch (error) {
+      setLoading(false)
       console.error('Error:', error);
       console.log('Failed to login. Please try again.');
     }
@@ -221,6 +235,7 @@ export const Login = ({ navigation }) => {
       <StatusBar hidden={true} />
       <ScrollView>
 
+      
       {!isKeyboardOpen &&  <Block
           style={[styles.Space_Between, { marginTop: -12, marginRight: -13 }]}
         >
@@ -245,14 +260,18 @@ export const Login = ({ navigation }) => {
           ]}
         >
           <Block style={{ padding: 10 }}>
+           {
             <Block center style={{marginTop:20}}>
-              <LottieView
-                style={styles.lottie}
-                source={require("../../assets/Animations/Animation - 1698917253840.json")}
-                autoPlay
-                loop
-              />
-            </Block>
+            <LottieView
+              style={styles.lottie}
+              source={require("../../assets/Animations/Animation - 1698917253840.json")}
+              autoPlay
+              loop
+            />
+          </Block>
+           } 
+
+
 
             {showOTP ? (
               <View
@@ -264,7 +283,18 @@ export const Login = ({ navigation }) => {
               
               }}
               >
-                <Text style={{ fontSize: 27, fontWeight: 700,letterSpacing:2  }}>Enter OTP</Text>
+                <Text style={{ fontSize: 27, fontWeight: 700,letterSpacing:2  }}>
+                {loading ? 
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large"  color="#65be34" />
+        </View>
+        :
+        "Enter OTP"
+      }
+                 
+                  
+                  
+                  </Text>
                 <Text
                    style={{
                     fontSize: 17,
@@ -316,7 +346,15 @@ export const Login = ({ navigation }) => {
                 
                 }}
               >
-                <Text style={{ fontSize: 27, fontWeight: 700,letterSpacing:2 }}>Login</Text>
+                <Text style={{ fontSize: 27, fontWeight: 700,letterSpacing:2 }}>
+                {loading ? 
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large"  color="#65be34" />
+        </View>
+        :
+        "Login"
+      }
+                </Text>
                 <Text
                   style={{
                     fontSize: 17,
@@ -401,6 +439,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFF",
+  },
+  loadingContainer: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'center',
+    alignItems: 'center',
+     // Fully opaque background
   },
  
   inputContainer: {

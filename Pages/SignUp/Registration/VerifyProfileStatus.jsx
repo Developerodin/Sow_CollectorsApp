@@ -12,7 +12,10 @@ import { AntDesign } from '@expo/vector-icons';
 export const VerifyProfileStatus = () => {
     const navigation= useNavigation()
     const handelProceed=()=>{
-         navigation.replace("Login")
+         navigation.reset({
+          index: 0,
+          routes: [{ name: 'Login' }],
+        });
     }
   return (
     <View style={styles.container}>

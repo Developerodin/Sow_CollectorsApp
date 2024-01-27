@@ -80,7 +80,11 @@ export const Profile = () => {
   } catch (error) {
     console.error('Error clearing AsyncStorage:', error);
   }
-  navigation.navigate("Login")
+  // navigation.navigate("Login")
+  navigation.reset({
+    index: 0,
+    routes: [{ name: 'Login' }],
+  });
   }
 
   const handelRateAppliction=()=>{

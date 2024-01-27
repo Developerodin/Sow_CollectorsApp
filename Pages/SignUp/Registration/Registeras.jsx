@@ -43,19 +43,19 @@ export const RegisterAs = () => {
        </View>
         
         <Block style={{padding:10}}>
-        <TouchableOpacity onPress={()=>handelCardClick(1,"Scrap Collector")} style={{marginTop:20}}>
+        <TouchableOpacity onPress={()=>handelCardClick(1,"Collectors")} style={{marginTop:20}}>
            <RegisterCard Img={Collector} Title={"Scrap Collector"} SubTitle={"If you are a scrap collector"} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1,"Scrap Wholesaler")} style={{marginTop:30}}>
+       <TouchableOpacity onPress={()=>handelCardClick(1,"Wholesalers")} style={{marginTop:30}}>
            <RegisterCard Img={Wholesaler} Title={"Scrap Wholesaler"} SubTitle={"If you are a scrap Wholesaler"} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1,"Scrap Mediator")}style={{marginTop:30}}>
+       <TouchableOpacity onPress={()=>handelCardClick(1,"Mediators")}style={{marginTop:30}}>
            <RegisterCard Img={Mediator} Title={"Scrap Mediator"} SubTitle={"If you are a scrap Mediator"} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1,"Scrap Factory")}style={{marginTop:30}}>
+       <TouchableOpacity onPress={()=>handelCardClick(1,"Factory")}style={{marginTop:30}}>
            <RegisterCard Img={Factory} Title={"Scrap Factory"} SubTitle={"If you are a scrap Factory"} />
        </TouchableOpacity>
 

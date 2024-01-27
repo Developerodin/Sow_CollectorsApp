@@ -7,16 +7,16 @@ import { Feather } from '@expo/vector-icons';
 export const MarketRatesCard = (props) => {
     const {Title,Value} = props
   return (
-    <View style={[{borderWidth:0.2,padding:15,marginTop:20,height:80},styles.Space_Between]}>
+    <View style={[{padding:15,marginTop:20,backgroundColor:"#fff",borderRadius:10,borderWidth:1,borderColor:"#E4E4E4"},styles.Space_Between]}>
        
         
 
         <Block>
-            <Text style={{fontSize:20}}>{Title}</Text>
+            <Text style={{fontSize:17}}>{Title.toUpperCase()}</Text>
         </Block>
 
         <Block style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
-        <Text style={{fontSize:20,fontWeight:400,color:"green"}}>₹ {Value}</Text>
+        <Text style={{fontSize:17,fontWeight:400,color:"green"}}>₹ {Value}</Text>
         <Feather name="arrow-right" size={20} color="black" style={{marginLeft:10}} />
         </Block>
       

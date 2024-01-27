@@ -6,16 +6,50 @@ import { Header } from '../../Components/Header/Header';
 import HamburgerMenu from '../../Components/HamburgerMenu/HamburgerMenu ';
 const {width, height} = Dimensions.get('window');
 import LottieView from 'lottie-react-native';
+import { useAppContext } from '../../Context/AppContext';
+import axios from 'axios';
+import { Base_url } from '../../Config/BaseUrl';
+import { useNavigation } from '@react-navigation/native';
 
 export const Home = () => {
   const animationRef = useRef(null);
+  const navigation = useNavigation();
+  const {userDetails,update} = useAppContext()
+  const [CategoriesData, setCategoriesData] = useState([]);
+  const [categoryLength,setCategoryLength] = useState(4)
+  const [categorySeetype,setCategorySeetype] = useState(false);
+  const getCategories = async () => {
+    try {
+      const response = await axios.get(`${Base_url}api/category`);
+      setCategoriesData(response.data);
+      console.log("Categories all", response.data)
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  };
 
+  const handelCategoryLength =  () => {
+    setCategorySeetype(true)
+    setCategoryLength(CategoriesData.length)
+  }
+  const handelCategoryLength2 =  () => {
+    setCategorySeetype(false)
+    setCategoryLength(4)
+  }
+  const handelSellScrap = ()=>{
+    navigation.navigate("Market")
+  }
   useEffect(() => {
     animationRef.current?.play();
 
     // Or set a specific startFrame and endFrame with:
     animationRef.current?.play(10, 80);
   }, []);
+
+  useEffect(()=>{
+    getCategories()
+  },[update])
   return (
     <View style={styles.container}>
 
@@ -26,7 +60,7 @@ export const Home = () => {
 
      
       <Block style={{marginTop:20}}>
-        <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b"}}>Hey Vinod !!</Text>
+        <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b"}}>Hey {userDetails.name} !!</Text>
 
         <Block style={[{marginTop:10},styles.Space_Between]}>
           <Block>
@@ -35,7 +69,7 @@ export const Home = () => {
           </Block>
 
           <Block>
-          <Button color='white' style={{borderWidth:1,width:120}}>
+          <Button onPress={handelSellScrap} color='white' style={{borderWidth:1,width:120}}>
               <Text style={{fontSize:16,fontWeight:400}}>
               Sell Scraps
               </Text>
@@ -60,7 +94,7 @@ export const Home = () => {
   <Block>
           <Button color='white' style={{width:120}}>
               <Text style={{fontSize:16,fontWeight:400}}>
-              Sell Scraps
+             Scraps
               </Text>
             
               </Button>
@@ -91,49 +125,36 @@ export const Home = () => {
 
         <Block style={styles.Space_Between}>
         <Text style={{fontSize:16,fontWeight:500}}>Scrap Categories</Text>
-        <Text style={{fontSize:12,fontWeight:500,color:"#00a56a"}}>View All</Text>
+        {
+          categorySeetype ? <TouchableOpacity onPress={handelCategoryLength2}>
+          <Text style={{fontSize:12,fontWeight:500,color:"#00a56a"}}>View Less</Text>
+          </TouchableOpacity>
+          :
+          <TouchableOpacity onPress={handelCategoryLength}>
+          <Text style={{fontSize:12,fontWeight:500,color:"#00a56a"}}>View All</Text>
+          </TouchableOpacity>
+        }
+       
+
+        
+        
         </Block>
      
         
         <Block style={{marginTop:10}}>
-        <View style={styles.row}>
-        <View style={styles.column}>
-          <Block style={styles.gridItem}>
-            <Text style={styles.itemText}>Metal</Text>
-            
-            </Block>
-        </View>
-        <View style={styles.column}>
-          <Block style={styles.gridItem}>
-          <Text style={styles.itemText}>Metal</Text>
-            </Block>
-        </View>
+        <View style={styles.gridcontainer}>
+  {CategoriesData && CategoriesData.map((el, index) => {
+    if(index < parseInt(categoryLength)){
+      return <View style={styles.gridcolumn} key={index}>
+      <View style={styles.gridItem}>
+        <Text style={styles.itemText}>{el.name}</Text>
       </View>
-      <View style={styles.row}>
-        <View style={styles.column}>
-          <Block style={styles.gridItem}>
-          <Text style={styles.itemText}>Metal</Text>
-            </Block>
-        </View>
-        <View style={styles.column}>
-          <Block style={styles.gridItem}>
-          <Text style={styles.itemText}>Metal</Text>
-            </Block>
-        </View>
-      </View>
-
-      <View style={styles.row}>
-        <View style={styles.column}>
-          <Block style={styles.gridItem}>
-          <Text style={styles.itemText}>Metal</Text>
-            </Block>
-        </View>
-        <View style={styles.column}>
-          <Block style={styles.gridItem}>
-          <Text style={styles.itemText}>Metal</Text>
-            </Block>
-        </View>
-      </View>
+    </View>
+    }
+   
+})}
+</View>
+     
 
         </Block>
       </Block>
@@ -217,6 +238,23 @@ export const Home = () => {
 }
 
 const styles = StyleSheet.create({
+  gridcontainer: {
+    flexDirection: 'row',  // This makes the children align in a row
+    flexWrap: 'wrap',  // This allows items to wrap to the next line if there's not enough space
+    justifyContent: 'space-between',  // This distributes the items along the row
+  },
+  gridcolumn: {
+    width: '48%',  // You can adjust the width based on your preference
+    marginBottom: 10,  // Add some margin between columns
+  },
+  gridItem: {
+    borderWidth: 1,
+    borderColor: 'gray',
+    padding: 10,
+  },
+  itemText: {
+    textAlign: 'center',
+  },
   container:{
     flex: 1,
     backgroundColor:"#FFFFFF",
