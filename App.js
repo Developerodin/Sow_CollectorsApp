@@ -27,7 +27,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Inventory } from './Pages/Inventory/Inventory';
 import { Octicons } from '@expo/vector-icons'; 
 import { OrderDetail } from './Pages/Orders/OrderDetail';
-import { AppProvider } from './Context/AppContext';
+import { AppProvider, useAppContext } from './Context/AppContext';
 import * as SplashScreen from 'expo-splash-screen';
 import { WelcomeScreen } from './Pages/OnBoarding/SplashScreen/WelcomeScreen';
 import { Schedule } from './Pages/Schedule/Schedule';
@@ -47,6 +47,7 @@ const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const Tabs = ({navigation}) => {
+  const {userDetails} = useAppContext()
   return (
  
 <Tab.Navigator
@@ -71,7 +72,9 @@ const Tabs = ({navigation}) => {
        
      
       />
-      <Tab.Screen
+      {
+        (userDetails.registerAs !== "Collectors" || userDetails.registerAs !== "Factory") && 
+        <Tab.Screen
         name="Market"
         component={Market}
         options={{
@@ -84,19 +87,9 @@ const Tabs = ({navigation}) => {
       
        
       />
-      <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          tabBarIcon: ({ color, size }) => (
-            // <FontAwesome name="bookmark" size={size} color={color} />
-            <FontAwesome name="user" size={size} color={color} />
-          ),
-          headerShown: false,
-        }}
+      }
       
-       
-      />
+     
 
 <Tab.Screen
         name="My Rates"
@@ -136,6 +129,19 @@ const Tabs = ({navigation}) => {
           tabBarIcon: ({ color, size }) => (
             // <FontAwesome name="bookmark" size={size} color={color} />
             <FontAwesome name="shopping-bag" size={size} color={color} />
+          ),
+          headerShown: false,
+        }}
+      
+       
+      />
+       <Tab.Screen
+        name="Profile"
+        component={Profile}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            // <FontAwesome name="bookmark" size={size} color={color} />
+            <FontAwesome name="user" size={size} color={color} />
           ),
           headerShown: false,
         }}

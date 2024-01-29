@@ -143,10 +143,10 @@ export const Market = () => {
           return el.registerAs === "Collectors";
         });
 
-        setMediatorsData(MediatorsData);
-        setWholesalersData(WholesalersData);
-        setFactoryData(FactoryData);
-        setCollectorsData(CollectorsData);
+        // setMediatorsData(MediatorsData);
+        // setWholesalersData(WholesalersData);
+        // setFactoryData(FactoryData);
+        // setCollectorsData(CollectorsData);
       } else {
         console.error("Error fetching categories:", response.statusText);
       }
@@ -159,19 +159,20 @@ export const Market = () => {
     // Filter data based on selectedCategory, selectedSubCategory, and selectedCity
     let filteredData = AllVendorsData;
  
-    filteredData = filteredData.filter((vendor) => vendor.category === category && vendor.sub_category.includes(subCategory) && vendor.city.toLowerCase() === city.toLowerCase() );
- 
-  
-    // if (subCategory) {
-    //   filteredData = filteredData.filter((vendor) =>
-    //     vendor.sub_category.includes(subCategory)
-    //   );
-    // }
-  
-    // if (city) {
-    //   filteredData = filteredData.filter((vendor) => vendor.city.toLowerCase() === city.toLowerCase());
-    // }
+   
+    if (category && subCategory) {
+      filteredData = filteredData.filter((vendor) => vendor.category === category);
 
+      filteredData = filteredData.map((vendor) => ({
+        ...vendor,
+        sub_category: vendor.sub_category.filter(sub => sub.name === subCategory)
+      })).filter((vendor) => vendor.category === category && vendor.sub_category.length > 0);
+    }
+    
+    if (city) {
+      filteredData = filteredData.filter((vendor) => vendor.city.toLowerCase() === city.toLowerCase());
+    }
+    console.log(filteredData);
     const MediatorsData = filteredData.filter((el) => {
       return el.registerAs === "Mediators";
     });
@@ -188,11 +189,12 @@ export const Market = () => {
       return el.registerAs === "Collectors";
     });
 
+    if (category && subCategory) {
     setMediatorsData(MediatorsData);
     setWholesalersData(WholesalersData);
     setFactoryData(FactoryData);
     setCollectorsData(CollectorsData);
-  
+    }
     return filteredData;
   };
 
@@ -201,6 +203,10 @@ export const Market = () => {
     setselectedCategory("");
     setselectedSubCategory("")
     setselectedCity("")
+    setMediatorsData([]);
+    setWholesalersData([]);
+    setFactoryData([]);
+    setCollectorsData([]);
     setRefreshData((prev)=>prev+1)
     return ;
   }
@@ -215,7 +221,7 @@ export const Market = () => {
   useEffect(()=>{
     console.log("Selected Data",selectedCategory,selectedSubCategory,selectedCity)
     filterData(selectedCategory,selectedSubCategory,selectedCity);
-  },[selectedCity])
+  },[selectedCategory,selectedSubCategory,selectedCity])
          
   const uniqueCitySet = new Set();
 

@@ -87,6 +87,21 @@ export const InCommingOrderDetails = ({ route }) => {
       console.error("Error updating order:", error.message);
     }
   };
+
+  const handelAccept = async()=>{
+    handleOrderUpdate(orderDetails._id,"in-progress",quantityCollected);
+    setupdate((prev)=>prev+1)
+  }
+
+  const handelReject = async()=>{
+    handleOrderUpdate(orderDetails._id,"rejected",quantityCollected)
+    setupdate((prev)=>prev+1)
+  }
+
+  const handelCancel = async () =>{
+    handleOrderUpdate(orderDetails._id,"canceled",quantityCollected)
+    setupdate((prev)=>prev+1)
+  }
   
   const handelComplete = (otp) => {
     console.log("OTP =>", otp,orderDetails._id);
@@ -97,7 +112,8 @@ export const InCommingOrderDetails = ({ route }) => {
     if (orderDetails && otp === orderDetails.otp) {
         
         handleOrderUpdate(orderDetails._id,"completed",quantityCollected)
-        setModalVisible(false)
+        setModalVisible(false);
+        setupdate((prev)=>prev+1)
     } else {
       ToastAndroid.show("Wrong OTP", ToastAndroid.SHORT);
     }
@@ -122,6 +138,13 @@ export const InCommingOrderDetails = ({ route }) => {
         >
           <Block style={styles.Space_Between}>
             <Text style={{ fontSize: 20, color: "grey" }}>status</Text>
+            {orderDetails && orderDetails.status === "in-progress" && (
+              <Button style={{ backgroundColor: "crimson", borderRadius: 10 }}>
+                <Text style={{ fontSize: 16, fontWeight: 400, color: "#fff" }}>
+                In Progress
+                </Text>
+              </Button>
+            )}
             {orderDetails && orderDetails.status === "pending" && (
               <Button style={{ backgroundColor: "crimson", borderRadius: 10 }}>
                 <Text style={{ fontSize: 16, fontWeight: 400, color: "#fff" }}>
@@ -249,16 +272,28 @@ export const InCommingOrderDetails = ({ route }) => {
          
      
     </Block> */}
-    {
+       {
      orderDetails && orderDetails.status === "pending" &&  <Block style={[{ marginTop: 30, marginBottom: 30 }, styles.Center]}>
+      <Button color="teal" onPress={handelAccept} style={{ height: 63 }}>
+        Accept
+      </Button>
+      <Button color="black" onPress={handelReject} style={{ height: 63 }}>
+        Reject
+      </Button>
+    </Block>
+    }
+    {
+     orderDetails && orderDetails.status === "in-progress" &&  <Block style={[{ marginTop: 30, marginBottom: 30 }, styles.Center]}>
       <Button color="teal" onPress={handelSubmit} style={{ height: 63 }}>
         Mark Complete
       </Button>
-      <Button color="black" style={{ height: 63 }}>
+      <Button color="black" onPress={handelCancel} style={{ height: 63 }}>
         Cancel Order
       </Button>
     </Block>
     }
+
+    
 
        
 

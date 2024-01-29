@@ -18,12 +18,16 @@ export const RateDetails = ({ route }) => {
  const [details,setDetails] = useState(null);
  const [weight, setWeight] = useState('');
  const [TotalAmount, setTotalAmount] = useState('')
-
+  const [discription, setDiscription] = useState('')
  const handleInputChange = (text) => {
   setWeight(text);
   const totalWeight =  parseInt(text) * parseInt(details.sub_category[index].price);
   setTotalAmount(totalWeight)
 };
+
+const handelDiscriptionChange = (text) =>{
+  setDiscription(text);
+}
 
 const handleSubmit = () => {
   const Orderdetails ={
@@ -33,12 +37,12 @@ const handleSubmit = () => {
   }
 
   console.log(userDetails._id, details._id,Orderdetails,TotalAmount);
-  createOrder(userDetails._id, details._id,Orderdetails,TotalAmount);
+  createOrder(userDetails._id, details._id,Orderdetails,TotalAmount,discription);
 };
 
-const createOrder = async (from, to, details, totalAmount) => {
+const createOrder = async (from, to, details, totalAmount,discription) => {
   try {
-    const response = await axios.post(`${Base_url}api/b2b_orders`, { from, to, details, totalAmount });
+    const response = await axios.post(`${Base_url}api/b2b_orders`, { from, to, details, totalAmount,discription });
     navigation.navigate("Order Status", { status: "success" });
     setUpdate((prev)=>prev+1)
     return response.data;
@@ -135,6 +139,14 @@ const createOrder = async (from, to, details, totalAmount) => {
             <Input style={{height:60,width:width*0.3,borderColor:"black"}} value='Kilograms' />
         </Block>
 
+        <Block style={[styles.Space_Between,{marginTop:10}]}>
+            <Input style={{height:60,width:width*0.9,borderColor:"black"}} 
+            placeholder='discription' 
+            value={discription}
+        onChangeText={handelDiscriptionChange}
+            />
+            </Block>
+
         <Block style={{marginTop:10}}>
             <Text style={{fontSize:15}}>Weight need not to be Accurate, We </Text>
             <Text style={{fontSize:15}}>Just need an Idea.</Text>
@@ -154,6 +166,8 @@ const createOrder = async (from, to, details, totalAmount) => {
              <Text style={{fontSize:25,color:"grey"}}>Rs</Text>
         </Block>
         </Block>
+
+        
       
      </Block>
 
