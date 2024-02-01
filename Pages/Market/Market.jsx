@@ -142,7 +142,8 @@ export const Market = () => {
         const CollectorsData = fetchedB2BUsers.filter((el) => {
           return el.registerAs === "Collectors";
         });
-
+       console.log("MediatorsData",MediatorsData)
+       
         // setMediatorsData(MediatorsData);
         // setWholesalersData(WholesalersData);
         // setFactoryData(FactoryData);
@@ -497,7 +498,7 @@ export const Market = () => {
 
             {
               userDetails.registerAs === "Wholesalers" && MediatorsData && (MediatorsData.length>0 ?
-                MediatorsData.map((el, index) => {
+                MediatorsData.categories.map((el, index) => {
                   return el.sub_category.length > 0 && el.sub_category.map((item,index)=>{
                         return  <TouchableOpacity key={index} onPress={()=>handeViewDetail(el._id,index)}>
                         <MarketRatesCard Title={el.name} Value={item.price} />

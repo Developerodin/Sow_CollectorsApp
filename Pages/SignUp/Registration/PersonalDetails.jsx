@@ -22,6 +22,8 @@ import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 import { Base_url } from '../../../Config/BaseUrl';
 import { ToastAndroid } from "react-native";
+import MultiSelect from 'react-native-multiple-select';
+import { CategoryAddModel } from '../../../Components/CategoryAddModel/CategoryAddModel';
 // import CheckBox from 'react-native-check-box';
 
 export const PersonalDetails = () => {
@@ -32,7 +34,6 @@ export const PersonalDetails = () => {
       email: "",
       name:"",
       city:"",
-      category:"",
       address:""
     });
     const [CategoriesData, setCategoriesData] = useState([]);
@@ -42,6 +43,8 @@ export const PersonalDetails = () => {
       ForCity:false
     });
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
+    const [ modalVisible,setModalVisible] = useState(false);
+    const [selectedCategories, setSelectedCategories] = useState([]);
     const customStyle ={
       Card1: {
       
@@ -71,9 +74,24 @@ export const PersonalDetails = () => {
         // You can use any key you like to store the authentication status
         const key = 'Details';
         const value = JSON.stringify(formData) // Replace with your actual authentication status
-    
+        
+        const categoryNames = selectedCategories.map(category => {
+          return {
+            name:category.name,
+            sub_category:[
+              {
+                name:"test",
+                price:"100",
+                unit:"Kg"
+              }
+            ] 
+          }});
+        console.log("categoryNames",categoryNames)
+        const key2= 'selectedCategory';
+        const value2 = JSON.stringify(categoryNames);
         // Use AsyncStorage to save the authentication status
         await AsyncStorage.setItem(key, value);
+        await AsyncStorage.setItem(key2, value2);
         console.log('Details saved successfully.');
       } catch (error) {
         console.error('Error saving Details :', error);
@@ -98,6 +116,24 @@ export const PersonalDetails = () => {
         [fieldName]: value,
       }));
     };
+
+    const handleCategoryChange = (itemValue, index) => {
+      const updatedCategories = [...formData.categories];
+      updatedCategories[index] = itemValue;
+  
+      setFormData((prevData) => ({
+        ...prevData,
+        categories: updatedCategories,
+      }));
+    };
+  
+    const renderCategoriesPickerItems = () => {
+      return CategoriesData.map((el, index) => {
+        return (
+          <Picker.Item key={index} label={el.name} value={el.name} />
+        );
+      });
+    };
     const handelBack = () => {
       navigation.navigate("Login")
     };
@@ -112,6 +148,14 @@ export const PersonalDetails = () => {
         throw error.response.data;
       }
     };
+    
+    
+    const handelCategoryModelOpen=()=>{
+      setModalVisible(true)
+    }
+    const handelCategoryModelClose = ()=>{
+      setModalVisible(false)
+    }
 
     useEffect(() => {
       const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
@@ -219,26 +263,16 @@ export const PersonalDetails = () => {
        
 
         <Block style={{marginTop:10,padding:10}}>
-<Block style={[{borderBottomWidth:1,borderColor:"grey",flexDirection:"row",alignItems:"center"}]}>
+<Block style={[{paddingBottom:10,borderBottomWidth:1,borderColor:"grey",flexDirection:"row",alignItems:"center"}]}>
   <Block style={{width:"6%"}}>
   <MaterialIcons name="category" size={24} color="grey" />
   </Block>
-<Block style={{width:"95%"}} >
-<Picker
-          selectedValue={formData.category}
-          onValueChange={(itemValue) => handleInputChange('category', itemValue)}
-          style={{ color: 'black', height: 50, fontSize: 18 }}
-        >
-          <Picker.Item label="Select Category" value="" />
-          {
-            CategoriesData && CategoriesData.map((el,index)=>{
-              return  <Picker.Item key={index} label={el.name} value={el.name} />
-            })
-          }
-         
-          
-        </Picker>
+  <TouchableOpacity onPress={handelCategoryModelOpen} style={{width:"95%"}}>
+  <Block style={{width:"95%"}} >
+  <Text style={{marginLeft:15}}>{ selectedCategories.length >0 ?selectedCategories.map(category => category.name).join(', '): "Select Category"}</Text>
 </Block>
+  </TouchableOpacity>
+
 
                 </Block>
             
@@ -317,7 +351,13 @@ export const PersonalDetails = () => {
               
             </Block>
       
-   
+            <CategoryAddModel 
+            modalVisible={modalVisible} 
+            setModalVisible={setModalVisible} 
+            categoriesData={CategoriesData}
+            setSelectedCategories={setSelectedCategories}
+            selectedCategories={selectedCategories}
+            />
       
        </ScrollView>
        </View>

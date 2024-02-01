@@ -4,6 +4,7 @@ import {
   View,
   Dimensions,
   Image,
+  ScrollView,
 } from "react-native";
 import { Block, Text, Input, theme,Button } from "galio-framework";
 
@@ -12,26 +13,37 @@ import { Ionicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 
 import { TextInput } from "@react-native-material/core";
-
+import { Checkbox } from 'galio-framework';
+import { FlatList } from 'react-native';
 
 const { width, height } = Dimensions.get("screen");
-export const ItemAddModel = ({
+export const CategoryAddModel = ({
   modalVisible,
-  ItemModelData,
   setModalVisible,
-  handelComplete,
-  handelDelete
+  categoriesData,
+  setSelectedCategories,
+  selectedCategories
 }) => {
 
   const animationRef = useRef(null);
 
- 
-  const [formData, setFormData] = useState({
-    name:ItemModelData.title,
-    price: ItemModelData.value,
-    unit: "",
-  });
 
+  const handleCategorySelect = (category) => {
+    // console.log("Category selected", selectedCategories)
+    // selectedCategories.map((el)=>{
+    //     console.log(el.name)
+    //     return ;
+    // })
+
+    setSelectedCategories((prevSelectedCategories) => {
+      const isCategorySelected = prevSelectedCategories.includes(category);
+      if (isCategorySelected) {
+        return prevSelectedCategories.filter((c) => c !== category);
+      } else {
+        return [...prevSelectedCategories, category];
+      }
+    });
+  };
 
   useEffect(() => {
     // console.log(ItemModelData)
@@ -60,7 +72,7 @@ export const ItemAddModel = ({
       onSwipeComplete={() => setModalVisible(false)}
       backdropOpacity={0.1}
       onBackdropPress={() => setModalVisible(false)}
-      swipeDirection={["down"]}
+      swipeDirection={["right"]}
       style={styles.viewHalf}
     >
       <View style={[styles.centeredView]}>
@@ -73,102 +85,40 @@ export const ItemAddModel = ({
               color="#65be34"
             />
           </Block>
-
+          <Text style={{fontSize:17}}>Select Categories</Text>
           <Block
             style={{
-              marginTop: 10,
+             
               flexDirection: "row",
               justifyContent: "left",
               alignItems: "start",
               width: width * 0.9,
-              padding: 10,
+              padding: 12,
             }}
           >
-            <Image
-              source={{ uri: ItemModelData.image }}
-              style={{
-                resizeMode: "contain",
-                width: 30,
-                height: 30,
-                marginRight: 10,
-              }}
-            />
-            <Text style={{ fontSize: 20 }}>
-              {ItemModelData.title} {"( ₹" + ItemModelData.value + " / KG)"}
-            </Text>
+            
+          <ScrollView style={{ marginTop: 0,height:300,paddingBottom:10 }}>
+  
+  {categoriesData.map((category,index) => (
+    <View key={index} style={[styles.checkboxContainer]}>
+      <Checkbox
+      style={{marginTop:15}}
+      color="info"
+      label={category.name}
+      initialValue={selectedCategories.some(selectedCategory => selectedCategory.name === category.name)}
+        onChange={(el) => {
+            
+                handleCategorySelect(category)
+        }}
+      />
+      
+    </View>
+  ))}
+</ScrollView>
+            
           </Block>
 
-          <Block
-            style={{
-              marginTop: 20,
-              flexDirection: "row",
-              justifyContent: "left",
-              alignItems: "start",
-              width: width * 0.9,
-              padding: 10,
-            }}
-          >
-            <Block>
-              <TextInput
-                variant="standard"
-                
-                label="Price"
-                value={formData.value}
-                onChangeText={(text) => handleInputChange("price", text)}
-                color={"grey"}
-                inputStyle={{
-                  borderWidth: 0,
-                  paddingBottom: 0,
-                  color: "black",
-                  fontSize: 20,
-                  letterSpacing: 3,
-                }}
-                // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-                style={{ width: 200 }}
-              />
-            </Block>
-
-            <Block>
-              <TextInput
-                variant="standard"
-                keyboardType="numeric"
-                label="unit"
-                value={formData.unit}
-                onChangeText={(text) => handleInputChange("unit", text)}
-                color={"grey"}
-                inputStyle={{
-                  borderWidth: 0,
-                  paddingBottom: 0,
-                  color: "black",
-                  fontSize: 20,
-                  letterSpacing: 3,
-                }}
-                // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-                style={{ width: 80, marginLeft: 10 }}
-              />
-            </Block>
-          </Block>
-
-          <Block style={{flexDirection:"row",marginTop:20}}>
-            {/* <Button onPress={()=>handelDone(otp)} color="success"> Done</Button> */}
-            <Button
-             
-              
-              color="crimson"
-              onPress={() => handelDelete(ItemModelData.index)}
-           
-              size="small"
-            > Delete</Button>
-
-            <Button
-            color="teal"
-             
-             onPress={() => handelComplete(formData)}
           
-             size="small"
-           > Update</Button>
-           
-          </Block>
         </View>
       </View>
 
@@ -181,6 +131,9 @@ export const ItemAddModel = ({
 };
 
 const styles = StyleSheet.create({
+    checkboxContainer:{
+        flexDirection:"row"
+    },
   viewHalf: {
     justifyContent: "flex-end",
     margin: 0,
@@ -222,7 +175,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: width * 0.9,
-    height: height - 500,
+    height: height - 350,
   },
   button: {
     borderRadius: 20,

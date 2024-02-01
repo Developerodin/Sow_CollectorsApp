@@ -39,14 +39,15 @@ export const MyRates = () => {
   const [AddSubmodalVisible, setAddSubModalVisible] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [ItemAddStatus, setItemAddStatus] = useState(false);
-  const [CategoryData, setCategoryData1] = useState({});
+  const [UserCategoryData, setUserCategoryData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [update, setupdate] = useState(0);
   const [subAddForm, setsubAddForm] = useState({
+    categoryName:"",
     name: "",
     price: "",
-    unit: "Kg",
+    unit: "",
   });
   const initalModelData = {
     id: "",
@@ -80,16 +81,16 @@ export const MyRates = () => {
   };
 
   const updateSubcategoryByIndex = async (
-    userId,
-    subcategoryIndex,
+    categoryId,
+    subcategoryId,
     subcategoryData
   ) => {
-    console.log("Update Subcategory ========>",userId,
-    subcategoryIndex,
+    console.log("Update Subcategory ========>",categoryId,
+    subcategoryId,
     subcategoryData);
     try {
       const response = await axios.patch(
-        `${Base_url}api/b2b/${userId}/subcategories/${subcategoryIndex}`,
+        `${Base_url}api/b2b/${categoryId}/subcategories/${subcategoryId}`,
         subcategoryData
       );
       setupdate((prev) => prev + 1);
@@ -100,11 +101,11 @@ export const MyRates = () => {
     }
   };
 
-  const addSubcategory = async (userId, subcategoryData) => {
+  const addSubcategory = async (categoryId, subcategoryData) => {
     console.log("Add Subcategory ========>");
     try {
       const response = await axios.post(
-        `${Base_url}api/b2b/${userId}/subcategories`,
+        `${Base_url}api/b2b/${categoryId}/subcategories`,
         subcategoryData
       );
       setupdate((prev) => prev + 1);
@@ -116,28 +117,35 @@ export const MyRates = () => {
   };
 
   const handelComplete = (Data) => {
-    console.log(
-      "Data after update  =>",
-      Data,
-      userDetails._id,
-      ItemModelData.index
-    );
+    // console.log(
+    //   "Data after update  =>",
+    //   Data,
+    //   ItemModelData
+    // );
+    const category = UserCategoryData.filter((el,index)=>{
+      return el.name === ItemModelData.category
+    })
     const UpdatedData = {
       name:ItemModelData.title,
       price:Data.price,
       unit:Data.unit
 
     }
-    updateSubcategoryByIndex(userDetails._id, ItemModelData.index, UpdatedData);
+    updateSubcategoryByIndex(category[0]._id, ItemModelData.id, UpdatedData);
     setModalVisible(false);
   };
 
   const handelSubCategoryModelSubmit = () => {
-    addSubcategory(userDetails._id, subAddForm)
+   const category = UserCategoryData.filter((el,index)=>{
+      return el.name === subAddForm.categoryName
+    })
+    console.log("after submit",category)
+    addSubcategory(category[0]._id, subAddForm)
     setsubAddForm({
+      categoryName:"",
       name: "",
       price: "",
-      unit: "Kg",
+      unit: "",
     })
     handelSubCategoryModelClose();
     // console.log("Data after submit =>",subAddForm)
@@ -148,6 +156,12 @@ export const MyRates = () => {
   };
 
   const handelSubCategoryModelClose = () => {
+    setsubAddForm({
+      categoryName:"",
+      name: "",
+      price: "",
+      unit: "",
+    })
     setAddSubModalVisible(false);
   };
 
@@ -156,16 +170,21 @@ export const MyRates = () => {
       const response = await axios.get(
         `${Base_url}api/b2b/${userId}/category-subcategory`
       );
-      console.log("res =>", response.data);
-      const transformedData = response.data.sub_category.map((subCategory) => ({
-        id: subCategory._id,
-        title: subCategory.name,
-        value: subCategory.price,
-        image: "https://tse4.mm.bing.net/th?id=OIP.OQh1ykyaCVyCvt2aNHJ-LwHaHa&pid=Api&P=0&h=220", // Replace with the actual image URL
-        category: response.data.category,
+      const CategoriesData =  response.data.data.categories
+      // console.log("res of category and subcategory =>", CategoriesData);
+      const transformedData = [].concat(...CategoriesData.map(category => {
+        return category.sub_category.map(subCategory => ({
+          id: subCategory._id,
+          title: subCategory.name.toUpperCase(),
+          value: subCategory.price,
+          image: "https://tse4.mm.bing.net/th?id=OIP.OQh1ykyaCVyCvt2aNHJ-LwHaHa&pid=Api&P=0&h=220", // Replace with the actual image URL
+          category: category.name,
+        }));
       }));
+
+      console.log("Subcategory Data ==>",transformedData)
       setData(transformedData);
-      setCategoryData1(response.data);
+      setUserCategoryData(CategoriesData);
       setLoading(false);
     } catch (error) {
       console.log("error", error);
@@ -175,13 +194,16 @@ export const MyRates = () => {
   };
 
   const handelSubCategoryDelete = (index)=>{
-    deleteSubcategoryByIndex(userDetails._id,index)
+    const category = UserCategoryData.filter((el,index)=>{
+      return el.name === ItemModelData.category
+    })
+    deleteSubcategoryByIndex(category[0]._id,ItemModelData.id)
     setModalVisible(false)
   }
 
-  const deleteSubcategoryByIndex = async (userId, subcategoryIndex) => {
+  const deleteSubcategoryByIndex = async (categoryId, subcategoryId) => {
     try {
-      const response = await axios.delete(`${Base_url}api/b2b/${userId}/subcategories/${subcategoryIndex}`);
+      const response = await axios.delete(`${Base_url}api/b2b/${categoryId}/subcategories/${subcategoryId}`);
       setupdate((prev)=>prev+1)
       return response.data;
     } catch (error) {
@@ -195,7 +217,7 @@ export const MyRates = () => {
     try {
       const response = await axios.get(`${Base_url}api/category`);
       setCategoriesData(response.data);
-      console.log("Categories all", response.data)
+      // console.log("Categories all", response.data)
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -253,21 +275,21 @@ export const MyRates = () => {
             <Text style={{ fontWeight: "500", color: "black" }}>All</Text>
           </TouchableOpacity>
 
-          {Categories.map((el, index) => {
+          {UserCategoryData&& UserCategoryData.length>0 && UserCategoryData.map((el, index) => {
             return (
               <TouchableOpacity
                 key={index}
                 activeOpacity={0.9}
-                onPress={() => filterItems(el)}
+                onPress={() => filterItems(el.name)}
                 style={{
                   paddingVertical: 10,
                   paddingHorizontal: 20,
-                  borderBottomWidth: activeCategory === el ? 2 : 0,
+                  borderBottomWidth: activeCategory === el.name ? 2 : 0,
                   borderBottomColor:
-                    activeCategory === el ? "blue" : "transparent",
+                    activeCategory === el.name ? "blue" : "transparent",
                 }}
               >
-                <Text style={{ fontWeight: "500", color: "black" }}>{el}</Text>
+                <Text style={{ fontWeight: "500", color: "black" }}>{el.name.toUpperCase()}</Text>
               </TouchableOpacity>
             );
           })}
@@ -357,7 +379,27 @@ export const MyRates = () => {
                 value={subAddForm.name}
                 onChangeText={(text) => handleSubAddInputChange("name", text)}
               /> */}
-              <Block style={{borderWidth:1,borderColor:"grey"}}>
+               <Block style={{borderWidth:1,borderColor:"grey",marginTop:10}}>
+              <Picker
+          selectedValue={subAddForm.categoryName}
+          onValueChange={(itemValue) => handleSubAddInputChange('categoryName', itemValue)}
+          style={{ color: 'black', height: 50, fontSize: 18 }}
+        >
+          <Picker.Item label="Select Category" value="" />
+          {
+            UserCategoryData && UserCategoryData.length>0 && UserCategoryData.map((el,index)=>{
+              
+                  return <Picker.Item key={index} label={el.name} value={el.name} />
+                })
+              }
+            
+          
+         
+          
+        </Picker>
+              </Block>
+
+              <Block style={{borderWidth:1,borderColor:"grey",marginTop: 20}}>
               <Picker
           selectedValue={subAddForm.name}
           onValueChange={(itemValue) => handleSubAddInputChange('name', itemValue)}
@@ -366,7 +408,7 @@ export const MyRates = () => {
           <Picker.Item label="Select Sub Category" value="" />
           {
             CategoriesData && CategoriesData.map((el,index)=>{
-              if(userDetails.category === el.name){
+              if(subAddForm.categoryName === el.name){
                return  el &&  el.sub_category.map((item,index)=>{
                   return <Picker.Item key={index} label={item.name} value={item.name} />
                 })
@@ -397,6 +439,19 @@ export const MyRates = () => {
                 onChangeText={(text) => handleSubAddInputChange("unit", text)}
                 style={{ marginTop: 20 }}
               /> */}
+               <Block style={{borderWidth:1,borderColor:"grey",marginTop: 20}}>
+              <Picker
+          selectedValue={subAddForm.unit}
+          onValueChange={(itemValue) => handleSubAddInputChange('unit', itemValue)}
+          style={{ color: 'black', height: 50, fontSize: 18 }}
+        >
+          <Picker.Item label="Select Unit" value="" />
+          <Picker.Item label="Kg" value="Kg" />
+          <Picker.Item label="Per Piece" value="Per Piece" />
+         
+          
+        </Picker>
+              </Block>
               
               <Block center style={{ marginTop: 30 }}>
                 <Button
@@ -607,7 +662,7 @@ const styles2 = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: width * 0.9,
-    height: height - 460,
+    height: height - 320,
   },
   button: {
     borderRadius: 20,
