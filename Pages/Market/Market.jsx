@@ -81,8 +81,8 @@ export const Market = () => {
     }
   };
 
-  const handeViewDetail = (id,value) => {
-    navigation.navigate("Rate Details", { itemId: id,index : value });
+  const handeViewDetail = (id,subIndex,categoryIndex) => {
+    navigation.navigate("Rate Details", { itemId: id,subIndex : subIndex,categoryIndex :categoryIndex});
   };
 
   const toggleAccordion = () => {
@@ -162,18 +162,34 @@ export const Market = () => {
  
    
     if (category && subCategory) {
-      filteredData = filteredData.filter((vendor) => vendor.category === category);
-
-      filteredData = filteredData.map((vendor) => ({
-        ...vendor,
-        sub_category: vendor.sub_category.filter(sub => sub.name === subCategory)
-      })).filter((vendor) => vendor.category === category && vendor.sub_category.length > 0);
-    }
+      filteredData = filteredData.filter((vendor) => {
+        // Check if the vendor has the specified category
+        
+        const hasCategory = vendor.categories.some((cat) => cat.name === category);
+       
+        if (hasCategory) {
+          // If the vendor has the specified category, filter the subcategories
+          const filteredSubCategories = vendor.categories
+            .filter((cat) => cat.name === category)
+            .flatMap((cat) => cat.sub_category) // Adjust the property name here
+            .filter((sub) => sub.name === subCategory);
     
+          // Return true only if there is at least one matching subcategory
+          // console.log("Vendor data in filter  ==>", filteredSubCategories);
+          return filteredSubCategories.length > 0;
+        }
+    
+        return false;
+      });
+
+      console.log("Vendor data in filter  ==>", filteredData);
+    }
+   
     if (city) {
       filteredData = filteredData.filter((vendor) => vendor.city.toLowerCase() === city.toLowerCase());
+      console.log("Filter data  cat and subcategory ==>",filteredData)
     }
-    console.log(filteredData);
+    // console.log(filteredData);
     const MediatorsData = filteredData.filter((el) => {
       return el.registerAs === "Mediators";
     });
@@ -448,8 +464,9 @@ export const Market = () => {
 
                        // Check if the lowercased category is not in the set, then add it to the set and render the JSX
                        if (!uniqueCitySet.has(lowerCaseCity)) {
+                       
                         uniqueCitySet.add(lowerCaseCity);
-                     
+                        // console.log("Lower city not prsent   ===>",lowerCaseCity,uniqueCitySet)
                          return (
                           <Block
                           key={index}
@@ -465,6 +482,7 @@ export const Market = () => {
                          );
                        } else {
                          // If the lowercased category is already in the set, return null (no rendering)
+                        //  console.log("City alred prsent  ==>",lowerCaseCity)
                          return null;
                        }
                      
@@ -476,36 +494,61 @@ export const Market = () => {
           </Block>
 
           <Block>
-            {
+          {
               userDetails.registerAs === "Collectors" && WholesalersData && (WholesalersData.length > 0 ?
                 WholesalersData.map((el, index) => {
-                  return el.sub_category.length > 0 && el.sub_category.map((item,index)=>{
-                    return  <TouchableOpacity key={index} onPress={()=>handeViewDetail(el._id,index)}>
-                    <MarketRatesCard Title={el.name} Value={item.price} />
-                  </TouchableOpacity>
-              } 
-               
-              );
+                  // Check if categories is an array and not empty
+                  if (el.categories && el.categories.length > 0) {
+                    return el.categories.map((category, categoryIndex) => {
+                      // Check if sub_category exists in the current category
+                      if (category.sub_category && category.sub_category.length > 0) {
+                        return category.sub_category.map((item, subIndex) => {
+
+                          if(selectedSubCategory === item.name ){
+                            return <TouchableOpacity key={subIndex} onPress={() => handeViewDetail(el._id, subIndex,categoryIndex)}>
+                            <MarketRatesCard Title={el.name} Value={item.price} />
+                          </TouchableOpacity>
+                          }
+                        
+                      });
+                      }
+                      return null; // or any default JSX if sub_category is not present
+                    });
+                  }
+                  return null; // or any default JSX if categories is not present or empty
                 })
               :
               <Block center>
                 <Text style={{ fontSize: 18, marginTop: 30 }}>
-                    No Wholesalers Data
+                    No WholesalersData Data
                   </Text>
               </Block>
               )
             }
+         
 
             {
-              userDetails.registerAs === "Wholesalers" && MediatorsData && (MediatorsData.length>0 ?
-                MediatorsData.categories.map((el, index) => {
-                  return el.sub_category.length > 0 && el.sub_category.map((item,index)=>{
-                        return  <TouchableOpacity key={index} onPress={()=>handeViewDetail(el._id,index)}>
-                        <MarketRatesCard Title={el.name} Value={item.price} />
-                      </TouchableOpacity>
-                  } 
-                   
-                  );
+              userDetails.registerAs === "Wholesalers" && MediatorsData && (MediatorsData.length > 0 ?
+                MediatorsData.map((el, index) => {
+                  // Check if categories is an array and not empty
+                  if (el.categories && el.categories.length > 0) {
+                    return el.categories.map((category, categoryIndex) => {
+                      // Check if sub_category exists in the current category
+                      if (category.sub_category && category.sub_category.length > 0) {
+                        return category.sub_category.map((item, subIndex) => {
+
+                          if(selectedSubCategory === item.name ){
+                            return <TouchableOpacity key={subIndex} onPress={() => handeViewDetail(el._id, subIndex,categoryIndex)}>
+                            <MarketRatesCard Title={el.name} Value={item.price} />
+                          </TouchableOpacity>
+                          }
+                        
+                      });
+                      }
+                      return null; // or any default JSX if sub_category is not present
+                    });
+                  }
+                  return null; // or any default JSX if categories is not present or empty
                 })
               :
               <Block center>
@@ -516,7 +559,7 @@ export const Market = () => {
               )
             }
 
-            {
+            {/* {
               userDetails.registerAs === "Mediators" && (FactoryData.length > 0 ?
                 FactoryData.map((el, index) => {
                   return el.sub_category.length > 0 && el.sub_category.map((item,index)=>{
@@ -526,6 +569,70 @@ export const Market = () => {
               } 
                
               );
+                })
+              :
+              <Block center>
+                <Text style={{ fontSize: 18, marginTop: 30 }}>
+                    No Factory Data
+                  </Text>
+              </Block>
+              )
+            } */}
+
+               {
+              userDetails.registerAs === "Mediators" && FactoryData && (FactoryData.length > 0 ?
+                FactoryData.map((el, index) => {
+                  // Check if categories is an array and not empty
+                  if (el.categories && el.categories.length > 0) {
+                    return el.categories.map((category, categoryIndex) => {
+                      // Check if sub_category exists in the current category
+                      if (category.sub_category && category.sub_category.length > 0) {
+                        return category.sub_category.map((item, subIndex) => {
+
+                          if(selectedSubCategory === item.name ){
+                            return <TouchableOpacity key={subIndex} onPress={() => handeViewDetail(el._id, subIndex,categoryIndex)}>
+                            <MarketRatesCard Title={el.name} Value={item.price} />
+                          </TouchableOpacity>
+                          }
+                        
+                      });
+                      }
+                      return null; // or any default JSX if sub_category is not present
+                    });
+                  }
+                  return null; // or any default JSX if categories is not present or empty
+                })
+              :
+              <Block center>
+                <Text style={{ fontSize: 18, marginTop: 30 }}>
+                    No Factory Data
+                  </Text>
+              </Block>
+              )
+            }
+
+{
+              userDetails.registerAs === "Factory" && FactoryData && (FactoryData.length > 0 ?
+                FactoryData.map((el, index) => {
+                  // Check if categories is an array and not empty
+                  if (el.categories && el.categories.length > 0 && el._id !== userDetails._id ) {
+                    return el.categories.map((category, categoryIndex) => {
+                      // Check if sub_category exists in the current category
+                      if (category.sub_category && category.sub_category.length > 0) {
+                        return category.sub_category.map((item, subIndex) => {
+
+                          if(selectedSubCategory === item.name ){
+                            return <TouchableOpacity key={subIndex} onPress={() => handeViewDetail(el._id, subIndex,categoryIndex)}>
+                            <MarketRatesCard Title={el.name} Value={item.price} />
+                          </TouchableOpacity>
+                          }
+                        
+                      });
+                      }
+                      return null; // or any default JSX if sub_category is not present
+                    });
+                  }
+                  return null; // or any default JSX if categories is not present or empty
                 })
               :
               <Block center>

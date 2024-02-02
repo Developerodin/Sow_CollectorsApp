@@ -74,9 +74,21 @@ export const Orders = () => {
      
       <Block style={{padding:10,marginBottom:60}}>
            {
-           InCommingpendingOrders && InCommingpendingOrders.map((el,index)=>{
+           InCommingpendingOrders && InCommingpendingOrders.length>0 ? InCommingpendingOrders.map((el,index)=>{
               return    <InCommingOrderCard key={index} data={el} />
             })
+            :
+            <Block center style={{marginTop:40}}>
+            <Image
+     source={require('../../assets/media/5-dark.png')}
+     style={{
+       width: 300,
+       height: 300,
+       marginRight: 10,
+     }}
+   />
+           
+         </Block>
            }
         
 
@@ -88,9 +100,21 @@ export const Orders = () => {
      
       <Block style={{padding:10,marginBottom:60}}>
            {
-           pendingOrders && pendingOrders.map((el,index)=>{
+           pendingOrders && pendingOrders.length > 0 ?pendingOrders.map((el,index)=>{
               return    <PendingOrderCard key={index} data={el} />
             })
+            :
+            <Block center style={{marginTop:40}}>
+               <Image
+        source={require('../../assets/media/5-dark.png')}
+        style={{
+          width: 300,
+          height: 300,
+          marginRight: 10,
+        }}
+      />
+              
+            </Block>
            }
         
 
@@ -103,9 +127,21 @@ export const Orders = () => {
       <Block style={{padding:10,marginBottom:60}}>
            
            {
-            completedOrders && completedOrders.map((el,index)=>{
+            completedOrders && completedOrders.length>0 ? completedOrders.map((el,index)=>{
               return  <OrdersCard key={index} data={el} />
             })
+            :
+            <Block center style={{marginTop:40}}>
+            <Image
+     source={require('../../assets/media/5-dark.png')}
+     style={{
+       width: 300,
+       height: 300,
+       marginRight: 10,
+     }}
+   />
+           
+         </Block>
            }
           
           

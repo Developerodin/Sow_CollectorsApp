@@ -131,6 +131,20 @@ export const PendingOrderDetails = ({route}) => {
         
      </Block>
 
+{
+  orderDetails && orderDetails.details.discription &&<Block style={{marginTop:20}} >
+  <Block>
+   <Text style={styles.text1}>Discription</Text>
+  </Block>
+  <Block style={{marginTop:10}}>
+  <Text style={{fontSize:20}}>{orderDetails && orderDetails.details.discription}</Text>
+  </Block>
+  
+</Block>
+
+}
+     
+
 
      <Block style={{marginTop:20}} >
 

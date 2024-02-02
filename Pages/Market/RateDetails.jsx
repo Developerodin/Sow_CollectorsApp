@@ -11,9 +11,10 @@ import { Base_url } from '../../Config/BaseUrl';
 import { useAppContext } from '../../Context/AppContext';
 const {width, height} = Dimensions.get('window');
 import { useNavigation } from "@react-navigation/native";
+import { ToastAndroid } from "react-native";
 export const RateDetails = ({ route }) => {
   const navigation = useNavigation();
-  const { itemId,index } = route.params;
+  const { itemId,subIndex,categoryIndex } = route.params;
   const { update, userDetails,setUpdate } = useAppContext();
  const [details,setDetails] = useState(null);
  const [weight, setWeight] = useState('');
@@ -21,7 +22,7 @@ export const RateDetails = ({ route }) => {
   const [discription, setDiscription] = useState('')
  const handleInputChange = (text) => {
   setWeight(text);
-  const totalWeight =  parseInt(text) * parseInt(details.sub_category[index].price);
+  const totalWeight =  parseInt(text) * parseInt(details.categories[categoryIndex].sub_category[subIndex].price);
   setTotalAmount(totalWeight)
 };
 
@@ -30,10 +31,17 @@ const handelDiscriptionChange = (text) =>{
 }
 
 const handleSubmit = () => {
+
+  if(weight === "" || TotalAmount=== ""   ){
+    ToastAndroid.show("Please Fill All Details", ToastAndroid.SHORT);
+    return;
+  }
+
   const Orderdetails ={
-    category:details.category,
-    sub_category:details.sub_category[index].name,
+    category:details.categories[categoryIndex].name,
+    sub_category:details.categories[categoryIndex].sub_category[subIndex].name,
     quantity:weight,
+    discription:discription
   }
 
   console.log(userDetails._id, details._id,Orderdetails,TotalAmount);
@@ -57,7 +65,7 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
       const response = await axios.get(`${Base_url}api/b2b/${itemId}`);
 
       if (response.status === 200) {
-        console.log("Data =====>",response.data);
+        console.log("Data of vender =====>",response.data);
         setDetails(response.data);
       } else {
         console.log('Error fetching data:', response.data.message);
@@ -80,7 +88,7 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
      <Block >
         
         <Block>
-        <Text style={{fontSize:28,fontWeight:400}}>{details && details.category}</Text>
+        <Text style={{fontSize:28,fontWeight:400}}>{details && details.categories[categoryIndex].name}</Text>
         </Block>
         
      </Block>
@@ -110,7 +118,7 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
         <FontAwesome name="money" size={16} color="black" />
         </Block>
         <Block >
-        <Text style={{fontSize:18}}>sub category : {details && details.sub_category[index].name}</Text>
+        <Text style={{fontSize:18}}>sub category : {details && details.categories[categoryIndex].sub_category[subIndex].name}</Text>
         </Block>
         
      </Block>
@@ -120,7 +128,7 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
         <FontAwesome name="money" size={16} color="black" />
         </Block>
         <Block >
-        <Text style={{fontSize:18}}>₹ {details && details.sub_category[index].price}/KG</Text>
+        <Text style={{fontSize:18}}>₹ {details && details.categories[categoryIndex].sub_category[subIndex].price}/KG</Text>
         </Block>
         
      </Block>

@@ -27,6 +27,9 @@ import axios from "axios";
 import { Base_url } from "../../Config/BaseUrl";
 import { TextInput } from "@react-native-material/core";
 import {Picker} from '@react-native-picker/picker';
+import { CategoryAddModel } from "../../Components/CategoryAddModel/CategoryAddModel";
+import { CategoryAddModel2 } from "../../Components/CategoryAddModel/CategoryAddModel2";
+
 export const MyRates = () => {
   const navigation = useNavigation();
   const { userDetails } = useAppContext();
@@ -63,6 +66,9 @@ export const MyRates = () => {
     setCart,
   } = useAppContext();
   const [CategoriesData, setCategoriesData] = useState([]);
+  const [ catmodalVisible,setcatModalVisible] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [updatedCategoriesData,setUpdatedCategoriesData] = useState([])
   const filterItems = (category) => {
     let filteredItems = data;
 
@@ -224,6 +230,55 @@ export const MyRates = () => {
     }
   };
 
+  const handelCategoryModelOpen=()=>{
+
+    const newCategoriesData = CategoriesData.filter(
+      (category) => !UserCategoryData.some((userCategory) => userCategory.name === category.name)
+    );
+    setUpdatedCategoriesData(newCategoriesData)
+      // console.log("CategoryUpdatedData",newCategoriesData)
+   
+    setcatModalVisible(true)
+  }
+
+  const handelCatSelectComplete = async()=>{
+
+    if(selectedCategories && selectedCategories.length>0){
+     
+        const Data = selectedCategories.map(category => {
+          return {
+            name:category.name,
+            sub_category:[
+              {
+                name:"test",
+                price:"100",
+                unit:"Kg"
+              }
+            ] 
+          }});
+        console.log("categoryNames",Data)
+        const UpdatedData = JSON.stringify(Data);
+    
+        try {
+          const response = await axios.post(
+            `${Base_url}api/b2b/${userDetails._id}/addCategories`,{
+             Data : UpdatedData
+            }
+            
+          );
+          setupdate((prev) => prev + 1);
+          setcatModalVisible(false)
+          return response.data;
+        } catch (error) {
+          console.error("Error adding category:", error);
+          throw error;
+        }
+    
+    }
+    
+    
+  }
+
   useEffect(() => {
     setFilteredData(
       data.filter((item) =>
@@ -231,9 +286,9 @@ export const MyRates = () => {
       )
     );
     const categories = [...new Set(data.map((item) => item.category))];
-    console.log(categories);
+    // console.log(categories);
     setCategories(categories);
-  }, [query, data]);
+  }, [query, data,update]);
 
   useEffect(() => {
     fetchCategoryData(userDetails._id);
@@ -242,6 +297,9 @@ export const MyRates = () => {
   useEffect(()=>{
     getCategories()
   },[update])
+
+
+
 
   return (
     <View style={styles.container}>
@@ -259,7 +317,7 @@ export const MyRates = () => {
           value={query}
           onChangeText={(text) => setQuery(text)}
         />
-
+        <Block style={styles.Space_Between}>
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
           <TouchableOpacity
             activeOpacity={0.9}
@@ -269,7 +327,7 @@ export const MyRates = () => {
               paddingHorizontal: 20,
               borderBottomWidth: activeCategory === "All" ? 2 : 0,
               borderBottomColor:
-                activeCategory === "All" ? "blue" : "transparent",
+                activeCategory === "All" ? "teal" : "transparent",
             }}
           >
             <Text style={{ fontWeight: "500", color: "black" }}>All</Text>
@@ -286,14 +344,24 @@ export const MyRates = () => {
                   paddingHorizontal: 20,
                   borderBottomWidth: activeCategory === el.name ? 2 : 0,
                   borderBottomColor:
-                    activeCategory === el.name ? "blue" : "transparent",
+                    activeCategory === el.name ? "teal" : "transparent",
                 }}
               >
                 <Text style={{ fontWeight: "500", color: "black" }}>{el.name.toUpperCase()}</Text>
               </TouchableOpacity>
             );
           })}
+
+          
         </ScrollView>
+
+
+        <TouchableOpacity onPress={handelCategoryModelOpen} style={[styles.Center,{marginRight:10}]}>
+          <Ionicons name="add-circle-outline" size={24} color="teal" />
+          </TouchableOpacity>
+        </Block>
+      
+       
       </Block>
 
       <ScrollView style={{ backgroundColor: "#F1F1F1" }}>
@@ -466,6 +534,15 @@ export const MyRates = () => {
           </View>
         </View>
       </Modal>
+
+      <CategoryAddModel2 
+            modalVisible={catmodalVisible} 
+            setModalVisible={setcatModalVisible} 
+            categoriesData={updatedCategoriesData}
+            setSelectedCategories={setSelectedCategories}
+            selectedCategories={selectedCategories}
+            handelComplete={handelCatSelectComplete}
+            />
 
       {/* {
 showCartSuggestion && CartInStorage.length >0 && <Block center style={{position:"absolute",bottom:60,elevation:10,borderRadius:15,height:100,backgroundColor:"#fff",width:width*0.9,marginTop:10,borderWidth:1,borderColor:"#65be34"}}>
