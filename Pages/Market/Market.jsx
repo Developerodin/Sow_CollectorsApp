@@ -301,7 +301,9 @@ export const Market = () => {
                   </Block>
                 </TouchableOpacity>
                 {expanded && (
-                  <View style={{ marginTop: 20 }}>
+                  <View style={{ marginTop: 20,height:200 }}>
+                    <ScrollView>
+                   
                     <Block style={[styles.Space_Between, { marginTop: 10 }]}>
                       <TouchableOpacity
                         activeOpacity={0.6}
@@ -329,6 +331,9 @@ export const Market = () => {
                      
                     
                     })}
+
+                       
+                </ScrollView>
                   </View>
                 )}
               </View>
@@ -375,7 +380,10 @@ export const Market = () => {
                   </Block>
                 </TouchableOpacity>
                 {expanded4 && (
-                  <View style={{ marginTop: 20 }}>
+                  <View style={{ marginTop: 20 ,height:200}}>
+                    <ScrollView>
+
+                    
                     <Block style={[styles.Space_Between, { marginTop: 10 }]}>
                       <TouchableOpacity
                         activeOpacity={0.6}
@@ -403,6 +411,7 @@ export const Market = () => {
                      
                     
                     })}
+                    </ScrollView>
                   </View>
                 )}
               </View>
@@ -450,7 +459,10 @@ export const Market = () => {
                   </Block>
                 </TouchableOpacity>
                 {CityExpand && (
-                  <View style={{ marginTop: 20 }}>
+                  <View style={{ marginTop: 20,height:200 }}>
+                    <ScrollView>
+
+                  
                     <Block style={[styles.Space_Between, { marginTop: 10 }]}>
                       <TouchableOpacity
                         activeOpacity={0.6}
@@ -487,7 +499,9 @@ export const Market = () => {
                        }
                      
                     })}
+                     </ScrollView>
                   </View>
+                 
                 )}
               </View>
             </Block>
