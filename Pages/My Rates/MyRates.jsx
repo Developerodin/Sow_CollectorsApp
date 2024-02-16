@@ -139,6 +139,9 @@ export const MyRates = () => {
     }
     updateSubcategoryByIndex(category[0]._id, ItemModelData.id, UpdatedData);
     setModalVisible(false);
+    
+    setActiveCategory("All");
+    console.log("Complete ==>")
   };
 
   const handelSubCategoryModelSubmit = () => {
@@ -188,7 +191,7 @@ export const MyRates = () => {
         }));
       }));
 
-      console.log("Subcategory Data ==>",transformedData)
+      // console.log("Subcategory Data ==>",transformedData)
       setData(transformedData);
       setUserCategoryData(CategoriesData);
       setLoading(false);
@@ -286,9 +289,10 @@ export const MyRates = () => {
       )
     );
     const categories = [...new Set(data.map((item) => item.category))];
-    // console.log(categories);
+    console.log("Updating ===>");
     setCategories(categories);
-  }, [query, data,update]);
+    setActiveCategory("All");
+  }, [query,update]);
 
   useEffect(() => {
     fetchCategoryData(userDetails._id);
