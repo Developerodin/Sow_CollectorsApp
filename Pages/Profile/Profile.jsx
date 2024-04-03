@@ -32,13 +32,41 @@ export const Profile = () => {
     {icon:<MaterialIcons name="pending-actions" size={24} color="#62ceff" />,title:"Pending Orders",link:"Orders"},
     {icon:<FontAwesome name="building" size={24} color="#4854e0" />,title:"About Comapny",link:"About Company"},
     {icon:<AntDesign name="infocirlce" size={24} color="#222428" />,title:"Terms & Conditions",link:"Terms and Condition"},
-    
+    {icon:<MaterialIcons name="privacy-tip" size={24} color="green" />,title:"Privacy Policy",link:"Privacy Policy"},
    
     // {icon:<Foundation name="torso-business" size={28} color="#4854e0" />,title:"Upgrade to business profile",link:"Upgrade Profile"},
 
   ]
 
+
+ 
+
+
   const handeClick=(link)=>{
+    if(link==="About Company"){
+      const Data={
+        url:"https://scraponwheels.com/"
+        }
+      navigation.navigate("Scrap On Wheels", { Data });
+      return 
+    }
+     
+    if(link==="Terms and Condition"){
+      const Data={
+        url:"https://www.scraponwheels.com/terms.html"
+        }
+      navigation.navigate("Scrap On Wheels", { Data });
+      return 
+    }
+
+    if(link==="Privacy Policy"){
+      const Data={
+        url:"https://www.scraponwheels.com/privacy.html"
+        }
+      navigation.navigate("Scrap On Wheels", { Data });
+      return 
+    }
+
     navigation.navigate(link)
   }
   const handelSellScrap =()=>{

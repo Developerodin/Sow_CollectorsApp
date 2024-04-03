@@ -193,6 +193,7 @@ export const MyRates = () => {
 
       // console.log("Subcategory Data ==>",transformedData)
       setData(transformedData);
+      setFilteredData(transformedData)
       setUserCategoryData(CategoriesData);
       setLoading(false);
     } catch (error) {
@@ -292,6 +293,7 @@ export const MyRates = () => {
     console.log("Updating ===>");
     setCategories(categories);
     setActiveCategory("All");
+    
   }, [query,update]);
 
   useEffect(() => {

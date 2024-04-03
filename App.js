@@ -43,6 +43,8 @@ import { Market } from './Pages/Market/Market';
 import { RateDetails } from './Pages/Market/RateDetails';
 import { OrderStatus } from './Pages/Market/OrderStatus';
 import { InCommingOrderDetails } from './Pages/Orders/InCommingOrderDetails';
+import { PrivacyPolicy } from './Pages/Profile/ProfileTabs/PrivacyPolicy';
+import { WebViewApp } from './Pages/WebViewPage/WebView';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -391,6 +393,12 @@ export default function App() {
             headerShown: false,
           }}
         />
+
+<Stack.Screen name="Scrap On Wheels" component={WebViewApp}
+          options={{
+            headerShown: true,
+          }}
+        />
        
         <Stack.Screen name="Login" component={Login} options={{
             headerShown: false,
@@ -400,6 +408,10 @@ export default function App() {
           }}/>
 
 <Stack.Screen name="About Company" component={AboutCompany} options={{
+            headerShown: true,
+          }}/>
+
+<Stack.Screen name="Privacy Policy" component={PrivacyPolicy} options={{
             headerShown: true,
           }}/>
     
