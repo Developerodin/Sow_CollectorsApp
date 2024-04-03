@@ -12,12 +12,13 @@ export const AppProvider = ({ children }) => {
   const [isMarkerModalVisible, setMarkerModalVisible] = useState(false);
   const [isDrwerMenuVisible, setDrawerMenuVisible] = useState(false);
   const [Cart,setCart] = useState([]);
-  const[update,setUpdate]= useState(0);
+  const [update,setUpdate]= useState(0);
   const [CartInStorage,setCartInStorage] = useState([]);
   const [showCartSuggestion,setShowCartSuggestion] = useState(false);
   const [CartTotalAmount,setCartTotalAmount] = useState(0);
-    const [CartTotalWeight,setCartTotalWeight] = useState(0);
-    const [SelectedAddressFromMap,setSelectedAddressFromMap] = useState({});
+  const [CartTotalWeight,setCartTotalWeight] = useState(0);
+  const [SelectedAddressFromMap,setSelectedAddressFromMap] = useState({});
+
   const toggleDrwerMenu = () => {
     setDrawerMenuVisible(!isDrwerMenuVisible);
   };
@@ -36,9 +37,9 @@ export const AppProvider = ({ children }) => {
         setIsLoggedIn(false)
         // setModalVisible(true)
     }
-}
+  }
 
-const getCurrentUser=async()=>{
+  const getCurrentUser=async()=>{
   const user = await AsyncStorage.getItem('userDetails');
   const ParseUser = JSON.parse(user)
   if(user){
@@ -46,9 +47,9 @@ const getCurrentUser=async()=>{
       
   }
  
-}
+  }
 
-const getCartFromAsyncStorage = async () => {
+ const getCartFromAsyncStorage = async () => {
   try {
     const cartArrayJSON = await AsyncStorage.getItem('cart') || null;
     if (cartArrayJSON !== null) {
@@ -65,10 +66,15 @@ const getCartFromAsyncStorage = async () => {
     setCartInStorage([]);
     console.error('Error retrieving cart from AsyncStorage:', error);
   }
-};
+ };
   useEffect(()=>{
     checklogin()
   },[])
+
+  useEffect(()=>{
+    console.log("Get user details called ==>")
+    getCurrentUser();
+  },[isLoggedIn])
 
   useEffect(()=>{
     getCartFromAsyncStorage().then((res)=>{

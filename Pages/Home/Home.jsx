@@ -18,6 +18,7 @@ export const Home = () => {
   const [CategoriesData, setCategoriesData] = useState([]);
   const [categoryLength,setCategoryLength] = useState(4)
   const [categorySeetype,setCategorySeetype] = useState(false);
+
   const getCategories = async () => {
     try {
       const response = await axios.get(`${Base_url}api/category`);
@@ -50,6 +51,7 @@ export const Home = () => {
   useEffect(()=>{
     getCategories()
   },[update])
+
   return (
     <View style={styles.container}>
 

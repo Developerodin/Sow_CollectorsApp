@@ -254,7 +254,7 @@ const SubmitSigupData= async()=>{
   
   // console.log("Data of user ====>",UserData)
      try {
-      const response = await axios.post(`${Base_url}b2b`, UserData);
+      const response = await axios.post(`${Base_url}api/b2b`, UserData);
       if (response.status === 201) {
            if(response.data){
       ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);

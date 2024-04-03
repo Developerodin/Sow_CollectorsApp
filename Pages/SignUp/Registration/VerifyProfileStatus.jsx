@@ -43,7 +43,7 @@ export const VerifyProfileStatus = () => {
          <Text style={{fontSize:25,fontWeight:400}}>We are currently verifying your profile !</Text>
         
          <Block >
-         <Text style={{fontSize:24,fontWeight:400,marginTop:10}}>Aman Gupta</Text>
+         <Text style={{fontSize:24,fontWeight:400,marginTop:10}}></Text>
          <Text style={{fontSize:14,fontWeight:400,marginTop:15}}>It may take 2-7 days. Thank you for your patience</Text>
            {/* <Image source={Line1} style={{marginTop:10}} /> */}
    
