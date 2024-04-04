@@ -52,6 +52,7 @@ export const CategoryAddModel2 = ({
 
     // Or set a specific startFrame and endFrame with:
     animationRef.current?.play(10, 80);
+    handelData()
   }, []);
 
   const handleInputChange = (name, value) => {
@@ -64,6 +65,10 @@ export const CategoryAddModel2 = ({
     setModalVisible(false);
     // setFormData(initalValuesForm);
   };
+
+  const handelData  = ()=>{
+    console.log("Data of category ==> add",categoriesData)
+  }
 
   return (
     <Modal
@@ -87,7 +92,7 @@ export const CategoryAddModel2 = ({
               color="teal"
             />
           </Block>
-          <Text style={{fontSize:17}}>Select Categories</Text>
+          <Text style={{fontSize:17}}>Select Categories </Text>
           <Block
             style={{
              

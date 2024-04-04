@@ -81,17 +81,17 @@ export const OrderDetail = ({route}) => {
          <Text style={styles.text1}>Pick Up Location</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:20}}>{orderDetails && orderDetails.from.Address}, {orderDetails && orderDetails.from.pincode}, {orderDetails && orderDetails.from.city} </Text>
+        <Text style={{fontSize:20}}>{orderDetails && orderDetails.from && orderDetails.from.Address}, {orderDetails && orderDetails.from && orderDetails.from.pincode}, {orderDetails && orderDetails.from && orderDetails.from.city} </Text>
         </Block>
         
      </Block>
      {
-  orderDetails && orderDetails.details.discription &&<Block style={{marginTop:20}} >
+  orderDetails && orderDetails.details && orderDetails.details.discription &&<Block style={{marginTop:20}} >
   <Block>
    <Text style={styles.text1}>Discription</Text>
   </Block>
   <Block style={{marginTop:10}}>
-  <Text style={{fontSize:20}}>{orderDetails && orderDetails.details.discription}</Text>
+  <Text style={{fontSize:20}}>{orderDetails && orderDetails.details && orderDetails.details.discription}</Text>
   </Block>
   
 </Block>
@@ -105,13 +105,13 @@ export const OrderDetail = ({route}) => {
          <Text style={styles.text1}>Order Collector</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> <Entypo name="user" size={14}  color="black" />  {orderDetails && orderDetails.to.name}</Text>
+        <Text style={{fontSize:16}}> <Entypo name="user" size={14}  color="black" />  {orderDetails && orderDetails.to && orderDetails.to.name}</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> <Feather name="phone" size={14} color="black" />  +91 {orderDetails && orderDetails.to.mobile}</Text>
+        <Text style={{fontSize:16}}> <Feather name="phone" size={14} color="black" />  +91 {orderDetails && orderDetails.to && orderDetails.to.mobile}</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> <AntDesign name="infocirlceo" size={14} color="black" />  {orderDetails && orderDetails.to.registerAs}</Text>
+        <Text style={{fontSize:16}}> <AntDesign name="infocirlceo" size={14} color="black" />  {orderDetails && orderDetails.to && orderDetails.to.registerAs}</Text>
         </Block>
         
      </Block>

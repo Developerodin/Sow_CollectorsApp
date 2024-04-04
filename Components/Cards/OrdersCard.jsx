@@ -19,12 +19,12 @@ export const OrdersCard = ({data}) => {
       <Block>
         <Block style={[styles.displayF]}>
         <Ionicons name="person" size={18} color="black" />
-        <Text style={[styles.text1]} >{data.to.name}</Text>
+        <Text style={[styles.text1]} >{data && data.to.name}</Text>
         </Block>
 
         <Block style={{marginTop:15}}>
           <Text style={{fontSize:18,fontWeight:400}}>Estimated Value</Text>
-          <Text style={{fontSize:20,fontWeight:500,marginTop:3}}>₹ {data.totalAmount}</Text>
+          <Text style={{fontSize:20,fontWeight:500,marginTop:3}}>₹ {data && data.totalAmount}</Text>
         </Block>
 
         <Block style={[styles.displayF,{marginTop:10}]}>
@@ -34,7 +34,7 @@ export const OrdersCard = ({data}) => {
 
         <Block style={[styles.displayF,{marginTop:10}]}>
         <Ionicons name="location" size={20} color="black" />
-        <Text style={[styles.text1]} >Pickup Location : {data.from.Address}, {data.from.pincode}, {data.from.city}, {data.from.country} </Text>
+        <Text style={[styles.text1]} >Pickup Location : {data && data.from && data.from.Address}, {data && data.from && data.from.pincode}, {data && data.from && data.from.city}, {data && data.from && data.from.country} </Text>
         </Block>
 
         <Block style={[styles.Center]} >

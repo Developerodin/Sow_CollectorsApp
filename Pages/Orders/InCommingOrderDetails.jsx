@@ -19,7 +19,7 @@ import { AntDesign } from "@expo/vector-icons";
 import DynamicInputField from "../../Components/DynamicInput/DynamicInputField ";
 import { OTPModel } from "../../Components/Model/OTPModel";
 import { ToastAndroid } from "react-native";
-import { NavigationMap } from "../../Components/Maps/NavigationMap";
+// import { NavigationMap } from "../../Components/Maps/NavigationMap";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { Base_url } from "../../Config/BaseUrl";
@@ -306,7 +306,7 @@ export const InCommingOrderDetails = ({ route }) => {
 
         <Modal visible={isModalVisible} animationType="slide">
           <View style={styles.modalContainer}>
-            <NavigationMap navigation={navigation} />
+            {/* <NavigationMap navigation={navigation} /> */}
 
             <Block
               style={{

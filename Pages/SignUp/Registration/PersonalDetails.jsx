@@ -229,12 +229,12 @@ export const PersonalDetails = () => {
 <Picker
           selectedValue={formData.gender}
           onValueChange={(itemValue) => handleInputChange('gender', itemValue)}
-          style={{ color: 'black', height: 50, fontSize: 18 }}
+          style={{ color: 'black', height: 50, fontSize: 18,borderWidth:1,borderColor:"red" }}
         >
           <Picker.Item label="Select Gender" value="" />
           <Picker.Item label="Male" value="male" />
           <Picker.Item label="Female" value="female" />
-          <Picker.Item label="Other" value="other" />
+          <Picker.Item label="Other" value="other"  />
         </Picker>
 </Block>
 

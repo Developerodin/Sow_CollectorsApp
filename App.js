@@ -34,7 +34,7 @@ import { Schedule } from './Pages/Schedule/Schedule';
 import { AboutCompany } from './Pages/Profile/ProfileTabs/AboutCompany';
 import { TermsCondition } from './Pages/Profile/ProfileTabs/TermsCondition';
 import { UpgradeTo } from './Pages/Profile/ProfileTabs/UpgradeTo';
-import { Address } from './Pages/Profile/ProfileTabs/Address/Address';
+// import { Address } from './Pages/Profile/ProfileTabs/Address/Address';
 import { VerifyProfile, VerifyProfileStatus } from './Pages/SignUp/Registration/VerifyProfileStatus';
 import { VerificationDetails } from './Pages/SignUp/Registration/VerificationDetails';
 import { PendingOrderDetails } from './Pages/Orders/PendingOrderDetails';
@@ -422,9 +422,9 @@ export default function App() {
             headerShown: true,
           }}/>
 
-<Stack.Screen name="Address" component={Address} options={{
+{/* <Stack.Screen name="Address" component={Address} options={{
             headerShown: true,
-          }}/>
+          }}/> */}
       
       </Stack.Navigator>
       {/* } */}

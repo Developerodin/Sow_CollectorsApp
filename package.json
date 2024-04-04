@@ -4,8 +4,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web"
   },
   "dependencies": {
@@ -16,7 +16,7 @@
     "@react-native-community/datetimepicker": "7.2.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-material/core": "^1.3.7",
-    "@react-native-picker/picker": "^2.4.10",
+    "@react-native-picker/picker": "^2.7.2",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/drawer": "^6.6.3",
     "@react-navigation/material-top-tabs": "^6.6.3",
@@ -28,7 +28,6 @@
     "expo-blur": "~12.4.1",
     "expo-image-picker": "~14.3.2",
     "expo-linear-gradient": "~12.3.0",
-    "expo-location": "~16.1.0",
     "expo-splash-screen": "~0.20.5",
     "expo-status-bar": "~1.6.0",
     "expo-task-manager": "~11.3.0",
@@ -36,12 +35,11 @@
     "lottie-react-native": "5.1.6",
     "react": "18.2.0",
     "react-dom": "^18.2.0",
-    "react-native": "0.72.6",
+    "react-native": "0.72.10",
     "react-native-check-box": "^2.1.7",
+    "react-native-compressor": "^1.8.24",
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-dropdown-select-list": "^2.0.5",
-    "react-native-geocoding": "^0.5.0",
-    "react-native-geolocation-service": "^5.3.1",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-maps": "1.7.1",
     "react-native-maps-directions": "^1.9.0",
@@ -57,7 +55,7 @@
     "react-native-scrollable-tab-view": "^1.0.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-web": "~0.19.6",
-    "react-native-webview": "^13.8.1"
+    "react-native-webview": "13.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

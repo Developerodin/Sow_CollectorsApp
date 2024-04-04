@@ -7,7 +7,7 @@ import { AntDesign } from '@expo/vector-icons';
 import DynamicInputField from '../../Components/DynamicInput/DynamicInputField ';
 import { OTPModel } from '../../Components/Model/OTPModel';
 import { ToastAndroid } from 'react-native';
-import { NavigationMap } from '../../Components/Maps/NavigationMap';
+// import { NavigationMap } from '../../Components/Maps/NavigationMap';
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import { Base_url } from '../../Config/BaseUrl';
@@ -90,13 +90,13 @@ export const PendingOrderDetails = ({route}) => {
          <Text style={styles.text1}>Order Collector</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> <Entypo name="user" size={14}  color="black" />  {orderDetails && orderDetails.to.name}</Text>
+        <Text style={{fontSize:16}}> <Entypo name="user" size={14}  color="black" />  {orderDetails && orderDetails.to && orderDetails.to.name}</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> <Feather name="phone" size={14} color="black" />  +91 {orderDetails && orderDetails.to.mobile}</Text>
+        <Text style={{fontSize:16}}> <Feather name="phone" size={14} color="black" />  +91 {orderDetails && orderDetails.to && orderDetails.to.mobile}</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> <AntDesign name="infocirlceo" size={14} color="black" />  {orderDetails && orderDetails.to.registerAs}</Text>
+        <Text style={{fontSize:16}}> <AntDesign name="infocirlceo" size={14} color="black" />  {orderDetails && orderDetails.to && orderDetails.to.registerAs}</Text>
         </Block>
         
      </Block>
@@ -106,13 +106,13 @@ export const PendingOrderDetails = ({route}) => {
          <Text style={styles.text1}>Order Details</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> Qty :  {orderDetails && orderDetails.details.quantity} Kg</Text>
+        <Text style={{fontSize:16}}> Qty :  {orderDetails && orderDetails.details && orderDetails.details.quantity} Kg</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> Category :  {orderDetails && orderDetails.details.category}</Text>
+        <Text style={{fontSize:16}}> Category :  {orderDetails && orderDetails.details && orderDetails.details.category}</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> Sub category : {orderDetails && orderDetails.details.sub_category}</Text>
+        <Text style={{fontSize:16}}> Sub category : {orderDetails && orderDetails.details && orderDetails.details.sub_category}</Text>
         </Block>
        
         <Block style={{marginTop:10}}>
@@ -126,7 +126,8 @@ export const PendingOrderDetails = ({route}) => {
          <Text style={styles.text1}>Pick Up Location</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:20}}>{orderDetails && orderDetails.from.Address}, {orderDetails && orderDetails.from.pincode}, {orderDetails && orderDetails.from.city}</Text>
+          
+        <Text style={{fontSize:20}}>{orderDetails && orderDetails.from && orderDetails.from.Address}, {orderDetails && orderDetails.from && orderDetails.from.pincode}, {orderDetails && orderDetails.from && orderDetails.from.city}</Text>
         </Block>
         
      </Block>
@@ -204,7 +205,7 @@ export const PendingOrderDetails = ({route}) => {
     
     <Modal visible={isModalVisible} animationType="slide">
         <View style={styles.modalContainer}>
-          <NavigationMap navigation={navigation} />
+          {/* <NavigationMap navigation={navigation} /> */}
 
           <Block
             style={{

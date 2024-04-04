@@ -180,6 +180,7 @@ export const MyRates = () => {
         `${Base_url}api/b2b/${userId}/category-subcategory`
       );
       const CategoriesData =  response.data.data.categories
+      // console.log("CategoriesData =====================>",CategoriesData)
       // console.log("res of category and subcategory =>", CategoriesData);
       const transformedData = [].concat(...CategoriesData.map(category => {
         return category.sub_category.map(subCategory => ({
@@ -453,16 +454,26 @@ export const MyRates = () => {
                 value={subAddForm.name}
                 onChangeText={(text) => handleSubAddInputChange("name", text)}
               /> */}
-               <Block style={{borderWidth:1,borderColor:"grey",marginTop:10}}>
+               <Block style={{marginTop:10}}>
+               {/* {
+            UserCategoryData && UserCategoryData.length>0 && UserCategoryData.map((el,index)=>{
+              console.log("UserCategoryData ==>",index,el)
+                  return <Text> </Text>
+                })
+              } */}
               <Picker
           selectedValue={subAddForm.categoryName}
-          onValueChange={(itemValue) => handleSubAddInputChange('categoryName', itemValue)}
-          style={{ color: 'black', height: 50, fontSize: 18 }}
+          onValueChange={(itemValue) => {
+            console.log("Value selected ==>",itemValue)
+            handleSubAddInputChange('categoryName', itemValue)
+          }}
+          style={{ color:'black', height: 50, fontSize: 18 }}
+          itemStyle={{ color: 'black' }}
         >
           <Picker.Item label="Select Category" value="" />
           {
             UserCategoryData && UserCategoryData.length>0 && UserCategoryData.map((el,index)=>{
-              
+              console.log("UserCategoryData ==>",index,el)
                   return <Picker.Item key={index} label={el.name} value={el.name} />
                 })
               }
