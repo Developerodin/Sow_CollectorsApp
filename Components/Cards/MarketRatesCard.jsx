@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -6,6 +6,10 @@ const {width, height} = Dimensions.get('window');
 import { Feather } from '@expo/vector-icons';
 export const MarketRatesCard = (props) => {
     const {Title,Value} = props
+
+    useEffect(()=>{
+console.log("Mediator Data ==>",Title)
+    },[])
   return (
     <View style={[{padding:15,marginTop:20,backgroundColor:"#fff",borderRadius:10,borderWidth:1,borderColor:"#E4E4E4"},styles.Space_Between]}>
        

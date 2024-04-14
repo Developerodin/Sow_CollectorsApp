@@ -94,6 +94,13 @@ setShowCartSuggestion(true)
     })
   },[update])
 
+  // useEffect(()=>{
+  //   setInterval(()=>{
+  //     getCurrentUser()
+  //   },1000)
+   
+    
+  // },[])
   
 
 //   useEffect(()=>{
@@ -107,7 +114,7 @@ setShowCartSuggestion(true)
 //   },[selectedTabs])
 
   return (
-    <AppContext.Provider value={{userDetails,SelectedAddressFromMap,setSelectedAddressFromMap,CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion,Cart,setCart,update,setUpdate,toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible ,selectedMarker, setSelectedMarker,isMarkerModalVisible, setMarkerModalVisible,selectedTabs,setSelectedTabs, isLoggedIn, toggleLogin,modalVisible,setModalVisible,isLoggedIn,setIsLoggedIn }}>
+    <AppContext.Provider value={{userDetails,setuserDetails,SelectedAddressFromMap,setSelectedAddressFromMap,CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion,Cart,setCart,update,setUpdate,toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible ,selectedMarker, setSelectedMarker,isMarkerModalVisible, setMarkerModalVisible,selectedTabs,setSelectedTabs, isLoggedIn, toggleLogin,modalVisible,setModalVisible,isLoggedIn,setIsLoggedIn }}>
       {children}
     </AppContext.Provider>
   );

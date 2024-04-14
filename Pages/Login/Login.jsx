@@ -32,7 +32,9 @@ import { Keyboard } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import { Base_url } from "../../Config/BaseUrl";
+import { useAppContext } from "../../Context/AppContext";
 export const Login = ({ navigation }) => {
+  const {setIsLoggedIn,setuserDetails}= useAppContext();
   const initalValuesForm = {
     phoneNumber: "",
   }
@@ -108,6 +110,7 @@ export const Login = ({ navigation }) => {
   };
 
   const handelPreviousUser = () => {
+    setIsLoggedIn(true);
     saveMobileNumber()
     setFormData(initalValuesForm);
     setOTPShow(false)
@@ -188,6 +191,7 @@ export const Login = ({ navigation }) => {
         if(response.data.message === "Login successful"){
           const User = JSON.stringify(response.data.data)
           await AsyncStorage.setItem("userDetails", User);
+          setuserDetails(response.data.data);
           saveAuthStatus()
           handelPreviousUser();
           console.log("res =>",response.data.data);

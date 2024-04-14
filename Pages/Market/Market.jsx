@@ -62,7 +62,7 @@ export const Market = () => {
     try {
       const response = await axios.get(`${Base_url}api/category`);
       setCategoriesData(response.data);
-      console.log("Categories all", response.data)
+      // console.log("Categories all", response.data)
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -74,7 +74,7 @@ export const Market = () => {
       const response = await axios.get(`${Base_url}api/category/${id}`);
       // setUpdate((prev) =>prev+1)
       setSelectedSubCategoriesData(response.data[0].sub_category)
-      console.log("SubCategory data", response.data[0].sub_category)
+      // console.log("SubCategory data", response.data[0].sub_category)
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -124,7 +124,7 @@ export const Market = () => {
         const fetchedB2BUsers = response.data;
         // setCategories(fetchedCategories);
 
-        console.log("Fetch users == >", fetchedB2BUsers);
+        // console.log("Fetch users == >", fetchedB2BUsers);
 
         setVendorsData(fetchedB2BUsers);
         const MediatorsData = fetchedB2BUsers.filter((el) => {
@@ -142,9 +142,9 @@ export const Market = () => {
         const CollectorsData = fetchedB2BUsers.filter((el) => {
           return el.registerAs === "Collectors";
         });
-       console.log("MediatorsData",MediatorsData)
+       console.log("MediatorsData ===>",MediatorsData)
        
-        // setMediatorsData(MediatorsData);
+        setMediatorsData(MediatorsData);
         // setWholesalersData(WholesalersData);
         // setFactoryData(FactoryData);
         // setCollectorsData(CollectorsData);
@@ -182,12 +182,12 @@ export const Market = () => {
         return false;
       });
 
-      console.log("Vendor data in filter  ==>", filteredData);
+      // console.log("Vendor data in filter  ==>", filteredData);
     }
    
     if (city) {
       filteredData = filteredData.filter((vendor) => vendor.city.toLowerCase() === city.toLowerCase());
-      console.log("Filter data  cat and subcategory ==>",filteredData)
+      // console.log("Filter data  cat and subcategory ==>",filteredData)
     }
     // console.log(filteredData);
     const MediatorsData = filteredData.filter((el) => {
@@ -231,12 +231,12 @@ export const Market = () => {
   useEffect(() => {
     fetchB2BUser();
     getCategories()
-    console.log("User Data ", userDetails);
+    // console.log("User Data ", userDetails);
   }, [refreshData,update]);
 
 
   useEffect(()=>{
-    console.log("Selected Data",selectedCategory,selectedSubCategory,selectedCity)
+    // console.log("Selected Data",selectedCategory,selectedSubCategory,selectedCity)
     filterData(selectedCategory,selectedSubCategory,selectedCity);
   },[selectedCategory,selectedSubCategory,selectedCity])
          
@@ -546,12 +546,15 @@ export const Market = () => {
                 MediatorsData.map((el, index) => {
                   // Check if categories is an array and not empty
                   if (el.categories && el.categories.length > 0) {
+                    // console.log("Mediator stage 1")
                     return el.categories.map((category, categoryIndex) => {
                       // Check if sub_category exists in the current category
                       if (category.sub_category && category.sub_category.length > 0) {
+                        // console.log("Mediator stage 2")
                         return category.sub_category.map((item, subIndex) => {
-
+                            // console.log("Stage 3====>",item.name,selectedSubCategory)
                           if(selectedSubCategory === item.name ){
+                            // console.log("Mediator stage 3")
                             return <TouchableOpacity key={subIndex} onPress={() => handeViewDetail(el._id, subIndex,categoryIndex)}>
                             <MarketRatesCard Title={el.name} Value={item.price} />
                           </TouchableOpacity>

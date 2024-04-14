@@ -14,7 +14,7 @@ export const Header = () => {
   const {toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible} =useAppContext()
  
   return (
-    <View style={[{marginTop:10,padding:10},styles.container]}>
+    <View style={[{marginTop:20,padding:10},styles.container]}>
         <Block  style={styles.Center}>
         {/* <TouchableOpacity onPress={toggleDrwerMenu}>
           <Entypo name="menu" size={43} color="black"  />

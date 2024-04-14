@@ -56,13 +56,14 @@ export const Home = () => {
     <View style={styles.container}>
 
       <Header/>
+      <StatusBar hidden={false} color={"light"} />
     <ScrollView >
 
       <Block style={{backgroundColor:"#FFF",padding:10}}>
 
      
       <Block style={{marginTop:20}}>
-        <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b"}}>Hey {userDetails.name} !!</Text>
+        <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b"}}>Hey {userDetails && userDetails.name} !!</Text>
 
         <Block style={[{marginTop:10},styles.Space_Between]}>
           <Block>
@@ -94,7 +95,7 @@ export const Home = () => {
   </Block>
  
   <Block>
-          <Button color='white' style={{width:120}}>
+          <Button onPress={handelSellScrap} color='white' style={{width:120}}>
               <Text style={{fontSize:16,fontWeight:400}}>
              Scraps
               </Text>
@@ -174,7 +175,7 @@ export const Home = () => {
   </Block>
  
   <Block>
-          <Button color='white' style={{width:120}}>
+          <Button onPress={handelSellScrap} color='white' style={{width:120}}>
               <Text style={{fontSize:16,fontWeight:400}}>
               Sell Scraps
               </Text>
@@ -203,7 +204,7 @@ export const Home = () => {
     <Text style={{fontSize:30,fontWeight:500,color:"grey"}}>ko kro</Text>
     <Text style={{fontSize:30,fontWeight:500}}>Cash</Text>
     <Block style={{marginTop:10}}>
-          <Button color='white' style={{borderWidth:1,height:80,borderBottomWidth:5,marginLeft:-3}}>
+          <Button onPress={handelSellScrap} color='white' style={{borderWidth:1,height:80,borderBottomWidth:5,marginLeft:-3}}>
               <Text style={{fontSize:18,fontWeight:400}}>
                  Within
               </Text>

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput,Share } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -22,8 +22,8 @@ export const Profile = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
   const [visible, setVisible] = useState(false);
-
-  const {userDetails,CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion} = useAppContext()
+  const [userDetails,setuserDetails] = useState({})
+  const {CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion} = useAppContext()
   const ProfileTabs=[
     
     // {icon:<FontAwesome name="address-book" size={24} color="#2dd36f" />,title:"Manage Address",link:"Address",color:"dark"},
@@ -38,7 +38,15 @@ export const Profile = () => {
 
   ]
 
-
+  const getCurrentUser=async()=>{
+    const user = await AsyncStorage.getItem('userDetails');
+    const ParseUser = JSON.parse(user)
+    if(user){
+      setuserDetails(ParseUser);
+        
+    }
+   
+    }
  
 
 
@@ -143,6 +151,10 @@ export const Profile = () => {
       setImage(result.uri);
     }
   };
+
+  useEffect(()=>{
+    getCurrentUser();
+  },[])
 
   return (
     <View style={styles.container}>

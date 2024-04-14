@@ -193,12 +193,12 @@ export const PendingOrderDetails = ({route}) => {
              
             
               </Button> */}
-    <Button color='black'  style={{height:63}}>
+    {/* <Button color='black'  style={{height:63}}>
              
               Cancel Order
              
             
-              </Button>
+              </Button> */}
     </Block>
 
     <OTPModel modalVisible ={modalVisible} setModalVisible={setModalVisible} handelComplete={handelComplete} orderCompleteStatus={orderCompleteStatus} />

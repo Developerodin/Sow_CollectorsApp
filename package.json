@@ -1,6 +1,6 @@
 {
   "name": "sow_collectors_app",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -16,7 +16,7 @@
     "@react-native-community/datetimepicker": "7.2.0",
     "@react-native-community/masked-view": "^0.1.11",
     "@react-native-material/core": "^1.3.7",
-    "@react-native-picker/picker": "^2.7.2",
+    "@react-native-picker/picker": "2.4.10",
     "@react-navigation/bottom-tabs": "^6.5.8",
     "@react-navigation/drawer": "^6.6.3",
     "@react-navigation/material-top-tabs": "^6.6.3",
