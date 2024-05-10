@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
+import { FlatList,RefreshControl, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
 
@@ -25,6 +25,17 @@ export const Orders = () => {
   const [completedOrders,setCompletedOrders] = useState([]);
   const [InCommingpendingOrders,setInCommingPendingOrders] = useState([]);
   const [InCommingcompletedOrders,setInCommingCompletedOrders] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    // Call your functions here
+    getOrders();
+    getInCommingOrders();
+    // After fetching data, set refreshing to false
+    setRefreshing(false);
+  };
+
   const handleIndexChange = (newIndex) => setIndex(newIndex);
 
   const getOrders = async () => {
@@ -36,11 +47,13 @@ export const Orders = () => {
       const Orders = data.orders
       setOrders(Orders);
       const PendingOrders = Orders.filter((el)=>{
-        return el.status === "pending"
+        return el.status === "pending" || el.status === "in-progress" || el.status === "rejected" || el.status === "canceled"
       })
       const CompletedOrders = Orders.filter((el)=>{
         return el.status === "completed"
       })
+
+      // in-progress
       setPendingOrders(PendingOrders);
       setCompletedOrders(CompletedOrders);
     } catch (error) {
@@ -205,7 +218,15 @@ export const Orders = () => {
 
 
   return (
-    <View style={styles.container}>
+     <ScrollView
+      contentContainerStyle={{ flex: 1 }}
+      refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }
+    >
     <Header/>
    
     <TabView
@@ -217,7 +238,7 @@ export const Orders = () => {
    
     
     
-    </View>
+    </ScrollView>
   )
 }
 

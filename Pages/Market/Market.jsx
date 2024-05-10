@@ -304,29 +304,28 @@ export const Market = () => {
                   <View style={{ marginTop: 20,height:200 }}>
                     <ScrollView>
                    
-                    <Block style={[styles.Space_Between, { marginTop: 10 }]}>
-                      <TouchableOpacity
+                    <TouchableOpacity
                         activeOpacity={0.6}
-                        onPress={() => handelCategory("","0")}
-                      >
+                        onPress={() => handelCategory("","0")} 
+                        style={[styles.Space_Between, { marginTop: 10 }]}>
+                      
                         <Text style={{ fontSize: 20 }}>None</Text>
-                      </TouchableOpacity>
-                    </Block>
+                 
+                    </TouchableOpacity>
                     {CategoriesData.map((el, index) => {
                       
                      
                          return (
-                          <Block
+                          <TouchableOpacity
+                          activeOpacity={0.6}
+                          onPress={() => handelCategory(el.name,el._id)}
                           key={index}
                           style={[styles.Space_Between, { marginTop: 10 }]}
                         >
-                          <TouchableOpacity
-                            activeOpacity={0.6}
-                            onPress={() => handelCategory(el.name,el._id)}
-                          >
+                         
                             <Text style={{ fontSize: 20 }}>{el.name}</Text>
-                          </TouchableOpacity>
-                        </Block>
+                          
+                        </TouchableOpacity>
                          );
                      
                     
@@ -384,29 +383,27 @@ export const Market = () => {
                     <ScrollView>
 
                     
-                    <Block style={[styles.Space_Between, { marginTop: 10 }]}>
-                      <TouchableOpacity
+                    <TouchableOpacity
                         activeOpacity={0.6}
-                        onPress={() => handelSubCategory("")}
-                      >
+                        onPress={() => handelSubCategory("")} style={[styles.Space_Between, { marginTop: 10 }]}>
+                     
                         <Text style={{ fontSize: 20 }}>None</Text>
-                      </TouchableOpacity>
-                    </Block>
+                     
+                    </TouchableOpacity>
                     {SelectedSubCategoriesData && SelectedSubCategoriesData.map((el, index) => {
                       
                      
                          return (
-                          <Block
+                          <TouchableOpacity
+                          activeOpacity={0.6}
+                          onPress={() => handelSubCategory(el.name)}
                           key={index}
                           style={[styles.Space_Between, { marginTop: 10 }]}
                         >
-                          <TouchableOpacity
-                            activeOpacity={0.6}
-                            onPress={() => handelSubCategory(el.name)}
-                          >
+                         
                             <Text style={{ fontSize: 20 }}>{el.name}</Text>
                           </TouchableOpacity>
-                        </Block>
+                      
                          );
                      
                     
@@ -463,14 +460,14 @@ export const Market = () => {
                     <ScrollView>
 
                   
-                    <Block style={[styles.Space_Between, { marginTop: 10 }]}>
-                      <TouchableOpacity
+                    <TouchableOpacity
                         activeOpacity={0.6}
                         onPress={() => handelCity("")}
-                      >
+                         style={[styles.Space_Between, { marginTop: 10 }]}>
+                     
                         <Text style={{ fontSize: 20 }}>None</Text>
                       </TouchableOpacity>
-                    </Block>
+                    
                     {AllVendorsData.map((el, index) => {
                        const lowerCaseCity = el.city.toLowerCase();
 
@@ -480,17 +477,16 @@ export const Market = () => {
                         uniqueCitySet.add(lowerCaseCity);
                         // console.log("Lower city not prsent   ===>",lowerCaseCity,uniqueCitySet)
                          return (
-                          <Block
+                          <TouchableOpacity
+                          activeOpacity={0.6}
+                          onPress={() => handelCity(el.city)}
                           key={index}
                           style={[styles.Space_Between, { marginTop: 10 }]}
                         >
-                          <TouchableOpacity
-                            activeOpacity={0.6}
-                            onPress={() => handelCity(el.city)}
-                          >
+                          
                             <Text style={{ fontSize: 20 }}>{el.city.toLowerCase()}</Text>
                           </TouchableOpacity>
-                        </Block>
+                       
                          );
                        } else {
                          // If the lowercased category is already in the set, return null (no rendering)

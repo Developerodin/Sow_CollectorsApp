@@ -25,7 +25,7 @@ export const PendingOrderDetails = ({route}) => {
   const [modalVisible,setModalVisible] = useState(false)
   const [orderCompleteStatus,setOrderCompleteStatus] = useState(false)
   const [isModalVisible, setIsModalVisible] = useState(false);
-
+  const [update,setupdate] = useState(0)
   const getOrdersById = async () => {
     try {
       const response = await axios.get(`${Base_url}api/b2b_orders/${id}`);
@@ -43,6 +43,28 @@ export const PendingOrderDetails = ({route}) => {
     const updatedInputFields = [...inputFields, { value: '', category: 'Category 1' }];
     setInputFields(updatedInputFields);
   };
+  const handleOrderUpdate = async (orderId, status, quantity) => {
+    try {
+      // Make API call to update order status and quantity
+      await axios.put(`${Base_url}api/b2b_orders/orders/${orderId}`, {
+        status,
+        quantity,
+      });
+
+      // You can perform additional actions after a successful update if needed
+      if(status === "completed"){
+        setOrderCompleteStatus(true);
+      }
+   
+      setupdate((prev)=>prev+1)
+      console.log("Order updated successfully!");
+      ToastAndroid.show("Order successfull !", ToastAndroid.SHORT);
+    } catch (error) {
+        ToastAndroid.show("Try Again !!", ToastAndroid.SHORT);
+      console.error("Error updating order:", error.message);
+    }
+  };
+
 
   const handelSubmit =()=>{
     console.log("Values",inputFields )
@@ -66,9 +88,15 @@ export const PendingOrderDetails = ({route}) => {
 
   }
 
+  const handelCancel = async () =>{
+    handleOrderUpdate(orderDetails._id,"canceled","")
+    setupdate((prev)=>prev+1)
+  }
+
+
   useEffect(()=>{
     getOrdersById()
-  },[])
+  },[update])
   
   return (
    <View style={styles.container}>
@@ -80,7 +108,7 @@ export const PendingOrderDetails = ({route}) => {
          <Text style={{fontSize:20,color:"grey"}}>OTP :{orderDetails && orderDetails.otp}</Text>
          <Button  style={{backgroundColor:"crimson",borderRadius:10}}>
               <Text style={{fontSize:16,fontWeight:400,color:"#fff"}}>
-              Pending
+              {orderDetails && (orderDetails.status).toUpperCase()}
               </Text>
             
               </Button>
@@ -187,6 +215,14 @@ export const PendingOrderDetails = ({route}) => {
 
 
     <Block style={[{marginTop:30,marginBottom:30},styles.Center]}>
+    {
+     orderDetails && orderDetails.status === "in-progress" || "pending" && orderDetails && orderDetails.status !== "canceled" &&  <Block style={[{ marginTop: 30, marginBottom: 30 }, styles.Center]}>
+    
+      <Button color="black" onPress={handelCancel} style={{ height: 63 }}>
+        Cancel Order
+      </Button>
+    </Block>
+    }
     {/* <Button  color='black' onPress={handelSubmit} style={{height:63}}>
               
               Submit

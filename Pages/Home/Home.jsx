@@ -41,6 +41,16 @@ export const Home = () => {
   const handelSellScrap = ()=>{
     navigation.navigate("Market")
   }
+
+  const handelCategoryPress= ()=>{
+    if(userDetails.registerAs === "Collectors"){
+      navigation.navigate("Market");
+      return
+    }
+    
+    navigation.navigate("My Rates")
+  }
+
   useEffect(() => {
     animationRef.current?.play();
 
@@ -115,12 +125,12 @@ export const Home = () => {
 
 
 <Block style={{marginTop:30}}>
-        <Text style={{fontSize:16,fontWeight:500}}>Latest from Us</Text>
+        {/* <Text style={{fontSize:16,fontWeight:500}}>Latest from Us</Text> */}
         
-        <Block style={{marginTop:20,flexDirection:"row",justifyContent:"center",alignItem:"center"}}>
+        {/* <Block style={{marginTop:20,flexDirection:"row",justifyContent:"center",alignItem:"center"}}>
   <Image style={{width:"100%",height:200}} 
   source={{ uri: "https://img.freepik.com/premium-vector/mega-sale-discount-banner-set-promotion-with-yellow-background_497837-702.jpg" }} />
-</Block>
+</Block> */}
       </Block>
 
 
@@ -148,11 +158,11 @@ export const Home = () => {
         <View style={styles.gridcontainer}>
   {CategoriesData && CategoriesData.map((el, index) => {
     if(index < parseInt(categoryLength)){
-      return <View style={styles.gridcolumn} key={index}>
+      return <TouchableOpacity activeOpacity={0.5} onPress={handelCategoryPress}  style={styles.gridcolumn} key={index}>
       <View style={styles.gridItem}>
         <Text style={styles.itemText}>{el.name}</Text>
       </View>
-    </View>
+    </TouchableOpacity>
     }
    
 })}

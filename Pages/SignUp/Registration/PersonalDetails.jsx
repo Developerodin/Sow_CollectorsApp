@@ -24,6 +24,7 @@ import { Base_url } from '../../../Config/BaseUrl';
 import { ToastAndroid } from "react-native";
 import MultiSelect from 'react-native-multiple-select';
 import { CategoryAddModel } from '../../../Components/CategoryAddModel/CategoryAddModel';
+import { Checkbox } from 'galio-framework';
 // import CheckBox from 'react-native-check-box';
 
 export const PersonalDetails = () => {
@@ -45,6 +46,7 @@ export const PersonalDetails = () => {
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
     const [ modalVisible,setModalVisible] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState([]);
+    const [termandCondition,setTermandCondition] = useState(false);
     const customStyle ={
       Card1: {
       
@@ -99,6 +101,11 @@ export const PersonalDetails = () => {
     };
     const handelPersonalDetailSubmit=()=>{
       const emptyField = Object.keys(formData).find(key => formData[key] === "");
+       
+      if(!termandCondition){
+        ToastAndroid.show(`Please check term and conditions`, ToastAndroid.SHORT);
+        return
+      }
 
       if (emptyField) {
         ToastAndroid.show(`Please provide ${emptyField}`, ToastAndroid.SHORT);
@@ -135,7 +142,7 @@ export const PersonalDetails = () => {
       });
     };
     const handelBack = () => {
-      navigation.navigate("Login")
+      navigation.navigate("Register As")
     };
     const getCategories = async () => {
       
@@ -331,6 +338,19 @@ export const PersonalDetails = () => {
       />
                 </Block>
        
+        </Block>
+
+        <Block style={[{flexDirection:"row",justifyContent:"left",alignItems:"center",marginLeft:10}]}>
+        <Checkbox
+      style={{marginTop:15}}
+      color="info"
+      label={"By checking this box, you accept the terms and conditions"}
+      initialValue={termandCondition}
+        onChange={(el) => {
+                console.log("VAlue of checkbox ==>",el)
+                setTermandCondition(el)
+        }}
+      />
         </Block>
 
        </Block>

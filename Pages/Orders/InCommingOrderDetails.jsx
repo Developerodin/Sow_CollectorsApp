@@ -78,7 +78,10 @@ export const InCommingOrderDetails = ({ route }) => {
       });
 
       // You can perform additional actions after a successful update if needed
-      setOrderCompleteStatus(true);
+      if(status === "completed"){
+        setOrderCompleteStatus(true);
+      }
+   
       setupdate((prev)=>prev+1)
       console.log("Order updated successfully!");
       ToastAndroid.show("Order successfull !", ToastAndroid.SHORT);
@@ -104,12 +107,12 @@ export const InCommingOrderDetails = ({ route }) => {
   }
   
   const handelComplete = (otp) => {
-    console.log("OTP =>", otp,orderDetails._id);
+    console.log("OTP =>", otp,orderDetails.otp);
     if (otp === "") {
       ToastAndroid.show("OTP Required", ToastAndroid.SHORT);
       return;
     }
-    if (orderDetails && otp === orderDetails.otp) {
+    if ( orderDetails && parseInt(otp) === orderDetails.otp) {
         
         handleOrderUpdate(orderDetails._id,"completed",quantityCollected)
         setModalVisible(false);
@@ -137,7 +140,7 @@ export const InCommingOrderDetails = ({ route }) => {
           }}
         >
           <Block style={styles.Space_Between}>
-            <Text style={{ fontSize: 20, color: "grey" }}>status</Text>
+            <Text style={{ fontSize: 20, color: "grey" }}>Status</Text>
             {orderDetails && orderDetails.status === "in-progress" && (
               <Button style={{ backgroundColor: "crimson", borderRadius: 10 }}>
                 <Text style={{ fontSize: 16, fontWeight: 400, color: "#fff" }}>
@@ -156,7 +159,22 @@ export const InCommingOrderDetails = ({ route }) => {
             {orderDetails && orderDetails.status === "completed" && (
               <Button style={{ backgroundColor: "teal", borderRadius: 10 }}>
                 <Text style={{ fontSize: 16, fontWeight: 400, color: "#fff" }}>
-                completed
+                Completed
+                </Text>
+              </Button>
+            )}
+            {orderDetails && orderDetails.status === "rejected" && (
+              <Button style={{ backgroundColor: "crimson", borderRadius: 10 }}>
+                <Text style={{ fontSize: 16, fontWeight: 400, color: "#fff" }}>
+                Rejected
+                </Text>
+              </Button>
+            )}
+
+{orderDetails && orderDetails.status === "canceled" && (
+              <Button style={{ backgroundColor: "crimson", borderRadius: 10 }}>
+                <Text style={{ fontSize: 16, fontWeight: 400, color: "#fff" }}>
+                Canceled
                 </Text>
               </Button>
             )}

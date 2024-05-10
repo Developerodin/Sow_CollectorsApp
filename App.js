@@ -91,21 +91,23 @@ const Tabs = ({navigation}) => {
       />
       }
       
-     
-
-<Tab.Screen
-        name="My Rates"
-        component={MyRates}
-        options={{
-          tabBarIcon: ({ color, size }) => (
+     {
+            userDetails.registerAs !== "Collectors"  && <Tab.Screen
+            name="My Rates"
+            component={MyRates}
+            options={{
+              tabBarIcon: ({ color, size }) => (
+               
+                
+                <AntDesign name="barschart" size={size} color={color} />
+              ),
+              headerShown: false,
+            }}
            
-            
-            <AntDesign name="barschart" size={size} color={color} />
-          ),
-          headerShown: false,
-        }}
-       
-      />
+          />
+     }
+    
+
       
 
 

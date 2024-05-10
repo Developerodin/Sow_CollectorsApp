@@ -2,7 +2,7 @@
   "expo": {
     "name": "SOW COLLECTORS APP",
     "slug": "scraponwheels-collectors",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -18,6 +18,7 @@
       "supportsTablet": true
     },
     "android": {
+      "versionCode": 3,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"

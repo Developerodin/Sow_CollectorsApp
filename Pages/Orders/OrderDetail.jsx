@@ -42,7 +42,7 @@ export const OrderDetail = ({route}) => {
     
      <Block >
         <Block style={styles.Space_Between}>
-         <Text style={styles.text1}>Category</Text>
+        <Text style={{ fontSize: 20, color: "grey" }}>Status</Text>
          <Button  style={{backgroundColor:"#45FFCA",borderRadius:10}}>
               <Text style={{fontSize:16,fontWeight:400,color:"green"}}>
               Completed
@@ -50,7 +50,8 @@ export const OrderDetail = ({route}) => {
             
               </Button>
         </Block>
-        <Block>
+        <Block style={{marginTop:10}}>
+        <Text style={styles.text1}>Category</Text>
         <Text style={styles.text2}>Electronics</Text>
         </Block>
         

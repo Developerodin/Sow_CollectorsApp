@@ -17,6 +17,10 @@ export const PendingOrderCard = ({data}) => {
   return (
     <View style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:5}}>
       <Block>
+      <Block right>
+        <Text style={[{color:"grey",fontSize:13}]} >{(data.status).toUpperCase()}</Text>
+        </Block>
+        
         <Block style={[styles.displayF]}>
         <Ionicons name="person" size={18} color="black" />
         <Text style={[styles.text1]} >{data && data.to.name}</Text>
