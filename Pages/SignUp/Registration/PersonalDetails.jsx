@@ -31,10 +31,8 @@ export const PersonalDetails = () => {
     const navigation= useNavigation()
     const [formData, setFormData] = useState({
       gender:"",
-      pincode:"",
       email: "",
       name:"",
-      city:"",
       address:""
     });
     const [CategoriesData, setCategoriesData] = useState([]);
@@ -47,6 +45,12 @@ export const PersonalDetails = () => {
     const [ modalVisible,setModalVisible] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [termandCondition,setTermandCondition] = useState(false);
+    const [selectedState, setSelectedState] = useState("");
+    const [selectedCity, setSelectedCity] = useState("");
+    const [pincode,setPincode] = useState("")
+    const [isStateModelOpen,setIsStateModelOpen] = useState(false);
+    const [isCityModelOpen,setIsCityModelOpen] = useState(false);
+    const [AddressData,setAddressData] = useState([]);
     const customStyle ={
       Card1: {
       
@@ -71,11 +75,84 @@ export const PersonalDetails = () => {
       },
     }
 
+    const AddAddressData = async () => {
+      try {
+        const url = `${Base_url}api/unifiedPinCode`;
+        // const formData1 = new FormData();
+        // formData1.append('user_id', userDetails.user_id);
+        // formData1.append('degree', formData.degree);
+        // formData1.append('university', formData.university);
+        // formData1.append('year', formData.yearGraduated);
+  
+      
+  
+        const response = await axios.get(url,{
+          headers: {
+            "Content-Type": "multipart/form-data",
+            // "Authorization" :`Berear ${token}`,
+       
+          }
+        });
+        const data = response.data
+            // console.log("Response check work experience",data.data)
+            
+              // if(data === "otp in valid"){
+              //   showToast("error", "wrong otp", "");
+              //   return;
+              // }
+  
+            if(data.status === "success"){
+                //  localStorage.setItem("userRegisterDetails", JSON.stringify(data.user));
+            
+              //  console.log("Data main ==>",data.data)
+               const Data = data.data
+              
+               // Set the unique states in the state variable
+               setAddressData(Data);
+             
+             
+                return
+              
+            }
+            // showToast("error", "Try After Some Time", "");
+  
+              
+           
+            
+      } catch (error) {
+        console.error('Error:', error);
+        // showToast("error", "Try After Some Time", "");
+      }
+    };
+
+    const handlePincodeChange = (newPincode) => {
+   
+      setPincode(newPincode);
+      // console.log("Enter Pin code ==>",AddressData)
+      // Search for the pincode in the data array
+      const pinData =  AddressData.find(item => item.pincode === parseInt(newPincode));
+    
+      // console.log("Pincode Data",pinData);
+      if (pinData) {
+        setSelectedCity(pinData.city_name);
+        setSelectedState(pinData.state_name);
+      } else {
+        setSelectedCity('');
+        setSelectedState('');
+      }
+    };
+
     const savePersonalDetails = async () => {
       try {
         // You can use any key you like to store the authentication status
         const key = 'Details';
-        const value = JSON.stringify(formData) // Replace with your actual authentication status
+        const data = {
+          ...formData,
+          city:selectedCity,
+          state:selectedState,
+          pincode:pincode
+        }
+        const value = JSON.stringify(data) // Replace with your actual authentication status
         
         const categoryNames = selectedCategories.map(category => {
           return {
@@ -99,6 +176,7 @@ export const PersonalDetails = () => {
         console.error('Error saving Details :', error);
       }
     };
+    
     const handelPersonalDetailSubmit=()=>{
       const emptyField = Object.keys(formData).find(key => formData[key] === "");
        
@@ -181,7 +259,8 @@ export const PersonalDetails = () => {
     }, []);
 
     useEffect(()=>{
-      getCategories()
+      getCategories();
+      AddAddressData()
     },[])
   return (
     <View style={styles.container}>
@@ -312,8 +391,10 @@ export const PersonalDetails = () => {
         keyboardType="numeric"
         label="Pin Code"
         leading={(props) => <Icon name={ 'city'} {...props} />}
-        value={formData.pincode}
-        onChangeText={(text) => handleInputChange("pincode", text)}
+        name="pincode"
+      
+        value={pincode}
+        onChangeText={(text) => handlePincodeChange(text)}
         color={ 'grey'}
         inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
@@ -329,16 +410,34 @@ export const PersonalDetails = () => {
         keyboardType="default"
         label="City"
         leading={(props) => <Icon name={ 'city'} {...props} />}
-        value={formData.city}
-        onChangeText={(text) => handleInputChange("city", text)}
+        value={selectedCity}
+        onChangeText={(text) => setSelectedCity(text)}
         color={ 'grey'}
         inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
       />
                 </Block>
+
+                
        
         </Block>
+
+        <Block style={[ customStyle.Card3]}>
+                <TextInput
+
+        variant="standard"
+        keyboardType="default"
+        label="State"
+        leading={(props) => <Icon name={ 'city'} {...props} />}
+        value={selectedState}
+        onChangeText={(text) => setSelectedState(text)}
+        color={ 'grey'}
+        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
+        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
+        
+      />
+                </Block>
 
         <Block style={[{flexDirection:"row",justifyContent:"left",alignItems:"center",marginLeft:10}]}>
         <Checkbox

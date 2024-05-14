@@ -243,6 +243,7 @@ const SubmitSigupData= async()=>{
     Address: userDetails.address,
     city: userDetails.city,
     pincode: userDetails.pincode,
+    state: userDetails.state,
     country: 'India',
     registerAs: RegisterAs,
     panNo:PANformData.PANNo,
@@ -255,6 +256,23 @@ const SubmitSigupData= async()=>{
   // console.log("Data of user ====>",UserData)
      try {
       const response = await axios.post(`${Base_url}api/b2b`, UserData);
+         
+      if(response.status === 200){
+           if(response.data){
+            const data = response.data
+              console.log("Data ==>",response.data)
+              ToastAndroid.show(data.error, ToastAndroid.SHORT);
+              setShowPAN(true);
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'FillPersonalDetails' }],
+              });
+              // navigation.navigate("FillPersonalDetails")
+              return
+           }
+           return
+      }
+      
       if (response.status === 201) {
            if(response.data){
       ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);
