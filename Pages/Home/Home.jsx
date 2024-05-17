@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
+import { FlatList,RefreshControl, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
 import { Header } from '../../Components/Header/Header';
@@ -10,7 +10,7 @@ import { useAppContext } from '../../Context/AppContext';
 import axios from 'axios';
 import { Base_url } from '../../Config/BaseUrl';
 import { useNavigation } from '@react-navigation/native';
-
+import logo from "./scrap-img.jpeg"
 export const Home = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
@@ -18,6 +18,19 @@ export const Home = () => {
   const [CategoriesData, setCategoriesData] = useState([]);
   const [categoryLength,setCategoryLength] = useState(4)
   const [categorySeetype,setCategorySeetype] = useState(false);
+  const [Data, setData] = useState([]);
+  const [marketRateLength,setmarketRateLength] = useState(2)
+  const [marketRateSeetype,setmarketRateSeetype] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    // Call your functions here
+    getCategories();
+    fetchMarketRates()
+    // After fetching data, set refreshing to false
+    setRefreshing(false);
+  };
 
   const getCategories = async () => {
     try {
@@ -38,6 +51,14 @@ export const Home = () => {
     setCategorySeetype(false)
     setCategoryLength(4)
   }
+  const handelMarketRateLength =  () => {
+    setmarketRateSeetype(true)
+    setmarketRateLength(CategoriesData.length)
+  }
+  const handelMarketRateLength2 =  () => {
+    setmarketRateSeetype(false)
+    setmarketRateLength(2)
+  }
   const handelSellScrap = ()=>{
     navigation.navigate("Market")
   }
@@ -51,6 +72,30 @@ export const Home = () => {
     navigation.navigate("My Rates")
   }
 
+  const fetchMarketRates = async () => {
+    try {
+      const response = await axios.get(`${Base_url}api/market_rates`); 
+      console.log('Fetched plans:', response.data);
+      setData(response.data);
+    } catch (error) {
+      console.error('Error fetching plans:', error);
+    }
+  };
+
+  function formatDate(dateString) {
+    const date = new Date(dateString);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear() % 100; // Get last two digits of the year
+  
+    // Add leading zeros if needed
+    const formattedDay = day < 10 ? `0${day}` : day;
+    const formattedMonth = month < 10 ? `0${month}` : month;
+    const formattedYear = year < 10 ? `0${year}` : year;
+  
+    return `${formattedDay}:${formattedMonth}:${formattedYear}`;
+  }
+
   useEffect(() => {
     animationRef.current?.play();
 
@@ -59,7 +104,8 @@ export const Home = () => {
   }, []);
 
   useEffect(()=>{
-    getCategories()
+    getCategories();
+    fetchMarketRates()
   },[update])
 
   return (
@@ -67,7 +113,12 @@ export const Home = () => {
 
       <Header/>
       <StatusBar hidden={false} color={"light"} />
-    <ScrollView >
+    <ScrollView  refreshControl={
+        <RefreshControl
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
+      }>
 
       <Block style={{backgroundColor:"#FFF",padding:10}}>
 
@@ -93,7 +144,61 @@ export const Home = () => {
        
       </Block>
 
-      <Block style={{marginTop:20,borderWidth:1,borderColor:"#DCDCDC",padding:10,backgroundColor:"#96DE20",paddingBottom:20,borderRadius:7,elevation:2}}>
+{
+  Data && Data.length >0 && <Block style={{marginTop:30}}>
+
+  <Block style={styles.Space_Between}>
+  <Text style={{fontSize:16,fontWeight:500}}>Live Market Rates</Text>
+  {
+    marketRateSeetype ? <TouchableOpacity onPress={handelMarketRateLength2}>
+    <Text style={{fontSize:12,fontWeight:500,color:"#00a56a"}}>View Less</Text>
+    </TouchableOpacity>
+    :
+    <TouchableOpacity onPress={handelMarketRateLength}>
+    <Text style={{fontSize:12,fontWeight:500,color:"#00a56a"}}>View All</Text>
+    </TouchableOpacity>
+  }
+ 
+
+  
+  
+  </Block>
+
+  
+  <Block style={{marginTop:20}}>
+  <View style={styles.gridcontainer}>
+{Data && Data.map((el, index) => {
+if(index < parseInt(marketRateLength)){
+return <TouchableOpacity style={{marginTop:10}} onPress={handelCategoryPress} activeOpacity={0.5}  key={index} >
+<Block style={{width:width*0.93,borderRadius:5,padding:10,borderWidth:1,borderColor:"#C8C8C8",flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
+<Block> 
+<Image
+source={logo}
+style={{resizeMode: 'contain',width:60,height:60}}
+/>
+</Block>
+<Block style={{width:"60%",marginLeft:20}}> 
+  <Text style={{fontWeight:500,color:"#002379",fontSize:16}}>{el.name.toUpperCase()}</Text>
+  <Text style={{fontSize:14}}>{el.category}</Text>
+  <Text style={{fontSize:12}}>{formatDate(el.date)}  {el.time} </Text>
+</Block>
+<Block> 
+  <Text style={{fontWeight:500,color:"#002379"}}>₹ {el.price}</Text>
+</Block>
+</Block>
+</TouchableOpacity>
+}
+
+})}
+</View>
+
+
+  </Block>
+</Block>
+}
+      
+
+      <Block style={{marginTop:40,borderWidth:1,borderColor:"#DCDCDC",padding:10,backgroundColor:"#96DE20",paddingBottom:20,borderRadius:7,elevation:2}}>
 
 <Block>
   <Block>
@@ -124,7 +229,7 @@ export const Home = () => {
 
 
 
-<Block style={{marginTop:30}}>
+<Block style={{marginTop:20}}>
         {/* <Text style={{fontSize:16,fontWeight:500}}>Latest from Us</Text> */}
         
         {/* <Block style={{marginTop:20,flexDirection:"row",justifyContent:"center",alignItem:"center"}}>
