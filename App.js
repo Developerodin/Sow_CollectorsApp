@@ -45,6 +45,9 @@ import { OrderStatus } from './Pages/Market/OrderStatus';
 import { InCommingOrderDetails } from './Pages/Orders/InCommingOrderDetails';
 import { PrivacyPolicy } from './Pages/Profile/ProfileTabs/PrivacyPolicy';
 import { WebViewApp } from './Pages/WebViewPage/WebView';
+import { KYC } from './Pages/Profile/ProfileTabs/Kyc';
+import { LiveRating } from './Pages/LiveRating/LiveRating';
+import { DailyRates } from './Pages/LiveRating/DailyRates';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -327,6 +330,18 @@ export default function App() {
           }}
         />
 
+<Stack.Screen name="Live Market Rates" component={LiveRating}
+          options={{
+            headerShown: true,
+          }}
+        />
+
+<Stack.Screen name="Daily Rates" component={DailyRates}
+          options={{
+            headerShown: true,
+          }}
+        />
+
 <Stack.Screen name="Order Status" component={OrderStatus}
           options={{
             headerShown: true,
@@ -421,6 +436,10 @@ export default function App() {
             headerShown: true,
           }}/>
            <Stack.Screen name="Upgrade Profile" component={UpgradeTo} options={{
+            headerShown: true,
+          }}/>
+
+<Stack.Screen name="Update Kyc" component={KYC} options={{
             headerShown: true,
           }}/>
 

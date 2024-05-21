@@ -250,7 +250,7 @@ export const Market = () => {
           <Block style={{borderBottomWidth:1,paddingBottom:20,borderColor:"#E4E4E4"}}>
             <Block style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}>
               <Text style={{ fontSize: 23, marginTop: 20 }}>
-                Live Market Rates
+              Scrap Market 
               </Text>
 
               <Block style={{marginTop:18}}>

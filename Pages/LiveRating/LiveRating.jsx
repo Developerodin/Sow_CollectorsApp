@@ -9,11 +9,14 @@ import LottieView from 'lottie-react-native';
 import { useAppContext } from '../../Context/AppContext';
 import axios from 'axios';
 import { Base_url } from '../../Config/BaseUrl';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import logo from "./scrap-img.jpeg"
-export const Home = () => {
+
+export const LiveRating = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
+  const route = useRoute();
+  const { value } = route.params;
   const {userDetails,update} = useAppContext()
   const [CategoriesData, setCategoriesData] = useState([]);
   const [categoryLength,setCategoryLength] = useState(4)
@@ -43,14 +46,6 @@ export const Home = () => {
     }
   };
 
-  const handelCategoryLength =  () => {
-    setCategorySeetype(true)
-    setCategoryLength(CategoriesData.length)
-  }
-  const handelCategoryLength2 =  () => {
-    setCategorySeetype(false)
-    setCategoryLength(4)
-  }
   const handelMarketRateLength =  () => {
     setmarketRateSeetype(true)
     setmarketRateLength(CategoriesData.length)
@@ -59,23 +54,22 @@ export const Home = () => {
     setmarketRateSeetype(false)
     setmarketRateLength(2)
   }
-  const handelSellScrap = ()=>{
-    navigation.navigate("Market")
-  }
-
-  const handelDailyRates = ()=>{
-    navigation.navigate("Daily Rates")
-  }
-
-  const handelCategoryPress= (categorie)=>{
-    navigation.navigate("Live Market Rates", { value: categorie })
+  const handelCategoryPress= ()=>{
+    if(userDetails.registerAs === "Collectors"){
+      navigation.navigate("Market");
+      return
+    }
+    
+    navigation.navigate("My Rates")
   }
 
   const fetchMarketRates = async () => {
     try {
       const response = await axios.get(`${Base_url}api/market_rates`); 
       console.log('Fetched plans:', response.data);
-      setData(response.data);
+      const Data = response.data;
+      const res = Data.filter((el,index)=>el.category === value)
+      setData(res);
     } catch (error) {
       console.error('Error fetching plans:', error);
     }
@@ -109,9 +103,9 @@ export const Home = () => {
 
   return (
     <View style={styles.container}>
-
-      <Header/>
-      <StatusBar hidden={false} color={"light"} />
+{/* 
+      <Header/> */}
+      {/* <StatusBar hidden={false} color={"light"} /> */}
     <ScrollView  refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -122,176 +116,57 @@ export const Home = () => {
       <Block style={{backgroundColor:"#FFF",padding:10}}>
 
      
-      <Block style={{marginTop:20}}>
-        <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b"}}>Hey {userDetails && userDetails.name} !!</Text>
 
-        <Block style={[{marginTop:10},styles.Space_Between]}>
-          <Block>
-          <Text style={{fontSize:14,color:"#797979",letterSpacing:1}}>Let’s Save Environment &</Text>
-          <Text style={{fontSize:14,color:"#797979",letterSpacing:1,marginTop:5}}>Make Some Money</Text>
-          </Block>
+{
+  Data && Data.length >0 ? 
+  <Block style={{marginTop:10}}>
 
-          <Block>
-          <Button onPress={handelSellScrap} color='white' style={{borderWidth:1,width:120}}>
-              <Text style={{fontSize:16,fontWeight:400}}>
-              Sell Scraps
-              </Text>
-            
-              </Button>
-          </Block>
-        </Block>
-       
-      </Block>  
+  
+  <Block style={{marginTop:20}}>
+  <View style={styles.gridcontainer}>
+{Data && Data.map((el, index) => {
 
-      <Block style={{marginTop:40,borderWidth:1,borderColor:"#DCDCDC",padding:10,backgroundColor:"#96DE20",paddingBottom:20,borderRadius:7,elevation:2}}>
-
-<Block>
-  <Block>
-    <Text style={{fontSize:16}}>Check Out</Text>
-  </Block>
-<Block style={[styles.Space_Between,{marginTop:-10}]}>
-  <Block>
-  <Text style={{fontSize:30,fontWeight:700}}>Daily Rates </Text>
-  </Block>
- 
-  <Block>
-          <Button onPress={handelDailyRates} color='white' style={{width:120}}>
-              <Text style={{fontSize:16,fontWeight:400}}>
-             View
-              </Text>
-            
-              </Button>
-          </Block>
+return <TouchableOpacity style={{marginTop:10}} onPress={handelCategoryPress} activeOpacity={0.5}  key={index} >
+<Block style={{width:width*0.93,borderRadius:5,padding:10,borderWidth:1,borderColor:"#C8C8C8",flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
+<Block> 
+<Image
+source={logo}
+style={{resizeMode: 'contain',width:60,height:60}}
+/>
 </Block>
-
-<Block>
-  <Text style={{fontSize:16}}>For Your Scrap</Text>
+<Block style={{width:"60%",marginLeft:20}}> 
+  <Text style={{fontWeight:500,color:"#002379",fontSize:16}}>{el.name.toUpperCase()}</Text>
+  <Text style={{fontSize:14}}>{el.category}</Text>
+  <Text style={{fontSize:12}}>{formatDate(el.date)}  {el.time} </Text>
+</Block>
+<Block> 
+  <Text style={{fontWeight:500,color:"#002379"}}>₹ {el.price}</Text>
 </Block>
 </Block>
-
-</Block>
-
-
-     
+</TouchableOpacity>
 
 
-
-
-<Block style={{marginTop:20}}>
-        {/* <Text style={{fontSize:16,fontWeight:500}}>Latest from Us</Text> */}
-        
-        {/* <Block style={{marginTop:20,flexDirection:"row",justifyContent:"center",alignItem:"center"}}>
-  <Image style={{width:"100%",height:200}} 
-  source={{ uri: "https://img.freepik.com/premium-vector/mega-sale-discount-banner-set-promotion-with-yellow-background_497837-702.jpg" }} />
-</Block> */}
-      </Block>
-
-
-      <Block style={{marginTop:30}}>
-
-        <Block style={styles.Space_Between}>
-        <Text style={{fontSize:16,fontWeight:500}}>Live Scrap Rates</Text>
-        {
-          categorySeetype ? <TouchableOpacity onPress={handelCategoryLength2}>
-          <Text style={{fontSize:12,fontWeight:500,color:"#00a56a"}}>View Less</Text>
-          </TouchableOpacity>
-          :
-          <TouchableOpacity onPress={handelCategoryLength}>
-          <Text style={{fontSize:12,fontWeight:500,color:"#00a56a"}}>View All</Text>
-          </TouchableOpacity>
-        }
-       
-
-        
-        
-        </Block>
-     
-        
-        <Block style={{marginTop:10}}>
-        <View style={styles.gridcontainer}>
-  {CategoriesData && CategoriesData.map((el, index) => {
-    if(index < parseInt(categoryLength)){
-      return <TouchableOpacity activeOpacity={0.5} onPress={()=>handelCategoryPress(el.name)}  style={styles.gridcolumn} key={index}>
-      <View style={styles.gridItem}>
-        <Text style={styles.itemText}>{el.name}</Text>
-      </View>
-    </TouchableOpacity>
-    }
-   
 })}
 </View>
-     
-
-        </Block>
-      </Block>
 
 
-      <Block style={{marginTop:20,borderWidth:1,borderColor:"#DCDCDC",padding:10,backgroundColor:"#3333ef",paddingBottom:20,borderRadius:7,elevation:2}}>
-
-<Block>
-  <Block>
-    <Text style={{fontSize:16,color:"#fff"}}>We Buy</Text>
-  </Block>
-<Block style={[styles.Space_Between,{marginTop:-10}]}>
-  <Block>
-  <Text style={{fontSize:30,fontWeight:700,color:"#fff"}}>Over 10 +</Text>
-  </Block>
- 
-  <Block>
-          <Button onPress={handelSellScrap} color='white' style={{width:120}}>
-              <Text style={{fontSize:16,fontWeight:400}}>
-             Scraps
-              </Text>
-            
-              </Button>
-          </Block>
-</Block>
-
-<Block>
-  <Text style={{fontSize:16,color:"#fff"}}>Types of Scrap</Text>
-</Block>
-</Block>
-
-</Block>
-
-
-
-      
-
-         
-      <Block style={{marginBottom:60,marginTop:30,borderWidth:2,padding:20,backgroundColor:"#FFFFFF",paddingBottom:60,borderRadius:10}}>
-
-<Block style={styles.Space_Between}>
-  <Block style={{height:200}}>
-    <Text style={{fontSize:30,fontWeight:500}}>Trash</Text>
-    <Text style={{fontSize:30,fontWeight:500,color:"grey"}}>ko kro</Text>
-    <Text style={{fontSize:30,fontWeight:500}}>Cash</Text>
-    <Block style={{marginTop:10}}>
-          <Button onPress={handelSellScrap} color='white' style={{borderWidth:1,height:80,borderBottomWidth:5,marginLeft:-3}}>
-              <Text style={{fontSize:18,fontWeight:400}}>
-                 Within
-              </Text>
-              <Text style={{fontSize:20,fontWeight:500,}}>
-                 24 Hours
-              </Text>
-            
-              </Button>
-          </Block>
-  </Block>
-
-  <Block style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
-  <LottieView
-      ref={animationRef}
-      style={styles.lottie}
-     
-      
-      source={require('../../assets/Animations/Animation - 1695806708311.json')}
-      autoPlay={true} loop={true}
-    />
   </Block>
 </Block>
 
-       </Block>
+:
+<Block center style={{marginTop:40}}>
+<Image
+source={require('../../assets/media/5-dark.png')}
+style={{
+width: 300,
+height: 300,
+marginRight: 10,
+}}
+/>
+<Text>No Rates Availabel For {value}</Text>
+
+</Block>
+}
 
        </Block>
 
@@ -324,7 +199,7 @@ const styles = StyleSheet.create({
   container:{
     flex: 1,
     backgroundColor:"#FFFFFF",
-    borderWidth:1
+   
 
   },
   lottie:{
@@ -420,7 +295,8 @@ const styles = StyleSheet.create({
       // Center items vertically
     },
     gridItem: {
-      height: 45,
+      width:170,
+      height: 75,
       backgroundColor: '#fff',
        margin:5,
       alignItems: 'center',

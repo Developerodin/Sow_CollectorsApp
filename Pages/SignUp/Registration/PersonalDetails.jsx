@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated } from 'react-native'
+import { FlatList, SafeAreaView,ActivityIndicator, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme } from "galio-framework";
 const {width, height} = Dimensions.get('window');
@@ -25,12 +25,13 @@ import { ToastAndroid } from "react-native";
 import MultiSelect from 'react-native-multiple-select';
 import { CategoryAddModel } from '../../../Components/CategoryAddModel/CategoryAddModel';
 import { Checkbox } from 'galio-framework';
+
 // import CheckBox from 'react-native-check-box';
 
 export const PersonalDetails = () => {
     const navigation= useNavigation()
     const [formData, setFormData] = useState({
-      gender:"",
+      // gender:"",
       email: "",
       name:"",
       address:""
@@ -51,6 +52,7 @@ export const PersonalDetails = () => {
     const [isStateModelOpen,setIsStateModelOpen] = useState(false);
     const [isCityModelOpen,setIsCityModelOpen] = useState(false);
     const [AddressData,setAddressData] = useState([]);
+    const [loading,setLoading] = useState(false)
     const customStyle ={
       Card1: {
       
@@ -191,8 +193,121 @@ export const PersonalDetails = () => {
       }
         // setShowShopDetails(true);
         console.log("Details",formData);
-        savePersonalDetails()
-        navigation.navigate("VerificationDetails")
+        // savePersonalDetails()
+        SubmitSigupData()
+        // navigation.navigate("VerificationDetails")
+    }
+
+    const SubmitSigupData= async()=>{
+      setLoading(true)
+      const RegisterAs = await AsyncStorage.getItem('RegisterAs') || null;
+      const Details = await AsyncStorage.getItem('Details') || null;
+      const Mobile = await AsyncStorage.getItem('Mobile') || null;
+      // const Category = await AsyncStorage.getItem('selectedCategory') || null;
+      const categoryNames = selectedCategories.map(category => {
+        return {
+          name:category.name,
+          sub_category:[
+            {
+              name:"test",
+              price:"100",
+              unit:"Kg"
+            }
+          ] 
+        }});
+      console.log("categoryNames",categoryNames)
+      const Category = JSON.stringify(categoryNames);
+     
+      // console.log("Post req",DocumentsImages)
+    
+      // const Data= {
+      //   "RegisterAs": RegisterAs,
+      //   "pan_Number":PANformData.PANNo,
+      //   "adhar_Number":AddharformData.AdhharNo,
+      //   "address":AddharformData.Address,
+      //   "name":AddharformData.Name,
+      // }
+      // const Adhar = JSON.stringify(AddharformData);
+      // const SubCategoryData = [
+      //   {name:"test",price:"20",unit:"kg"}
+      // ]
+      const UserData = {
+        name: formData.name,
+        email: formData.email ,
+        password: '1234',
+        mobile: Mobile,
+        Address: formData.address,
+        city: selectedCity,
+        pincode: pincode,
+        state: selectedState,
+        country: 'India',
+        registerAs: RegisterAs,
+        panNo:"",
+        adharData:'',
+        images:[],
+        categories:Category,
+      };
+    
+      
+      // console.log("Data of user ====>",UserData)
+         try {
+          const response = await axios.post(`${Base_url}api/b2b`, UserData);
+             
+          if(response.status === 200){
+               if(response.data){
+                const data = response.data
+                  console.log("Data ==>",response.data)
+                  ToastAndroid.show(data.error, ToastAndroid.SHORT);
+                  setLoading(false);
+                  // setShowPAN(true);
+                  // navigation.reset({
+                  //   index: 0,
+                  //   routes: [{ name: 'FillPersonalDetails' }],
+                  // });
+                  // navigation.navigate("FillPersonalDetails")
+                  return
+               }
+               return
+          }
+          
+          if (response.status === 201) {
+               if(response.data){
+          ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);
+          // setShowSuccess(true);
+          // setLoading(false)
+          navigation.navigate("VerifyProfileStatus")
+    
+         }
+           else {
+            console.error("Error creating user:", response);
+            // setLoading(false)
+          }
+        }
+        } catch (error) {
+                ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
+        
+        //  setShowPAN(true);
+          console.error("Error:", error);
+          // setLoading(false)
+        }
+    
+      // try {
+      //   const response = await axios.post(`${Base_url}b2b`, formData); // Update the API endpoint accordingly
+      //   console.log("Res ==>",response.data);
+      //   if(response.data){
+      //     ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);
+      //     setShowSuccess(true);
+    
+      //   }
+        
+      // } catch (error) {
+      //   console.error('Error creating user:', error);
+        
+      //     ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
+        
+      //   setShowPAN(true);
+      // }
+    
     }
 
     const handleInputChange = (fieldName, value) => {
@@ -306,7 +421,7 @@ export const PersonalDetails = () => {
             
         </Block>
 
-        <Block style={{marginTop:10,padding:10}}>
+        {/* <Block style={{marginTop:10,padding:10}}>
 <Block style={[{borderBottomWidth:1,borderColor:"grey",flexDirection:"row",alignItems:"center"}]}>
   <Block style={{width:"6%"}}>
   <MaterialCommunityIcons name="gender-male" size={24} color="grey" />
@@ -326,7 +441,7 @@ export const PersonalDetails = () => {
 
                 </Block>
             
-        </Block>
+        </Block> */}
 
         <Block style={{marginTop:20}}>
         <Block style={[ customStyle.Card2]}>
@@ -459,7 +574,13 @@ export const PersonalDetails = () => {
         
     <Block right style={[{ padding: 20, marginTop: 20 }]}>
              
-                <Button
+                
+                    {loading ? 
+        <View >
+          <ActivityIndicator size="large"  color="#65be34" />
+        </View>
+        :
+        <Button
                   title="Proceed"
                   color="#65be34"
                   style={{ width: 150, padding: 5 }}
@@ -467,6 +588,7 @@ export const PersonalDetails = () => {
                   trailing={(props) => <Icon name="send" {...props} />}
                   tintColor="#fff"
                 />
+      }
               
             </Block>
       
