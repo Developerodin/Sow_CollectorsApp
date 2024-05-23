@@ -11,7 +11,8 @@ import axios from 'axios';
 import { Base_url } from '../../Config/BaseUrl';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import logo from "./scrap-img.jpeg"
-
+import { FontAwesome5 } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 export const LiveRating = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
@@ -22,6 +23,9 @@ export const LiveRating = () => {
   const [categoryLength,setCategoryLength] = useState(4)
   const [categorySeetype,setCategorySeetype] = useState(false);
   const [Data, setData] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  const [sortOrder, setSortOrder] = useState(null);
   const [marketRateLength,setmarketRateLength] = useState(2)
   const [marketRateSeetype,setmarketRateSeetype] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
@@ -88,6 +92,44 @@ export const LiveRating = () => {
   
     return `${formattedDay}:${formattedMonth}:${formattedYear}`;
   }
+  const filterData = () => {
+    if (searchQuery === '') {
+      setFilteredData(Data);
+    } else {
+      const filtered = Data.filter(el =>
+        el.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredData(filtered);
+    }
+  };
+
+  const sortData = () => {
+    let sortedData = [...filteredData];
+    if (sortOrder === 'lowToHigh') {
+      sortedData.sort((a, b) => a.price - b.price);
+    } else if (sortOrder === 'highToLow') {
+      sortedData.sort((a, b) => b.price - a.price);
+    }
+    setFilteredData(sortedData);
+  };
+
+  const handleSortPress = () => {
+    if (sortOrder === null || sortOrder === 'highToLow') {
+      setSortOrder('lowToHigh');
+    } else {
+      setSortOrder('highToLow');
+    }
+  };
+
+  const handleResetPress = () => {
+    setSearchQuery('');
+    setSortOrder(null);
+    setFilteredData(Data);
+  };
+
+  useEffect(() => {
+    sortData();
+  }, [sortOrder]);
 
   useEffect(() => {
     animationRef.current?.play();
@@ -95,6 +137,9 @@ export const LiveRating = () => {
     // Or set a specific startFrame and endFrame with:
     animationRef.current?.play(10, 80);
   }, []);
+  useEffect(() => {
+    filterData();
+  }, [searchQuery, Data]);
 
   useEffect(()=>{
     getCategories();
@@ -106,6 +151,7 @@ export const LiveRating = () => {
 {/* 
       <Header/> */}
       {/* <StatusBar hidden={false} color={"light"} /> */}
+      
     <ScrollView  refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -113,34 +159,61 @@ export const LiveRating = () => {
         />
       }>
 
+
+
       <Block style={{backgroundColor:"#FFF",padding:10}}>
 
-     
+      <Block style={{marginTop:10,flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
+
+        <Block>
+        <TextInput
+        placeholder="Search..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, paddingLeft: 10,width:width*0.7,borderRadius:20 }}
+      />
+        </Block>
+      
+      <Block style={{flexDirection:"row",justifyContent:"center",alignItems:"center",marginLeft:10}}>
+      <TouchableOpacity onPress={handleSortPress} style={{padding:6,backgroundColor:"teal",borderRadius:12,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+        {/* <Text style={{fontSize:16,marginRight:10,color:"#fff"}}>Sort</Text> */}
+      <FontAwesome5 name="sort" size={22} color="#fff" />
+</TouchableOpacity>
+<TouchableOpacity onPress={handleResetPress} style={{marginLeft:10,marginRight:20,padding:6,backgroundColor:"teal",borderRadius:12,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+        {/* <Text style={{fontSize:16,marginRight:10,color:"#fff"}}>Reset</Text> */}
+        <Feather name="refresh-ccw" size={22} color="#fff" />
+</TouchableOpacity>
+
+      </Block>
+    
+       
+        
+      </Block>
 
 {
   Data && Data.length >0 ? 
-  <Block style={{marginTop:10}}>
+  <Block style={{marginTop:20}}>
 
   
-  <Block style={{marginTop:20}}>
+  <Block >
   <View style={styles.gridcontainer}>
-{Data && Data.map((el, index) => {
+{filteredData && filteredData.map((el, index) => {
 
-return <TouchableOpacity style={{marginTop:10}} onPress={handelCategoryPress} activeOpacity={0.5}  key={index} >
-<Block style={{width:width*0.93,borderRadius:5,padding:10,borderWidth:1,borderColor:"#C8C8C8",flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
+return <TouchableOpacity style={{marginTop:20}} onPress={handelCategoryPress} activeOpacity={0.5}  key={index} >
+<Block style={{width:width*0.93,borderRadius:10,padding:0,borderWidth:1,borderColor:"#C8C8C8",flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
 <Block> 
 <Image
 source={logo}
-style={{resizeMode: 'contain',width:60,height:60}}
+style={{resizeMode: 'cover',width:50,height:50,borderTopLeftRadius:10,borderBottomLeftRadius:10}}
 />
 </Block>
 <Block style={{width:"60%",marginLeft:20}}> 
-  <Text style={{fontWeight:500,color:"#002379",fontSize:16}}>{el.name.toUpperCase()}</Text>
-  <Text style={{fontSize:14}}>{el.category}</Text>
-  <Text style={{fontSize:12}}>{formatDate(el.date)}  {el.time} </Text>
+  <Text style={{fontWeight:500,color:"#002379",fontSize:14}}>{el.name.toUpperCase()}</Text>
+  <Text style={{fontSize:12}}>{el.category}</Text>
+  <Text style={{fontSize:11}}>{formatDate(el.date)}  {el.time} </Text>
 </Block>
 <Block> 
-  <Text style={{fontWeight:500,color:"#002379"}}>₹ {el.price}</Text>
+  <Text style={{fontWeight:500,color:"#002379",fontSize:14}}>₹ {el.price}</Text>
 </Block>
 </Block>
 </TouchableOpacity>
