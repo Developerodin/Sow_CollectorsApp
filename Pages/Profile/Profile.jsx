@@ -43,7 +43,6 @@ export const Profile = () => {
     const ParseUser = JSON.parse(user)
     if(user){
       setuserDetails(ParseUser);
-        
     }
    
     }

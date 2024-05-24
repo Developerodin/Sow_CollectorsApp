@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList,RefreshControl, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
+import { FlatList,RefreshControl, SafeAreaView, StyleSheet,ScrollView,ImageBackground, View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
 import { Header } from '../../Components/Header/Header';
@@ -11,6 +11,8 @@ import axios from 'axios';
 import { Base_url } from '../../Config/BaseUrl';
 import { useNavigation } from '@react-navigation/native';
 import logo from "./scrap-img.jpeg"
+import frame1 from "./Frame1.png";
+import frame2 from "./Frame2.png";
 export const Home = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
@@ -123,17 +125,17 @@ export const Home = () => {
 
      
       <Block style={{marginTop:20}}>
-        <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b"}}>Hey {userDetails && userDetails.name} !!</Text>
+        <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b"}}>Hey {userDetails && userDetails.name}</Text>
 
         <Block style={[{marginTop:10},styles.Space_Between]}>
           <Block>
-          <Text style={{fontSize:14,color:"#797979",letterSpacing:1}}>Let’s Save Environment &</Text>
-          <Text style={{fontSize:14,color:"#797979",letterSpacing:1,marginTop:5}}>Make Some Money</Text>
+          <Text style={{fontSize:13,color:"black",letterSpacing:1}}>Let’s Save Environment &</Text>
+          <Text style={{fontSize:13,color:"black",letterSpacing:1,marginTop:5}}>Make Some Money</Text>
           </Block>
 
           <Block>
-          <Button onPress={handelSellScrap} color='white' style={{borderWidth:1,width:120}}>
-              <Text style={{fontSize:16,fontWeight:400}}>
+          <Button onPress={handelSellScrap} color='white' style={{borderWidth:1,width:120,borderColor:"#239456"}}>
+              <Text style={{fontSize:16,fontWeight:600,color:"#239456"}}>
               Sell Scraps
               </Text>
             
@@ -142,21 +144,37 @@ export const Home = () => {
         </Block>
        
       </Block>  
+        
+       
+      
+      <Block style={{marginTop:40,width:width*0.93}}>
+      <Block>
+          <Image source={frame2} style={{width:width*0.93,height:115,borderRadius:7}} />
+        </Block>
+<Block style={{position:"absolute",top:10}}>
 
-      <Block style={{marginTop:40,borderWidth:1,borderColor:"#DCDCDC",padding:10,backgroundColor:"#96DE20",paddingBottom:20,borderRadius:7,elevation:2}}>
-
+<Block style={{marginLeft:15,width:width*0.8}}>
 <Block>
-  <Block>
-    <Text style={{fontSize:16}}>Check Out</Text>
+    <Text style={{fontSize:14,color:"#fff"}}>Check Out</Text>
   </Block>
-<Block style={[styles.Space_Between,{marginTop:-10}]}>
+
+<Block style={[styles.Space_Between]}>
   <Block>
-  <Text style={{fontSize:30,fontWeight:700}}>Daily Rates </Text>
+  <Text style={{fontSize:28,fontWeight:700,color:"#fff"}}>Daily Rates </Text>
   </Block>
  
+ 
+</Block>
+
+<Block style={[styles.Space_Between,{marginTop:-15}]}>
   <Block>
-          <Button onPress={handelDailyRates} color='white' style={{width:120}}>
-              <Text style={{fontSize:16,fontWeight:400}}>
+  <Text style={{fontSize:14,color:"#fff"}}>For Your Scrap</Text>
+  </Block>
+
+
+  <Block>
+          <Button onPress={handelDailyRates} color='#239456' style={{width:70,height:38}}>
+              <Text style={{fontSize:16,fontWeight:400,color:"#fff"}}>
              View
               </Text>
             
@@ -164,12 +182,13 @@ export const Home = () => {
           </Block>
 </Block>
 
-<Block>
-  <Text style={{fontSize:16}}>For Your Scrap</Text>
 </Block>
-</Block>
+  
+
 
 </Block>
+
+     </Block>
 
 
      
@@ -187,17 +206,17 @@ export const Home = () => {
       </Block>
 
 
-      <Block style={{marginTop:30}}>
+      <Block style={{marginTop:10}}>
 
         <Block style={styles.Space_Between}>
         <Text style={{fontSize:16,fontWeight:500}}>Live Scrap Rates</Text>
         {
           categorySeetype ? <TouchableOpacity onPress={handelCategoryLength2}>
-          <Text style={{fontSize:12,fontWeight:500,color:"#00a56a"}}>View Less</Text>
+          <Text style={{fontSize:12,fontWeight:500,color:"#239456"}}>View Less</Text>
           </TouchableOpacity>
           :
           <TouchableOpacity onPress={handelCategoryLength}>
-          <Text style={{fontSize:12,fontWeight:500,color:"#00a56a"}}>View All</Text>
+          <Text style={{fontSize:12,fontWeight:500,color:"#239456"}}>View All</Text>
           </TouchableOpacity>
         }
        
@@ -226,33 +245,52 @@ export const Home = () => {
       </Block>
 
 
-      <Block style={{marginTop:20,borderWidth:1,borderColor:"#DCDCDC",padding:10,backgroundColor:"#3333ef",paddingBottom:20,borderRadius:7,elevation:2}}>
+      <Block style={{marginTop:20,width:width*0.93}}>
+      <Block>
+          <Image source={frame1} style={{width:width*0.93,height:115,borderRadius:7}} />
+        </Block>
+<Block style={{position:"absolute",top:10}}>
 
+<Block style={{marginLeft:15,width:width*0.8}}>
 <Block>
-  <Block>
-    <Text style={{fontSize:16,color:"#fff"}}>We Buy</Text>
+    <Text style={{fontSize:14,color:"#fff"}}>We Buy</Text>
   </Block>
-<Block style={[styles.Space_Between,{marginTop:-10}]}>
+
+<Block style={[styles.Space_Between]}>
   <Block>
-  <Text style={{fontSize:30,fontWeight:700,color:"#fff"}}>Over 10 +</Text>
+  <Text style={{fontSize:28,fontWeight:700,color:"#fff"}}>Over 10 +</Text>
   </Block>
  
+ 
+</Block>
+
+<Block style={[styles.Space_Between,{marginTop:-15}]}>
   <Block>
-          <Button onPress={handelSellScrap} color='white' style={{width:120}}>
-              <Text style={{fontSize:16,fontWeight:400}}>
-             Scraps
+  <Text style={{fontSize:14,color:"#fff"}}>Types of Scrap</Text>
+  </Block>
+
+
+  <Block>
+          <Button onPress={handelSellScrap} color='#96DE20' style={{width:70,height:38}}>
+              <Text style={{fontSize:16,fontWeight:400,color:"#145431"}}>
+              Scraps
               </Text>
             
               </Button>
           </Block>
 </Block>
 
-<Block>
-  <Text style={{fontSize:16,color:"#fff"}}>Types of Scrap</Text>
 </Block>
-</Block>
+  
+
 
 </Block>
+
+     </Block>
+
+
+
+    
 
 
 
@@ -304,6 +342,11 @@ export const Home = () => {
 }
 
 const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
   gridcontainer: {
     flexDirection: 'row',  // This makes the children align in a row
     flexWrap: 'wrap',  // This allows items to wrap to the next line if there's not enough space
@@ -420,17 +463,17 @@ const styles = StyleSheet.create({
       // Center items vertically
     },
     gridItem: {
-      height: 45,
+      height: 40,
       backgroundColor: '#fff',
        margin:5,
       alignItems: 'center',
       justifyContent: 'center',
-      borderWidth:2,
-      borderColor:"#ea5932",
-      borderRadius:10
+      borderWidth:1,
+      borderColor:"#239456",
+      borderRadius:5
     },
     itemText:{
-      color:"#ea5932",
+      color:"#239456",
       fontSize:17
     }
   });
