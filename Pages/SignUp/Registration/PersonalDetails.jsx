@@ -242,7 +242,6 @@ export const PersonalDetails = () => {
         state: selectedState,
         country: 'India',
         registerAs: RegisterAs,
-        panNo:"",
         adharData:'',
         images:[],
         categories:Category,
