@@ -189,7 +189,7 @@ export const Market = () => {
       filteredData = filteredData.filter((vendor) => vendor.city.toLowerCase() === city.toLowerCase());
       // console.log("Filter data  cat and subcategory ==>",filteredData)
     }
-    // console.log(filteredData);
+    console.log(filteredData);
     const MediatorsData = filteredData.filter((el) => {
       return el.registerAs === "Mediators";
     });
@@ -345,7 +345,6 @@ export const Market = () => {
                   borderColor: "#E4E4E4",
                   padding: 10,
                   backgroundColor: "#fff",
-               
                   borderRadius: 10,
                 }}
               >
@@ -421,7 +420,7 @@ export const Market = () => {
                   borderColor: "#E4E4E4",
                   padding: 10,
                   backgroundColor: "#fff",
-                 
+                  
                   borderRadius: 10,
                 }}
               >
@@ -484,7 +483,7 @@ export const Market = () => {
                           style={[styles.Space_Between, { marginTop: 10 }]}
                         >
                           
-                            <Text style={{ fontSize: 20 }}>{el.city.toLowerCase()}</Text>
+                            <Text style={{ fontSize: 20 }}>{el.city.toUpperCase()}</Text>
                           </TouchableOpacity>
                        
                          );

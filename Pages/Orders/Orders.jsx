@@ -13,6 +13,7 @@ import { Base_url } from '../../Config/BaseUrl';
 import axios from 'axios';
 import { useAppContext } from '../../Context/AppContext';
 import { InCommingOrderCard } from '../../Components/Cards/InCommingOrderCard';
+import { RejectedOrderCard } from '../../Components/Cards/RejectedOrderCard';
 
 
 
@@ -23,6 +24,7 @@ export const Orders = () => {
   const [InCommingOrders, setInCommingOrders] = useState([]);
   const [pendingOrders,setPendingOrders] = useState([]);
   const [completedOrders,setCompletedOrders] = useState([]);
+  const [rejectedOrders,setRejectedOrders] = useState([]);
   const [InCommingpendingOrders,setInCommingPendingOrders] = useState([]);
   const [InCommingcompletedOrders,setInCommingCompletedOrders] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
@@ -47,15 +49,20 @@ export const Orders = () => {
       const Orders = data.orders
       setOrders(Orders);
       const PendingOrders = Orders.filter((el)=>{
-        return el.status === "pending" || el.status === "in-progress" || el.status === "rejected" || el.status === "canceled"
+        return el.status === "pending" || el.status === "in-progress"  || el.status === "canceled"
       })
       const CompletedOrders = Orders.filter((el)=>{
         return el.status === "completed"
       })
 
+      const RejectedOrders = Orders.filter((el)=>{
+        return el.status === "rejected"
+      })
+
       // in-progress
       setPendingOrders(PendingOrders);
       setCompletedOrders(CompletedOrders);
+      setRejectedOrders(RejectedOrders);
     } catch (error) {
       console.error('Error fetching orders:', error);
     }
@@ -68,13 +75,24 @@ export const Orders = () => {
        console.log("orders incoming ==>",response.data);
       // Assuming the response contains an 'orders' property
       const Orders = data.orders
-      setInCommingOrders(Orders);
+      
+
+      const InCommingOrder = Orders.filter((el)=>{
+        return el.status === "pending"
+      })
+
       const PendingOrders = Orders.filter((el)=>{
         return el.status === "pending"
       })
       const CompletedOrders = Orders.filter((el)=>{
         return el.status === "completed"
       })
+      const RejectedOrders = Orders.filter((el)=>{
+        return el.status === "rejected"
+      }
+      )
+      setInCommingOrders(Orders);
+      setRejectedOrders(RejectedOrders);
       setInCommingPendingOrders(Orders);
       setInCommingCompletedOrders(CompletedOrders);
     } catch (error) {
@@ -162,10 +180,37 @@ export const Orders = () => {
           </ScrollView>
   );
 
+   const ThirdRoute = () => (
+    <ScrollView style={{flex:1}}>
+      <Block style={{padding:10,marginBottom:60}}>
+            {
+            rejectedOrders && rejectedOrders.length>0 ? rejectedOrders.map((el,index)=>{
+              return  <RejectedOrderCard key={index} data={el} />
+            })
+            :
+            <Block center style={{marginTop:40}}>
+            <Image
+      source={require('../../assets/media/5-dark.png')}
+      style={{
+        width: 300,
+        height: 300,
+        marginRight: 10,
+      }}
+    />
+           
+          </Block>
+            }
+          </Block>
+          </ScrollView>
+  );
+
+
+
   const routes = [
-    {key:"zero",title:"In Comming"},
-    { key: 'first', title: 'Pending' },
+    {key:"zero",title:"Purchase"},
+    { key: 'first', title: 'Sell' },
     { key: 'second', title: 'Completed' },
+    { key: 'third', title: 'Rejected' },
   ];
 
   const renderTabBar = (props) => {
@@ -178,8 +223,8 @@ export const Orders = () => {
         const tabBackgroundColor = isTabActive ? '#F3F3F3' : '#F3F3F3';
         const textColor = isTabActive ? 'black' : 'grey';
         const borderWidth = isTabActive ? 2 : 0;
-        const borderColor = isTabActive ? 'blue' : 'grey';
-
+        const borderColor = isTabActive ? 'blue' : 'grey'; 
+            
         const tabStyle = [
           styles.tabItem,
           { borderRadius:0,borderBottomWidth:borderWidth,borderColor:borderColor },
@@ -196,7 +241,7 @@ export const Orders = () => {
             key={i}
             style={tabStyle}
             onPress={() => setIndex(i)}>
-            <Animated.Text style={[textStyles,{fontSize:16}]}>{route.title}</Animated.Text>
+            <Animated.Text style={[textStyles,{fontSize:14}]}>{route.title}</Animated.Text>
           </TouchableOpacity>
         );
       })}
@@ -205,9 +250,10 @@ export const Orders = () => {
   };
 
   const renderScene = SceneMap({
-    zero:ZeroRoute,
+    zero: ZeroRoute,
     first: FirstRoute,
     second: SecondRoute,
+    third: ThirdRoute,
   });
 
 

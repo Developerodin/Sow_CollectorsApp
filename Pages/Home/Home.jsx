@@ -62,7 +62,7 @@ export const Home = () => {
     setmarketRateLength(2)
   }
   const handelSellScrap = ()=>{
-    navigation.navigate("Market")
+    navigation.navigate("Trading")
   }
 
   const handelDailyRates = ()=>{
@@ -160,7 +160,7 @@ export const Home = () => {
 
 <Block style={[styles.Space_Between]}>
   <Block>
-  <Text style={{fontSize:28,fontWeight:700,color:"#fff"}}>Daily Rates </Text>
+  <Text style={{fontSize:28,fontWeight:700,color:"#fff"}}>Daily Markets </Text>
   </Block>
  
  

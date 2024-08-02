@@ -80,7 +80,7 @@ const Tabs = ({navigation}) => {
       {
         (userDetails.registerAs !== "Collectors" || userDetails.registerAs !== "Factory") && 
         <Tab.Screen
-        name="Market"
+        name="Trading"
         component={Market}
         options={{
           tabBarIcon: ({ color, size }) => (

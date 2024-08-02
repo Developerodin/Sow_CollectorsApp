@@ -46,12 +46,15 @@ export const MyRates = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [update, setupdate] = useState(0);
+  
+  
   const [subAddForm, setsubAddForm] = useState({
     categoryName:"",
     name: "",
     price: "",
     unit: "",
   });
+  const [isCategorySelected, setIsCategorySelected] = useState(false);
   const initalModelData = {
     id: "",
     index: "",
@@ -71,13 +74,13 @@ export const MyRates = () => {
   const [updatedCategoriesData,setUpdatedCategoriesData] = useState([])
   const filterItems = (category) => {
     let filteredItems = data;
-
+    console.log("Category ===>", category);
     if (category !== "All") {
       filteredItems = filteredItems.filter(
         (item) => item.category === category
       );
     }
-
+     
     setFilteredData(filteredItems);
     setActiveCategory(category);
   };
@@ -161,6 +164,7 @@ export const MyRates = () => {
   };
 
   const handelSubCategoryModelOpen = () => {
+    setsubAddForm({ ...subAddForm, categoryName: activeCategory });
     setAddSubModalVisible(true);
   };
 
@@ -172,6 +176,8 @@ export const MyRates = () => {
       unit: "",
     })
     setAddSubModalVisible(false);
+
+  
   };
 
   const fetchCategoryData = async (userId) => {
@@ -228,7 +234,6 @@ export const MyRates = () => {
     try {
       const response = await axios.get(`${Base_url}api/category`);
       setCategoriesData(response.data);
-      // console.log("Categories all", response.data)
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -241,7 +246,7 @@ export const MyRates = () => {
       (category) => !UserCategoryData.some((userCategory) => userCategory.name === category.name)
     );
     setUpdatedCategoriesData(newCategoriesData)
-      // console.log("CategoryUpdatedData",newCategoriesData)
+      
    
     setcatModalVisible(true)
   }
@@ -305,7 +310,20 @@ export const MyRates = () => {
     getCategories()
   },[update])
 
+  
 
+
+
+const handleSubAddChange = (field, value) => {
+  setsubAddForm((prevForm) => ({
+    ...prevForm,
+    [field]: value
+  }));
+  if (field === 'categoryName') {
+    setIsCategorySelected(value !== '');
+    setSelectedCategories(value)
+  }
+};
 
 
   return (
@@ -325,48 +343,44 @@ export const MyRates = () => {
           onChangeText={(text) => setQuery(text)}
         />
         <Block style={styles.Space_Between}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <TouchableOpacity
+          activeOpacity={0.9}
+          onPress={() => filterItems("All")}
+          style={{
+            paddingVertical: 10,
+            paddingHorizontal: 20,
+            borderBottomWidth: activeCategory === "All" ? 2 : 0,
+            borderBottomColor: activeCategory === "All" ? "teal" : "transparent",
+          }}
+        >
+          <Text style={{ fontWeight: "500", color: "black" }}>All</Text>
+        </TouchableOpacity>
+
+        {UserCategoryData && UserCategoryData.length > 0 && UserCategoryData.map((el, index) => (
           <TouchableOpacity
+            key={index}
             activeOpacity={0.9}
-            onPress={() => filterItems("All")}
+            onPress={() => filterItems(el.name)}
             style={{
               paddingVertical: 10,
               paddingHorizontal: 20,
-              borderBottomWidth: activeCategory === "All" ? 2 : 0,
-              borderBottomColor:
-                activeCategory === "All" ? "teal" : "transparent",
+              borderBottomWidth: activeCategory === el.name ? 2 : 0,
+              borderBottomColor: activeCategory === el.name ? "teal" : "transparent",
             }}
           >
-            <Text style={{ fontWeight: "500", color: "black" }}>All</Text>
+            <Text style={{ fontWeight: "500", color: "black" }}>{el.name.toUpperCase()}</Text>
           </TouchableOpacity>
+        ))}
+      </ScrollView>
 
-          {UserCategoryData&& UserCategoryData.length>0 && UserCategoryData.map((el, index) => {
-            return (
-              <TouchableOpacity
-                key={index}
-                activeOpacity={0.9}
-                onPress={() => filterItems(el.name)}
-                style={{
-                  paddingVertical: 10,
-                  paddingHorizontal: 20,
-                  borderBottomWidth: activeCategory === el.name ? 2 : 0,
-                  borderBottomColor:
-                    activeCategory === el.name ? "teal" : "transparent",
-                }}
-              >
-                <Text style={{ fontWeight: "500", color: "black" }}>{el.name.toUpperCase()}</Text>
-              </TouchableOpacity>
-            );
-          })}
-
-          
-        </ScrollView>
-
-
-        <TouchableOpacity onPress={handelCategoryModelOpen} style={[styles.Center,{marginRight:10}]}>
-          <Ionicons name="add-circle-outline" size={24} color="teal" />
-          </TouchableOpacity>
-        </Block>
+      <TouchableOpacity
+        onPress={() => handelCategoryModelOpen(activeCategory)}
+        style={[styles.Center, { marginRight: 10 }]}
+      >
+        <Ionicons name="add-circle-outline" size={24} color="teal" />
+      </TouchableOpacity>
+    </Block>
       
        
       </Block>
@@ -375,21 +389,22 @@ export const MyRates = () => {
         <Block
           style={{ backgroundColor: "#F1F1F1", padding: 10, marginBottom: 60 }}
         >
-          <Text center style={{ fontSize: 32, fontWeight: 500, marginTop: 20 }}>
+          <Text center style={{ fontSize: 32, fontWeight: 500, marginTop: 10 }}>
             My Rates
           </Text>
-          <Block style={[styles.Space_Between, { marginTop: 20 }]}>
-            <Text style={{ fontWeight: 500 }}>Normal Recyclables</Text>
+          <Block style={[styles.Space_Between, { marginTop: 10 }]}>
+            <Text style={{ fontWeight: 500 ,fontSize: 20}}>Normal Recyclables</Text>
             {/* {
     CartInStorage.length > 0 &&  <Button onPress={handelCartProceed} color='#29BD7F' size={"small"}>Proceed</Button>
   } */}
-            <Button
-              size={"small"}
-              onPress={handelSubCategoryModelOpen}
-              style={{ backgroundColor: "teal" }}
-            >
-              Add
-            </Button>
+
+<Button
+  size={"small"}
+  onPress={handelSubCategoryModelOpen}
+  style={{ backgroundColor: "teal" }}
+>
+  Add
+</Button>
           </Block>
 
           <Block style={{ marginTop: 10, marginBottom: 100 }}>
@@ -454,57 +469,39 @@ export const MyRates = () => {
                 value={subAddForm.name}
                 onChangeText={(text) => handleSubAddInputChange("name", text)}
               /> */}
-               <Block style={{marginTop:10}}>
-               {/* {
-            UserCategoryData && UserCategoryData.length>0 && UserCategoryData.map((el,index)=>{
-              console.log("UserCategoryData ==>",index,el)
-                  return <Text> </Text>
-                })
-              } */}
-              <Picker
-          selectedValue={subAddForm.categoryName}
-          onValueChange={(itemValue) => {
-            console.log("Value selected ==>",itemValue)
-            handleSubAddInputChange('categoryName', itemValue)
-          }}
-          style={{ color:'black', height: 50, fontSize: 18 }}
-          itemStyle={{ color: 'black' }}
-        >
-          <Picker.Item label="Select Category" value="" />
-          {
-            UserCategoryData && UserCategoryData.length>0 && UserCategoryData.map((el,index)=>{
-              console.log("UserCategoryData ==>",index,el)
-                  return <Picker.Item key={index} label={el.name} value={el.name} />
-                })
-              }
-            
-          
-         
-          
-        </Picker>
-              </Block>
+           <Block style={{ marginTop: 10, borderColor: "grey", borderWidth: 1 }}>
+          <Picker
+            selectedValue={subAddForm.categoryName}
+            onValueChange={(itemValue) => {
+              console.log("Value selected ==>", itemValue);
+              handleSubAddChange('categoryName', itemValue);
+            }}
+            style={{ color: 'black', height: 50, fontSize: 18 }}
+            itemStyle={{ color: 'black' }}
+          >
+            <Picker.Item label="Select Category" value="" />
+            {UserCategoryData && UserCategoryData.length > 0 && UserCategoryData.map((el, index) => (
+              <Picker.Item key={index} label={el.name} value={el.name} />
+            ))}
+          </Picker>
+        </Block>
 
-              <Block style={{borderWidth:1,borderColor:"grey",marginTop: 20}}>
-              <Picker
-          selectedValue={subAddForm.name}
-          onValueChange={(itemValue) => handleSubAddInputChange('name', itemValue)}
-          style={{ color: 'black', height: 50, fontSize: 18 }}
-        >
-          <Picker.Item label="Select Sub Category" value="" />
-          {
-            CategoriesData && CategoriesData.map((el,index)=>{
-              if(subAddForm.categoryName === el.name){
-               return  el &&  el.sub_category.map((item,index)=>{
-                  return <Picker.Item key={index} label={item.name} value={item.name} />
-                })
-              }
-              
-            })
-          }
-         
-          
-        </Picker>
-              </Block>
+        {/* {isCategorySelected && ( */}
+          <Block style={{ borderWidth: 1, borderColor: "grey", marginTop: 20 }}>
+            <Picker
+              selectedValue={subAddForm.name}
+              onValueChange={(itemValue) => handleSubAddChange('name', itemValue)}
+              style={{ color: 'black', height: 50, fontSize: 18 }}
+            >
+              <Picker.Item label="Select Sub Category" value="" />
+              {CategoriesData && CategoriesData.map((el) => (
+                el.name === subAddForm.categoryName && el.sub_category.map((item, index) => (
+                  <Picker.Item key={index} label={item.name} value={item.name} />
+                ))
+              ))}
+            </Picker> 
+          </Block>
+        {/* )} */}
              
 
               <TextInput
@@ -512,7 +509,7 @@ export const MyRates = () => {
                 keyboardType="numeric"
                 label="Price"
                 value={subAddForm.price}
-                onChangeText={(text) => handleSubAddInputChange("price", text)}
+                onChangeText={(text) => handleSubAddChange("price", text)}
                 style={{ marginTop: 20 }}
               />
 
@@ -527,7 +524,7 @@ export const MyRates = () => {
                <Block style={{borderWidth:1,borderColor:"grey",marginTop: 20}}>
               <Picker
           selectedValue={subAddForm.unit}
-          onValueChange={(itemValue) => handleSubAddInputChange('unit', itemValue)}
+          onValueChange={(itemValue) => handleSubAddChange('unit', itemValue)}
           style={{ color: 'black', height: 50, fontSize: 18 }}
         >
           <Picker.Item label="Select Unit" value="" />
