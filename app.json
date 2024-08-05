@@ -1,11 +1,24 @@
 {
   "expo": {
     "name": "SOW COLLECTORS APP",
-    "slug": "scraponwheels-collectors",
-    "version": "3.0.0",
+    "slug": "sow",
+    "version": "4.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ffffff",
+          "defaultChannel": "default",
+          "sounds": [
+            "./assets/sounds/i_phone_notification.mp3"
+          ]
+        }
+      ]
+    ],
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -18,11 +31,15 @@
       "supportsTablet": true
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "permissions": [
+        "NOTIFICATIONS"
+      ],
+      "googleServicesFile": "./android/app/google-services.json",
       "package": "com.scraponwheels_collectors.app"
     },
     "web": {
@@ -30,9 +47,9 @@
     },
     "extra": {
       "eas": {
-        "projectId": "844f772d-56de-47f3-8518-ff81b0857d49"
+        "projectId": "ceeea356-925c-4742-bafd-6d4525165544"
       }
     },
-    "owner": "akshaypareek_01"
+    "owner": "scraponwheels"
   }
 }

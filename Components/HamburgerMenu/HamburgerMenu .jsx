@@ -9,6 +9,20 @@ const HamburgerMenu = ({ isVisible, onClose }) => {
     return null;
   }
 
+  // const handelDeleteCustomer=async(id)=>{
+  //   console.log("delete Customer",id)
+   
+  //   try {
+  //     const res = await axios.delete(`${Base_url}api/users/${id}`, {
+  //       // headers: { "Authorization": `${token}` }
+  //     });
+  //     console.log("res Customer delete === ==>", res);
+  //     setupdate((prev)=>prev+1)
+  //   } catch (err) {
+  //     console.log("error in Customer delete", err);
+  //   }
+  // }
+
   return (
     <View>
       

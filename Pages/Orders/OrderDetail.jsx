@@ -72,7 +72,7 @@ export const OrderDetail = ({route}) => {
          <Text style={styles.text1}>Weight</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={styles.text2}>24 Kilograms</Text>
+        <Text style={styles.text2}> {orderDetails && orderDetails.details.quantity} {orderDetails && orderDetails.details && orderDetails.details.unit}</Text>
         </Block>
         
      </Block>

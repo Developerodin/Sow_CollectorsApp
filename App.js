@@ -48,6 +48,8 @@ import { WebViewApp } from './Pages/WebViewPage/WebView';
 import { KYC } from './Pages/Profile/ProfileTabs/Kyc';
 import { LiveRating } from './Pages/LiveRating/LiveRating';
 import { DailyRates } from './Pages/LiveRating/DailyRates';
+import * as Notifications from 'expo-notifications';
+import usePushNotifications from './usePushNotifications';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -57,10 +59,10 @@ const Tabs = ({navigation}) => {
  
 <Tab.Navigator
     screenOptions={{
-      tabBarActiveTintColor: 'black',
+      tabBarActiveTintColor: '#239456',
       tabBarInactiveTintColor :'grey',
       tabBarLabelStyle:{color:"black"},
-      tabBarStyle: { backgroundColor: '#F1F1F1',color:"#fff",position:'absolute',bottom:0,paddingTop:2,paddingBottom:3},
+      tabBarStyle: { backgroundColor: '#FFF',color:"#fff",position:'absolute',bottom:0,paddingTop:2,paddingBottom:3},
     }}
     >
       <Tab.Screen
@@ -85,7 +87,7 @@ const Tabs = ({navigation}) => {
         options={{
           tabBarIcon: ({ color, size }) => (
           
-            <MaterialCommunityIcons name="tag-outline" size={size} color={color} />
+            <MaterialCommunityIcons name="tag" size={size} color={color} />
           ),
           headerShown: false,
         }}
@@ -235,9 +237,16 @@ const Tabs = ({navigation}) => {
     
   );
 };
-
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 export default function App() {
-
+  const { expoPushToken, notification } = usePushNotifications();
+  const data = JSON.stringify(notification, undefined, 2);
   const [Auth, setAuth]=useState(null);
   const [isAppFirstLaunched, setIsAppFirstLaunched] =useState(null);
   const [appIsReady, setAppIsReady] = useState(false);

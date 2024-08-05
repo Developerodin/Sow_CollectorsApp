@@ -276,7 +276,7 @@ export const Market = () => {
                     <Block
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                      <Text style={{ fontSize: 20 }}>
+                      <Text style={{ fontSize:18 }}>
                         {selectedCategory !== ""
                           ? selectedCategory
                           : "Select Category"}
@@ -323,7 +323,7 @@ export const Market = () => {
                           style={[styles.Space_Between, { marginTop: 10 }]}
                         >
                          
-                            <Text style={{ fontSize: 20 }}>{el.name}</Text>
+                            <Text style={{ fontSize:18 }}>{el.name}</Text>
                           
                         </TouchableOpacity>
                          );
@@ -353,7 +353,7 @@ export const Market = () => {
                     <Block
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                      <Text style={{ fontSize: 20 }}>
+                      <Text style={{ fontSize:18 }}>
                         {selectedSubCategory !== ""
                           ? selectedSubCategory
                           : "Select Sub Category"}
@@ -400,7 +400,7 @@ export const Market = () => {
                           style={[styles.Space_Between, { marginTop: 10 }]}
                         >
                          
-                            <Text style={{ fontSize: 20 }}>{el.name}</Text>
+                            <Text style={{ fontSize:18 }}>{el.name}</Text>
                           </TouchableOpacity>
                       
                          );
@@ -432,7 +432,7 @@ export const Market = () => {
                     <Block
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                      <Text style={{ fontSize: 20 }}>
+                      <Text style={{ fontSize:18 }}>
                         {selectedCity !== "" ? selectedCity : "Select City"}
                       </Text>
                     </Block>
@@ -474,7 +474,7 @@ export const Market = () => {
                        if (!uniqueCitySet.has(lowerCaseCity)) {
                        
                         uniqueCitySet.add(lowerCaseCity);
-                        // console.log("Lower city not prsent   ===>",lowerCaseCity,uniqueCitySet)
+                        console.log("Lower city not prsent   ===>",lowerCaseCity,uniqueCitySet)
                          return (
                           <TouchableOpacity
                           activeOpacity={0.6}
@@ -483,7 +483,7 @@ export const Market = () => {
                           style={[styles.Space_Between, { marginTop: 10 }]}
                         >
                           
-                            <Text style={{ fontSize: 20 }}>{el.city.toUpperCase()}</Text>
+                            <Text style={{ fontSize:18 }}>{el.city.toUpperCase()}</Text>
                           </TouchableOpacity>
                        
                          );

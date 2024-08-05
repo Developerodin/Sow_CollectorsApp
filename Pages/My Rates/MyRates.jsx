@@ -336,7 +336,7 @@ const handleSubAddChange = (field, value) => {
       <StatusBar style="dark" />
       <Header />
 
-      <Block style={{ marginTop: 20, padding: 10 }}>
+      <Block style={{ padding: 10 }}>
         <Input
           placeholder="Search for an item..."
           right
@@ -356,7 +356,7 @@ const handleSubAddChange = (field, value) => {
             paddingVertical: 10,
             paddingHorizontal: 20,
             borderBottomWidth: activeCategory === "All" ? 2 : 0,
-            borderBottomColor: activeCategory === "All" ? "teal" : "transparent",
+            borderBottomColor: activeCategory === "All" ? "#239456" : "transparent",
           }}
         >
           <Text style={{ fontWeight: "500", color: "black" }}>All</Text>
@@ -371,7 +371,7 @@ const handleSubAddChange = (field, value) => {
               paddingVertical: 10,
               paddingHorizontal: 20,
               borderBottomWidth: activeCategory === el.name ? 2 : 0,
-              borderBottomColor: activeCategory === el.name ? "teal" : "transparent",
+              borderBottomColor: activeCategory === el.name ? "#239456" : "transparent",
             }}
           >
             <Text style={{ fontWeight: "500", color: "black" }}>{el.name.toUpperCase()}</Text>
@@ -383,7 +383,7 @@ const handleSubAddChange = (field, value) => {
         onPress={() => handelCategoryModelOpen(activeCategory)}
         style={[styles.Center, { marginRight: 10 }]}
       >
-        <Ionicons name="add-circle-outline" size={24} color="teal" />
+        <Ionicons name="add-circle-outline" size={24} color="#239456" />
       </TouchableOpacity>
     </Block>
       
@@ -394,11 +394,8 @@ const handleSubAddChange = (field, value) => {
         <Block
           style={{ backgroundColor: "#F1F1F1", padding: 10, marginBottom: 60 }}
         >
-          <Text center style={{ fontSize: 32, fontWeight: 500, marginTop: 10 }}>
-            My Rates
-          </Text>
           <Block style={[styles.Space_Between, { marginTop: 10 }]}>
-            <Text style={{ fontWeight: 500 ,fontSize: 20}}>Normal Recyclables</Text>
+            <Text style={{ fontWeight: 500 ,fontSize:18}}>Normal Recyclables</Text>
             {/* {
     CartInStorage.length > 0 &&  <Button onPress={handelCartProceed} color='#29BD7F' size={"small"}>Proceed</Button>
   } */}
@@ -406,7 +403,7 @@ const handleSubAddChange = (field, value) => {
 <Button
   size={"small"}
   onPress={handelSubCategoryModelOpen}
-  style={{ backgroundColor: "teal" }}
+  style={{ backgroundColor: "#239456",height:30,width:60 }}
 >
   Add
 </Button>

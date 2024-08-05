@@ -223,7 +223,7 @@ export const Orders = () => {
         const tabBackgroundColor = isTabActive ? '#F3F3F3' : '#F3F3F3';
         const textColor = isTabActive ? 'black' : 'grey';
         const borderWidth = isTabActive ? 2 : 0;
-        const borderColor = isTabActive ? 'blue' : 'grey'; 
+        const borderColor = isTabActive ? '#239456' : 'grey'; 
             
         const tabStyle = [
           styles.tabItem,
@@ -241,7 +241,7 @@ export const Orders = () => {
             key={i}
             style={tabStyle}
             onPress={() => setIndex(i)}>
-            <Animated.Text style={[textStyles,{fontSize:14}]}>{route.title}</Animated.Text>
+            <Animated.Text style={[textStyles,{fontSize:13}]}>{route.title}</Animated.Text>
           </TouchableOpacity>
         );
       })}

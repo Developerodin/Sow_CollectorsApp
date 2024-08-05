@@ -12,6 +12,7 @@ import { useAppContext } from '../../Context/AppContext';
 const {width, height} = Dimensions.get('window');
 import { useNavigation } from "@react-navigation/native";
 import { ToastAndroid } from "react-native";
+import {Picker} from '@react-native-picker/picker';
 export const RateDetails = ({ route }) => {
   const navigation = useNavigation();
   const { itemId,subIndex,categoryIndex } = route.params;
@@ -20,11 +21,23 @@ export const RateDetails = ({ route }) => {
  const [weight, setWeight] = useState('');
  const [TotalAmount, setTotalAmount] = useState('')
   const [discription, setDiscription] = useState('')
+  const [selectedValue, setSelectedValue] = useState('Kg');
  const handleInputChange = (text) => {
   setWeight(text);
-  const totalWeight =  parseInt(text) * parseInt(details.categories[categoryIndex].sub_category[subIndex].price);
-  setTotalAmount(totalWeight)
+ 
 };
+
+useEffect(()=>{
+  if(weight !== ''){
+    let w = weight;
+  if(selectedValue === "Ton"){
+    w=`${1000 * parseInt(w)}`
+  }
+  const totalWeight =  parseInt(w) * parseInt(details.categories[categoryIndex].sub_category[subIndex].price);
+  setTotalAmount(totalWeight)
+  }
+ 
+},[weight,selectedValue])
 
 const handelDiscriptionChange = (text) =>{
   setDiscription(text);
@@ -41,7 +54,8 @@ const handleSubmit = () => {
     category:details.categories[categoryIndex].name,
     sub_category:details.categories[categoryIndex].sub_category[subIndex].name,
     quantity:weight,
-    discription:discription
+    discription:discription,
+    unit:selectedValue
   }
 
   console.log(userDetails._id, details._id,Orderdetails,TotalAmount);
@@ -144,7 +158,21 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
         onChangeText={handleInputChange}
             />
 
-            <Input style={{height:60,width:width*0.3,borderColor:"black"}} value='Kilograms' />
+            {/* <Input style={{height:60,width:width*0.3,borderColor:"black"}} value='Kilograms' /> */}
+        
+            <Block style={{height:60,width:width*0.3,borderColor:"black",borderWidth:1,borderRadius:10}}>
+              <Picker
+          selectedValue={selectedValue}
+          onValueChange={(itemValue) => setSelectedValue(itemValue)}
+          style={{ color: 'black', height: 50, fontSize: 18 }}
+        >
+          <Picker.Item label="Select Unit" value="" />
+          <Picker.Item label="Kg" value="Kg" />
+          <Picker.Item label="Ton" value="Ton" />
+         
+          
+        </Picker>
+              </Block>
         </Block>
 
         <Block style={[styles.Space_Between,{marginTop:10}]}>

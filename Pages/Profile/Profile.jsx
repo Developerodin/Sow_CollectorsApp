@@ -176,8 +176,8 @@ export const Profile = () => {
           
 
            <Block  style={{marginTop:20}}>
-            <Text center style={{fontSize:20,fontWeight:"500"}}>{userDetails && userDetails.name}</Text>
-            <Text center style={{fontSize:14,fontWeight:"500"}}>{userDetails && userDetails.registerAs}</Text>
+            <Text center style={{fontSize:20,fontWeight:"500"}}>{userDetails && userDetails.name} </Text>
+            <Text center style={{fontSize:14,fontWeight:"500"}}>   {userDetails && userDetails.mobile}  ( {userDetails && userDetails.registerAs} )</Text>
             <Block center >
            <Button onPress={() => showImagePicker('camera')} color='#0F2C59'>
            

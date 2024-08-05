@@ -13,6 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 import logo from "./scrap-img.jpeg"
 import frame1 from "./Frame1.png";
 import frame2 from "./Frame2.png";
+import usePushNotifications from "../../usePushNotifications";
 export const Home = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
@@ -24,7 +25,8 @@ export const Home = () => {
   const [marketRateLength,setmarketRateLength] = useState(2)
   const [marketRateSeetype,setmarketRateSeetype] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-
+  const { expoPushToken, notification } = usePushNotifications();
+  const data = JSON.stringify(notification, undefined, 2);
   const onRefresh = () => {
     setRefreshing(true);
     // Call your functions here
@@ -38,7 +40,7 @@ export const Home = () => {
     try {
       const response = await axios.get(`${Base_url}api/category`);
       setCategoriesData(response.data);
-      console.log("Categories all", response.data)
+      // console.log("Categories all", response.data)
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -76,7 +78,7 @@ export const Home = () => {
   const fetchMarketRates = async () => {
     try {
       const response = await axios.get(`${Base_url}api/market_rates`); 
-      console.log('Fetched plans:', response.data);
+      // console.log('Fetched plans:', response.data);
       setData(response.data);
     } catch (error) {
       console.error('Error fetching plans:', error);
@@ -122,7 +124,7 @@ export const Home = () => {
       }>
 
       <Block style={{backgroundColor:"#FFF",padding:10}}>
-
+         
      
       <Block style={{marginTop:20}}>
         <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b"}}>Hey {userDetails && userDetails.name}</Text>

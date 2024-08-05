@@ -72,7 +72,7 @@ export const MarketCard = (props) => {
         <Image
     
         source={{uri:Img}}
-        style={{resizeMode: 'contain',width:50,height:50}}
+        style={{resizeMode: 'contain',width:40,height:40}}
       />
         </Block>
       </Block>
@@ -81,11 +81,11 @@ export const MarketCard = (props) => {
       <Block style={[styles.Space_Between,{width:"80%",marginLeft:10}]}>
         <Block>
         <Block>
-        <Text style={{fontSize:16,color:"#424242",fontWeight:"bold"}}>{Title}</Text>
+        <Text style={{fontSize:14,color:"#424242",fontWeight:"bold"}}>{Title}</Text>
       </Block>
 
       <Block style={{marginRight:30}}>
-          <Text style={{color:"#29BD7F",fontSize:16,fontWeight:600}}>₹ {Value} / KG</Text>
+          <Text style={{color:"#29BD7F",fontSize:15,fontWeight:600}}>₹ {Value} / KG</Text>
         </Block>
         </Block>
        

@@ -70,6 +70,9 @@ export const CategoryAddModel2 = ({
     console.log("Data of category ==> add",categoriesData)
   }
 
+
+  console.log("selectedCategories===>",selectedCategories)
+
   return (
     <Modal
    
@@ -89,7 +92,7 @@ export const CategoryAddModel2 = ({
               onPress={handelClose}
               name="close-circle"
               size={24}
-              color="teal"
+              color="#239456"
             />
           </Block>
           <Text style={{fontSize:17}}>Select Categories </Text>
@@ -110,9 +113,9 @@ export const CategoryAddModel2 = ({
     <View key={index} style={[styles.checkboxContainer]}>
       <Checkbox
       style={{marginTop:15}}
-      color="info"
+      color="#239456"
       label={category.name}
-      initialValue={selectedCategories.some(selectedCategory => selectedCategory.name === category.name)}
+      initialValue={selectedCategories && selectedCategories.length > 0 && selectedCategories.some(selectedCategory => selectedCategory.name === category.name)}
         onChange={(el) => {
             
                 handleCategorySelect(category)
@@ -125,7 +128,7 @@ export const CategoryAddModel2 = ({
            
           </Block>
 
-          <Button onPress={handelComplete} color="teal">Submit</Button>
+          <Button onPress={handelComplete} color="#239456">Submit</Button>
         </View>
       </View>
 

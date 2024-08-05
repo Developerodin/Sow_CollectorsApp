@@ -134,7 +134,7 @@ export const PendingOrderDetails = ({route}) => {
          <Text style={styles.text1}>Order Details</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> Qty :  {orderDetails && orderDetails.details && orderDetails.details.quantity} Kg</Text>
+        <Text style={{fontSize:16}}> Qty :  {orderDetails && orderDetails.details && orderDetails.details.quantity} {orderDetails && orderDetails.details && orderDetails.details.unit}</Text>
         </Block>
         <Block style={{marginTop:10}}>
         <Text style={{fontSize:16}}> Category :  {orderDetails && orderDetails.details && orderDetails.details.category}</Text>

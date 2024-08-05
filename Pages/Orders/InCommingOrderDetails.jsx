@@ -213,7 +213,7 @@ export const InCommingOrderDetails = ({ route }) => {
             <Block style={{ marginTop: 10 }}>
               <Text style={{ fontSize: 16 }}>
                 {" "}
-                Qty : {orderDetails && orderDetails.details.quantity} Kg
+                Qty : {orderDetails && orderDetails.details.quantity} {orderDetails && orderDetails.details && orderDetails.details.unit}
               </Text>
             </Block>
             <Block style={{ marginTop: 10 }}>
