@@ -7,6 +7,7 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -147,20 +148,24 @@ export const MyRates = () => {
     console.log("Complete ==>")
   };
 
-  const handelSubCategoryModelSubmit = () => {
-   const category = UserCategoryData.filter((el,index)=>{
-      return el.name === subAddForm.categoryName
-    })
-    console.log("after submit",category)
-    addSubcategory(category[0]._id, subAddForm)
-    setsubAddForm({
-      categoryName:"",
-      name: "",
-      price: "",
-      unit: "",
-    })
-    handelSubCategoryModelClose();
-    // console.log("Data after submit =>",subAddForm)
+  const handelSubCategoryModelSubmit = async () => {
+    setLoading(true);
+    try {
+      const category = UserCategoryData.filter((el) => el.name === subAddForm.categoryName);
+      console.log("after submit", category);
+      await addSubcategory(category[0]._id, subAddForm);
+      setsubAddForm({
+        categoryName: "",
+        name: "",
+        price: "",
+        unit: "",
+      });
+      handelSubCategoryModelClose();
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handelSubCategoryModelOpen = () => {
@@ -536,14 +541,15 @@ const handleSubAddChange = (field, value) => {
               </Block>
               
               <Block center style={{ marginTop: 30 }}>
-                <Button
-                  size={"small"}
-                  style={{ backgroundColor: "teal" }}
-                  onPress={handelSubCategoryModelSubmit}
-                >
-                  Submit
-                </Button>
-              </Block>
+      <Button
+        size={"small"}
+        style={{ backgroundColor: "teal", color: "#fff" }}
+        onPress={handelSubCategoryModelSubmit}
+        disabled={loading}
+      >
+        {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: "#fff" }} >Submit</Text>}
+      </Button>
+    </Block>
             </View>
           </View>
         </View>

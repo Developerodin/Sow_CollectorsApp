@@ -48,11 +48,10 @@ export const DailyRates = () => {
     const date = new Date(dateString);
     const day = date.getDate();
     const month = date.getMonth() + 1;
-    const year = date.getFullYear() % 100; // Get last two digits of the year
+    const year = date.getFullYear();
     const formattedDay = day < 10 ? `0${day}` : day;
     const formattedMonth = month < 10 ? `0${month}` : month;
-    const formattedYear = year < 10 ? `0${year}` : year;
-    return `${formattedDay}:${formattedMonth}:${formattedYear}`;
+    return `${formattedDay}:${formattedMonth}:${year}`;
   }
 
   useEffect(() => {
@@ -70,8 +69,6 @@ export const DailyRates = () => {
 
   return (
     <View style={styles.container}>
-      {/* <Header/> */}
-      {/* <StatusBar hidden={false} color={"light"} /> */}
       <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <Block style={{ backgroundColor: "#FFF", padding: 10 }}>
           {Data && Data.length > 0 ? (
@@ -80,7 +77,7 @@ export const DailyRates = () => {
                 <View style={styles.gridcontainer}>
                   {Data && Data.map((el, index) => (
                     <Block style={{ marginTop: 15 }} activeOpacity={0.5} key={index}>
-                      <Block style={{ width: width * 0.93, borderRadius: 15, borderWidth: 1, borderColor: "#C8C8C8" }}>
+                      <Block style={styles.card}>
                         <Block>
                           <Block style={{ padding: 10, backgroundColor: "teal", borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
                             <Text left style={{ fontWeight: 500, color: "#fff", fontSize: 16 }}>Price Update : {el.name}</Text>
@@ -88,29 +85,27 @@ export const DailyRates = () => {
                           <Block style={{ padding: 10 }}>
                             <Text style={{ fontSize: 14, fontWeight: "bold", color: "grey" }}>Date : {formatDate(el.date)} </Text>
                           </Block>
-                          <ScrollView>
-                            <Block style={{ padding: 10 }}>
-                              {expandedCardIndex === index ? (
-                                <>
-                                  {el.text.split(',').map((textPart, idx) => (
-                                    <Text key={idx} style={{ fontSize: 14, fontWeight: "bold", color: "grey" }}>{textPart}</Text>
-                                  ))}
-                                  <TouchableOpacity onPress={() => toggleExpandCard(index)}>
-                                    <Text style={{ color: "grey", marginTop: 5 }}>Close</Text>
-                                  </TouchableOpacity>
-                                </>
-                              ) : (
-                                <>
-                                  <Text numberOfLines={1} style={{ fontSize: 14, fontWeight: "bold", color: "grey" }}>
-                                    {el.text.split(',')[0]}
-                                  </Text>
-                                  <TouchableOpacity onPress={() => toggleExpandCard(index)}>
-                                    <Text style={{ color: "grey", marginTop: 5 }}>Read more...</Text>
-                                  </TouchableOpacity>
-                                </>
-                              )}
-                            </Block>
-                          </ScrollView>
+                          <Block style={{ padding: 10, height: expandedCardIndex === index ? 'auto' : 100, overflow: 'hidden' }}>
+                            {expandedCardIndex === index ? (
+                              <>
+                                {el.text.split(',').map((textPart, idx) => (
+                                  <Text key={idx} style={{ fontSize: 14, fontWeight: "bold", color: "grey" }}>{textPart}</Text>
+                                ))}
+                                <TouchableOpacity onPress={() => toggleExpandCard(index)}>
+                                  <Text style={{ color: "#0F2C59", marginTop: 5, textAlign: 'right' }}>Close</Text>
+                                </TouchableOpacity>
+                              </>
+                            ) : (
+                              <>
+                                {el.text.split(',').slice(0, 2).map((textPart, idx) => (
+                                  <Text key={idx} style={{ fontSize: 14, fontWeight: "bold", color: "grey" }}>{textPart}</Text>
+                                ))}
+                                <TouchableOpacity onPress={() => toggleExpandCard(index)}>
+                                  <Text style={{ color: "#0F2C59", marginTop: 5, textAlign: 'right' }}>Read more...</Text>
+                                </TouchableOpacity>
+                              </>
+                            )}
+                          </Block>
                         </Block>
                       </Block>
                     </Block>
@@ -255,12 +250,26 @@ const styles = StyleSheet.create({
     margin: 5,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: "#ea5932",
-    borderRadius: 10
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 10,
   },
-  itemText: {
-    color: "#ea5932",
-    fontSize: 17
-  }
+  centeredText: {
+    textAlign: 'center',
+  },
+  card: {
+    backgroundColor: "#fff",
+    padding: 0,
+    borderRadius: 15,
+    width: width * 0.9,
+    overflow: 'hidden',
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 1,
+    marginBottom: 10,
+    height: 200,
+  },
 });
+
