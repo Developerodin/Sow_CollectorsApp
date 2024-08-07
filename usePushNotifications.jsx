@@ -74,7 +74,8 @@ const usePushNotifications = () => {
   }
   const userDetailsFromStorage = async (token) => {
     // console.log("Token in user details check ===>",token)
-    const Details = (await AsyncStorage.getItem("userDetails")) || null;
+    try{
+      const Details = (await AsyncStorage.getItem("userDetails")) || null;
       // console.log("step 6 ===>",Details)
     const ParseData = JSON.parse(Details);
      
@@ -84,6 +85,11 @@ const usePushNotifications = () => {
       saveToken(token,data._id)
     }
     return ;
+    }
+    catch(err){
+      console.log("Error in getting user ==.",err)
+    }
+   
   }; 
 
   useEffect(() => {

@@ -101,6 +101,7 @@ export const Market = () => {
     toggleCityAccordion();
   };
   const handelCategory = (data,id) => {
+    console.log("data=== >",data,id)
     setselectedCategory(data);
     if(id !== "0"){
       getCategoryById(id)
@@ -228,9 +229,36 @@ export const Market = () => {
     return ;
   }
 
+  const userDetailsFromStorage = async (token) => {
+    // console.log("Token in user details check ===>",token)
+    try{
+      const Details = (await AsyncStorage.getItem("userDetails")) || null;
+      // console.log("step 6 ===>",Details)
+    const ParseData = JSON.parse(Details);
+     
+    // console.log("Parse Data of user  ===>", ParseData);
+    const data = ParseData;
+     console.log("User Data 2 ==>",data)
+     if(data) {
+      setselectedCity(data.city)
+      // handelCategory('Iron','66910a952bc19d639b4f2a9c')
+      // handelSubCategory('Iron - HMS')
+      // setselectedCategory('Iron')
+      // setselectedSubCategory('')
+     }
+    
+    return ;
+    }
+    catch(err){
+      console.log("Error in getting user ==.",err)
+    }
+   
+  }; 
+
   useEffect(() => {
     fetchB2BUser();
     getCategories()
+    userDetailsFromStorage()
     // console.log("User Data ", userDetails);
   }, [refreshData,update]);
 
@@ -249,7 +277,7 @@ export const Market = () => {
         <Block style={{ padding: 10 }}>
           <Block style={{borderBottomWidth:1,paddingBottom:20,borderColor:"#E4E4E4"}}>
             <Block style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center"}}>
-              <Text style={{ fontSize: 23, marginTop: 20 }}>
+              <Text style={{ fontSize: 23, marginTop: 10 }}>
               Scrap Market 
               </Text>
 
@@ -276,10 +304,8 @@ export const Market = () => {
                     <Block
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                      <Text style={{ fontSize:18 }}>
-                        {selectedCategory !== ""
-                          ? selectedCategory
-                          : "Select Category"}
+                      <Text style={{ fontSize:18,color:`${selectedCategory !== "" ? "#239456" : "black"}` }}>
+                        {selectedCategory !== "" ? selectedCategory : "Select Category"}
                       </Text>
                     </Block>
 
@@ -301,9 +327,9 @@ export const Market = () => {
                   </Block>
                 </TouchableOpacity>
                 {expanded && (
-                  <View style={{ marginTop: 20,height:200 }}>
+                  <View style={{height:200 }}>
                     <ScrollView>
-                   
+{/*                    
                     <TouchableOpacity
                         activeOpacity={0.6}
                         onPress={() => handelCategory("","0")} 
@@ -311,7 +337,7 @@ export const Market = () => {
                       
                         <Text style={{ fontSize: 20 }}>None</Text>
                  
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     {CategoriesData.map((el, index) => {
                       
                      
@@ -337,8 +363,8 @@ export const Market = () => {
                 )}
               </View>
             </Block>
-
-            <Block style={{ marginTop: 20 }}>
+            { 
+              selectedCategory !== "" &&   <Block style={{ marginTop: 20 }}>
               <View
                 style={{
                   borderWidth: 1,
@@ -353,7 +379,7 @@ export const Market = () => {
                     <Block
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                      <Text style={{ fontSize:18 }}>
+                      <Text style={{ fontSize:18,color:`${selectedSubCategory !== "" ? "#239456" : "black"}` }}>
                         {selectedSubCategory !== ""
                           ? selectedSubCategory
                           : "Select Sub Category"}
@@ -378,17 +404,17 @@ export const Market = () => {
                   </Block>
                 </TouchableOpacity>
                 {expanded4 && (
-                  <View style={{ marginTop: 20 ,height:200}}>
+                  <View style={{height:200}}>
                     <ScrollView>
 
                     
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         activeOpacity={0.6}
                         onPress={() => handelSubCategory("")} style={[styles.Space_Between, { marginTop: 10 }]}>
                      
                         <Text style={{ fontSize: 20 }}>None</Text>
                      
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     {SelectedSubCategoriesData && SelectedSubCategoriesData.map((el, index) => {
                       
                      
@@ -412,6 +438,9 @@ export const Market = () => {
                 )}
               </View>
             </Block>
+            }
+
+           
 
             <Block style={{ marginTop: 20 }}>
               <View
@@ -432,7 +461,7 @@ export const Market = () => {
                     <Block
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                      <Text style={{ fontSize:18 }}>
+                      <Text style={{ fontSize:18,color:"#239456" }}>
                         {selectedCity !== "" ? selectedCity : "Select City"}
                       </Text>
                     </Block>
@@ -455,17 +484,17 @@ export const Market = () => {
                   </Block>
                 </TouchableOpacity>
                 {CityExpand && (
-                  <View style={{ marginTop: 20,height:200 }}>
+                  <View style={{height:200 }}>
                     <ScrollView>
 
                   
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         activeOpacity={0.6}
                         onPress={() => handelCity("")}
                          style={[styles.Space_Between, { marginTop: 10 }]}>
                      
                         <Text style={{ fontSize: 20 }}>None</Text>
-                      </TouchableOpacity>
+                      </TouchableOpacity> */}
                     
                     {AllVendorsData.map((el, index) => {
                        const lowerCaseCity = el.city.toLowerCase();

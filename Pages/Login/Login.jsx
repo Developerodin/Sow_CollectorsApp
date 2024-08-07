@@ -44,6 +44,8 @@ export const Login = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
   const [loading,setLoading] = useState(false);
+  const [countdown, setCountdown] = useState(30); // Initial countdown value
+  const [canResend, setCanResend] = useState(false);
   const scaleValue = new Animated.Value(1);
 
   const customStyle ={
@@ -163,6 +165,8 @@ export const Login = ({ navigation }) => {
 
   const generateOTP = async () => {
     setLoading(true)
+    setCanResend(false);
+      setCountdown(30);
     try {
       const response = await axios.post(`${Base_url}api/b2b/generate-otp`, { mobile_number: formData.phoneNumber });
       // handelNewUser();
@@ -174,7 +178,8 @@ export const Login = ({ navigation }) => {
       }
       ToastAndroid.show("Otp send to mobile number", ToastAndroid.SHORT);
       setOTPShow(true);
-
+      // setCanResend(false);
+      // setCountdown(30);
     } catch (error) {
       console.error('Error:', error);
       ToastAndroid.show("Try After Some Time", ToastAndroid.SHORT);
@@ -183,14 +188,36 @@ export const Login = ({ navigation }) => {
     }
   };
 
+  useEffect(() => {
+    let timer;
+    if (countdown > 0 && showOTP && !canResend) {
+      timer = setInterval(() => {
+        setCountdown(prevCountdown => prevCountdown - 1);
+      }, 1000);
+    } else if (countdown === 0) {
+      setCanResend(true);
+      clearInterval(timer);
+    }
+    return () => clearInterval(timer);
+  }, [countdown, showOTP, canResend]);
+
   const loginWithOTP = async () => {
     setLoading(true)
     try {
       const response = await axios.post(`${Base_url}api/b2b/login-with-otp`, { mobile_number: formData.phoneNumber, otp: otp });
       setLoading(false)
         if(response.data.message === "Login successful"){
-          const User = JSON.stringify(response.data.data)
+          const User = JSON.stringify(response.data.data);
+         const data = response.data.data;
           await AsyncStorage.setItem("userDetails", User);
+          if(data.status === false){
+            saveMobileNumber()
+           
+            setOTPShow(false)
+            setOtp("")
+            navigation.navigate("VerifyProfileStatus");
+            return
+          }
           setuserDetails(response.data.data);
           saveAuthStatus()
           handelPreviousUser();
@@ -206,6 +233,7 @@ export const Login = ({ navigation }) => {
       setLoading(false)
       console.error('Error:', error);
       console.log('Failed to login. Please try again.');
+      ToastAndroid.show("Wrong Otp", ToastAndroid.SHORT);
     }
   };
 
@@ -335,7 +363,11 @@ export const Login = ({ navigation }) => {
                   >
                     OTP Not Receive ?{" "}
                     <Text style={{ color: "#65be34", fontWeight: 500 }}>
-                      Resend OTP
+                    {canResend ? (
+            <Text onPress={generateOTP}>Resend OTP</Text>
+          ) : (
+            `Resend OTP in ${countdown} sec`
+          )}
                     </Text>
                   </Text>
                 </Block>

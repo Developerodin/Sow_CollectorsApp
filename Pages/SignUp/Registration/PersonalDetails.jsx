@@ -25,6 +25,7 @@ import { ToastAndroid } from "react-native";
 import MultiSelect from 'react-native-multiple-select';
 import { CategoryAddModel } from '../../../Components/CategoryAddModel/CategoryAddModel';
 import { Checkbox } from 'galio-framework';
+import { StateSelectModel } from '../../../Components/Model/StateSelectModel';
 
 // import CheckBox from 'react-native-check-box';
 
@@ -46,13 +47,19 @@ export const PersonalDetails = () => {
     const [ modalVisible,setModalVisible] = useState(false);
     const [selectedCategories, setSelectedCategories] = useState([]);
     const [termandCondition,setTermandCondition] = useState(false);
-    const [selectedState, setSelectedState] = useState("");
+    const [selectedState, setSelectedState] = useState("Delhi");
     const [selectedCity, setSelectedCity] = useState("");
+ 
     const [pincode,setPincode] = useState("")
     const [isStateModelOpen,setIsStateModelOpen] = useState(false);
     const [isCityModelOpen,setIsCityModelOpen] = useState(false);
     const [AddressData,setAddressData] = useState([]);
     const [loading,setLoading] = useState(false)
+    
+     
+    const handleStateChange = (state) => {
+      setSelectedState(state);
+    };
     const customStyle ={
       Card1: {
       
@@ -108,7 +115,7 @@ export const PersonalDetails = () => {
             
               //  console.log("Data main ==>",data.data)
                const Data = data.data
-              
+              //  console.log("Address Data =====>",Data)
                // Set the unique states in the state variable
                setAddressData(Data);
              
@@ -356,6 +363,14 @@ export const PersonalDetails = () => {
       setModalVisible(false)
     }
 
+    const handelStateSelectComplete = ()=>{
+
+    }
+
+    const handleCityChange = (city) => {
+      setSelectedCity(city);
+    };
+
     useEffect(() => {
       const keyboardDidShowListener = Keyboard.addListener('keyboardDidShow', () => {
         setIsKeyboardOpen(true);
@@ -376,6 +391,9 @@ export const PersonalDetails = () => {
       getCategories();
       AddAddressData()
     },[])
+
+    const uniqueStates = [...new Set(AddressData.map(address => address.state_name))];
+    const filteredCities = AddressData.filter(address => address.state_name === selectedState);
   return (
     <View style={styles.container}>
     <StatusBar style="dark" />
@@ -478,7 +496,7 @@ export const PersonalDetails = () => {
             
         </Block>
 
-        <Block style={{marginTop:20}}>
+        <Block style={{marginTop:10}}>
         <Block style={[ customStyle.Card3]}>
                 <TextInput
 
@@ -496,9 +514,9 @@ export const PersonalDetails = () => {
                 </Block>
         </Block>
 
-        <Block style={[{marginTop:20},styles.Space_Between]}>
+        <Block style={[{marginTop:10},styles.Space_Between]}>
     
-        <Block style={[ customStyle.Card3,{width:"48%"}]}>
+        <Block style={[ customStyle.Card3,{width:"100%"}]}>
                 <TextInput
 
         variant="standard"
@@ -517,46 +535,75 @@ export const PersonalDetails = () => {
                 </Block>
       
        
-        <Block style={[ customStyle.Card3,{width:"48%"}]}>
-                <TextInput
-
-        variant="standard"
-        keyboardType="default"
-        label="City"
-        leading={(props) => <Icon name={ 'city'} {...props} />}
-        value={selectedCity}
-        onChangeText={(text) => setSelectedCity(text)}
-        color={ 'grey'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
-        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-        
-      />
-                </Block>
+       
 
                 
        
         </Block>
-
-        <Block style={[ customStyle.Card3]}>
-                <TextInput
-
-        variant="standard"
-        keyboardType="default"
-        label="State"
-        leading={(props) => <Icon name={ 'city'} {...props} />}
-        value={selectedState}
-        onChangeText={(text) => setSelectedState(text)}
-        color={ 'grey'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
-        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
-      />
+       
+        <Block style={[ customStyle.Card3]}>
+
+
+<View style={{borderBottomWidth:1,borderColor:"grey"}} >
+      <Text>Select a State:</Text>
+      <Block style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+            <Block >
+            <Icon name={ 'city'} size={24} color={'grey'} />
+            </Block>
+         <Block style={{width:"90%"}}>
+         <Picker
+        selectedValue={selectedState}
+        onValueChange={(itemValue) => handleStateChange(itemValue)}
+        style={[styles.picker]}
+      >
+        {uniqueStates.map((state, index) => (
+          <Picker.Item key={index} label={state} value={state} />
+        ))}
+      </Picker>
+
+         </Block>
+      </Block>
+      {/* <Text>Selected State: {selectedState}</Text> */}
+    </View>
+      {/* <TouchableOpacity onPress={()=>setIsStateModelOpen(true)}>
+        <Text>Sate Model Open</Text>
+      </TouchableOpacity> */}
+                </Block>
+
+                <Block style={[ customStyle.Card3]}>
+        {selectedState !== "" ? (
+        <View style={{borderBottomWidth:1,borderColor:"grey"}}>
+          <Text>Select a City:</Text>
+          <Block style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+            <Block >
+            <Icon name={ 'city'} size={24} color={'grey'} />
+            </Block>
+         <Block style={{width:"90%"}}>
+         <Picker
+            selectedValue={selectedCity}
+            onValueChange={(itemValue) => handleCityChange(itemValue)}
+            // style={styles.picker}
+          >
+            {filteredCities.map((address, index) => (
+              <Picker.Item key={index} label={address.city_name} value={address.city_name} />
+            ))}
+          </Picker>
+         </Block>
+          
+
+          </Block>
+        
+        </View>
+      ) : null}
+
+      
                 </Block>
 
         <Block style={[{flexDirection:"row",justifyContent:"left",alignItems:"center",marginLeft:10}]}>
         <Checkbox
       style={{marginTop:15}}
-      color="info"
+      color="#239456"
       label={"By checking this box, you accept the terms and conditions"}
       initialValue={termandCondition}
         onChange={(el) => {
@@ -597,6 +644,12 @@ export const PersonalDetails = () => {
             categoriesData={CategoriesData}
             setSelectedCategories={setSelectedCategories}
             selectedCategories={selectedCategories}
+            />
+
+            <StateSelectModel
+              modalVisible={isStateModelOpen}
+              setModalVisible={setIsStateModelOpen}
+              handelComplete={handelStateSelectComplete}
             />
       
        </ScrollView>

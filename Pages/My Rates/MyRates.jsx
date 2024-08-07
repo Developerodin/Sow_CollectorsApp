@@ -463,7 +463,7 @@ const handleSubAddChange = (field, value) => {
               />
             </Block>
 
-            <View style={{ width: "100%", height: "100%", marginTop: 15 }}>
+            <View style={{ width: "100%", marginTop: 15 }}>
               {/* <TextInput
                 variant="outlined"
             
@@ -471,7 +471,7 @@ const handleSubAddChange = (field, value) => {
                 value={subAddForm.name}
                 onChangeText={(text) => handleSubAddInputChange("name", text)}
               /> */}
-           <Block style={{ marginTop: 10, borderColor: "grey", borderWidth: 1 }}>
+           <Block style={{ marginTop: 10, borderColor: "grey", borderWidth: 1,borderRadius:10 }}>
           <Picker
             selectedValue={subAddForm.categoryName}
             onValueChange={(itemValue) => {
@@ -488,8 +488,8 @@ const handleSubAddChange = (field, value) => {
           </Picker>
         </Block>
 
-        {/* {isCategorySelected && ( */}
-          <Block style={{ borderWidth: 1, borderColor: "grey", marginTop: 20 }}>
+        {isCategorySelected && (
+          <Block style={{ borderWidth: 1, borderColor: "grey", marginTop: 20,borderRadius:10 }}>
             <Picker
               selectedValue={subAddForm.name}
               onValueChange={(itemValue) => handleSubAddChange('name', itemValue)}
@@ -503,7 +503,7 @@ const handleSubAddChange = (field, value) => {
               ))}
             </Picker> 
           </Block>
-        {/* )} */}
+        )} 
              
 
               <TextInput
@@ -512,7 +512,7 @@ const handleSubAddChange = (field, value) => {
                 label="Price"
                 value={subAddForm.price}
                 onChangeText={(text) => handleSubAddChange("price", text)}
-                style={{ marginTop: 20 }}
+                style={{ marginTop: 20,borderRadius:10 }}
               />
 
               {/* <TextInput
@@ -523,17 +523,17 @@ const handleSubAddChange = (field, value) => {
                 onChangeText={(text) => handleSubAddInputChange("unit", text)}
                 style={{ marginTop: 20 }}
               /> */}
-               <Block style={{borderWidth:1,borderColor:"grey",marginTop: 20}}>
+               <Block style={{borderWidth:1,borderColor:"grey",marginTop: 20,borderRadius:10}}>
               <Picker
           selectedValue={subAddForm.unit}
           onValueChange={(itemValue) => handleSubAddChange('unit', itemValue)}
           style={{ color: 'black', height: 50, fontSize: 18 }}
         >
-          <Picker.Item label="Select Unit" value="" />
-          <Picker.Item label="Kg" value="Kg" />
-          <Picker.Item label="Per Piece" value="Per Piece" />
-         
+          {/* <Picker.Item label="Select Unit" value="" /> */}
+          <Picker.Item  label="Kg" value="Kg" />
           
+          <Picker.Item label="Ton" value="Ton" />
+          <Picker.Item label="Per Piece" value="Per Piece" />
         </Picker>
               </Block>
               
@@ -756,7 +756,7 @@ const styles2 = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: width * 0.9,
-    height: height - 320,
+    minHeight:300,
   },
   button: {
     borderRadius: 20,

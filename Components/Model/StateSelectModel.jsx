@@ -15,22 +15,16 @@ import { TextInput } from "@react-native-material/core";
 
 
 const { width, height } = Dimensions.get("screen");
-export const ItemAddModel = ({
+export const StateSelectModel = ({
   modalVisible,
-  ItemModelData,
+  
   setModalVisible,
   handelComplete,
-  handelDelete
+ 
 }) => {
 
   const animationRef = useRef(null);
 
- 
-  const [formData, setFormData] = useState({
-    name:ItemModelData.title,
-    price: ItemModelData.value,
-    unit: "Kg",
-  });
 
 
   useEffect(() => {
@@ -41,25 +35,13 @@ export const ItemAddModel = ({
     animationRef.current?.play(10, 80);
   }, []);
 
-  const handleInputChange = (name, value) => {
-    setFormData({ ...formData, [name]: value });
   
-  };
 
   const handelClose = () => {
     setModalVisible(false);
     // setFormData(initalValuesForm);
   };
 
-  console.log("Item model data==.",ItemModelData.value)
-
-  useEffect(()=>{
-    setFormData({
-      name:ItemModelData.title,
-      price:ItemModelData.value,
-      unit: "Kg",
-    })
-  },[ItemModelData])
   
 
   return (
@@ -95,91 +77,8 @@ export const ItemAddModel = ({
               padding: 10,
             }}
           >
-            <Image
-              source={{ uri: ItemModelData.image }}
-              style={{
-                resizeMode: "contain",
-                width: 30,
-                height: 30,
-                marginRight: 10,
-              }}
-            />
-            <Text style={{ fontSize: 20 }}>
-              {ItemModelData.title} {"( ₹" + ItemModelData.value + " / KG)"}
-            </Text>
-          </Block>
 
-          <Block
-            style={{
-              marginTop: 20,
-              flexDirection: "row",
-              justifyContent: "left",
-              alignItems: "start",
-              width: width * 0.9,
-              padding: 10,
-            }}
-          >
-            <Block>
-              <TextInput
-                variant="standard"
-                 keyboardType="numeric"
-                // label="Price"
-                value={formData.price}
-                onChangeText={(text) => handleInputChange("price", text)}
-                color={"grey"}
-                inputStyle={{
-                  borderWidth: 0,
-                  paddingBottom: 0,
-                  color: "black",
-                  fontSize: 20,
-                  letterSpacing: 3,
-                }}
-                // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-                style={{ width: 200 }}
-              />
             </Block>
-
-            <Block>
-              <TextInput
-                variant="standard"
-                // keyboardType="numeric"
-                label="unit"
-                value={formData.unit}
-                onChangeText={(text) => handleInputChange("unit", text)}
-                color={"grey"}
-                inputStyle={{
-                  borderWidth: 0,
-                  paddingBottom: 0,
-                  color: "black",
-                  fontSize: 20,
-                  letterSpacing: 3,
-                }}
-                
-                style={{ width: 80, marginLeft: 10 }}
-              />
-            </Block>
-          </Block>
-
-          <Block style={{flexDirection:"row",marginTop:20}}>
-            {/* <Button onPress={()=>handelDone(otp)} color="success"> Done</Button> */}
-            <Button
-             
-              
-              color="crimson"
-              onPress={() => handelDelete(ItemModelData.index)}
-           
-              size="small"
-            > Delete</Button>
-
-            <Button
-            color="teal"
-             
-             onPress={() => handelComplete(formData)}
-          
-             size="small"
-           > Update</Button>
-           
-          </Block>
         </View>
       </View>
 
