@@ -10,6 +10,10 @@ import { useNavigation } from '@react-navigation/native';
 
 export const PendingOrderCard = ({data}) => {
   const navigation = useNavigation();
+  if (!data) {
+    console.log("no c data ==>")
+    return null; // or return some placeholder
+  }
   const handeViewDetail=()=>{
     navigation.navigate("Pending Order",{id:data._id})
   }

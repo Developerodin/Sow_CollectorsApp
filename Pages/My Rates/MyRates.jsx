@@ -488,7 +488,7 @@ const handleSubAddChange = (field, value) => {
           </Picker>
         </Block>
 
-        {isCategorySelected && (
+        {/* {isCategorySelected && ( */}
           <Block style={{ borderWidth: 1, borderColor: "grey", marginTop: 20,borderRadius:10 }}>
             <Picker
               selectedValue={subAddForm.name}
@@ -503,7 +503,7 @@ const handleSubAddChange = (field, value) => {
               ))}
             </Picker> 
           </Block>
-        )} 
+        {/* )}  */}
              
 
               <TextInput

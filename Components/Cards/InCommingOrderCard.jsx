@@ -10,6 +10,10 @@ import { useNavigation } from '@react-navigation/native';
 
 export const InCommingOrderCard = ({data}) => {
   const navigation = useNavigation();
+  if (!data) {
+    console.log("no c data ==>")
+    return null
+  }
   const handeViewDetail=()=>{
     navigation.navigate("In Comming Orders",{id:data._id})
   }

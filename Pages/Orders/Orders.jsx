@@ -47,16 +47,18 @@ export const Orders = () => {
       //  console.log("orders ==>",response.data);
       // Assuming the response contains an 'orders' property
       const Orders = data.orders
+
+      console.log("All  Orders ==>",data.orders)
       setOrders(Orders);
       const PendingOrders = Orders.filter((el)=>{
-        return el.status === "pending" || el.status === "in-progress"  || el.status === "canceled"
+        return (el.status === "pending" || el.status === "in-progress"  || el.status === "canceled") && el.from !== null && el.to !== null
       })
       const CompletedOrders = Orders.filter((el)=>{
-        return el.status === "completed"
+        return el.status === "completed" && el.from !== null && el.to !== null
       })
 
       const RejectedOrders = Orders.filter((el)=>{
-        return el.status === "rejected"
+        return el.status === "rejected" && el.from !== null && el.to !== null
       })
 
       // in-progress
@@ -78,17 +80,17 @@ export const Orders = () => {
       
 
       const InCommingOrder = Orders.filter((el)=>{
-        return el.status === "pending"
+        return el.status === "pending" && el.from !== null && el.to !== null
       })
 
       const PendingOrders = Orders.filter((el)=>{
-        return el.status === "pending"
+        return el.status === "pending" && el.from !== null && el.to !== null
       })
       const CompletedOrders = Orders.filter((el)=>{
-        return el.status === "completed"
+        return el.status === "completed" && el.from !== null && el.to !== null
       })
       const RejectedOrders = Orders.filter((el)=>{
-        return el.status === "rejected"
+        return el.status === "rejected" && el.from !== null && el.to !== null
       }
       )
       setInCommingOrders(Orders);
@@ -106,7 +108,7 @@ export const Orders = () => {
       <Block style={{padding:10,marginBottom:60}}>
            {
            InCommingpendingOrders && InCommingpendingOrders.length>0 ? InCommingpendingOrders.map((el,index)=>{
-              return    <InCommingOrderCard key={index} data={el} />
+              return    <InCommingOrderCard key={index} data={ el.from && el} />
             })
             :
             <Block center style={{marginTop:40}}>
@@ -132,7 +134,7 @@ export const Orders = () => {
       <Block style={{padding:10,marginBottom:60}}>
            {
            pendingOrders && pendingOrders.length > 0 ?pendingOrders.map((el,index)=>{
-              return    <PendingOrderCard key={index} data={el} />
+              return    <PendingOrderCard key={index} data={ el.from && el} />
             })
             :
             <Block center style={{marginTop:40}}>
@@ -159,7 +161,7 @@ export const Orders = () => {
            
            {
             completedOrders && completedOrders.length>0 ? completedOrders.map((el,index)=>{
-              return  <OrdersCard key={index} data={el} />
+              return  <OrdersCard key={index} data={el.from && el} />
             })
             :
             <Block center style={{marginTop:40}}>
@@ -185,7 +187,7 @@ export const Orders = () => {
       <Block style={{padding:10,marginBottom:60}}>
             {
             rejectedOrders && rejectedOrders.length>0 ? rejectedOrders.map((el,index)=>{
-              return  <RejectedOrderCard key={index} data={el} />
+              return  <RejectedOrderCard key={index} data={el.from && el} />
             })
             :
             <Block center style={{marginTop:40}}>

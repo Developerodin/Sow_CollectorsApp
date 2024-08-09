@@ -9,7 +9,10 @@ import { AntDesign } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 export const OrdersCard = ({data}) => {
   const navigation = useNavigation();
-
+  if (!data) {
+    console.log("no c data ==>")
+    return null; // or return some placeholder
+  }
   const handeViewDetail=()=>{
     navigation.navigate("Order Details",{id:data._id})
   }

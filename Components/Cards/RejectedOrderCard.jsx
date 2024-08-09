@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -10,24 +10,34 @@ import { useNavigation } from '@react-navigation/native';
 
 export const RejectedOrderCard = ({data}) => {
   const navigation = useNavigation();
+  if (!data) {
+    console.log("no c data ==>")
+    return null; // or return some placeholder
+  }
   const handeViewDetail=()=>{
     navigation.navigate("In Comming Orders",{id:data._id})
   }
     // const {Img,Title,SubTitle} = props
+
+    useEffect(()=>{
+      console.log("Data ==>",data)
+     
+    },[])
+    
   return (
     <View style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:5}}>
       <Block>
         <Block right>
-        <Text style={[{color:"grey",fontSize:13}]} >{(data.status).toUpperCase()}</Text>
+        <Text style={[{color:"grey",fontSize:13}]} >{data && (data.status).toUpperCase()}</Text>
         </Block>
         <Block style={[styles.displayF]}>
         <Ionicons name="person" size={18} color="black" />
-        <Text style={[styles.text1]} >{data.from.name}</Text>
+        <Text style={[styles.text1]} >{data && data.from && data.from.name}</Text>
         </Block>
 
         <Block style={{marginTop:15}}>
           <Text style={{fontSize:18,fontWeight:400}}>Estimated Value</Text>
-          <Text style={{fontSize:20,fontWeight:500,marginTop:3}}>₹ {data.totalAmount}</Text>
+          <Text style={{fontSize:20,fontWeight:500,marginTop:3}}>₹ {data && data.totalAmount}</Text>
         </Block>
 
         <Block style={[styles.displayF,{marginTop:10}]}>
@@ -37,38 +47,41 @@ export const RejectedOrderCard = ({data}) => {
 
         <Block style={[styles.displayF,{marginTop:10}]}>
         <Ionicons name="location" size={20} color="black" />
-        <Text style={[styles.text1]} >Pickup Location : {data.from.Address}, {data.from.pincode}, {data.from.city}, {data.from.country} </Text>
+        <Text style={[styles.text1]} >Pickup Location : {data && data.from && data.from.Address}, {data && data.from && data.from.pincode}, {data && data.from && data.from.city}, {data && data.from && data.from.country} </Text>
         </Block>
 
         <Block style={[styles.Center]} >
         <Block style={[styles.Center,{marginTop:20}]} >
-        <TouchableOpacity
-                activeOpacity={1}
-                style={[
-                  styles.btn,
-                  {
-                    borderColor:"black",
-                    borderWidth: 1,
-                    backgroundColor: 'black',
-                    flexDirection:"row",
-                    alignItems:"center"
-                  },
-                ]}
-                onPress={handeViewDetail}
-                >
-                <Text
-                  style={{
-                  
-                    fontSize: 15,
-                    color:"#fff",
-                   
-                  }}>
-                   Details
-                  
-                </Text>
-                
+          {
+            data && <TouchableOpacity
+            activeOpacity={1}
+            style={[
+              styles.btn,
+              {
+                borderColor:"black",
+                borderWidth: 1,
+                backgroundColor: 'black',
+                flexDirection:"row",
+                alignItems:"center"
+              },
+            ]}
+            onPress={handeViewDetail}
+            >
+            <Text
+              style={{
+              
+                fontSize: 15,
+                color:"#fff",
                
-        </TouchableOpacity>
+              }}>
+               Details
+              
+            </Text>
+            
+           
+    </TouchableOpacity>
+          }
+        
         </Block>
         </Block>
       </Block>
