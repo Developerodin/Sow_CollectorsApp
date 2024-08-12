@@ -14,6 +14,7 @@ import logo from "./scrap-img.jpeg"
 import frame1 from "./Frame1.png";
 import frame2 from "./Frame2.png";
 import usePushNotifications from "../../usePushNotifications";
+import LiveRates from '../../Components/Cards/LiveRates';
 export const Home = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
@@ -126,7 +127,7 @@ export const Home = () => {
       <Block style={{backgroundColor:"#FFF",padding:10}}>
          
      
-      <Block style={{marginTop:20}}>
+      {/* <Block style={{marginTop:20}}>
         <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b"}}>Hey {userDetails && userDetails.name}</Text>
 
         <Block style={[{marginTop:10},styles.Space_Between]}>
@@ -199,12 +200,7 @@ export const Home = () => {
 
 
 <Block style={{marginTop:20}}>
-        {/* <Text style={{fontSize:16,fontWeight:500}}>Latest from Us</Text> */}
-        
-        {/* <Block style={{marginTop:20,flexDirection:"row",justifyContent:"center",alignItem:"center"}}>
-  <Image style={{width:"100%",height:200}} 
-  source={{ uri: "https://img.freepik.com/premium-vector/mega-sale-discount-banner-set-promotion-with-yellow-background_497837-702.jpg" }} />
-</Block> */}
+     
       </Block>
 
 
@@ -331,7 +327,11 @@ export const Home = () => {
   </Block>
 </Block>
 
-       </Block>
+       </Block> */}
+       <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b",textAlign:'center'}}>Hey {userDetails && userDetails.name}</Text>
+       <Block style={{flex:1}}>
+    <LiveRates />
+  </Block>
 
        </Block>
 

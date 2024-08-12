@@ -144,7 +144,7 @@ const LiveRates = () => {
                                         stroke: "#ffa726"
                                     }
                                 }}
-                                bezier
+                                
                                 style={{
                                     marginVertical: 20,
                                     borderRadius: 16,
