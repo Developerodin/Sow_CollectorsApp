@@ -1,0 +1,183 @@
+[
+    {
+        "_id": "665032b60cfc8ed85b60f487",
+        "category": "Copper",
+        "date": "2024-05-24T00:00:00.000Z",
+        "name": "Jaipur",
+        "city": "Rajasthan",
+        "price": 200,
+        "time": "12:55"
+    },
+    {
+        "_id": "669f89f13744f3fa99bf7c65",
+        "category": "Iron",
+        "date": "2024-07-23T00:00:00.000Z",
+        "name": "Punjab",
+        "city": "Punjab",
+        "price": 31.2,
+        "time": "16:15"
+    },
+    {
+        "_id": "6617a1c37e9b4a0f826b9a4d",
+        "category": "Steel",
+        "date": "2024-06-15T00:00:00.000Z",
+        "name": "Mumbai",
+        "city": "Maharashtra",
+        "price": 50.5,
+        "time": "10:30"
+    },
+    {
+        "_id": "66a2bce4e1fa2d4c2a9a3e7c",
+        "category": "Aluminum",
+        "date": "2024-08-01T00:00:00.000Z",
+        "name": "Delhi",
+        "city": "Delhi",
+        "price": 75.3,
+        "time": "11:45"
+    },
+    {
+        "_id": "66c3dba981e5f5e42d7a5f5d",
+        "category": "Zinc",
+        "date": "2024-07-10T00:00:00.000Z",
+        "name": "Kolkata",
+        "city": "West Bengal",
+        "price": 120.1,
+        "time": "13:00"
+    },
+    {
+        "_id": "66d7f68b7e8f6e4f2a8a6a5f",
+        "category": "Lead",
+        "date": "2024-08-05T00:00:00.000Z",
+        "name": "Chennai",
+        "city": "Tamil Nadu",
+        "price": 65.8,
+        "time": "14:20"
+    },
+    {
+        "_id": "66e8c6b2c5b1f4d5b3a6a4a3",
+        "category": "Tin",
+        "date": "2024-07-25T00:00:00.000Z",
+        "name": "Hyderabad",
+        "city": "Telangana",
+        "price": 180.6,
+        "time": "15:10"
+    },
+    {
+        "_id": "66f2a7a0a4d5f4b6a7c8a5e2",
+        "category": "Nickel",
+        "date": "2024-06-20T00:00:00.000Z",
+        "name": "Pune",
+        "city": "Maharashtra",
+        "price": 210.4,
+        "time": "16:30"
+    },
+    {
+        "_id": "6703c2d4c6f7e5d4a3b8a6a3",
+        "category": "Brass",
+        "date": "2024-07-30T00:00:00.000Z",
+        "name": "Ahmedabad",
+        "city": "Gujarat",
+        "price": 95.2,
+        "time": "17:45"
+    },
+    {
+        "_id": "6715e4f9b8d1f4c3a5e2a7b1",
+        "category": "Bronze",
+        "date": "2024-06-10T00:00:00.000Z",
+        "name": "Surat",
+        "city": "Gujarat",
+        "price": 85.7,
+        "time": "18:20"
+    },
+    {
+        "_id": "6728b3a4d5f7e6d2a9c8b7a4",
+        "category": "Silver",
+        "date": "2024-05-30T00:00:00.000Z",
+        "name": "Lucknow",
+        "city": "Utter Pradesh",
+        "price": 500.5,
+        "time": "19:00"
+    },
+    {
+        "_id": "6734d5e6f8b9d7c6a8e9b8a5",
+        "category": "Gold",
+        "date": "2024-08-15T00:00:00.000Z",
+        "name": "Kanpur",
+        "city": "Utter Pradesh",
+        "price": 3500.2,
+        "time": "09:50"
+    },
+    {
+        "_id": "6748e5d7b6c9a7f4e9a8b6c4",
+        "category": "Platinum",
+        "date": "2024-07-14T00:00:00.000Z",
+        "name": "Patna",
+        "city": "Bihar",
+        "price": 2500.7,
+        "time": "11:15"
+    },
+    {
+        "_id": "6756f7a9d8b1c7e2a6d7a5c3",
+        "category": "Titanium",
+        "date": "2024-06-05T00:00:00.000Z",
+        "name": "Nagpur",
+        "city": "Maharashtra",
+        "price": 800.4,
+        "time": "12:40"
+    },
+    {
+        "_id": "6769b4c5d9f6e3b8c7a8b5d2",
+        "category": "Palladium",
+        "date": "2024-05-20T00:00:00.000Z",
+        "name": "Bhopal",
+        "city": "Madhya Pradesh",
+        "price": 3200.6,
+        "time": "13:30"
+    },
+    {
+        "_id": "6778c6d8f7e9b6d3a9e7b6e3",
+        "category": "Cobalt",
+        "date": "2024-07-01T00:00:00.000Z",
+        "name": "Indore",
+        "city": "Madhya Pradesh",
+        "price": 190.3,
+        "time": "14:25"
+    },
+    {
+        "_id": "6789e7b1f5c9a8d2b6c7a4f2",
+        "category": "Magnesium",
+        "date": "2024-06-25T00:00:00.000Z",
+        "name": "Ludhiana",
+        "city": "Punjab",
+        "price": 140.5,
+        "time": "15:50"
+    },
+    {
+        "_id": "6798f6a4c8b3d7e2b8a9c6f1",
+        "category": "Chromium",
+        "date": "2024-08-10T00:00:00.000Z",
+        "name": "Vadodara",
+        "city": "Gujarat",
+        "price": 250.7,
+        "time": "17:15"
+    },
+    {
+        "_id": "67a9c7d8e9f7b4a3d7b8c7e0",
+        "category": "Manganese",
+        "date": "2024-07-20T00:00:00.000Z",
+        "name": "Rajkot",
+        "city": "Gujarat",
+        "price": 135.8,
+        "time": "18:30"
+    },
+    {
+        "_id": "67b8d9a3c6f9e8d2a7c8f6e1",
+        "category": "Tungsten",
+        "date": "2024-06-18T00:00:00.000Z",
+        "name": "Amritsar",
+        "city": "Punjab",
+        "price": 400.4,
+        "time": "19:10"
+    }
+    
+]

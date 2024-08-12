@@ -13,6 +13,8 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import logo from "./scrap-img.jpeg"
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
+import LiveRates from '../../Components/Cards/LiveRates';
+
 export const LiveRating = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
@@ -29,6 +31,7 @@ export const LiveRating = () => {
   const [marketRateLength,setmarketRateLength] = useState(2)
   const [marketRateSeetype,setmarketRateSeetype] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -161,7 +164,7 @@ export const LiveRating = () => {
 
 
 
-      <Block style={{backgroundColor:"#FFF",padding:10}}>
+      <Block style={{backgroundColor:"#FAFAFA",padding:10}}>
 
       <Block style={{marginTop:10,flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
 
@@ -170,7 +173,7 @@ export const LiveRating = () => {
         placeholder="Search..."
         value={searchQuery}
         onChangeText={setSearchQuery}
-        style={{ height: 40, borderColor: 'gray', borderWidth: 1, paddingLeft: 10,width:width*0.7,borderRadius:20 }}
+        style={{ height: 40, borderColor: 'gray', borderWidth: 1, paddingLeft: 10,width:width*0.7,borderRadius:20 ,backgroundColor:'#FFFFFF'}}
       />
         </Block>
       
@@ -190,43 +193,15 @@ export const LiveRating = () => {
         
       </Block>
 
-{
-  Data && Data.length >0 ? 
-  <Block style={{marginTop:20}}>
-
-  
-  <Block >
-  <View style={styles.gridcontainer}>
-{filteredData && filteredData.map((el, index) => {
-
-return <TouchableOpacity style={{marginTop:20}} onPress={handelCategoryPress} activeOpacity={0.5}  key={index} >
-<Block style={{width:width*0.93,borderRadius:10,padding:0,borderWidth:1,borderColor:"#C8C8C8",flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
-<Block> 
-<Image
-source={logo}
-style={{resizeMode: 'cover',width:50,height:50,borderTopLeftRadius:10,borderBottomLeftRadius:10}}
-/>
-</Block>
-<Block style={{width:"60%",marginLeft:20}}> 
-  <Text style={{fontWeight:500,color:"#002379",fontSize:14}}>{el.name.toUpperCase()}</Text>
-  <Text style={{fontSize:12}}>{el.category}</Text>
-  <Text style={{fontSize:11}}>{formatDate(el.date)}  {el.time} </Text>
-</Block>
-<Block> 
-  <Text style={{fontWeight:500,color:"#002379",fontSize:14}}>₹ {el.price}</Text>
-</Block>
-</Block>
-</TouchableOpacity>
-
-
-})}
-</View>
-
-
+      {
+  Data && Data.length > 0 ? 
+  <Block style={{marginTop:20,flex:1}}>
+    <LiveRates />
   </Block>
-</Block>
+//   : <Text>No Data Available</Text>
+// }
 
-:
+ :
 <Block center style={{marginTop:40}}>
 <Image
 source={require('../../assets/media/5-dark.png')}
@@ -239,7 +214,7 @@ marginRight: 10,
 <Text>No Rates Availabel For {value}</Text>
 
 </Block>
-}
+} 
 
        </Block>
 
@@ -255,7 +230,8 @@ const styles = StyleSheet.create({
   gridcontainer: {
     flexDirection: 'row',  // This makes the children align in a row
     flexWrap: 'wrap',  // This allows items to wrap to the next line if there's not enough space
-    justifyContent: 'space-between',  // This distributes the items along the row
+    justifyContent: 'space-between', 
+    
   },
   gridcolumn: {
     width: '48%',  // You can adjust the width based on your preference
@@ -271,7 +247,7 @@ const styles = StyleSheet.create({
   },
   container:{
     flex: 1,
-    backgroundColor:"#FFFFFF",
+    backgroundColor:"#FAFAFA",
    
 
   },
