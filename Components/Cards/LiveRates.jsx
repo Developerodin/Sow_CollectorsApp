@@ -1,20 +1,27 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, Image, StyleSheet, Dimensions, ScrollView, FlatList, Modal, Button } from 'react-native';
+import { View, TouchableOpacity, Image, ScrollView, FlatList } from 'react-native';
 import { Block, Text } from "galio-framework";
 import marketRates from './marketRates.json';
 import logo from "./scrap-img.jpeg";
-import { LineChart } from 'react-native-chart-kit';
+import MarketModal from './MarketModal';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import icon from './trend.png';
 
 const LiveRates = () => {
     const [selectedCity, setSelectedCity] = useState('All');
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
+    const [visibleItems, setVisibleItems] = useState(5); // State to manage number of items visible
 
     const cities = ['All', ...new Set(marketRates.map(item => item.city))];
 
     const filteredData = selectedCity === 'All'
         ? marketRates
         : marketRates.filter(item => item.city === selectedCity);
+
+    const handleShowMore = () => {
+        setVisibleItems(filteredData.length); // Show all items
+    };
 
     const formatDate = (dateString) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -23,6 +30,7 @@ const LiveRates = () => {
 
     const handleCityPress = (city) => {
         setSelectedCity(city);
+        setVisibleItems(5); // Reset visible items when city changes
     };
 
     const handleItemPress = (item) => {
@@ -30,31 +38,26 @@ const LiveRates = () => {
         setModalVisible(true);
     };
 
-    const renderCityItem = ({ item }) => (
-        <TouchableOpacity
-            onPress={() => handleCityPress(item)}
-            style={{ padding: 10, backgroundColor: selectedCity === item ? '#002379' : '#fff', borderRadius: 5, marginHorizontal: 5, borderColor: '#002379' }}
-        >
-            <Text style={{ color: selectedCity === item ? '#fff' : '#000', borderColor: '#002379' }}>{item}</Text>
-        </TouchableOpacity>
-    );
-
     const renderMarketItem = ({ item }) => (
         <TouchableOpacity style={{ marginTop: 20 }} activeOpacity={0.5} onPress={() => handleItemPress(item)}>
             <Block style={{ width: '100%', borderRadius: 10, padding: 5, borderWidth: 1, borderColor: "#C8C8C8", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", backgroundColor: '#FFFFFF' }}>
                 <Block>
                     <Image
                         source={logo}
-                        style={{ resizeMode: 'cover', width: 50, height: 50, borderTopLeftRadius: 10, borderBottomLeftRadius: 10 }}
+                        style={{ resizeMode: 'cover', width: 50, height: 50 }}
                     />
                 </Block>
-                <Block style={{ width: "60%", marginLeft: 20 }}>
-                    <Text style={{ fontWeight: '500', color: "#002379", fontSize: 14 }}>{item.name.toUpperCase()}</Text>
-                    <Text style={{ fontSize: 12 }}>{item.category}</Text>
-                    <Text style={{ fontSize: 11 }}>{formatDate(item.date)}  {item.time} </Text>
+                <Block style={{ width: "60%", marginLeft: 15 }}>
+                    <Text style={{ fontWeight: '700', color: "#002379", fontSize: 14 }}>{item.name.toUpperCase()}</Text>
+                    <Text style={{ fontSize: 13,fontWeight: '600' }}>{item.category}</Text>
+                    <Text style={{ fontSize: 12,fontWeight: '600' }}>{formatDate(item.date)}  {item.time} </Text>
                 </Block>
-                <Block>
+                <Block style={{textAlign:'right'}}>
                     <Text style={{ fontWeight: '500', color: "#002379", fontSize: 14 }}>₹ {item.price}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Text style={{ marginRight: 5 ,color:'#e41010',fontWeight:400}}>0 </Text>
+                        <Image source={icon} style={{ width: 24, height: 24 }} />
+                    </View>
                 </Block>
             </Block>
         </TouchableOpacity>
@@ -73,164 +76,34 @@ const LiveRates = () => {
                         onPress={() => handleCityPress(city)}
                         style={{ marginRight: 10, padding: 10, backgroundColor: selectedCity === city ? '#002379' : '#fff', borderRadius: 10 }}
                     >
-                        <Text style={{ color: selectedCity === city ? '#fff' : '#000' }}>{city}</Text>
+                        <Text style={{ color: selectedCity === city ? '#fff' : 'black' }}>{city}</Text>
                     </TouchableOpacity>
                 ))}
             </ScrollView>
 
             <FlatList
-                data={filteredData}
+                data={filteredData.slice(0, visibleItems)} // Show only the visible items
                 renderItem={renderMarketItem}
-                keyExtractor={(item) => item._id}
+                keyExtractor={item => item.id}
                 contentContainerStyle={{ paddingHorizontal: 10 }}
+                ListFooterComponent={
+                    visibleItems < filteredData.length ? (
+                        <TouchableOpacity onPress={handleShowMore} style={{ marginVertical: 20, alignSelf: 'center', padding: 10, borderRadius: 10, backgroundColor: '#002379' }}>
+                            <Text style={{ color: '#fff', fontWeight: '600' }}>Show More</Text>
+                        </TouchableOpacity>
+                    ) : null
+                }
             />
 
-            {/* Modal Component */}
-            {selectedItem && (
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => setModalVisible(false)}
-                >
-                    <View style={styles.modalView}>
-                        <View style={styles.modalContent}>
-                            {/* Top Bar */}
-                            <View style={styles.topBar}>
-                                <View style={styles.topBarHandle}></View>
-                            </View>
-
-                            {/* Title */}
-                            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, borderRadius: 30, borderColor: '#F2F2F2', borderWidth: 1,marginBottom:10,backgroundColor:'#ffffff'}}>
-  <Text style={{flex: 1, textAlign: 'center'}}>Add to:</Text>
-  <Text style={{flex: 1, textAlign: 'center'}}>Notification</Text>
-  <Text style={{flex: 1, textAlign: 'center'}}>Favourite</Text>
-</View>
-
-
-                            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',padding: 10, borderRadius: 30, borderColor: '#F2F2F2', borderWidth: 1,backgroundColor:'#ffffff'}}>
-  <Text style={{flex: 1, textAlign: 'center'}}>Today</Text>
-  <Text style={{flex: 1, textAlign: 'center'}}>Week</Text>
-  <Text style={{flex: 1, textAlign: 'center'}}>Month</Text>
-  <Text style={{flex: 1, textAlign: 'center'}}>3 Month</Text>
-  <Text style={{flex: 1, textAlign: 'center'}}>Custom</Text>
-</View>
-                            {/* Line Chart */}
-                            <LineChart
-                                data={{
-                                    labels: ['9:00', '12:00', '15:00', '18:00'],
-                                    datasets: [
-                                        {
-                                            data: [30000, 37000, 32000, 37000],
-                                            color: (opacity = 1) => `rgba(2, 115, 177, ${opacity})`, // Color of the line
-                                            strokeWidth: 2 // Thickness of the line
-                                        },
-                                    ],
-                                }}
-                                width={Dimensions.get("window").width - 40} // Adjust width as needed
-                                height={220}
-                                chartConfig={{
-                                    backgroundGradientFrom: '#ffffff',
-                                    backgroundGradientTo: '#ffffff',
-                                    decimalPlaces: 0,
-                                    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                                    labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                                    style: {
-                                        borderRadius: 16,
-                                    },
-                                    propsForDots: {
-                                        r: "6",
-                                        strokeWidth: "2",
-                                        stroke: "#ffa726"
-                                    }
-                                }}
-                                
-                                style={{
-                                    marginVertical: 20,
-                                    borderRadius: 16,
-                                }}
-                            />
-
-                            {/* Additional Information */}
-                            <View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, borderRadius: 30, borderColor: '#F2F2F2', borderWidth: 1, marginBottom: 10, backgroundColor: '#ffffff'}}>
-  <Text style={{flex: 1, textAlign: 'left', paddingLeft: 10, color: '#4682B4'}}>{formatDate(selectedItem.date)} {selectedItem.time}</Text>
-  <Text style={{flex: 1, textAlign: 'right', paddingRight: 10}}>₹ {selectedItem.price}</Text>
-</View>
-
-<View style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10, borderRadius: 30, borderColor: '#F2F2F2', borderWidth: 1, marginBottom: 10, backgroundColor: '#ffffff'}}>
-  <Text style={{flex: 1, textAlign: 'left', paddingLeft: 10, color: '#4682B4'}}>{formatDate(selectedItem.date)} {selectedItem.time}</Text>
-
-  <Text style={{flex: 1, textAlign: 'right', paddingRight: 10}}>₹ {selectedItem.price}</Text>
-</View>
-                          
-
-                            <Button title="Close" onPress={() => setModalVisible(false)} />
-                        </View>
-                    </View>
-                </Modal>
-            )}
+            {/* Modal */}
+            <MarketModal
+                modalVisible={modalVisible}
+                selectedItem={selectedItem}
+                setModalVisible={setModalVisible}
+                formatDate={formatDate}
+            />
         </View>
     );
 };
-
-const styles = StyleSheet.create({
-    modalView: {
-        flex: 1,
-        justifyContent: 'flex-end',
-
-    },
-    modalContent: {
-        height: '65%',
-        backgroundColor: "#FAFAFA",
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20,
-        padding: 20,
-        alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
-    },
-    topBar: {
-        width: '100%',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    topBarHandle: {
-        width: 40,
-        height: 4,
-        backgroundColor: '#C0C0C0',
-        borderRadius: 2,
-    },
-    modalTitle: {
-        fontSize: 18,
-        fontWeight: 'bold',
-        color: '#002379',
-    },
-    modalSubtitle: {
-        fontSize: 14,
-        color: '#808080',
-        marginVertical: 5,
-    },
-    modalPrice: {
-        fontSize: 22,
-        fontWeight: 'bold',
-        color: '#002379',
-        marginBottom: 20,
-    },
-    additionalInfo: {
-        marginTop: 20,
-        width: '100%',
-        paddingHorizontal: 20,
-    },
-    additionalInfoText: {
-        fontSize: 14,
-        color: '#808080',
-    },
-});
 
 export default LiveRates;

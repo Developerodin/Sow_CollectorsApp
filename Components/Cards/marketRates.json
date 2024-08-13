@@ -143,15 +143,7 @@
         "price": 190.3,
         "time": "14:25"
     },
-    {
-        "_id": "6789e7b1f5c9a8d2b6c7a4f2",
-        "category": "Magnesium",
-        "date": "2024-06-25T00:00:00.000Z",
-        "name": "Ludhiana",
-        "city": "Punjab",
-        "price": 140.5,
-        "time": "15:50"
-    },
+   
     {
         "_id": "6798f6a4c8b3d7e2b8a9c6f1",
         "category": "Chromium",
