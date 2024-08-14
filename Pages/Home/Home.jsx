@@ -15,6 +15,7 @@ import frame1 from "./Frame1.png";
 import frame2 from "./Frame2.png";
 import usePushNotifications from "../../usePushNotifications";
 import LiveRates from '../../Components/Cards/LiveRates';
+
 export const Home = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
@@ -126,8 +127,9 @@ export const Home = () => {
 
       <Block style={{backgroundColor:"#FFF",padding:10}}>
          
+    
      
-      {/* <Block style={{marginTop:20}}>
+      <Block style={{marginTop:20}}>
         <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b"}}>Hey {userDetails && userDetails.name}</Text>
 
         <Block style={[{marginTop:10},styles.Space_Between]}>
@@ -147,10 +149,12 @@ export const Home = () => {
         </Block>
        
       </Block>  
-        
+      <Block style={{flex:1}}>
+    <LiveRates />
+  </Block>
        
       
-      <Block style={{marginTop:40,width:width*0.93}}>
+      <Block style={{marginTop:10,width:width*0.93}}>
       <Block>
           <Image source={frame2} style={{width:width*0.93,height:115,borderRadius:7}} />
         </Block>
@@ -327,11 +331,9 @@ export const Home = () => {
   </Block>
 </Block>
 
-       </Block> */}
+       </Block>
        <Text style={{fontSize:25,fontWeight:500,color:"#4b4b4b",textAlign:'center'}}>Hey {userDetails && userDetails.name}</Text>
-       <Block style={{flex:1}}>
-    <LiveRates />
-  </Block>
+      
 
        </Block>
 
