@@ -82,7 +82,7 @@ export const OrderDetail = ({route}) => {
          <Text style={styles.text1}>Pick Up Location</Text>
         </Block>
         <Block style={{marginTop:10}}>
-        <Text style={{fontSize:20}}>{orderDetails && orderDetails.from && orderDetails.from.Address}, {orderDetails && orderDetails.from && orderDetails.from.pincode}, {orderDetails && orderDetails.from && orderDetails.from.city} </Text>
+        <Text style={{fontSize:16}}>{orderDetails && orderDetails.from && orderDetails.from.Address}, {orderDetails && orderDetails.from && orderDetails.from.pincode}, {orderDetails && orderDetails.from && orderDetails.from.city} </Text>
         </Block>
         
      </Block>
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
      color:"#9B9B9B"
     },
     text2:{
-        fontSize:24,
+        fontSize:16,
         color:"#040404"
     },
     tabBar: {

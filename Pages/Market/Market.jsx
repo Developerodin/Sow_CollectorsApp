@@ -72,7 +72,7 @@ export const Market = () => {
   const getCategoryById = async (id) => {
     try {
       const response = await axios.get(`${Base_url}api/category/${id}`);
-      // setUpdate((prev) =>prev+1)
+      
       setSelectedSubCategoriesData(response.data[0].sub_category)
       // console.log("SubCategory data", response.data[0].sub_category)
       return response.data;
@@ -123,9 +123,7 @@ export const Market = () => {
 
       if (response.status === 200) {
         const fetchedB2BUsers = response.data;
-        // setCategories(fetchedCategories);
 
-        // console.log("Fetch users == >", fetchedB2BUsers);
 
         setVendorsData(fetchedB2BUsers);
         const MediatorsData = fetchedB2BUsers.filter((el) => {

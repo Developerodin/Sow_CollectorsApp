@@ -44,24 +44,24 @@ export const Orders = () => {
     try {
       const response = await axios.get(`${Base_url}api/b2b_orders/from/${userDetails._id}`);
       const data = response.data;
-      //  console.log("orders ==>",response.data);
-      // Assuming the response contains an 'orders' property
-      const Orders = data.orders
-
-      console.log("All  Orders ==>",data.orders)
+      const Orders = data.orders;
+  
+      
+      Orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+      console.log("All Orders ==>", Orders);
       setOrders(Orders);
-      const PendingOrders = Orders.filter((el)=>{
-        return (el.status === "pending" || el.status === "in-progress"  || el.status === "canceled") && el.from !== null && el.to !== null
-      })
-      const CompletedOrders = Orders.filter((el)=>{
-        return el.status === "completed" && el.from !== null && el.to !== null
-      })
-
-      const RejectedOrders = Orders.filter((el)=>{
-        return el.status === "rejected" && el.from !== null && el.to !== null
-      })
-
-      // in-progress
+  
+      const PendingOrders = Orders.filter((el) => {
+        return (el.status === "pending" || el.status === "in-progress" || el.status === "canceled") && el.from !== null && el.to !== null;
+      });
+      const CompletedOrders = Orders.filter((el) => {
+        return el.status === "completed" && el.from !== null && el.to !== null;
+      });
+      const RejectedOrders = Orders.filter((el) => {
+        return el.status === "rejected" && el.from !== null && el.to !== null;
+      });
+  
       setPendingOrders(PendingOrders);
       setCompletedOrders(CompletedOrders);
       setRejectedOrders(RejectedOrders);
@@ -69,36 +69,34 @@ export const Orders = () => {
       console.error('Error fetching orders:', error);
     }
   };
-
+  
   const getInCommingOrders = async () => {
     try {
       const response = await axios.get(`${Base_url}api/b2b_orders/to/${userDetails._id}`);
       const data = response.data;
-       console.log("orders incoming ==>",response.data);
-      // Assuming the response contains an 'orders' property
-      const Orders = data.orders
-      
-
-      const InCommingOrder = Orders.filter((el)=>{
-        return el.status === "pending" && el.from !== null && el.to !== null
-      })
-
-      const PendingOrders = Orders.filter((el)=>{
-        return el.status === "pending" && el.from !== null && el.to !== null
-      })
-      const CompletedOrders = Orders.filter((el)=>{
-        return el.status === "completed" && el.from !== null && el.to !== null
-      })
-      const RejectedOrders = Orders.filter((el)=>{
-        return el.status === "rejected" && el.from !== null && el.to !== null
-      }
-      )
+      const Orders = data.orders;
+  
+      // Sort orders by date and time in descending order
+      Orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+      console.log("Incoming Orders ==>", Orders);
       setInCommingOrders(Orders);
+  
+      const PendingOrders = Orders.filter((el) => {
+        return el.status === "pending"  && el.from !== null && el.to !== null;
+      });
+      const CompletedOrders = Orders.filter((el) => {
+        return el.status === "completed" && el.from !== null && el.to !== null;
+      });
+      const RejectedOrders = Orders.filter((el) => {
+        return el.status === "rejected" && el.from !== null && el.to !== null;
+      });
+  
       setRejectedOrders(RejectedOrders);
-      setInCommingPendingOrders(Orders);
+      setInCommingPendingOrders(PendingOrders);
       setInCommingCompletedOrders(CompletedOrders);
     } catch (error) {
-      console.error('Error fetching orders:', error);
+      console.error('Error fetching incoming orders:', error);
     }
   };
 

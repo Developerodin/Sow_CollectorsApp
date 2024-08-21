@@ -393,7 +393,17 @@ export const PersonalDetails = () => {
     },[])
 
     const uniqueStates = [...new Set(AddressData.map(address => address.state_name))];
-    const filteredCities = AddressData.filter(address => address.state_name === selectedState);
+    const getUniqueCitiesByName = (addresses) => {
+      const uniqueCities = {};
+      addresses.forEach(address => {
+        if (!uniqueCities[address.city_name]) {
+          uniqueCities[address.city_name] = address.city_name;
+        }
+      });
+      return Object.values(uniqueCities);
+    };
+    
+    const filteredCities = getUniqueCitiesByName(AddressData.filter(address => address.state_name === selectedState));
   return (
     <View style={styles.container}>
     <StatusBar style="dark" />
@@ -585,9 +595,9 @@ export const PersonalDetails = () => {
             onValueChange={(itemValue) => handleCityChange(itemValue)}
             // style={styles.picker}
           >
-            {filteredCities.map((address, index) => (
-              <Picker.Item key={index} label={address.city_name} value={address.city_name} />
-            ))}
+            {filteredCities.map((city, index) => (
+  <Picker.Item key={index} label={city} value={city} />
+))}
           </Picker>
          </Block>
           

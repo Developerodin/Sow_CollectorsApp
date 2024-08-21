@@ -243,7 +243,7 @@ export const InCommingOrderDetails = ({ route }) => {
               <Text style={styles.text1}>Pick Up Location</Text>
             </Block>
             <Block style={{ marginTop: 10 }}>
-              <Text style={{ fontSize: 20 }}>
+              <Text style={{ fontSize: 16 }}>
                 {orderDetails && orderDetails.from.Address},{" "}
                 {orderDetails && orderDetails.from.pincode},{" "}
                 {orderDetails && orderDetails.from.city}
@@ -472,7 +472,7 @@ const styles = StyleSheet.create({
     color: "#9B9B9B",
   },
   text2: {
-    fontSize: 24,
+    fontSize: 16,
     color: "#040404",
   },
   tabBar: {
