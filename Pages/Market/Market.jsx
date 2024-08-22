@@ -28,6 +28,8 @@ import { useAppContext } from "../../Context/AppContext";
 import { MarketRatesCard } from "../../Components/Cards/MarketRatesCard";
 import axios from "axios";
 import { Base_url } from "../../Config/BaseUrl";
+
+
 export const Market = () => {
   const navigation = useNavigation();
   const City = [
@@ -46,6 +48,7 @@ export const Market = () => {
   const [CityExpand, setCityExpand] = useState(false);
   const [Timeexpanded, setTimeExpanded] = useState(false);
   const [Addressexpanded, setAddressExpanded] = useState(false);
+  const [sortOrder, setSortOrder] = useState('asc');
 
   const [selectedCity, setselectedCity] = useState("");
   const [selectedCategory, setselectedCategory] = useState("");
@@ -268,6 +271,24 @@ export const Market = () => {
          
   const uniqueCitySet = new Set();
 
+  const sortSubCategories = (subCategories) => {
+    return subCategories.sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.price - b.price;
+      } else {
+        return b.price - a.price;
+      }
+    });
+  };
+
+  const handleSortPress = () => {
+    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+  };
+
+  const handleResetPress = () => {
+    setSortOrder('asc');
+  };
+
   return (
     <View style={styles.container}>
       <Header />
@@ -486,13 +507,7 @@ export const Market = () => {
                     <ScrollView>
 
                   
-                    {/* <TouchableOpacity
-                        activeOpacity={0.6}
-                        onPress={() => handelCity("")}
-                         style={[styles.Space_Between, { marginTop: 10 }]}>
-                     
-                        <Text style={{ fontSize: 20 }}>None</Text>
-                      </TouchableOpacity> */}
+
                     
                     {AllVendorsData.map((el, index) => {
                        const lowerCaseCity = el.city.toLowerCase();
@@ -530,37 +545,45 @@ export const Market = () => {
           </Block>
 
           <Block>
-          {
-              userDetails.registerAs === "Collectors" && WholesalersData && (WholesalersData.length > 0 ?
-                WholesalersData.map((el, index) => {
-                  // Check if categories is an array and not empty
-                  if (el.categories && el.categories.length > 0) {
-                    return el.categories.map((category, categoryIndex) => {
-                      // Check if sub_category exists in the current category
-                      if (category.sub_category && category.sub_category.length > 0) {
-                        return category.sub_category.map((item, subIndex) => {
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', padding: 10 }}>
+      <TouchableOpacity onPress={handleSortPress} style={{ padding: 6, backgroundColor: "teal", borderRadius: 12, flexDirection: "row", justifyContent: "center", alignItems: "center", width: 30 }}>
+        <FontAwesome5 name="sort" size={22} color="#fff" />
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleResetPress} style={{ marginLeft: 10,  padding: 6, backgroundColor: "teal", borderRadius: 12, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+        <Feather name="refresh-ccw" size={22} color="#fff" />
+      </TouchableOpacity>
+    </View>
 
-                          if(selectedSubCategory === item.name ){
-                            return <TouchableOpacity key={subIndex} onPress={() => handeViewDetail(el._id, subIndex,categoryIndex)}>
-                            <MarketRatesCard Title={el.name} Value={item.price} />
-                          </TouchableOpacity>
-                          }
-                        
-                      });
-                      }
-                      return null; // or any default JSX if sub_category is not present
-                    });
+      {userDetails.registerAs === "Collectors" && WholesalersData && (
+        WholesalersData.length > 0 ? WholesalersData.map((el, index) => {
+          if (el.categories && el.categories.length > 0) {
+            return el.categories.map((category, categoryIndex) => {
+              if (category.sub_category && category.sub_category.length > 0) {
+                const sortedSubCategories = sortSubCategories([...category.sub_category]);
+                return sortedSubCategories.map((item, subIndex) => {
+                  if (selectedSubCategory === item.name) {
+                    return (
+                      <TouchableOpacity
+                        key={`${el._id}-${categoryIndex}-${subIndex}`}
+                        onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
+                      >
+                        <MarketRatesCard Title={el.name} Value={item.price} />
+                      </TouchableOpacity>
+                    );
                   }
-                  return null; // or any default JSX if categories is not present or empty
-                })
-              :
-              <Block center>
-                <Text style={{ fontSize: 18, marginTop: 30 }}>
-                    No WholesalersData Data
-                  </Text>
-              </Block>
-              )
-            }
+                  return null;
+                });
+              }
+              return null;
+            });
+          }
+          return null;
+        })
+        :
+        <Block center>
+          <Text style={{ fontSize: 18, marginTop: 30 }}>No WholesalersData Data</Text>
+        </Block>
+      )}
          
 
             {
@@ -572,22 +595,25 @@ export const Market = () => {
                     return el.categories.map((category, categoryIndex) => {
                       // Check if sub_category exists in the current category
                       if (category.sub_category && category.sub_category.length > 0) {
-                        // console.log("Mediator stage 2")
-                        return category.sub_category.map((item, subIndex) => {
-                            // console.log("Stage 3====>",item.name,selectedSubCategory)
-                          if(selectedSubCategory === item.name ){
-                            // console.log("Mediator stage 3")
-                            return <TouchableOpacity key={subIndex} onPress={() => handeViewDetail(el._id, subIndex,categoryIndex)}>
-                            <MarketRatesCard Title={el.name} Value={item.price} />
-                          </TouchableOpacity>
+                        const sortedSubCategories = sortSubCategories([...category.sub_category]);
+                        return sortedSubCategories.map((item, subIndex) => {
+                          if (selectedSubCategory === item.name) {
+                            return (
+                              <TouchableOpacity
+                                key={`${el._id}-${categoryIndex}-${subIndex}`}
+                                onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
+                              >
+                                <MarketRatesCard Title={el.name} Value={item.price} />
+                              </TouchableOpacity>
+                            );
                           }
-                        
-                      });
+                          return null;
+                        });
                       }
-                      return null; // or any default JSX if sub_category is not present
+                      return null;
                     });
                   }
-                  return null; // or any default JSX if categories is not present or empty
+                  return null;
                 })
               :
               <Block center>
@@ -598,25 +624,7 @@ export const Market = () => {
               )
             }
 
-            {/* {
-              userDetails.registerAs === "Mediators" && (FactoryData.length > 0 ?
-                FactoryData.map((el, index) => {
-                  return el.sub_category.length > 0 && el.sub_category.map((item,index)=>{
-                    return  <TouchableOpacity key={index} onPress={()=>handeViewDetail(el._id,index)}>
-                    <MarketRatesCard Title={el.name} Value={item.price} />
-                  </TouchableOpacity>
-              } 
-               
-              );
-                })
-              :
-              <Block center>
-                <Text style={{ fontSize: 18, marginTop: 30 }}>
-                    No Factory Data
-                  </Text>
-              </Block>
-              )
-            } */}
+            
 
                {
               userDetails.registerAs === "Mediators" && FactoryData && (FactoryData.length > 0 ?
@@ -626,21 +634,27 @@ export const Market = () => {
                     return el.categories.map((category, categoryIndex) => {
                       // Check if sub_category exists in the current category
                       if (category.sub_category && category.sub_category.length > 0) {
-                        return category.sub_category.map((item, subIndex) => {
-
-                          if(selectedSubCategory === item.name ){
-                            return <TouchableOpacity key={subIndex} onPress={() => handeViewDetail(el._id, subIndex,categoryIndex)}>
-                            <MarketRatesCard Title={el.name} Value={item.price} />
-                          </TouchableOpacity>
+                        const sortedSubCategories = sortSubCategories([...category.sub_category]);
+                        return sortedSubCategories.map((item, subIndex) => {
+                          if (selectedSubCategory === item.name) {
+                            return (
+                              <TouchableOpacity
+                                key={`${el._id}-${categoryIndex}-${subIndex}`}
+                                onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
+                              >
+                                <MarketRatesCard Title={el.name} Value={item.price} />
+                              </TouchableOpacity>
+                            );
                           }
-                        
-                      });
+                          return null;
+                        });
                       }
-                      return null; // or any default JSX if sub_category is not present
+                      return null;
                     });
                   }
-                  return null; // or any default JSX if categories is not present or empty
+                  return null;
                 })
+        
               :
               <Block center>
                 <Text style={{ fontSize: 18, marginTop: 30 }}>
@@ -658,21 +672,27 @@ export const Market = () => {
                     return el.categories.map((category, categoryIndex) => {
                       // Check if sub_category exists in the current category
                       if (category.sub_category && category.sub_category.length > 0) {
-                        return category.sub_category.map((item, subIndex) => {
-
-                          if(selectedSubCategory === item.name ){
-                            return <TouchableOpacity key={subIndex} onPress={() => handeViewDetail(el._id, subIndex,categoryIndex)}>
-                            <MarketRatesCard Title={el.name} Value={item.price} />
-                          </TouchableOpacity>
+                        const sortedSubCategories = sortSubCategories([...category.sub_category]);
+                        return sortedSubCategories.map((item, subIndex) => {
+                          if (selectedSubCategory === item.name) {
+                            return (
+                              <TouchableOpacity
+                                key={`${el._id}-${categoryIndex}-${subIndex}`}
+                                onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
+                              >
+                                <MarketRatesCard Title={el.name} Value={item.price} />
+                              </TouchableOpacity>
+                            );
                           }
-                        
-                      });
+                          return null;
+                        });
                       }
-                      return null; // or any default JSX if sub_category is not present
+                      return null;
                     });
                   }
-                  return null; // or any default JSX if categories is not present or empty
+                  return null;
                 })
+        
               :
               <Block center>
                 <Text style={{ fontSize: 18, marginTop: 30 }}>

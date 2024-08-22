@@ -213,7 +213,7 @@ const styles2 = StyleSheet.create({
   },
   textContainer: {
     position: "absolute",
-    bottom: 40, // Adjust as needed
+    bottom: 40, 
     left: 0,
     right: 0,
     justifyContent: "center",
