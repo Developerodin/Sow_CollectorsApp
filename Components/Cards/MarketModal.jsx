@@ -1,9 +1,61 @@
-import React from 'react';
-import { View, Modal, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Modal, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator, ScrollView } from 'react-native';
 import { Text } from "galio-framework";
 import { LineChart } from 'react-native-chart-kit';
+import axios from 'axios';
+import { Base_url } from '../../Config/BaseUrl';
 
-const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate }) => {
+const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, formatTime }) => {
+    const [priceHistory, setPriceHistory] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [activeButton, setActiveButton] = useState(0);
+    const [timeframe, setTimeframe] = useState('today');
+
+    const getHistoryByTimeframe = async (mandiId, category, timeframe) => {
+        try {
+            console.log('Fetching history by timeframe:', mandiId, category, timeframe);
+            const response = await axios.get(`${Base_url}api/mandi_rates/history/timeframe/${mandiId}/${category}/${timeframe}`);
+            return response.data;
+        } catch (error) {
+            console.error('Error fetching history by timeframe:', error);
+            throw error;
+        }
+    };
+
+    useEffect(() => {
+        if (modalVisible) {
+            const fetchHistory = async () => {
+                try {
+                    setLoading(true);
+                    const mandiId = selectedItem?.mandi?._id;
+                    const category = selectedItem?.categoryPrices?.[0]?.category;
+    
+                    if (!mandiId || !category) {
+                        throw new Error('Invalid mandiId or category');
+                    }
+    
+                    const historyData = await getHistoryByTimeframe(mandiId, category, timeframe);
+    
+                    // Sort the data by date
+                    const sortedData = historyData.map(entry => ({
+                        price: entry.categoryPrices[0]?.price,
+                        date: entry.createdAt
+                    })).filter(entry => !isNaN(entry.price) && !isNaN(new Date(entry.date).getTime()))
+                      .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sorting by date
+    
+                    setPriceHistory(sortedData);
+                    setLoading(false);
+                } catch (error) {
+                    console.error('Error fetching history:', error);
+                    setLoading(false);
+                }
+            };
+    
+            fetchHistory();
+        }
+    }, [modalVisible, timeframe]);
+    
+
     if (!selectedItem) return null;
 
     return (
@@ -13,99 +65,102 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate }
             visible={modalVisible}
             onRequestClose={() => setModalVisible(false)}
         >
-            {/* Clickable Backdrop */}
             <TouchableOpacity style={styles.backdrop} onPress={() => setModalVisible(false)}>
                 <TouchableOpacity activeOpacity={1} style={styles.modalView}>
                     <View style={styles.modalContent}>
-                        {/* Top Bar with Close Handler */}
                         <TouchableOpacity style={styles.topBar} onPress={() => setModalVisible(false)}>
                             <View style={styles.topBarHandle}></View>
                         </TouchableOpacity>
 
-                        {/* Title */}
                         <View style={styles.buttonGroup}>
                             <Text style={styles.buttonGroupText}>Add to:</Text>
                             <Text style={styles.buttonGroupText}>Notification</Text>
                             <Text style={styles.buttonGroupText}>Favourite</Text>
                         </View>
 
-                        <View style={styles.buttonGroup}>
-                            <Text style={styles.buttonGroupText}>Today</Text>
-                            <Text style={styles.buttonGroupText}>Week</Text>
-                            <Text style={styles.buttonGroupText}>Month</Text>
-                            <Text style={styles.buttonGroupText}>3 Month</Text>
-                            <Text style={styles.buttonGroupText}>Custom</Text>
+                        <View style={styles.buttonGrouptwo}>
+                            {['Today', 'Week', 'Month', 'Year', 'All'].map((label, index) => (
+                                <TouchableOpacity
+                                    key={index}
+                                    onPress={() => {
+                                        setActiveButton(index);
+                                        setTimeframe(label.toLowerCase());
+                                    }}
+                                    style={[
+                                        styles.buttonGroupItem,
+                                        activeButton === index && styles.activeButton
+                                    ]}
+                                >
+                                    <Text style={[
+                                        styles.buttonGroupTexttwo,
+                                        activeButton === index && styles.activeButtonText
+                                    ]}>
+                                        {label}
+                                    </Text>
+                                </TouchableOpacity>
+                            ))}
                         </View>
 
-                        {/* Line Chart */}
-                        <LineChart
-    data={{
-        labels: ['Wed, 07', 'Thu, 08', 'Fri, 09', 'Sat, 10', 'Mon, 12', 'Tue, 13'],
-        datasets: [
-            {
-                data: [36500, 36100, 35800, 35900, 36200, 31000, 37650, 37000], // Updated data points for 8 points
-                color: (opacity = 1) => `rgba(0, 115, 177, ${opacity})`, // Darker line color
-                strokeWidth: 2, // Slightly thinner line
-            },
-        ],
-    }}
-    width={Dimensions.get("window").width - 40} // Adjust width based on screen size
-    height={200} // Adjust height as necessary
-    chartConfig={{
-        backgroundGradientFrom: '#ffffff',
-        backgroundGradientTo: '#ffffff',
-        decimalPlaces: 0, // No decimal places
-        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Label color
-        labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-        style: {
-            borderRadius: 16,
-        },
-        propsForDots: {
-            r: "6", // Smaller dot size for clarity
-            strokeWidth: "2", // Thinner dot border
-            stroke: "#000000", // Darker dot border color
-        },
-        // Adjust grid line appearance
-        propsForBackgroundLines: {
-            stroke: '#cccccc', // Solid line color for grid
-            strokeDasharray: "", // Remove dash pattern to make it solid
-        },
-        fillShadowGradient: 'transparent', // Ensure shadow effect is removed
-        fillShadowGradientOpacity: 0, // Ensure shadow effect is removed
-    }}
-    style={{
-        marginVertical: 10,
-        borderRadius: 2,
-    }}
-    withInnerLines={true} // Ensure inner grid lines are visible
-    withOuterLines={true} // Ensure outer grid lines are visible
-    fromZero={false} // If you want the y-axis to start from zero, set this to true
-/>
+                        {loading ? (
+                            <ActivityIndicator size="large" color="#0000ff" />
+                        ) : (
+                            <>
+                                <LineChart
+                                    data={{
+                                        labels: priceHistory.map(entry => formatTime(entry.date)),
+                                        datasets: [
+                                            {
+                                                data: priceHistory.map(entry => entry.price),
+                                                color: (opacity = 1) => `rgba(0, 115, 177, ${opacity})`,
+                                                strokeWidth: 2,
+                                            },
+                                        ],
+                                    }}
+                                    width={Dimensions.get("window").width - 40}
+                                    height={200}
+                                    chartConfig={{
+                                        backgroundGradientFrom: '#ffffff',
+                                        backgroundGradientTo: '#ffffff',
+                                        decimalPlaces: 0,
+                                        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                        labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                                        style: {
+                                            borderRadius: 16,
+                                        },
+                                        propsForDots: {
+                                            r: "6",
+                                            strokeWidth: "2",
+                                            stroke: "#000000",
+                                        },
+                                        propsForBackgroundLines: {
+                                            stroke: '#cccccc',
+                                            strokeDasharray: "",
+                                        },
+                                        fillShadowGradient: 'transparent',
+                                        fillShadowGradientOpacity: 0,
+                                    }}
+                                    style={{
+                                        marginVertical: 10,
+                                        borderRadius: 2,
+                                    }}
+                                    withInnerLines={true}
+                                    withOuterLines={true}
+                                    fromZero={false}
+                                />
 
-
-
-
-
-
-
-
-                        {/* Additional Information */}
-                        
-                    
-                        <View style={styles.infoRow}>
-                            <Text style={styles.infoRowText}>{formatDate(selectedItem.date)} {selectedItem.time}</Text>
-                            <Text style={styles.infoRowTextRight}>₹ {selectedItem.price}</Text>
-                        </View>
-
-                        <View style={styles.infoRow}>
-                            <Text style={styles.infoRowText}>{formatDate(selectedItem.date)} {selectedItem.time}</Text>
-                            <Text style={styles.infoRowTextRight}>₹ {selectedItem.price}</Text>
-                        </View>
-
-                        <View style={styles.infoRow}>
-                            <Text style={styles.infoRowText}>{formatDate(selectedItem.date)} {selectedItem.time}</Text>
-                            <Text style={styles.infoRowTextRight}>₹ {selectedItem.price}</Text>
-                        </View>
+                                <ScrollView style={styles.scrollView}>
+                                {priceHistory
+    .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort in descending order by date
+    .map((entry, index) => (
+        <View key={index} style={styles.infoRow}>
+            <Text style={styles.infoRowText}>{formatDate(entry.date)}</Text>
+            <Text style={styles.infoRowTextRight}>₹ {entry.price}</Text>
+        </View>
+    ))
+}
+                                </ScrollView>
+                            </>
+                        )}
                     </View>
                 </TouchableOpacity>
             </TouchableOpacity>
@@ -161,23 +216,38 @@ const styles = StyleSheet.create({
         marginBottom: 10,
         backgroundColor: '#ffffff',
     },
+    buttonGrouptwo: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+        borderRadius: 30,
+        borderColor: '#F2F2F2',
+        borderWidth: 1,
+        marginBottom: 10,
+        backgroundColor: '#ffffff',
+    },
+    buttonGroupTexttwo: {
+        textAlign: 'center',
+        color: 'black',
+    },
     buttonGroupText: {
         flex: 1,
         textAlign: 'center',
+        color: 'black',
     },
     infoRow: {
         display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 7,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 10,
-    backgroundColor: 'transparent',
-
-
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        padding: 10,
+        borderRadius: 7,
+        borderColor: '#ccc',
+        borderWidth: 1,
+        marginBottom: 10,
+        backgroundColor: 'transparent',
     },
     infoRowText: {
         flex: 1,
@@ -189,6 +259,25 @@ const styles = StyleSheet.create({
         flex: 1,
         textAlign: 'right',
         paddingRight: 10,
+    },
+    scrollView: {
+        width: '100%',
+        height: 200,
+        marginBottom: 10,
+    },
+    buttonGroupItem: {
+        flex: 1,
+        textAlign: 'center',
+        padding: 5,
+        borderRadius: 15,
+    },
+    activeButton: {
+        backgroundColor: 'blue',
+        textAlign: 'center',
+        color: 'white',
+    },
+    activeButtonText: {
+        color: 'white',
     },
 });
 
