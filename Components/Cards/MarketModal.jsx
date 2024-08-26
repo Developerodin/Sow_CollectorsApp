@@ -13,7 +13,6 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
 
     const getHistoryByTimeframe = async (mandiId, category, timeframe) => {
         try {
-            console.log('Fetching history by timeframe:', mandiId, category, timeframe);
             const response = await axios.get(`${Base_url}api/mandi_rates/history/timeframe/${mandiId}/${category}/${timeframe}`);
             return response.data;
         } catch (error) {
@@ -36,7 +35,6 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
     
                     const historyData = await getHistoryByTimeframe(mandiId, category, timeframe);
     
-                   
                     const sortedData = historyData.map(entry => ({
                         price: entry.categoryPrices[0]?.price,
                         date: entry.createdAt
@@ -54,7 +52,17 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
             fetchHistory();
         }
     }, [modalVisible, timeframe]);
-    
+
+    const calculatePriceStatistics = () => {
+        const prices = priceHistory.map(entry => entry.price);
+        const highestPrice = Math.max(...prices);
+        const lowestPrice = Math.min(...prices);
+        const averagePrice = (prices.reduce((sum, price) => sum + price, 0) / prices.length).toFixed(2);
+
+        return { highestPrice, lowestPrice, averagePrice };
+    };
+
+    const { highestPrice, lowestPrice, averagePrice } = calculatePriceStatistics();
 
     if (!selectedItem) return null;
 
@@ -72,11 +80,28 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                             <View style={styles.topBarHandle}></View>
                         </TouchableOpacity>
 
-                        <View style={styles.buttonGroup}>
-                            <Text style={styles.buttonGroupText}>Add to:</Text>
-                            <Text style={styles.buttonGroupText}>Notification</Text>
-                            <Text style={styles.buttonGroupText}>Favourite</Text>
-                        </View>
+                        {timeframe === 'today' ? (
+                            <View style={styles.buttonGroup}>
+                                <Text style={styles.buttonGroupText}>Add to:</Text>
+                                <Text style={styles.buttonGroupText}>Notification</Text>
+                                <Text style={styles.buttonGroupText}>Favourite</Text>
+                            </View>
+                        ) : (
+                            <View style={styles.buttonGroupthree}>
+    <View style={[styles.priceContainer, { marginRight: 85 }]}>
+        <Text style={styles.priceSummaryText}>Highest</Text>
+        <Text style={styles.priceValueText}>₹ {highestPrice}</Text>
+    </View>
+    <View style={[styles.priceContainer, { marginRight: 85 }]}>
+        <Text style={styles.priceSummaryText}>Lowest</Text>
+        <Text style={styles.priceValueText}>₹ {lowestPrice}</Text>
+    </View>
+    <View style={styles.priceContainer}>
+        <Text style={styles.priceSummaryText}>Average</Text>
+        <Text style={styles.priceValueText}>₹ {averagePrice}</Text>
+    </View>
+</View>
+                        )}
 
                         <View style={styles.buttonGrouptwo}>
                             {['Today', 'Week', 'Month', 'Year', 'All'].map((label, index) => (
@@ -149,15 +174,14 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                                 />
 
                                 <ScrollView style={styles.scrollView}>
-                                {priceHistory
-    .sort((a, b) => new Date(b.date) - new Date(a.date)) 
-    .map((entry, index) => (
-        <View key={index} style={styles.infoRow}>
-            <Text style={styles.infoRowText}>{formatDate(entry.date)}</Text>
-            <Text style={styles.infoRowTextRight}>₹ {entry.price}</Text>
-        </View>
-    ))
-}
+                                    {priceHistory
+                                        .sort((a, b) => new Date(b.date) - new Date(a.date)) 
+                                        .map((entry, index) => (
+                                            <View key={index} style={styles.infoRow}>
+                                                <Text style={styles.infoRowText}>{formatDate(entry.date)}</Text>
+                                                <Text style={styles.infoRowTextRight}>₹ {entry.price}</Text>
+                                            </View>
+                                        ))}
                                 </ScrollView>
                             </>
                         )}
@@ -178,7 +202,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     modalContent: {
-        height: '90%',
+        height: '85%',
         backgroundColor: "#F2F2F2",
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
@@ -221,8 +245,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-        padding: 10,
-        borderRadius: 30,
+        padding: 8,
+        borderRadius: 50,
         borderColor: '#F2F2F2',
         borderWidth: 1,
         marginBottom: 10,
@@ -237,6 +261,38 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'black',
     },
+    buttonGroupItem: {
+        flex: 1,
+        margin: 5,
+        padding: 10,
+        borderRadius: 5,
+        
+    },
+    activeButton: {
+        backgroundColor: '#0073B1',
+        textAlign: 'center',
+        color: 'white',
+        borderRadius: 30,
+    },
+    activeButtonText: {
+        color: '#ffffff',
+    },
+    priceSummary: {
+        marginBottom: 20,
+        textAlign: 'center',
+       
+    },
+    priceSummaryText: {
+        fontSize: 15,
+        fontWeight: '500',
+        alignItems: 'center',
+        color: 'teal',
+    },
+    scrollView: {
+        width: '100%',
+        height: 200,
+        marginBottom: 10,
+    },
     infoRow: {
         display: 'flex',
         flexDirection: 'row',
@@ -244,10 +300,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 10,
         borderRadius: 7,
-        borderColor: '#ccc',
+        borderColor: '#FAF9F6',
         borderWidth: 1,
         marginBottom: 10,
-        backgroundColor: 'transparent',
+        backgroundColor: '#FAF9F6',
     },
     infoRowText: {
         flex: 1,
@@ -260,24 +316,29 @@ const styles = StyleSheet.create({
         textAlign: 'right',
         paddingRight: 10,
     },
-    scrollView: {
-        width: '100%',
-        height: 200,
+    priceContainer: {
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        
+    },
+    buttonGroupthree: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        paddingVertical: 10,
+        paddingHorizontal: 16,
+        borderRadius: 30,
+        borderColor: '#F2F2F2',
+        borderWidth: 1,
         marginBottom: 10,
+        backgroundColor: '#ffffff',
+        
     },
-    buttonGroupItem: {
-        flex: 1,
-        textAlign: 'center',
-        padding: 5,
-        borderRadius: 15,
-    },
-    activeButton: {
-        backgroundColor: 'blue',
-        textAlign: 'center',
-        color: 'white',
-    },
-    activeButtonText: {
-        color: 'white',
+    priceValueText: {
+        fontSize: 16,
+        fontWeight: '500',
+        color: '#0073B1',
     },
 });
 
