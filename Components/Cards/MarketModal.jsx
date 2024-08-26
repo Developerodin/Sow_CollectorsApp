@@ -36,7 +36,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
     
                     const historyData = await getHistoryByTimeframe(mandiId, category, timeframe);
     
-                    // Sort the data by date
+                   
                     const sortedData = historyData.map(entry => ({
                         price: entry.categoryPrices[0]?.price,
                         date: entry.createdAt
@@ -150,7 +150,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
 
                                 <ScrollView style={styles.scrollView}>
                                 {priceHistory
-    .sort((a, b) => new Date(b.date) - new Date(a.date)) // Sort in descending order by date
+    .sort((a, b) => new Date(b.date) - new Date(a.date)) 
     .map((entry, index) => (
         <View key={index} style={styles.infoRow}>
             <Text style={styles.infoRowText}>{formatDate(entry.date)}</Text>

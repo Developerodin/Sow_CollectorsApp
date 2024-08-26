@@ -14,15 +14,14 @@ const LiveRates = () => {
     const [selectedItem, setSelectedItem] = useState(null);
     const [marketRates, setMarketRates] = useState([]);
     const [visibleItems, setVisibleItems] = useState(4);
+    const [priceDifferences, setPriceDifferences] = useState({});
 
     const getAllData = async () => {
         try {
             const response = await axios.get(`${Base_url}api/mandi_rates/all-data`);
             const allData = response.data;
 
-            console.log("Fetched Data:", allData);
-
-            // Group by mandi ID and keep only the latest entry, while checking if `mandi` exists
+           
             const latestData = Object.values(
                 allData.reduce((acc, curr) => {
                     const mandi = curr.mandi;
@@ -36,16 +35,45 @@ const LiveRates = () => {
                 }, {})
             );
 
-            console.log("Latest Data after Grouping:", latestData);
-
             // Filter out any entries without a mandi name
             const filteredData = latestData.filter(item => item.mandi && item.mandi.mandiname);
 
-            console.log("Filtered Data:", filteredData);
-
             setMarketRates(filteredData);
+
+            // Fetch price differences for each mandi and category
+            for (const item of filteredData) {
+                for (const priceItem of item.categoryPrices) {
+                    fetchPriceDifference(item.mandi._id, priceItem.category);
+                }
+            }
         } catch (error) {
             console.error("Error fetching all data:", error);
+        }
+    };
+
+    const fetchPriceDifference = async (mandiId, category) => {
+        try {
+            console.log('Fetching price difference:', mandiId, category);
+            const response = await axios.get(`${Base_url}api/mandi_rates/price-difference/${mandiId}/${category}`);
+            
+            if (response.data) {
+                setPriceDifferences(prevState => ({
+                    ...prevState,
+                    [`${mandiId}-${category}`]: response.data
+                }));
+            } else {
+                console.warn('No data available for price difference:', mandiId, category);
+                setPriceDifferences(prevState => ({
+                    ...prevState,
+                    [`${mandiId}-${category}`]: 'No data available'
+                }));
+            }
+        } catch (error) {
+            console.error('Error fetching price difference:', error);
+            setPriceDifferences(prevState => ({
+                ...prevState,
+                [`${mandiId}-${category}`]: 'Error fetching data'
+            }));
         }
     };
 
@@ -69,39 +97,25 @@ const LiveRates = () => {
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
-        
-        
         const day = String(date.getDate()).padStart(2, '0');
-        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const month = String(date.getMonth() + 1).padStart(2, '0');
         const year = date.getFullYear();
-        
-        // Format date part as DD-MM-YYYY
-        const datePart = `${day}-${month}-${year}`;
-        
-        // Format time part as HH:MM AM/PM
         const timePart = date.toLocaleTimeString(undefined, {
             hour: '2-digit',
             minute: '2-digit',
             hour12: true
         });
-        
-        return `${datePart} ${timePart}`;
+        return `${day}-${month}-${year} ${timePart}`;
     };
-     
 
     const formatTime = (dateString) => {
         const date = new Date(dateString);
-    
-        
-        const timePart = date.toLocaleTimeString(undefined, {
+        return date.toLocaleTimeString(undefined, {
             hour: '2-digit',
             minute: '2-digit',
             hour12: true
         });
-    
-        return timePart;
     };
-
 
 
     const handleStatePress = (state) => {
@@ -112,36 +126,50 @@ const LiveRates = () => {
     const handleItemPress = (item) => {
         setSelectedItem(item);
         setModalVisible(true);
-        console.log("Selected Item:", item);
     };
 
     const renderMarketItem = ({ item }) => (
-        item.categoryPrices.map((priceItem, index) => (
-            <TouchableOpacity key={index} style={{ marginTop: 10 }} activeOpacity={0.5} onPress={() => handleItemPress(item)}>
-                <Block style={{ width: '100%', borderRadius: 10, padding: 5, borderWidth: 1, borderColor: "#C8C8C8", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", backgroundColor: '#FFFFFF' }}>
-                    <Block>
-                        <Image
-                            source={logo}
-                            style={{ resizeMode: 'cover', width: 50, height: 50 }}
-                        />
+        item.categoryPrices.map((priceItem, index) => {
+            const priceDifference = priceDifferences[`${item.mandi._id}-${priceItem.category}`];
+
+            return (
+                <TouchableOpacity key={index} style={{ marginTop: 10 }} activeOpacity={0.5} onPress={() => handleItemPress(item)}>
+                    <Block style={{ width: '100%', borderRadius: 10, padding: 5, borderWidth: 1, borderColor: "#C8C8C8", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", backgroundColor: '#FFFFFF' }}>
+                        <Block>
+                            <Image
+                                source={logo}
+                                style={{ resizeMode: 'cover', width: 50, height: 50 }}
+                            />
+                        </Block>
+                        <Block style={{ width: "60%", marginLeft: 15 }}>
+                            <Text style={{ fontWeight: '700', color: "#002379", fontSize: 13 }}>{item.mandi?.mandiname || 'Unknown Mandi'}</Text>
+                            <Text style={{ fontSize: 13, fontWeight: '600' }}>{priceItem.category}</Text>
+                            <Text style={{ fontSize: 12, fontWeight: '600' }}>{formatDate(item.updatedAt)}</Text>
+                        </Block>
+                        <Block style={{ textAlign: 'right' }}>
+                            <Text style={{ fontWeight: '500', color: "#002379", fontSize: 13 }}>
+                                ₹ {priceItem.price}
+                            </Text>
+                            {priceDifference && (
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                    <Text style={{ marginRight: 5, color: priceDifference.tag === 'Increment' ? '#239456' : '#e41010', fontWeight: 400 }}>
+                                        {priceDifference.percentChange}%
+                                    </Text>
+                                    <Image 
+                                        source={icon} 
+                                        style={{ 
+                                            width: 24, 
+                                            height: 24, 
+                                            transform: [{ rotate: priceDifference.tag === 'Increment' ? '0deg' : '60deg' }]
+                                        }} 
+                                    />
+                                </View>
+                            )}
+                        </Block>
                     </Block>
-                    <Block style={{ width: "60%", marginLeft: 15 }}>
-                        <Text style={{ fontWeight: '700', color: "#002379", fontSize: 13 }}>{item.mandi?.mandiname || 'Unknown Mandi'}</Text>
-                        <Text style={{ fontSize: 13, fontWeight: '600' }}>{priceItem.category}</Text>
-                        <Text style={{ fontSize: 12, fontWeight: '600' }}>{formatDate(item.updatedAt)}</Text>
-                    </Block>
-                    <Block style={{ textAlign: 'right' }}>
-                        <Text style={{ fontWeight: '500', color: "#002379", fontSize: 13 }}>
-                            ₹ {priceItem.price}
-                        </Text>
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Text style={{ marginRight: 5 ,color:'#e41010',fontWeight:400}}>20% </Text>
-                        <Image source={icon} style={{ width: 24, height: 24 }} />
-                    </View>
-                    </Block>
-                </Block>
-            </TouchableOpacity>
-        ))
+                </TouchableOpacity>
+            );
+        })
     );
 
     return (
