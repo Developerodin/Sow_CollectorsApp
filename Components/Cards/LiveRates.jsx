@@ -87,13 +87,15 @@ const LiveRates = () => {
         ? marketRates
         : marketRates.filter(item => item.mandi?.state === selectedState);
 
-    const handleShowMore = () => {
-        setVisibleItems(filteredData.length);
-    };
+        const handleShowMore = () => {
+            setVisibleItems(prevVisibleItems => prevVisibleItems + 4);
+        };
+        
+        const handleShowLess = () => {
+            setVisibleItems(4);
+        };
 
-    const handleShowLess = () => {
-        setVisibleItems(4);
-    };
+        const displayedData = filteredData.slice(0, visibleItems);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -191,7 +193,7 @@ const LiveRates = () => {
             </ScrollView>
 
             <FlatList
-                data={filteredData.slice(0, visibleItems)}
+                data={displayedData}
                 renderItem={renderMarketItem}
                 keyExtractor={item => item._id}
                 contentContainerStyle={{ paddingHorizontal: 10 }}

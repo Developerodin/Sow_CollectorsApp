@@ -290,8 +290,7 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         width: '100%',
-        height: 200,
-        marginBottom: 10,
+        
     },
     infoRow: {
         display: 'flex',

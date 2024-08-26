@@ -187,19 +187,23 @@ export const MyRates = () => {
 
   const fetchCategoryData = async (userId) => {
     try {
+      
       const response = await axios.get(
         `${Base_url}api/b2b/${userId}/category-subcategory`
       );
       const CategoriesData =  response.data.data.categories
+      
       // console.log("CategoriesData =====================>",CategoriesData)
       // console.log("res of category and subcategory =>", CategoriesData);
       const transformedData = [].concat(...CategoriesData.map(category => {
+        
         return category.sub_category.map(subCategory => ({
           id: subCategory._id,
           title: subCategory.name.toUpperCase(),
           value: subCategory.price,
           image: "https://tse4.mm.bing.net/th?id=OIP.OQh1ykyaCVyCvt2aNHJ-LwHaHa&pid=Api&P=0&h=220", // Replace with the actual image URL
           category: category.name,
+          updatedAt: subCategory.updatedAt,
         }));
       }));
 
@@ -298,6 +302,7 @@ export const MyRates = () => {
     setFilteredData(
       data.filter((item) =>
         item.title.toLowerCase().includes(query.toLowerCase())
+        
       )
     );
     const categories = [...new Set(data.map((item) => item.category))];
@@ -422,6 +427,7 @@ const handleSubAddChange = (field, value) => {
                   Value={el.value}
                   Img={el.image}
                   Category={el.category}
+                  Date={el.updatedAt}
                   setModalVisible={setModalVisible}
                   setItemModelData={setItemModelData}
                   ItemAddStatus={ItemAddStatus}

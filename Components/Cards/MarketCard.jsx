@@ -11,7 +11,7 @@ import { useAppContext } from '../../Context/AppContext';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 export const MarketCard = (props) => {
     const navigation = useNavigation();
-   const {Id,Index,Title,Value,Img,setModalVisible,setItemModelData,Category,setCart,Cart} = props
+   const {Id,Index,Title,Value,Img,setModalVisible,setItemModelData,Category,setCart,Cart,Date: dateProp} = props
    const [AddStatus,setAddStatus] = useState(false)
    const {CartInStorage,setUpdate,update} = useAppContext();
 
@@ -27,6 +27,7 @@ export const MarketCard = (props) => {
         value:Value,
         image:Img,
         category:Category,
+        date: dateProp,
         Fun : ()=>{
           setAddStatus(true)
         }
@@ -63,6 +64,32 @@ export const MarketCard = (props) => {
       return "";
     })
   },[CartInStorage])
+
+  const dateObj = new Date(dateProp);
+
+    // Extract day, month, year, hours, and minutes
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0'); // Months are zero-indexed
+    const year = dateObj.getFullYear();
+    let hours = dateObj.getHours();
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+
+    // Convert 24-hour format to 12-hour format and determine AM/PM
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // The hour '0' should be '12'
+    const formattedHours = String(hours).padStart(2, '0');
+
+    // Format the date as 'dd-MM-yyyy'
+    const formattedDate = `${day}-${month}-${year}`;
+
+    // Format the time as 'hh:mm AM/PM'
+    const formattedTime = `${formattedHours}:${minutes} ${ampm}`;
+
+    // Combine date and time
+    const formattedDateTime = `${formattedDate} ${formattedTime}`;
+
+  
   return (
     <View style={{borderWidth:1,borderColor:"#C8C8C8",padding:10,backgroundColor:"#fff", marginTop:10,borderRadius:5}}>
     <Block  style={{flexDirection:"row"}}>
@@ -86,6 +113,8 @@ export const MarketCard = (props) => {
 
       <Block style={{marginRight:30}}>
           <Text style={{color:"#29BD7F",fontSize:15,fontWeight:600}}>₹ {Value} / KG</Text>
+          <Text style={{color:"#29BD7F",fontSize:15,fontWeight:600}}>{formattedDateTime}</Text>
+
         </Block>
         </Block>
        
