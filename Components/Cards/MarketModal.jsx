@@ -160,7 +160,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                              >
                                  <View style={styles.iconTextContainer}>
                                  <Ionicons 
-                                    name={notificationAdded.includes(selectedItem?.mandi?._id) ? "checkmark-circle-outline" : "heart-outline"} 
+                                    name={notificationAdded.includes(selectedItem?.mandi?._id) ? "checkmark-circle-outline" : "notifications-outline"} 
                                     size={20} 
                                     color={notificationAdded.includes(selectedItem?.mandi?._id) ? "green" : "black"} 
                                     style={{ textAlign: 'center' }}
