@@ -10,6 +10,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
     const [loading, setLoading] = useState(true);
     const [activeButton, setActiveButton] = useState(0);
     const [timeframe, setTimeframe] = useState('today');
+    const [noData, setNoData] = useState(false);
 
     const getHistoryByTimeframe = async (mandiId, category, timeframe) => {
         try {
@@ -34,14 +35,21 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                     }
     
                     const historyData = await getHistoryByTimeframe(mandiId, category, timeframe);
+
+                    if (historyData.length === 0) {
+                        setNoData(true);
+                        setPriceHistory([]);
+                    } else {
+                        setNoData(false);
+                        const sortedData = historyData.map(entry => ({
+                            price: entry.categoryPrices[0]?.price,
+                            date: entry.createdAt
+                        })).filter(entry => !isNaN(entry.price) && !isNaN(new Date(entry.date).getTime()))
+                        .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sorting by date
     
-                    const sortedData = historyData.map(entry => ({
-                        price: entry.categoryPrices[0]?.price,
-                        date: entry.createdAt
-                    })).filter(entry => !isNaN(entry.price) && !isNaN(new Date(entry.date).getTime()))
-                      .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sorting by date
-    
-                    setPriceHistory(sortedData);
+                        setPriceHistory(sortedData);
+                    }
+
                     setLoading(false);
                 } catch (error) {
                     console.error('Error fetching history:', error);
@@ -88,19 +96,19 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                             </View>
                         ) : (
                             <View style={styles.buttonGroupthree}>
-    <View style={[styles.priceContainer, { marginRight: 85 }]}>
-        <Text style={styles.priceSummaryText}>Highest</Text>
-        <Text style={styles.priceValueText}>₹ {highestPrice}</Text>
-    </View>
-    <View style={[styles.priceContainer, { marginRight: 85 }]}>
-        <Text style={styles.priceSummaryText}>Lowest</Text>
-        <Text style={styles.priceValueText}>₹ {lowestPrice}</Text>
-    </View>
-    <View style={styles.priceContainer}>
-        <Text style={styles.priceSummaryText}>Average</Text>
-        <Text style={styles.priceValueText}>₹ {averagePrice}</Text>
-    </View>
-</View>
+                                <View style={[styles.priceContainer, { marginRight: 85 }]}>
+                                    <Text style={styles.priceSummaryText}>Highest</Text>
+                                    <Text style={styles.priceValueText}>₹ {highestPrice}</Text>
+                                </View>
+                                <View style={[styles.priceContainer, { marginRight: 85 }]}>
+                                    <Text style={styles.priceSummaryText}>Lowest</Text>
+                                    <Text style={styles.priceValueText}>₹ {lowestPrice}</Text>
+                                </View>
+                                <View style={styles.priceContainer}>
+                                    <Text style={styles.priceSummaryText}>Average</Text>
+                                    <Text style={styles.priceValueText}>₹ {averagePrice}</Text>
+                                </View>
+                            </View>
                         )}
 
                         <View style={styles.buttonGrouptwo}>
@@ -128,6 +136,8 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
 
                         {loading ? (
                             <ActivityIndicator size="large" color="#0000ff" />
+                        ) : noData ? (
+                            <Text>No data available for the selected timeframe.</Text>
                         ) : (
                             <>
                                 <LineChart
