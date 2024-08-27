@@ -7,21 +7,27 @@ import logo from "./scrap-img.jpeg";
 import EvilIcons from '@expo/vector-icons/EvilIcons';
 import { Base_url } from '../../Config/BaseUrl';
 import icon from './trend.png';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppContext } from '../../Context/AppContext';
+
 
 const LiveRates = () => {
-    const [selectedState, setSelectedState] = useState('All');
+    const { favouriteMandi,setFavouriteMandi,updateMandi} = useAppContext();
+    const [selectedState, setSelectedState] = useState('Favourite');
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedItem, setSelectedItem] = useState(null);
     const [marketRates, setMarketRates] = useState([]);
+    const [favoriteMandis, setFavoriteMandis] = useState([]);
     const [visibleItems, setVisibleItems] = useState(4);
     const [priceDifferences, setPriceDifferences] = useState({});
+    const [userId, setUserId] = useState(null);
+    const [isEmpty, setIsEmpty] = useState(false);
 
     const getAllData = async () => {
         try {
             const response = await axios.get(`${Base_url}api/mandi_rates/all-data`);
             const allData = response.data;
 
-           
             const latestData = Object.values(
                 allData.reduce((acc, curr) => {
                     const mandi = curr.mandi;
@@ -35,12 +41,9 @@ const LiveRates = () => {
                 }, {})
             );
 
-            // Filter out any entries without a mandi name
             const filteredData = latestData.filter(item => item.mandi && item.mandi.mandiname);
-
             setMarketRates(filteredData);
 
-            // Fetch price differences for each mandi and category
             for (const item of filteredData) {
                 for (const priceItem of item.categoryPrices) {
                     fetchPriceDifference(item.mandi._id, priceItem.category);
@@ -53,16 +56,13 @@ const LiveRates = () => {
 
     const fetchPriceDifference = async (mandiId, category) => {
         try {
-            console.log('Fetching price difference:', mandiId, category);
             const response = await axios.get(`${Base_url}api/mandi_rates/price-difference/${mandiId}/${category}`);
-            
             if (response.data) {
                 setPriceDifferences(prevState => ({
                     ...prevState,
                     [`${mandiId}-${category}`]: response.data
                 }));
             } else {
-                console.warn('No data available for price difference:', mandiId, category);
                 setPriceDifferences(prevState => ({
                     ...prevState,
                     [`${mandiId}-${category}`]: 'No data available'
@@ -77,25 +77,55 @@ const LiveRates = () => {
         }
     };
 
+    const getUserMandis = async (userId) => {
+        try {
+            const response = await axios.get(`${Base_url}api/b2b/${userId}/mandis`);
+            const favoriteMandis = response.data.favoriteMandis || [];
+            setIsEmpty(favoriteMandis.length === 0); // Check if the data is empty
+            return favoriteMandis;
+        } catch (error) {
+            console.error('Error getting user Mandis:', error);
+            throw error;
+        }
+    };
+
+    const userDetailsFromStorage = async () => {
+        try {
+            const Details = (await AsyncStorage.getItem("userDetails")) || null;
+            const ParseData = JSON.parse(Details);
+            const data = ParseData;
+            setUserId(data._id);
+        } catch (err) {
+            console.log("Error in getting user ==.", err);
+        }
+    };
+    
     useEffect(() => {
-        getAllData();
+        userDetailsFromStorage();
     }, []);
+    
+    useEffect(() => {
+        if (userId) {
+            getAllData();
+            getUserMandis(userId).then(setFavoriteMandis);
+        }
+    }, [userId,updateMandi]);
 
-    const states = ['All', ...new Set(marketRates.map(item => item.mandi?.state).filter(state => state))];
+    const states = ['Favourite', ...new Set(marketRates.map(item => item.mandi?.state).filter(state => state))];
 
-    const filteredData = selectedState === 'All'
-        ? marketRates
+    const filteredData = selectedState === 'Favourite'
+        ? marketRates.filter(item => favoriteMandis.some(mandi => mandi._id === item.mandi._id))
         : marketRates.filter(item => item.mandi?.state === selectedState);
 
-        const handleShowMore = () => {
-            setVisibleItems(prevVisibleItems => prevVisibleItems + 4);
-        };
-        
-        const handleShowLess = () => {
-            setVisibleItems(4);
-        };
+    const handleShowMore = () => {
+        setVisibleItems(prevVisibleItems => prevVisibleItems + 4);
+    };
+    
+    const handleShowLess = () => {
+        setVisibleItems(4);
+    };
 
-        const displayedData = filteredData.slice(0, visibleItems);
+    const displayedData = filteredData.slice(0, visibleItems);
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -118,7 +148,6 @@ const LiveRates = () => {
             hour12: true
         });
     };
-
 
     const handleStatePress = (state) => {
         setSelectedState(state);
@@ -174,50 +203,66 @@ const LiveRates = () => {
         })
     );
 
-    return (
-        <View style={{ flex: 1 }}>
-            <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                style={{ marginVertical: 10, paddingLeft: 10 }}
-            >
-                {states.map(state => (
-                    <TouchableOpacity
-                        key={state}
-                        onPress={() => handleStatePress(state)}
-                        style={{ marginRight: 10, padding: 10, backgroundColor: selectedState === state ? '#239456' : '#fff', borderRadius: 10 }}
-                    >
-                        <Text style={{ color: selectedState === state ? '#fff' : 'black' }}>{state}</Text>
-                    </TouchableOpacity>
-                ))}
-            </ScrollView>
-
-            <FlatList
-                data={displayedData}
-                renderItem={renderMarketItem}
-                keyExtractor={item => item._id}
-                contentContainerStyle={{ paddingHorizontal: 10 }}
-                ListFooterComponent={
-                    visibleItems < filteredData.length ? (
-                        <TouchableOpacity onPress={handleShowMore} style={{ marginVertical: 20, alignSelf: 'center' }}>
-                            <EvilIcons name="arrow-down" size={32} color="#239456" style={{ marginBottom: 10 }} />
+    
+        return (
+            <View style={{ flex: 1 }}>
+                <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    style={{ marginVertical: 10, paddingLeft: 10 }}
+                >
+                    {states.map(state => (
+                        <TouchableOpacity
+                            key={state}
+                            onPress={() => handleStatePress(state)}
+                            style={{ marginRight: 10, padding: 10, backgroundColor: selectedState === state ? '#239456' : '#fff', borderRadius: 10 }}
+                        >
+                            <Text style={{ color: selectedState === state ? '#fff' : 'black' }}>{state}</Text>
                         </TouchableOpacity>
-                    ) : (
-                        <TouchableOpacity onPress={handleShowLess} style={{ marginVertical: 20, alignSelf: 'center' }}>
-                            <EvilIcons name="arrow-up" size={32} color="#239456" style={{ marginBottom: 10 }} />
-                        </TouchableOpacity>
-                    )
-                }
-            />
-
-            <MarketModal
-                modalVisible={modalVisible}
-                selectedItem={selectedItem}
-                setModalVisible={setModalVisible}
-                formatDate={formatDate}
-                formatTime={formatTime}
-            />
-        </View>
+                    ))}
+                </ScrollView>
+    
+                {selectedState === 'Favourite' && filteredData.length === 0 ? (
+                    <Image
+                        source={require('../../assets/media/5-dark.png')}
+                        style={{
+                            width: 300,
+                            height: 300,
+                            marginRight: 10,
+                            alignSelf: 'center',
+                        }}
+                    />
+                ) : (
+                    <>
+                        <FlatList
+                            data={displayedData}
+                            renderItem={renderMarketItem}
+                            keyExtractor={item => item._id}
+                            contentContainerStyle={{ paddingHorizontal: 10 }}
+                        />
+    
+                        {filteredData.length > visibleItems ? (
+                            <TouchableOpacity onPress={handleShowMore} style={{ marginVertical: 20, alignSelf: 'center' }}>
+                                <EvilIcons name="arrow-down" size={32} color="#239456" style={{ marginBottom: 10 }} />
+                            </TouchableOpacity>
+                        ) : (
+                            visibleItems > 4 && (
+                                <TouchableOpacity onPress={handleShowLess} style={{ marginVertical: 20, alignSelf: 'center' }}>
+                                    <EvilIcons name="arrow-up" size={32} color="#239456" style={{ marginBottom: 10 }} />
+                                </TouchableOpacity>
+                            )
+                        )}
+                    </>
+                )}
+    
+                <MarketModal
+                    modalVisible={modalVisible}
+                    selectedItem={selectedItem}
+                    setModalVisible={setModalVisible}
+                    formatDate={formatDate}
+                    formatTime={formatTime}
+                />
+            </View>
     );
 };
 

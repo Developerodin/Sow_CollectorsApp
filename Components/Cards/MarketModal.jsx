@@ -1,16 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect ,useContext} from 'react';
 import { View, Modal, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator, ScrollView } from 'react-native';
 import { Text } from "galio-framework";
 import { LineChart } from 'react-native-chart-kit';
 import axios from 'axios';
 import { Base_url } from '../../Config/BaseUrl';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from '@expo/vector-icons';
+import { useAppContext } from '../../Context/AppContext';
 
 const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, formatTime }) => {
+    const { favouriteMandi,setFavouriteMandi,updateMandi,setUpdateMandi} = useAppContext();
     const [priceHistory, setPriceHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [activeButton, setActiveButton] = useState(0);
     const [timeframe, setTimeframe] = useState('today');
     const [noData, setNoData] = useState(false);
+    const [userId, setUserId] = useState(null);
+    const [notificationAdded, setNotificationAdded] = useState([]);
+    const [favouriteAdded, setFavouriteAdded] = useState([]);
 
     const getHistoryByTimeframe = async (mandiId, category, timeframe) => {
         try {
@@ -18,6 +25,35 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
             return response.data;
         } catch (error) {
             console.error('Error fetching history by timeframe:', error);
+            throw error;
+        }
+    };
+
+    const addMandiToList = async (mandiId, listType) => {
+        try {
+            console.log('mandiId:', mandiId);
+            console.log('userId:', userId);
+            console.log('listType:', listType);
+
+            const response = await axios.post(`${Base_url}api/b2b/add-mandi`, {
+                userId,
+                mandiId,
+                listType
+            });
+
+            if (listType === 'favorite') {
+                setFavouriteAdded(prev => [...prev, mandiId]);  // Add mandiId to favourite list
+            } else if (listType === 'notification') {
+                setNotificationAdded(prev => [...prev, mandiId]); // Add mandiId to notification list
+            }
+            setUpdateMandi((prev) => prev + 1);
+            return response.data;
+        } catch (error) {
+            if (error.response && error.response.status === 404) {
+                console.error(`Error 404: Not Found. Please check userId, mandiId, or listType:`, error);
+            } else {
+                console.error(`Error adding Mandi to ${listType}:`, error);
+            }
             throw error;
         }
     };
@@ -61,6 +97,33 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
         }
     }, [modalVisible, timeframe]);
 
+    const userDetailsFromStorage = async (token) => {
+        
+        try{
+          const Details = (await AsyncStorage.getItem("userDetails")) || null;
+         
+        const ParseData = JSON.parse(Details);
+         
+        
+        const data = ParseData;
+         console.log("User Data 2 ==>",data)
+            setUserId(ParseData._id);
+            console.log("User ID ==>",userId)
+         
+        
+        return ;
+        }
+        catch(err){
+          console.log("Error in getting user ==.",err)
+        }
+       
+      }; 
+
+
+      useEffect(() => {
+        userDetailsFromStorage();
+        }, []);
+
     const calculatePriceStatistics = () => {
         const prices = priceHistory.map(entry => entry.price);
         const highestPrice = Math.max(...prices);
@@ -89,11 +152,37 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                         </TouchableOpacity>
 
                         {timeframe === 'today' ? (
-                            <View style={styles.buttonGroup}>
-                                <Text style={styles.buttonGroupText}>Add to:</Text>
-                                <Text style={styles.buttonGroupText}>Notification</Text>
-                                <Text style={styles.buttonGroupText}>Favourite</Text>
-                            </View>
+                             <View style={[styles.buttonGroup]}>
+                             <Text style={styles.buttonGroupItemtwo}>Add to:</Text>
+                             <TouchableOpacity
+                                 onPress={() => addMandiToList(selectedItem?.mandi?._id, 'notification')}
+                                 style={styles.buttonGroupItemtwo}
+                             >
+                                 <View style={styles.iconTextContainer}>
+                                 <Ionicons 
+                                    name={notificationAdded.includes(selectedItem?.mandi?._id) ? "checkmark-circle-outline" : "heart-outline"} 
+                                    size={20} 
+                                    color={notificationAdded.includes(selectedItem?.mandi?._id) ? "green" : "black"} 
+                                    style={{ textAlign: 'center' }}
+                                />
+                                     <Text style={styles.buttonGroupText}>Notification</Text>
+                                 </View>
+                             </TouchableOpacity>
+                             <TouchableOpacity
+                                 onPress={() => addMandiToList(selectedItem?.mandi?._id, 'favorite')}
+                                 style={styles.buttonGroupItemtwo}
+                             >
+                                 <View style={styles.iconTextContainer}>
+                                     <Ionicons 
+                                         name={favouriteAdded.includes(selectedItem?.mandi?._id) ? "checkmark-circle-outline" : "heart-outline"} 
+                                         size={20} 
+                                         color={favouriteAdded.includes(selectedItem?.mandi?._id) ? "green" : "black"} 
+                                         style={{ textAlign: 'center' }}
+                                     />
+                                     <Text style={styles.buttonGroupText}>Favourite</Text>
+                                 </View>
+                             </TouchableOpacity>
+                         </View>
                         ) : (
                             <View style={styles.buttonGroupthree}>
                                 <View style={[styles.priceContainer, { marginRight: 85 }]}>
@@ -240,16 +329,40 @@ const styles = StyleSheet.create({
     },
     buttonGroup: {
         display: 'flex',
+        
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 10,
         borderRadius: 30,
         borderColor: '#F2F2F2',
         borderWidth: 1,
         marginBottom: 10,
         backgroundColor: '#ffffff',
+        paddingHorizontal: 26,
+
+    
     },
+    buttonGroupText: {
+        textAlign: 'center',
+        color: 'black',
+    },
+    buttonGroupItemtwo: {
+        
+        fontWeight: '700',
+        fontSize: 16,
+        borderRadius: 5,
+        alignItems: 'center',
+        justifyContent: 'center',
+        display: 'flex',
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        
+    },
+    iconTextContainer: {
+       
+
+    
+    }, 
     buttonGrouptwo: {
         display: 'flex',
         flexDirection: 'row',
@@ -266,11 +379,7 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: 'black',
     },
-    buttonGroupText: {
-        flex: 1,
-        textAlign: 'center',
-        color: 'black',
-    },
+   
     buttonGroupItem: {
         flex: 1,
         margin: 5,
