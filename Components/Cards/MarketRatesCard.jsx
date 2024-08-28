@@ -5,7 +5,7 @@ import { Block, Text, Input, theme, Button } from "galio-framework";
 const {width, height} = Dimensions.get('window');
 import { Feather } from '@expo/vector-icons';
 export const MarketRatesCard = (props) => {
-    const {Title,Value} = props
+    const {Title,Value ,CreatedAt } = props
 
     useEffect(()=>{
 console.log("Mediator Data ==>",Title)
@@ -16,11 +16,14 @@ console.log("Mediator Data ==>",Title)
         
 
         <Block>
-            <Text style={{fontSize:17}}>{Title.toUpperCase()}</Text>
+            <Text style={{fontSize:17}}>  {Title.toUpperCase()}</Text>
+            <Text style={{fontSize:17,fontWeight:400,color:"grey"}}>{CreatedAt}</Text>
         </Block>
+        
 
         <Block style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
         <Text style={{fontSize:17,fontWeight:400,color:"green"}}>₹ {Value}</Text>
+        
         <Feather name="arrow-right" size={20} color="black" style={{marginLeft:10}} />
         </Block>
       

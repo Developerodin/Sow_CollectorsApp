@@ -89,6 +89,12 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
     }
   };
 
+  const convertUTCToIST = (dateString) => {
+    const date = new Date(dateString);
+    const options = { timeZone: 'Asia/Kolkata', hour12: true };
+    return date.toLocaleString('en-IN', options);
+  };
+
   useEffect(()=>{
     console.log("Id ===>",itemId)
     fetchData()
@@ -129,7 +135,7 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
 
      <Block style={[{marginTop:15,flexDirection:"row",alignItems:"center"}]} >
         <Block style={{marginRight:20}}>
-        <FontAwesome name="money" size={16} color="black" />
+        <FontAwesome name="tags" size={16} color="black" />
         </Block>
         <Block >
         <Text style={{fontSize:18}}>sub category : {details && details.categories[categoryIndex].sub_category[subIndex].name}</Text>
@@ -143,9 +149,23 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
         </Block>
         <Block >
         <Text style={{fontSize:18}}>₹ {details && details.categories[categoryIndex].sub_category[subIndex].price}/KG</Text>
+       
         </Block>
         
      </Block>
+
+     <Block style={[{marginTop:15,flexDirection:"row",alignItems:"center"}]} >
+        <Block style={{marginRight:20}}>
+        <FontAwesome name="calendar" size={16} color="black" />
+        </Block>
+        <Block >
+        <Text style={{fontSize:18}}>{details && convertUTCToIST(details.createdAt)}</Text>
+       
+        </Block>
+        
+     </Block>
+
+
 
 
      <Block style={{marginTop:20}}>

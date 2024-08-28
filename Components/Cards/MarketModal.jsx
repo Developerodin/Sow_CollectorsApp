@@ -143,6 +143,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
             transparent={true}
             visible={modalVisible}
             onRequestClose={() => setModalVisible(false)}
+            swipeDirection={["down"]}
         >
             <TouchableOpacity style={styles.backdrop} onPress={() => setModalVisible(false)}>
                 <TouchableOpacity activeOpacity={1} style={styles.modalView}>

@@ -196,6 +196,7 @@ export const MyRates = () => {
       // console.log("CategoriesData =====================>",CategoriesData)
       // console.log("res of category and subcategory =>", CategoriesData);
       const transformedData = [].concat(...CategoriesData.map(category => {
+        console.log("Category Data ==>",category)
         
         return category.sub_category.map(subCategory => ({
           id: subCategory._id,

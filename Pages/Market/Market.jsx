@@ -191,7 +191,7 @@ export const Market = () => {
       filteredData = filteredData.filter((vendor) => vendor.city.toLowerCase() === city.toLowerCase());
       // console.log("Filter data  cat and subcategory ==>",filteredData)
     }
-    console.log(filteredData);
+    console.log("filer data >>  ", filteredData);
     const MediatorsData = filteredData.filter((el) => {
       return el.registerAs === "Mediators";
     });
@@ -287,6 +287,12 @@ export const Market = () => {
 
   const handleResetPress = () => {
     setSortOrder('asc');
+  };
+ 
+  const convertUTCToIST = (dateString) => {
+    const date = new Date(dateString);
+    const options = { timeZone: 'Asia/Kolkata', hour12: true };
+    return date.toLocaleString('en-IN', options);
   };
 
   return (
@@ -567,7 +573,7 @@ export const Market = () => {
                         key={`${el._id}-${categoryIndex}-${subIndex}`}
                         onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
                       >
-                        <MarketRatesCard Title={el.name} Value={item.price} />
+                        <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={el.createdAt}  />
                       </TouchableOpacity>
                     );
                   }
@@ -603,7 +609,7 @@ export const Market = () => {
                                 key={`${el._id}-${categoryIndex}-${subIndex}`}
                                 onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
                               >
-                                <MarketRatesCard Title={el.name} Value={item.price} />
+                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.createdAt)}  />
                               </TouchableOpacity>
                             );
                           }
@@ -642,7 +648,7 @@ export const Market = () => {
                                 key={`${el._id}-${categoryIndex}-${subIndex}`}
                                 onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
                               >
-                                <MarketRatesCard Title={el.name} Value={item.price} />
+                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.createdAt)}  />
                               </TouchableOpacity>
                             );
                           }
@@ -680,7 +686,7 @@ export const Market = () => {
                                 key={`${el._id}-${categoryIndex}-${subIndex}`}
                                 onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
                               >
-                                <MarketRatesCard Title={el.name} Value={item.price} />
+                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.createdAt)} />
                               </TouchableOpacity>
                             );
                           }

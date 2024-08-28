@@ -112,8 +112,8 @@ export const MarketCard = (props) => {
       </Block>
 
       <Block style={{marginRight:30}}>
+          <Text style={{color:"grey",fontSize:14,fontWeight:600}}>{formattedDateTime}</Text>
           <Text style={{color:"#29BD7F",fontSize:15,fontWeight:600}}>₹ {Value} / KG</Text>
-          <Text style={{color:"#29BD7F",fontSize:15,fontWeight:600}}>{formattedDateTime}</Text>
 
         </Block>
         </Block>
