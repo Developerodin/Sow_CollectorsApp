@@ -1,5 +1,5 @@
 import React, { useState, useEffect ,useContext} from 'react';
-import { View, Modal, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator, ScrollView } from 'react-native';
+import { View, Modal, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator, ScrollView ,FlatList} from 'react-native';
 import { Text } from "galio-framework";
 import { LineChart } from 'react-native-chart-kit';
 import axios from 'axios';
@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../../Context/AppContext';
 
-const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, formatTime }) => {
+const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, formatTime, onClose }) => {
     const { favouriteMandi,setFavouriteMandi,updateMandi,setUpdateMandi} = useAppContext();
     const [priceHistory, setPriceHistory] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -142,13 +142,13 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
             animationType="slide"
             transparent={true}
             visible={modalVisible}
-            onRequestClose={() => setModalVisible(false)}
+            onRequestClose={onClose}
             swipeDirection={["down"]}
         >
-            <TouchableOpacity style={styles.backdrop} onPress={() => setModalVisible(false)}>
+            <TouchableOpacity style={styles.backdrop} onPress={onClose}>
                 <TouchableOpacity activeOpacity={1} style={styles.modalView}>
                     <View style={styles.modalContent}>
-                        <TouchableOpacity style={styles.topBar} onPress={() => setModalVisible(false)}>
+                        <TouchableOpacity style={styles.topBar} onPress={onClose}>
                             <View style={styles.topBarHandle}></View>
                         </TouchableOpacity>
 
@@ -273,16 +273,19 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                                     fromZero={false}
                                 />
 
-                                <ScrollView style={styles.scrollView}>
-                                    {priceHistory
-                                        .sort((a, b) => new Date(b.date) - new Date(a.date)) 
-                                        .map((entry, index) => (
-                                            <View key={index} style={styles.infoRow}>
-                                                <Text style={styles.infoRowText}>{formatDate(entry.date)}</Text>
-                                                <Text style={styles.infoRowTextRight}>₹ {entry.price}</Text>
-                                            </View>
-                                        ))}
-                                </ScrollView>
+<FlatList
+      data={priceHistory.sort((a, b) => new Date(b.date) - new Date(a.date))}
+      keyExtractor={(item, index) => index.toString()}
+      renderItem={({ item }) => (
+        <TouchableOpacity onPress={() => console.log(`Item pressed: ${item.date}`)}>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoRowText}>{formatDate(item.date)}</Text>
+            <Text style={styles.infoRowTextRight}>₹ {item.price}</Text>
+          </View>
+        </TouchableOpacity>
+      )}
+      style={styles.scrollView}
+    />
                             </>
                         )}
                     </View>
@@ -375,10 +378,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         marginBottom: 10,
         backgroundColor: '#ffffff',
+        fontSize: 16,
     },
     buttonGroupTexttwo: {
         textAlign: 'center',
         color: 'black',
+        fontSize : 13,
     },
    
     buttonGroupItem: {
@@ -386,6 +391,7 @@ const styles = StyleSheet.create({
         margin: 5,
         padding: 10,
         borderRadius: 5,
+        fontSize: 16,
         
     },
     activeButton: {
@@ -439,12 +445,14 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'space-between',
+        borderColor: '#F2F2F2',
+        borderWidth: 1,
         
     },
     buttonGroupthree: {
         display: 'flex',
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: 'space-around',
         paddingVertical: 10,
         paddingHorizontal: 16,
         borderRadius: 30,

@@ -5,6 +5,7 @@ import {
   Dimensions,
   Image,
   ScrollView,
+  TouchableOpacity
 } from "react-native";
 import { Block, Text, Input, theme,Button } from "galio-framework";
 
@@ -122,7 +123,12 @@ export const CategoryAddModel = ({
 </ScrollView>
             
           </Block>
-
+          <TouchableOpacity
+            style={styles.doneButton}
+            onPress={handelClose}
+          >
+            <Text style={styles.doneButtonText}>Done</Text>
+          </TouchableOpacity>
           
         </View>
       </View>
@@ -202,6 +208,19 @@ const styles = StyleSheet.create({
     fontSize: 45,
     fontWeight: "bold",
     color: "#2DA194",
+  },
+  doneButton: {
+    marginTop: 20,
+    backgroundColor: '#65be34',
+    borderRadius: 5,
+    padding: 10,
+    position: 'absolute',
+    bottom: 20,
+    right: 10,
+  },
+  doneButtonText: {
+    color: 'white',
+    fontSize: 16,
   },
 });
 

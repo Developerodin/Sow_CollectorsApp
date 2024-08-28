@@ -159,7 +159,7 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
         <FontAwesome name="calendar" size={16} color="black" />
         </Block>
         <Block >
-        <Text style={{fontSize:18}}>{details && convertUTCToIST(details.createdAt)}</Text>
+        <Text style={{fontSize:18}}>{details && convertUTCToIST(details.categories[categoryIndex].sub_category[subIndex].updatedAt)}</Text>
        
         </Block>
         

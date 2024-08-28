@@ -551,13 +551,15 @@ export const Market = () => {
           </Block>
 
           <Block>
-          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', padding: 10 }}>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-end', padding: 10,alignItems:'center' }}>
+          <Text style={{marginRight: 8,fontSize: 16,color:'teal'}}>
+          {/* {sortOrder === 'asc' ? 'Sort' : 'Sort '} */} Sort
+        </Text>
       <TouchableOpacity onPress={handleSortPress} style={{ padding: 6, backgroundColor: "teal", borderRadius: 12, flexDirection: "row", justifyContent: "center", alignItems: "center", width: 30 }}>
         <FontAwesome5 name="sort" size={22} color="#fff" />
+      
       </TouchableOpacity>
-      <TouchableOpacity onPress={handleResetPress} style={{ marginLeft: 10,  padding: 6, backgroundColor: "teal", borderRadius: 12, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-        <Feather name="refresh-ccw" size={22} color="#fff" />
-      </TouchableOpacity>
+      
     </View>
 
       {userDetails.registerAs === "Collectors" && WholesalersData && (
@@ -573,7 +575,7 @@ export const Market = () => {
                         key={`${el._id}-${categoryIndex}-${subIndex}`}
                         onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
                       >
-                        <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={el.createdAt}  />
+                        <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.updatedAt)}  />
                       </TouchableOpacity>
                     );
                   }
@@ -587,7 +589,7 @@ export const Market = () => {
         })
         :
         <Block center>
-          <Text style={{ fontSize: 18, marginTop: 30 }}>No WholesalersData Data</Text>
+          <Text style={{ fontSize: 18, marginTop: 30 }}>No Wholesalers Data Available Right Now</Text>
         </Block>
       )}
          
@@ -609,7 +611,7 @@ export const Market = () => {
                                 key={`${el._id}-${categoryIndex}-${subIndex}`}
                                 onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
                               >
-                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.createdAt)}  />
+                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(item.updatedAt)}  />
                               </TouchableOpacity>
                             );
                           }
@@ -624,7 +626,7 @@ export const Market = () => {
               :
               <Block center>
                 <Text style={{ fontSize: 18, marginTop: 30 }}>
-                    No Mediators Data
+                   No Mediators Data Available Right Now
                   </Text>
               </Block>
               )
@@ -648,7 +650,7 @@ export const Market = () => {
                                 key={`${el._id}-${categoryIndex}-${subIndex}`}
                                 onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
                               >
-                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.createdAt)}  />
+                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.updatedAt)}  />
                               </TouchableOpacity>
                             );
                           }
@@ -664,7 +666,7 @@ export const Market = () => {
               :
               <Block center>
                 <Text style={{ fontSize: 18, marginTop: 30 }}>
-                    No Factory Data
+                    No Factory Data Available Right Now
                   </Text>
               </Block>
               )
@@ -686,7 +688,7 @@ export const Market = () => {
                                 key={`${el._id}-${categoryIndex}-${subIndex}`}
                                 onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
                               >
-                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.createdAt)} />
+                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.updatedAt)} />
                               </TouchableOpacity>
                             );
                           }
@@ -702,7 +704,7 @@ export const Market = () => {
               :
               <Block center>
                 <Text style={{ fontSize: 18, marginTop: 30 }}>
-                    No Factory Data
+                    No Factory Data Available Right Now
                   </Text>
               </Block>
               )

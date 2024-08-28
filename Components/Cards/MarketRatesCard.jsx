@@ -16,8 +16,8 @@ console.log("Mediator Data ==>",Title)
         
 
         <Block>
-            <Text style={{fontSize:17}}>  {Title.toUpperCase()}</Text>
-            <Text style={{fontSize:17,fontWeight:400,color:"grey"}}>{CreatedAt}</Text>
+            <Text style={{fontSize:17}}>{Title.toUpperCase()}</Text>
+            <Text style={{fontSize:15,fontWeight:400,color:"grey"}}>{CreatedAt}</Text>
         </Block>
         
 
