@@ -71,21 +71,39 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                     }
     
                     const historyData = await getHistoryByTimeframe(mandiId, category, timeframe);
-
+    
                     if (historyData.length === 0) {
                         setNoData(true);
                         setPriceHistory([]);
                     } else {
                         setNoData(false);
-                        const sortedData = historyData.map(entry => ({
-                            price: entry.categoryPrices[0]?.price,
-                            date: entry.createdAt
-                        })).filter(entry => !isNaN(entry.price) && !isNaN(new Date(entry.date).getTime()))
-                        .sort((a, b) => new Date(a.date) - new Date(b.date)); // Sorting by date
     
-                        setPriceHistory(sortedData);
+                        let processedData = historyData.map(entry => ({
+                            price: entry.categoryPrices[0]?.price,
+                            date: new Date(entry.createdAt)
+                        })).filter(entry => !isNaN(entry.price) && !isNaN(entry.date.getTime()));
+    
+                        // Sorting data by date in ascending order
+                        processedData.sort((a, b) => a.date - b.date);
+    
+                        switch (timeframe) {
+                            case 'week':
+                                processedData = processWeeklyData(processedData);
+                                break;
+                            case 'month':
+                                processedData = processMonthlyData(processedData);
+                                break;
+                            case 'year':
+                                processedData = processYearlyData(processedData);
+                                break;
+                            default:
+                                // Already sorted above, no need to sort again
+                                break;
+                        }
+    
+                        setPriceHistory(processedData);
                     }
-
+    
                     setLoading(false);
                 } catch (error) {
                     console.error('Error fetching history:', error);
@@ -96,6 +114,91 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
             fetchHistory();
         }
     }, [modalVisible, timeframe]);
+    
+
+
+
+ // Group data by day and calculate the average price per day
+const processWeeklyData = (data) => {
+    const groupedByDay = data.reduce((acc, item) => {
+        const day = item.date.toISOString().split('T')[0]; // YYYY-MM-DD
+        if (!acc[day]) {
+            acc[day] = { price: item.price, count: 1 };
+        } else {
+            acc[day].price += item.price;
+            acc[day].count += 1;
+        }
+        return acc;
+    }, {});
+
+    return Object.keys(groupedByDay).map(day => ({
+        date: new Date(day),
+        price: Math.round(groupedByDay[day].price / groupedByDay[day].count) // Rounded average price per day
+    }));
+};
+
+// Group data by week and calculate the average price per week
+const processMonthlyData = (data) => {
+    const groupedByWeek = data.reduce((acc, item) => {
+        const week = `${item.date.getFullYear()}-${getWeekNumber(item.date)}`;
+        if (!acc[week]) {
+            acc[week] = { price: item.price, count: 1 };
+        } else {
+            acc[week].price += item.price;
+            acc[week].count += 1;
+        }
+        return acc;
+    }, {});
+
+    return Object.keys(groupedByWeek).map(week => ({
+        date: new Date(week.split('-')[0], 0, 1 + (parseInt(week.split('-')[1]) - 1) * 7),
+        price: Math.round(groupedByWeek[week].price / groupedByWeek[week].count) // Rounded average price per week
+    }));
+};
+
+// Group data by month and calculate the average price per month
+const processYearlyData = (data) => {
+    const groupedByMonth = data.reduce((acc, item) => {
+        const month = `${item.date.getFullYear()}-${item.date.getMonth() + 1}`;
+        if (!acc[month]) {
+            acc[month] = { price: item.price, count: 1 };
+        } else {
+            acc[month].price += item.price;
+            acc[month].count += 1;
+        }
+        return acc;
+    }, {});
+
+    return Object.keys(groupedByMonth).map(month => ({
+        date: new Date(month.split('-')[0], month.split('-')[1] - 1),
+        price: Math.round(groupedByMonth[month].price / groupedByMonth[month].count) // Rounded average price per month
+    }));
+};
+
+// Helper function to get the week number of the year
+const getWeekNumber = (date) => {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+};
+
+
+const formatLabel = (date, timeframe) => {
+    const formattedDate = `${date.getDate().toString().padStart(2, '0')}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getFullYear()}`;
+    
+    switch (timeframe) {
+        case 'today':
+            return formatTime(date); // Format as time (e.g., "10:00 AM")
+        case 'week':
+        case 'month':
+        case 'year':
+            return formattedDate; // Format as "DD-MM-YYYY"
+        default:
+            return formattedDate; // Default to "DD-MM-YYYY"
+    }
+};
+
+
 
     const userDetailsFromStorage = async (token) => {
         
@@ -242,10 +345,10 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                         ) : (
                             <>
                               <ScrollView horizontal>
-                            <TouchableOpacity style={{height:500}}>
+                            <TouchableOpacity >
     <LineChart
         data={{
-            labels: priceHistory.map(entry => formatTime(entry.date)),
+            labels: priceHistory.map(entry => formatLabel(new Date(entry.date), timeframe)),
             datasets: [
                 {
                     data: priceHistory.map(entry => entry.price),
@@ -449,7 +552,7 @@ const styles = StyleSheet.create({
         borderColor: '#FAF9F6',
         borderWidth: 1,
         marginBottom: 10,
-        marginTop: 10,
+        
         backgroundColor: '#FAF9F6',
     },
     infoRowText: {
