@@ -611,7 +611,7 @@ export const Market = () => {
                                 key={`${el._id}-${categoryIndex}-${subIndex}`}
                                 onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
                               >
-                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(item.updatedAt)}  />
+                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(item.updatedAt)} subCategory={item.name} />
                               </TouchableOpacity>
                             );
                           }

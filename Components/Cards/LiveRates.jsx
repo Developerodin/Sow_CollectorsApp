@@ -16,6 +16,7 @@ import icon from "./trend.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "../../Context/AppContext";
 
+
 const LiveRates = () => {
   const { favouriteMandi, setFavouriteMandi, updateMandi } = useAppContext();
   const [selectedState, setSelectedState] = useState("All"); // Default to 'All'

@@ -26,6 +26,8 @@ import logo from "./scrap-img.jpeg";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import icon from "./trend.png";
+import Marketmodal from "./Marketmodal";
+
 
 export const LiveRating = () => {
   const animationRef = useRef(null);
@@ -45,6 +47,8 @@ export const LiveRating = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [mandiId, setMandiId] = useState(null);
   const [priceDifferences, setPriceDifferences] = useState({});
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
    
    
 
@@ -118,33 +122,38 @@ export const LiveRating = () => {
       );
       console.log("Fetched Market Rates:", response.data);
       const Data = response.data;
-
+  
+      // Step 1: Filter the data based on the category
       const filteredData = Data.filter(
-        (el) =>
-          el.mandi !== null &&
-          el.categoryPrices.some((cat) => cat.category === value)
+        (el) => el.mandi !== null && el.categoryPrices.some((cat) => cat.category === value)
       );
-
-      const latestData = Object.values(
-        filteredData.reduce((acc, curr) => {
-          const mandi = curr.mandi;
-          if (mandi && mandi._id) {
-            const mandiId = mandi._id;
-            if (
-              !acc[mandiId] ||
-              new Date(acc[mandiId].updatedAt) < new Date(curr.updatedAt)
-            ) {
-              acc[mandiId] = curr;
+  
+      // Step 2: Create a map to track the latest price for each mandi and category
+      const latestPriceMap = {};
+  
+      filteredData.forEach((item) => {
+        item.categoryPrices.forEach((catPrice) => {
+          if (catPrice.category === value) {
+            const key = `${item.mandi._id}-${catPrice.category}`;
+            if (!latestPriceMap[key] || new Date(latestPriceMap[key].updatedAt) < new Date(item.updatedAt)) {
+              latestPriceMap[key] = { ...item, categoryPrice: catPrice };
             }
           }
-          return acc;
-        }, {})
-      );
-      setMandiId(latestData[0]?.mandi?._id);  
+        });
+      });
+  
+      // Step 3: Convert the map back to an array
+      const latestData = Object.values(latestPriceMap).map((entry) => ({
+        ...entry,
+        categoryPrices: [entry.categoryPrice],
+      }));
+  
+      setMandiId(latestData[0]?.mandi?._id);
       setData(latestData);
       setFilteredData(latestData);
-
-      for (const item of filteredData) {
+  
+      
+      for (const item of latestData) {
         for (const priceItem of item.categoryPrices) {
           fetchPriceDifference(item.mandi._id, priceItem.category);
         }
@@ -153,6 +162,7 @@ export const LiveRating = () => {
       
     }
   };
+  
 
   useEffect(() => {
     fetchMarketRates({ value });
@@ -170,6 +180,16 @@ export const LiveRating = () => {
 
     return `${formattedDay}-${formattedMonth}-${formattedYear}`;
   }
+
+  const formatTime = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleTimeString(undefined, {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
   const filterData = () => {
     console.log("Data:", Data);
     console.log("Search Query:", searchQuery);
@@ -189,6 +209,18 @@ export const LiveRating = () => {
       setFilteredData(filtered);
     }
   };
+
+  const handleItemPress = (item) => {
+    console.log("Selected Item:", item);
+    setSelectedItem(item);
+    setModalVisible(true);
+
+  };
+
+  const closeModel = () => {
+    setModalVisible(false);
+  };
+
 
   const sortData = () => {
     let sortedData = [...filteredData];
@@ -232,7 +264,7 @@ export const LiveRating = () => {
   useEffect(() => {
     animationRef.current?.play();
 
-    // Or set a specific startFrame and endFrame with:
+    
     animationRef.current?.play(10, 80);
   }, []);
 
@@ -324,8 +356,9 @@ export const LiveRating = () => {
 
           {dataToDisplay && dataToDisplay.length > 0 ? (
             dataToDisplay.map((item, index) => (
-              <Block key={index} style={{ marginTop: 20, flex: 1 }}>
+              <TouchableOpacity onPress={() => handleItemPress(item)} key={index} style={{ marginTop: 20, flex: 1 }}>
                 <Block
+                  
                   style={{
                     width: "100%",
                     borderRadius: 10,
@@ -342,6 +375,7 @@ export const LiveRating = () => {
                     <Image
                       source={logo}
                       style={{ resizeMode: "cover", width: 50, height: 50 }}
+                      
                     />
                   </Block>
                   <Block style={{ width: "60%", marginLeft: 15 }}>
@@ -405,7 +439,7 @@ export const LiveRating = () => {
               )}
                   </Block>
                 </Block>
-              </Block>
+              </TouchableOpacity>
             ))
           ) : (
             //   : <Text>No Data Available</Text>
@@ -425,6 +459,15 @@ export const LiveRating = () => {
           )}
         </Block>
       </ScrollView>
+      <Marketmodal
+        modalVisible={modalVisible}
+        selectedItem={selectedItem}
+        onClose={closeModel}
+        setModalVisible={setModalVisible}
+        formatDate={formatDate}
+        formatTime={formatTime}
+        
+      />
     </View>
   );
 };

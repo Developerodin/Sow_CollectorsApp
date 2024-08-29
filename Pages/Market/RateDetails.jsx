@@ -57,6 +57,7 @@ const handleSubmit = () => {
     discription:discription,
     unit:selectedValue
   }
+  console.log("data >>>", Orderdetails);
 
   console.log(userDetails._id, details._id,Orderdetails,TotalAmount);
   createOrder(userDetails._id, details._id,Orderdetails,TotalAmount,discription);
@@ -76,8 +77,9 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
 
   const fetchData = async () => {
     try {
+      
       const response = await axios.get(`${Base_url}api/b2b/${itemId}`);
-
+      
       if (response.status === 200) {
         console.log("Data of vender =====>",response.data);
         setDetails(response.data);

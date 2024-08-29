@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../../Context/AppContext';
 
-const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, formatTime, onClose }) => {
+const Marketmodal = ({ modalVisible, selectedItem, setModalVisible, formatDate, formatTime, onClose }) => {
     const { favouriteMandi,setFavouriteMandi,updateMandi,setUpdateMandi} = useAppContext();
     const [priceHistory, setPriceHistory] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -593,4 +593,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default MarketModal;
+export default Marketmodal;
