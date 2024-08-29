@@ -1,5 +1,5 @@
 import React, { useState, useEffect ,useContext} from 'react';
-import { View, Modal, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator, ScrollView ,FlatList} from 'react-native';
+import { View, Modal, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator, ScrollView ,FlatList , Image,} from 'react-native';
 import { Text } from "galio-framework";
 import { LineChart } from 'react-native-chart-kit';
 import axios from 'axios';
@@ -146,7 +146,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
             swipeDirection={["down"]}
         >
             <TouchableOpacity style={styles.backdrop} onPress={onClose}>
-                <TouchableOpacity activeOpacity={1} style={styles.modalView}>
+                <View style={styles.modalView}>
                     <View style={styles.modalContent}>
                         <TouchableOpacity style={styles.topBar} onPress={onClose}>
                             <View style={styles.topBarHandle}></View>
@@ -227,51 +227,67 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                         {loading ? (
                             <ActivityIndicator size="large" color="#0000ff" />
                         ) : noData ? (
-                            <Text>No data available for the selected timeframe.</Text>
+                            <>
+                            <Text>No data available for the today</Text>
+                            <Image
+                            source={require("../../assets/media/5-dark.png")}
+                            style={{
+                              width: 300,
+                              height: 300,
+                              marginRight: 10,
+                              alignSelf: "center",
+                            }}
+                          />
+                            </>
                         ) : (
                             <>
-                                <LineChart
-                                    data={{
-                                        labels: priceHistory.map(entry => formatTime(entry.date)),
-                                        datasets: [
-                                            {
-                                                data: priceHistory.map(entry => entry.price),
-                                                color: (opacity = 1) => `rgba(0, 115, 177, ${opacity})`,
-                                                strokeWidth: 2,
-                                            },
-                                        ],
-                                    }}
-                                    width={Dimensions.get("window").width - 40}
-                                    height={200}
-                                    chartConfig={{
-                                        backgroundGradientFrom: '#ffffff',
-                                        backgroundGradientTo: '#ffffff',
-                                        decimalPlaces: 0,
-                                        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                                        labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-                                        style: {
-                                            borderRadius: 16,
-                                        },
-                                        propsForDots: {
-                                            r: "6",
-                                            strokeWidth: "2",
-                                            stroke: "#000000",
-                                        },
-                                        propsForBackgroundLines: {
-                                            stroke: '#cccccc',
-                                            strokeDasharray: "",
-                                        },
-                                        fillShadowGradient: 'transparent',
-                                        fillShadowGradientOpacity: 0,
-                                    }}
-                                    style={{
-                                        marginVertical: 10,
-                                        borderRadius: 2,
-                                    }}
-                                    withInnerLines={true}
-                                    withOuterLines={true}
-                                    fromZero={false}
-                                />
+                              
+                            <TouchableOpacity>
+    <LineChart
+        data={{
+            labels: priceHistory.map(entry => formatTime(entry.date)),
+            datasets: [
+                {
+                    data: priceHistory.map(entry => entry.price),
+                    color: (opacity = 1) => `rgba(0, 115, 177, ${opacity})`,
+                    strokeWidth: 2,
+                },
+            ],
+        }}
+        width={Dimensions.get("window").width - 40} 
+        height={200} 
+        chartConfig={{
+            backgroundGradientFrom: '#ffffff',
+            backgroundGradientTo: '#ffffff',
+            decimalPlaces: 0,
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            style: {
+                borderRadius: 16,
+                paddingRight: 50, // Ensure labels have enough space
+            },
+            propsForDots: {
+                r: "6",
+                strokeWidth: "2",
+                stroke: "#000000",
+            },
+            propsForBackgroundLines: {
+                stroke: '#cccccc',
+                strokeDasharray: "",
+            },
+            fillShadowGradient: 'transparent',
+            fillShadowGradientOpacity: 0,
+        }}
+        style={{
+            marginVertical: 10,
+            borderRadius: 2,
+        }}
+        withInnerLines={true}
+        withOuterLines={true}
+        fromZero={false}
+    />
+</TouchableOpacity>
+
 
 <FlatList
       data={priceHistory.sort((a, b) => new Date(b.date) - new Date(a.date))}
@@ -289,7 +305,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                             </>
                         )}
                     </View>
-                </TouchableOpacity>
+                </View>
             </TouchableOpacity>
         </Modal>
     );
@@ -298,27 +314,27 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
 const styles = StyleSheet.create({
     backdrop: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
         justifyContent: 'flex-end',
     },
     modalView: {
         justifyContent: 'flex-end',
     },
     modalContent: {
-        height: '85%',
+        height: '90%',
         backgroundColor: "#F2F2F2",
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         padding: 20,
         alignItems: "center",
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
+        // shadowColor: "#000",
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 2
+        // },
+        // shadowOpacity: 0.25,
+        // shadowRadius: 4,
+        // elevation: 5
     },
     topBar: {
         width: '100%',
@@ -428,6 +444,7 @@ const styles = StyleSheet.create({
         borderColor: '#FAF9F6',
         borderWidth: 1,
         marginBottom: 10,
+        marginTop: 10,
         backgroundColor: '#FAF9F6',
     },
     infoRowText: {
