@@ -42,9 +42,9 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
             });
 
             if (listType === 'favorite') {
-                setFavouriteAdded(prev => [...prev, mandiId]);  // Add mandiId to favourite list
+                setFavouriteAdded(prev => [...prev, mandiId]);  
             } else if (listType === 'notification') {
-                setNotificationAdded(prev => [...prev, mandiId]); // Add mandiId to notification list
+                setNotificationAdded(prev => [...prev, mandiId]); 
             }
             setUpdateMandi((prev) => prev + 1);
             return response.data;
@@ -186,11 +186,11 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                          </View>
                         ) : (
                             <View style={styles.buttonGroupthree}>
-                                <View style={[styles.priceContainer, { marginRight: 85 }]}>
+                                <View style={[styles.priceContainer, { marginRight: 80 }]}>
                                     <Text style={styles.priceSummaryText}>Highest</Text>
                                     <Text style={styles.priceValueText}>₹ {highestPrice}</Text>
                                 </View>
-                                <View style={[styles.priceContainer, { marginRight: 85 }]}>
+                                <View style={[styles.priceContainer, { marginRight: 80 }]}>
                                     <Text style={styles.priceSummaryText}>Lowest</Text>
                                     <Text style={styles.priceValueText}>₹ {lowestPrice}</Text>
                                 </View>
@@ -241,8 +241,8 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                             </>
                         ) : (
                             <>
-                              
-                            <TouchableOpacity>
+                              <ScrollView horizontal>
+                            <TouchableOpacity style={{height:500}}>
     <LineChart
         data={{
             labels: priceHistory.map(entry => formatTime(entry.date)),
@@ -251,10 +251,11 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                     data: priceHistory.map(entry => entry.price),
                     color: (opacity = 1) => `rgba(0, 115, 177, ${opacity})`,
                     strokeWidth: 2,
+                    
                 },
             ],
         }}
-        width={Dimensions.get("window").width - 40} 
+        width={600} 
         height={200} 
         chartConfig={{
             backgroundGradientFrom: '#ffffff',
@@ -271,6 +272,9 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
                 strokeWidth: "2",
                 stroke: "#000000",
             },
+            // propsForLabels: {
+            //     fontSize: 8, 
+            //   },
             propsForBackgroundLines: {
                 stroke: '#cccccc',
                 strokeDasharray: "",
@@ -287,6 +291,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
         fromZero={false}
     />
 </TouchableOpacity>
+</ScrollView>
 
 
 <FlatList
