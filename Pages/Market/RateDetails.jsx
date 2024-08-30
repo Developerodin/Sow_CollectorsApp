@@ -93,8 +93,17 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
 
   const convertUTCToIST = (dateString) => {
     const date = new Date(dateString);
-    const options = { timeZone: 'Asia/Kolkata', hour12: true };
-    return date.toLocaleString('en-IN', options);
+  
+    
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based
+    const year = date.getFullYear();
+  
+    
+    const options = { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: 'numeric', hour12: true };
+    const timeString = date.toLocaleTimeString('en-IN', options).toUpperCase();
+  
+    return `${day}-${month}-${year} ${timeString}`;
   };
 
   useEffect(()=>{

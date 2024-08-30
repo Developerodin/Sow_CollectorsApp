@@ -281,7 +281,24 @@ export const Market = () => {
     });
   };
 
+  const sortData = (data) => {
+    return data.sort((a, b) => {
+      
+      const aSubCategory = a.categories.flatMap(cat => cat.sub_category).find(sub => sub.name === selectedSubCategory);
+      const bSubCategory = b.categories.flatMap(cat => cat.sub_category).find(sub => sub.name === selectedSubCategory);
+  
+      if (!aSubCategory || !bSubCategory) return 0; 
+  
+      if (sortOrder === 'asc') {
+        return aSubCategory.price - bSubCategory.price;
+      } else {
+        return bSubCategory.price - aSubCategory.price;
+      }
+    });
+  };
+
   const handleSortPress = () => {
+    
     setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
   };
 
@@ -291,9 +308,20 @@ export const Market = () => {
  
   const convertUTCToIST = (dateString) => {
     const date = new Date(dateString);
-    const options = { timeZone: 'Asia/Kolkata', hour12: true };
-    return date.toLocaleString('en-IN', options);
+  
+    
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // getMonth() is zero-based
+    const year = date.getFullYear();
+  
+    
+    const options = { timeZone: 'Asia/Kolkata', hour: 'numeric', minute: 'numeric', hour12: true };
+    const timeString = date.toLocaleTimeString('en-IN', options).toUpperCase();
+  
+    return `${day}-${month}-${year} ${timeString}`;
   };
+  
+  
 
   return (
     <View style={styles.container}>
@@ -562,153 +590,174 @@ export const Market = () => {
       
     </View>
 
-      {userDetails.registerAs === "Collectors" && WholesalersData && (
-        WholesalersData.length > 0 ? WholesalersData.map((el, index) => {
-          if (el.categories && el.categories.length > 0) {
-            return el.categories.map((category, categoryIndex) => {
-              if (category.sub_category && category.sub_category.length > 0) {
-                const sortedSubCategories = sortSubCategories([...category.sub_category]);
-                return sortedSubCategories.map((item, subIndex) => {
-                  if (selectedSubCategory === item.name) {
-                    return (
-                      <TouchableOpacity
-                        key={`${el._id}-${categoryIndex}-${subIndex}`}
-                        onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
-                      >
-                        <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.updatedAt)}  />
-                      </TouchableOpacity>
-                    );
-                  }
-                  return null;
-                });
-              }
-              return null;
-            });
-          }
-          return null;
-        })
-        :
-        <Block center>
-          <Text style={{ fontSize: 18, marginTop: 30 }}>No Wholesalers Data Available Right Now</Text>
-        </Block>
-      )}
+    {
+  userDetails.registerAs === "Collectors" && WholesalersData && (
+    sortData([...WholesalersData]).length > 0 ?  // Use sortData here
+      sortData([...WholesalersData]).map((el, index) => {  // Use the sorted data for mapping
+        if (el.categories && el.categories.length > 0) {
+          return el.categories.map((category, categoryIndex) => {
+            if (category.sub_category && category.sub_category.length > 0) {
+              const sortedSubCategories = sortSubCategories([...category.sub_category]); // Sort sub-categories if needed
+              return sortedSubCategories.map((item, subIndex) => {
+                if (selectedSubCategory === item.name) {
+                  return (
+                    <TouchableOpacity
+                      key={`${el._id}-${categoryIndex}-${subIndex}`}
+                      onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
+                    >
+                      <MarketRatesCard 
+                        Title={el.name} 
+                        Value={item.price} 
+                        CreatedAt={convertUTCToIST(el.updatedAt)} 
+                      />
+                    </TouchableOpacity>
+                  );
+                }
+                return null;
+              });
+            }
+            return null;
+          });
+        }
+        return null;
+      })
+      :
+      <Block center>
+        <Text style={{ fontSize: 18, marginTop: 30 }}>No Wholesalers Data Available Right Now</Text>
+      </Block>
+  )
+}
+
          
 
-            {
-              userDetails.registerAs === "Wholesalers" && MediatorsData && (MediatorsData.length > 0 ?
-                MediatorsData.map((el, index) => {
-                  // Check if categories is an array and not empty
-                  if (el.categories && el.categories.length > 0) {
-                    // console.log("Mediator stage 1")
-                    return el.categories.map((category, categoryIndex) => {
-                      // Check if sub_category exists in the current category
-                      if (category.sub_category && category.sub_category.length > 0) {
-                        const sortedSubCategories = sortSubCategories([...category.sub_category]);
-                        return sortedSubCategories.map((item, subIndex) => {
-                          if (selectedSubCategory === item.name) {
-                            return (
-                              <TouchableOpacity
-                                key={`${el._id}-${categoryIndex}-${subIndex}`}
-                                onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
-                              >
-                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(item.updatedAt)} subCategory={item.name} />
-                              </TouchableOpacity>
-                            );
-                          }
-                          return null;
-                        });
-                      }
-                      return null;
-                    });
-                  }
-                  return null;
-                })
-              :
-              <Block center>
-                <Text style={{ fontSize: 18, marginTop: 30 }}>
-                   No Mediators Data Available Right Now
-                  </Text>
-              </Block>
-              )
+         {
+  userDetails.registerAs === "Wholesalers" && MediatorsData && (
+    sortData(MediatorsData).length > 0 ? (
+      sortData(MediatorsData).map((el, index) => {
+        if (el.categories && el.categories.length > 0) {
+          return el.categories.map((category, categoryIndex) => {
+            if (category.sub_category && category.sub_category.length > 0) {
+              return category.sub_category.map((item, subIndex) => {
+                if (selectedSubCategory === item.name) {
+                  return (
+                    <TouchableOpacity
+                      key={`${el._id}-${categoryIndex}-${subIndex}`}
+                      onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
+                    >
+                      <MarketRatesCard
+                        Title={el.name}
+                        Value={item.price}
+                        CreatedAt={convertUTCToIST(item.updatedAt)}
+                        subCategory={item.name}
+                      />
+                    </TouchableOpacity>
+                  );
+                }
+                return null;
+              });
             }
+            return null;
+          });
+        }
+        return null;
+      })
+    ) : (
+      <Block center>
+        <Text style={{ fontSize: 18, marginTop: 30 }}>
+          No Mediators Data Available Right Now
+        </Text>
+      </Block>
+    )
+  )
+}
 
             
 
-               {
-              userDetails.registerAs === "Mediators" && FactoryData && (FactoryData.length > 0 ?
-                FactoryData.map((el, index) => {
-                  // Check if categories is an array and not empty
-                  if (el.categories && el.categories.length > 0) {
-                    return el.categories.map((category, categoryIndex) => {
-                      // Check if sub_category exists in the current category
-                      if (category.sub_category && category.sub_category.length > 0) {
-                        const sortedSubCategories = sortSubCategories([...category.sub_category]);
-                        return sortedSubCategories.map((item, subIndex) => {
-                          if (selectedSubCategory === item.name) {
-                            return (
-                              <TouchableOpacity
-                                key={`${el._id}-${categoryIndex}-${subIndex}`}
-                                onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
-                              >
-                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.updatedAt)}  />
-                              </TouchableOpacity>
-                            );
-                          }
-                          return null;
-                        });
-                      }
-                      return null;
-                    });
-                  }
-                  return null;
-                })
-        
-              :
-              <Block center>
-                <Text style={{ fontSize: 18, marginTop: 30 }}>
-                    No Factory Data Available Right Now
-                  </Text>
-              </Block>
-              )
+{
+  userDetails.registerAs === "Mediators" && FactoryData && (
+    sortData([...FactoryData]).length > 0 ?  // Sort the FactoryData before mapping
+      sortData([...FactoryData]).map((el, index) => {  // Use the sorted data for mapping
+        // Check if categories is an array and not empty
+        if (el.categories && el.categories.length > 0) {
+          return el.categories.map((category, categoryIndex) => {
+            // Check if sub_category exists in the current category
+            if (category.sub_category && category.sub_category.length > 0) {
+              const sortedSubCategories = sortSubCategories([...category.sub_category]); // Sort sub-categories if needed
+              return sortedSubCategories.map((item, subIndex) => {
+                if (selectedSubCategory === item.name) {
+                  return (
+                    <TouchableOpacity
+                      key={`${el._id}-${categoryIndex}-${subIndex}`}
+                      onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
+                    >
+                      <MarketRatesCard 
+                        Title={el.name} 
+                        Value={item.price} 
+                        CreatedAt={convertUTCToIST(el.updatedAt)} 
+                      />
+                    </TouchableOpacity>
+                  );
+                }
+                return null;
+              });
             }
+            return null;
+          });
+        }
+        return null;
+      })
+      :
+      <Block center>
+        <Text style={{ fontSize: 18, marginTop: 30 }}>
+          No Factory Data Available Right Now
+        </Text>
+      </Block>
+  )
+}
+
 
 {
-              userDetails.registerAs === "Factory" && FactoryData && (FactoryData.length > 0 ?
-                FactoryData.map((el, index) => {
-                  // Check if categories is an array and not empty
-                  if (el.categories && el.categories.length > 0 && el._id !== userDetails._id ) {
-                    return el.categories.map((category, categoryIndex) => {
-                      // Check if sub_category exists in the current category
-                      if (category.sub_category && category.sub_category.length > 0) {
-                        const sortedSubCategories = sortSubCategories([...category.sub_category]);
-                        return sortedSubCategories.map((item, subIndex) => {
-                          if (selectedSubCategory === item.name) {
-                            return (
-                              <TouchableOpacity
-                                key={`${el._id}-${categoryIndex}-${subIndex}`}
-                                onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
-                              >
-                                <MarketRatesCard Title={el.name} Value={item.price} CreatedAt={convertUTCToIST(el.updatedAt)} />
-                              </TouchableOpacity>
-                            );
-                          }
-                          return null;
-                        });
-                      }
-                      return null;
-                    });
-                  }
-                  return null;
-                })
-        
-              :
-              <Block center>
-                <Text style={{ fontSize: 18, marginTop: 30 }}>
-                    No Factory Data Available Right Now
-                  </Text>
-              </Block>
-              )
+  userDetails.registerAs === "Factory" && FactoryData && (
+    sortData([...FactoryData]).length > 0 ?  // Sort the FactoryData before mapping
+      sortData([...FactoryData]).map((el, index) => {  // Use the sorted data for mapping
+        // Check if categories is an array and not empty, and if the current item is not the user's own data
+        if (el.categories && el.categories.length > 0 && el._id !== userDetails._id) {
+          return el.categories.map((category, categoryIndex) => {
+            // Check if sub_category exists in the current category
+            if (category.sub_category && category.sub_category.length > 0) {
+              const sortedSubCategories = sortSubCategories([...category.sub_category]); // Sort sub-categories if needed
+              return sortedSubCategories.map((item, subIndex) => {
+                if (selectedSubCategory === item.name) {
+                  return (
+                    <TouchableOpacity
+                      key={`${el._id}-${categoryIndex}-${subIndex}`}
+                      onPress={() => handeViewDetail(el._id, subIndex, categoryIndex)}
+                    >
+                      <MarketRatesCard 
+                        Title={el.name} 
+                        Value={item.price} 
+                        CreatedAt={convertUTCToIST(el.updatedAt)} 
+                      />
+                    </TouchableOpacity>
+                  );
+                }
+                return null;
+              });
             }
+            return null;
+          });
+        }
+        return null;
+      })
+      :
+      <Block center>
+        <Text style={{ fontSize: 18, marginTop: 30 }}>
+          No Factory Data Available Right Now
+        </Text>
+      </Block>
+  )
+}
+
           </Block>
         </Block>
       </ScrollView>
