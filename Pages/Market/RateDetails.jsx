@@ -187,6 +187,7 @@ const createOrder = async (from, to, details, totalAmount,discription) => {
             placeholder='Enter Weight ...' 
             value={weight}
         onChangeText={handleInputChange}
+        keyboardType="numeric"
             />
 
             {/* <Input style={{height:60,width:width*0.3,borderColor:"black"}} value='Kilograms' /> */}
