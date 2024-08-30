@@ -48,6 +48,7 @@ import { WebViewApp } from './Pages/WebViewPage/WebView';
 import { KYC } from './Pages/Profile/ProfileTabs/Kyc';
 import { LiveRating } from './Pages/LiveRating/LiveRating';
 import { DailyRates } from './Pages/LiveRating/DailyRates';
+import LiveRatestwo from './Components/Cards/LiveRatestwo';
 import * as Notifications from 'expo-notifications';
 import usePushNotifications from './usePushNotifications';
 const Stack = createNativeStackNavigator();
@@ -344,6 +345,12 @@ export default function App() {
             headerShown: true,
           }}
         />
+
+<Stack.Screen name="Live Rates" component={LiveRatestwo}
+          options={{
+            headerShown: true,
+          }}
+        />        
 
 <Stack.Screen name="Daily Rates" component={DailyRates}
           options={{

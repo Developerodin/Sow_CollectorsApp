@@ -305,7 +305,7 @@ const formatLabel = (date, timeframe) => {
                         )}
 
                         <View style={styles.buttonGrouptwo}>
-                            {['Today', 'Week', 'Month', 'Year', 'All'].map((label, index) => (
+                            {['Today', 'Week', 'Month', 'Year'].map((label, index) => (
                                 <TouchableOpacity
                                     key={index}
                                     onPress={() => {
@@ -345,7 +345,7 @@ const formatLabel = (date, timeframe) => {
                         ) : (
                             <>
                               <ScrollView horizontal>
-                            <TouchableOpacity style={{ height: timeframe === 'all' ? 400 : 'auto' }}>
+                            <TouchableOpacity >
     <LineChart
         data={{
             labels: priceHistory.map(entry => formatLabel(new Date(entry.date), timeframe)),

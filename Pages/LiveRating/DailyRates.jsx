@@ -49,9 +49,15 @@ export const DailyRates = () => {
     const day = date.getDate();
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
     const formattedDay = day < 10 ? `0${day}` : day;
     const formattedMonth = month < 10 ? `0${month}` : month;
-    return `${formattedDay}:${formattedMonth}:${year}`;
+    const formattedHours = hours % 12 || 12; // Convert to 12-hour format
+    const formattedMinutes = minutes < 10 ? `0${minutes}` : minutes;
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+  
+    return `${formattedDay}-${formattedMonth}-${year} ${formattedHours}:${formattedMinutes} ${ampm}`;
   }
 
   useEffect(() => {
@@ -100,8 +106,8 @@ export const DailyRates = () => {
                                 {el.text.split(',').slice(0, 2).map((textPart, idx) => (
                                   <Text key={idx} style={{ fontSize: 14, fontWeight: "bold", color: "grey" }}>{textPart}</Text>
                                 ))}
-                                <TouchableOpacity onPress={() => toggleExpandCard(index)}>
-                                  <Text style={{ color: "#0F2C59", marginTop: 5, textAlign: 'right' }}>Read more...</Text>
+                                <TouchableOpacity onPress={() => toggleExpandCard(index)} >
+                                  <Text style={{ color: "#0F2C59",marginTop: -10, textAlign: 'right' }}>Read more...</Text>
                                 </TouchableOpacity>
                               </>
                             )}

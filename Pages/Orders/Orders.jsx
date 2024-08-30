@@ -311,8 +311,8 @@ const styles = StyleSheet.create({
   inputContainer: {
     width: '100%',
     height: 66,
-    borderBottomWidth: 1, // Add a bottom border for the input
-    borderColor: 'transparent', // Make the border color transparent
+    borderBottomWidth: 1,
+    borderColor: 'transparent', 
   },
   input: {
     flex: 1,

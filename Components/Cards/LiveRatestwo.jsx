@@ -17,7 +17,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "../../Context/AppContext";
 
 
-const LiveRates = () => {
+const LiveRatestwo = () => {
   const { favouriteMandi, setFavouriteMandi, updateMandi } = useAppContext();
   const [selectedState, setSelectedState] = useState("All"); // Default to 'All'
   const [modalVisible, setModalVisible] = useState(false);
@@ -278,7 +278,8 @@ const LiveRates = () => {
     });
 
   return (
-    <View style={{ flex: 1 }}>
+      <ScrollView>
+            <View >
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -315,7 +316,7 @@ const LiveRates = () => {
       ) : (
         
         <View>
-        <View style={{height:300}} >
+       
           
           <FlatList
             data={displayedData}
@@ -323,8 +324,8 @@ const LiveRates = () => {
             keyExtractor={(item) => item._id}
             contentContainerStyle={{ paddingHorizontal: 10 }}
           />
-         
-        </View>
+          
+        
   
         {/* {filteredData.length > visibleItems ? (
           <TouchableOpacity
@@ -353,6 +354,7 @@ const LiveRates = () => {
             </TouchableOpacity>
           )
         )} */}
+        
       </View>
       )}
        
@@ -366,7 +368,8 @@ const LiveRates = () => {
         formatTime={formatTime}
       />
     </View>
+        </ScrollView>
   );
 };
 
-export default LiveRates;
+export default LiveRatestwo;

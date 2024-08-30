@@ -15,6 +15,7 @@ import frame1 from "./Frame1.png";
 import frame2 from "./Frame2.png";
 import usePushNotifications from "../../usePushNotifications";
 import LiveRates from '../../Components/Cards/LiveRates';
+import EvilIcons from "@expo/vector-icons/EvilIcons";
 
 export const Home = () => {
   const animationRef = useRef(null);
@@ -23,6 +24,7 @@ export const Home = () => {
   const [CategoriesData, setCategoriesData] = useState([]);
   const [categoryLength,setCategoryLength] = useState(4)
   const [categorySeetype,setCategorySeetype] = useState(false);
+  
   const [Data, setData] = useState([]);
   const [marketRateLength,setmarketRateLength] = useState(2)
   const [marketRateSeetype,setmarketRateSeetype] = useState(false);
@@ -38,16 +40,44 @@ export const Home = () => {
     setRefreshing(false);
   };
 
-  const getCategories = async () => {
+  const getAllData = async () => {
     try {
-      const response = await axios.get(`${Base_url}api/category`);
-      setCategoriesData(response.data);
-      // console.log("Categories all", response.data)
-      return response.data;
+      const response = await axios.get(`${Base_url}api/mandi_rates/all-data`);
+      const allData = response.data;
+  
+      // Filter out entries where mandi is null and get unique categories
+      const validCategories = new Set();
+      allData.forEach(item => {
+        if (item.mandi) {
+          item.mandi.categories.forEach(category => {
+            validCategories.add(category);
+          });
+        }
+      });
+  
+      return Array.from(validCategories);
     } catch (error) {
       throw error.response.data;
     }
   };
+
+  const getCategories = async () => {
+    try {
+      const response = await axios.get(`${Base_url}api/category`);
+      const allCategories = response.data;
+  
+      const validCategories = await getAllData();
+      
+      const filteredCategories = allCategories.filter(category => validCategories.includes(category.name));
+  
+      setCategoriesData(filteredCategories);
+      return filteredCategories;
+    } catch (error) {
+      throw error.response.data;
+    }
+  };
+  
+  
 
   const handelCategoryLength =  () => {
     setCategorySeetype(true)
@@ -75,6 +105,10 @@ export const Home = () => {
 
   const handelCategoryPress= (categorie)=>{
     navigation.navigate("Live Market Rates", { value: categorie })
+  }
+
+  const handelRatePress= ()=>{
+    navigation.navigate("Live Rates")
   }
 
   const fetchMarketRates = async () => {
@@ -149,9 +183,29 @@ export const Home = () => {
         </Block>
        
       </Block>  
-      <Block style={{flex:1}}>
-    <LiveRates />
-  </Block>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <LiveRates />
+        <TouchableOpacity
+        onPress={handelRatePress}
+        // style={{
+        //   backgroundColor: '#239456',
+        //   width: 150,
+        //   height: 38,
+        //   alignItems: 'center',
+        //   justifyContent: 'center',
+        //   borderRadius: 5,
+        //   marginTop: 10,
+        // }}
+      >
+         <EvilIcons
+                name="arrow-down"
+                size={32}
+                color="#239456"
+                style={{ marginTop: 10 }}
+              />
+      </TouchableOpacity>
+    </View>
+
        
       
       <Block style={{marginTop:10,width:width*0.93}}>
@@ -209,42 +263,40 @@ export const Home = () => {
 
 
       <Block style={{marginTop:10}}>
-
-        <Block style={styles.Space_Between}>
-        <Text style={{fontSize:16,fontWeight:500}}>Live Scrap Rates</Text>
-        {
-          categorySeetype ? <TouchableOpacity onPress={handelCategoryLength2}>
-          <Text style={{fontSize:12,fontWeight:500,color:"#239456"}}>View Less</Text>
-          </TouchableOpacity>
-          :
-          <TouchableOpacity onPress={handelCategoryLength}>
-          <Text style={{fontSize:12,fontWeight:500,color:"#239456"}}>View All</Text>
-          </TouchableOpacity>
+  <Block style={styles.Space_Between}>
+    <Text style={{fontSize:16,fontWeight:500}}>Live Scrap Rates</Text>
+    {categorySeetype ? (
+      <TouchableOpacity onPress={handelCategoryLength2}>
+        <Text style={{fontSize:12,fontWeight:500,color:"#239456"}}>View Less</Text>
+      </TouchableOpacity>
+    ) : (
+      <TouchableOpacity onPress={handelCategoryLength}>
+        <Text style={{fontSize:12,fontWeight:500,color:"#239456"}}>View All</Text>
+      </TouchableOpacity>
+    )}
+  </Block>
+  
+  <Block style={{marginTop:10}}>
+    <View style={styles.gridcontainer}>
+      {CategoriesData && CategoriesData.map((el, index) => {
+        if(index < parseInt(categoryLength)){
+          return (
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => handelCategoryPress(el.name)}
+              style={styles.gridcolumn}
+              key={index}
+            >
+              <View style={styles.gridItem}>
+                <Text style={styles.itemText}>{el.name}</Text>
+              </View>
+            </TouchableOpacity>
+          );
         }
-       
-
-        
-        
-        </Block>
-     
-        
-        <Block style={{marginTop:10}}>
-        <View style={styles.gridcontainer}>
-  {CategoriesData && CategoriesData.map((el, index) => {
-    if(index < parseInt(categoryLength)){
-      return <TouchableOpacity activeOpacity={0.5} onPress={()=>handelCategoryPress(el.name)}  style={styles.gridcolumn} key={index}>
-      <View style={styles.gridItem}>
-        <Text style={styles.itemText}>{el.name}</Text>
-      </View>
-    </TouchableOpacity>
-    }
-   
-})}
-</View>
-     
-
-        </Block>
-      </Block>
+      })}
+    </View>
+  </Block>
+</Block>
 
 
       <Block style={{marginTop:20,width:width*0.93}}>
