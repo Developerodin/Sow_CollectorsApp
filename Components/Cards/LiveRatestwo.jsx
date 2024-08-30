@@ -327,7 +327,7 @@ const LiveRatestwo = () => {
           
         
   
-        {/* {filteredData.length > visibleItems ? (
+        {filteredData.length > visibleItems ? (
           <TouchableOpacity
             onPress={handleShowMore}
             style={{ marginVertical: 20, alignSelf: "center" }}
@@ -353,7 +353,7 @@ const LiveRatestwo = () => {
               />
             </TouchableOpacity>
           )
-        )} */}
+        )}
         
       </View>
       )}
