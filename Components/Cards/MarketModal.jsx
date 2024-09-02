@@ -58,6 +58,61 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
         }
     };
 
+    const removeMandiFromList = async (userId, mandiId, listType) => {
+        try {
+            const response = await axios.post(`${Base_url}api/b2b/remove-mandi`, {
+                userId,
+                mandiId,
+                listType
+            });
+    
+            if (listType === 'favorite') {
+                setFavouriteAdded(prev => prev.filter(id => id !== mandiId));  
+            } else if (listType === 'notification') {
+                setNotificationAdded(prev => prev.filter(id => id !== mandiId)); 
+            }
+            setUpdateMandi((prev) => prev + 1);
+    
+            return response.data;
+        } catch (error) {
+            console.error('Error removing Mandi from list:', error);
+            throw error;
+        }
+    };
+
+
+    const fetchUserMandis = async (userId, mandiId) => {
+        try {
+            const response = await axios.get(`${Base_url}api/b2b/${userId}/mandis`);
+            
+            const favoriteMandis = response.data.favoriteMandis?.map(mandi => mandi._id) || [];
+            const notificationMandis = response.data.notificationFormMandiList?.map(mandi => mandi._id) || [];
+    
+           
+            setFavouriteAdded(favoriteMandis);
+            setNotificationAdded(notificationMandis);
+    
+            
+            if (mandiId) {
+                if (favoriteMandis.includes(mandiId)) {
+                    console.log('Mandi is in the favorite list');
+                } else if (notificationMandis.includes(mandiId)) {
+                    console.log('Mandi is in the notification list');
+                } else {
+                    console.log('Mandi is not in the favorite or notification list');
+                }
+            }
+        } catch (error) {
+            
+        }
+    };
+    
+    useEffect(() => {
+        fetchUserMandis(userId, selectedItem?.mandi?._id);
+    }, [userId, selectedItem?.mandi?._id]);
+    
+    
+
     useEffect(() => {
         if (modalVisible) {
             const fetchHistory = async () => {
@@ -227,16 +282,21 @@ const formatLabel = (date, timeframe) => {
         userDetailsFromStorage();
         }, []);
 
-    const calculatePriceStatistics = () => {
-        const prices = priceHistory.map(entry => entry.price);
-        const highestPrice = Math.max(...prices);
-        const lowestPrice = Math.min(...prices);
-        const averagePrice = (prices.reduce((sum, price) => sum + price, 0) / prices.length).toFixed(2);
-
-        return { highestPrice, lowestPrice, averagePrice };
-    };
-
-    const { highestPrice, lowestPrice, averagePrice } = calculatePriceStatistics();
+        const calculatePriceStatistics = () => {
+            const prices = priceHistory.map(entry => entry.price);
+        
+            if (prices.length === 0) {
+                return { highestPrice: 0, lowestPrice: 0, averagePrice: 0 };
+            }
+        
+            const highestPrice = Math.max(...prices);
+            const lowestPrice = Math.min(...prices);
+            const averagePrice = (prices.reduce((sum, price) => sum + price, 0) / prices.length).toFixed(2);
+        
+            return { highestPrice, lowestPrice, averagePrice };
+        };
+        
+        const { highestPrice, lowestPrice, averagePrice } = calculatePriceStatistics();
 
     if (!selectedItem) return null;
 
@@ -245,7 +305,7 @@ const formatLabel = (date, timeframe) => {
             animationType="slide"
             transparent={true}
             visible={modalVisible}
-            onRequestClose={onClose}
+            
             swipeDirection={["down"]}
         >
             <TouchableOpacity style={styles.backdrop} onPress={onClose}>
@@ -254,39 +314,62 @@ const formatLabel = (date, timeframe) => {
                         <TouchableOpacity style={styles.topBar} onPress={onClose}>
                             <View style={styles.topBarHandle}></View>
                         </TouchableOpacity>
+                       
 
                         {timeframe === 'today' ? (
-                             <View style={[styles.buttonGroup]}>
-                             <Text style={styles.buttonGroupItemtwo}>Add to:</Text>
-                             <TouchableOpacity
-                                 onPress={() => addMandiToList(selectedItem?.mandi?._id, 'notification')}
-                                 style={styles.buttonGroupItemtwo}
-                             >
-                                 <View style={styles.iconTextContainer}>
-                                 <Ionicons 
-                                    name={notificationAdded.includes(selectedItem?.mandi?._id) ? "checkmark-circle-outline" : "notifications-outline"} 
-                                    size={20} 
-                                    color={notificationAdded.includes(selectedItem?.mandi?._id) ? "green" : "black"} 
-                                    style={{ textAlign: 'center' }}
-                                />
-                                     <Text style={styles.buttonGroupText}>Notification</Text>
-                                 </View>
-                             </TouchableOpacity>
-                             <TouchableOpacity
-                                 onPress={() => addMandiToList(selectedItem?.mandi?._id, 'favorite')}
-                                 style={styles.buttonGroupItemtwo}
-                             >
-                                 <View style={styles.iconTextContainer}>
-                                     <Ionicons 
-                                         name={favouriteAdded.includes(selectedItem?.mandi?._id) ? "checkmark-circle-outline" : "heart-outline"} 
-                                         size={20} 
-                                         color={favouriteAdded.includes(selectedItem?.mandi?._id) ? "green" : "black"} 
-                                         style={{ textAlign: 'center' }}
-                                     />
-                                     <Text style={styles.buttonGroupText}>Favourite</Text>
-                                 </View>
-                             </TouchableOpacity>
-                         </View>
+                            <View style={[styles.buttonGroup]}>
+                            <Text style={styles.buttonGroupItemtwo}>Add to:</Text>
+                            
+                            <TouchableOpacity
+    onPress={() => {
+        if (notificationAdded.includes(selectedItem?.mandi?._id)) {
+            removeMandiFromList(userId, selectedItem?.mandi?._id, 'notification');
+        } else {
+            addMandiToList(selectedItem?.mandi?._id, 'notification');
+        }
+    }}
+    style={styles.buttonGroupItemtwo}
+>
+    <View style={styles.iconTextContainer}>
+        <Ionicons 
+            name={notificationAdded.includes(selectedItem?.mandi?._id) ? "checkmark-circle-outline" : "notifications-outline"} 
+            size={20} 
+            color={notificationAdded.includes(selectedItem?.mandi?._id) ? "green" : "black"} 
+            style={{ textAlign: 'center' }}
+        />
+        <Text style={styles.buttonGroupText}>
+        Notification
+        </Text>
+    </View>
+    
+</TouchableOpacity>
+
+
+<TouchableOpacity
+    onPress={() => {
+        if (favouriteAdded.includes(selectedItem?.mandi?._id)) {
+            removeMandiFromList(userId, selectedItem?.mandi?._id, 'favorite');
+        } else {
+            addMandiToList(selectedItem?.mandi?._id, 'favorite');
+        }
+    }}
+    style={styles.buttonGroupItemtwo}
+>
+    <View style={styles.iconTextContainer}>
+        <Ionicons 
+            name={favouriteAdded.includes(selectedItem?.mandi?._id) ? "checkmark-circle-outline" : "heart-outline"} 
+            size={20} 
+            color={favouriteAdded.includes(selectedItem?.mandi?._id) ? "green" : "black"} 
+            style={{ textAlign: 'center' }}
+        />
+        <Text style={styles.buttonGroupText}>
+        Favourite
+        </Text>
+    </View>
+</TouchableOpacity>
+ 
+                        </View>
+                        
                         ) : (
                             <View style={styles.buttonGroupthree}>
                                 <View style={[styles.priceContainer, { marginRight: 80 }]}>
@@ -331,7 +414,7 @@ const formatLabel = (date, timeframe) => {
                             <ActivityIndicator size="large" color="#0000ff" />
                         ) : noData ? (
                             <>
-                            <Text>No data available for the today</Text>
+                           <Text>No data available for {['Today', 'Week', 'Month', 'Year'][activeButton]}</Text>
                             <Image
                             source={require("../../assets/media/5-dark.png")}
                             style={{
@@ -344,7 +427,7 @@ const formatLabel = (date, timeframe) => {
                             </>
                         ) : (
                             <>
-                              <ScrollView horizontal>
+                              <ScrollView horizontal  showsHorizontalScrollIndicator={false}>
                             <TouchableOpacity >
     <LineChart
         data={{
