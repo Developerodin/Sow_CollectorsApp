@@ -1,5 +1,5 @@
 import React, { useState, useEffect ,useContext} from 'react';
-import { View, Modal, TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator, ScrollView ,FlatList , Image,} from 'react-native';
+import { View,  TouchableOpacity, StyleSheet, Dimensions, ActivityIndicator, ScrollView ,FlatList , Image,} from 'react-native';
 import { Text } from "galio-framework";
 import { LineChart } from 'react-native-chart-kit';
 import axios from 'axios';
@@ -7,6 +7,8 @@ import { Base_url } from '../../Config/BaseUrl';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Ionicons } from '@expo/vector-icons';
 import { useAppContext } from '../../Context/AppContext';
+import Modal from "react-native-modal";
+const { width, height } = Dimensions.get("screen");
 
 const Marketmodal = ({ modalVisible, selectedItem, setModalVisible, formatDate, formatTime, onClose }) => {
     const { favouriteMandi,setFavouriteMandi,updateMandi,setUpdateMandi} = useAppContext();
@@ -300,16 +302,19 @@ const formatLabel = (date, timeframe) => {
 
     return (
         <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={onClose}
-            swipeDirection={["down"]}
+        animationType="slide"
+        transparent={true}
+        isVisible={modalVisible}
+        onSwipeComplete={() => setModalVisible(false)}
+        backdropOpacity={0.1}
+        onBackdropPress={() => setModalVisible(false)}
+        swipeDirection={[ "down"]}
+        style={styles.backdrop}
         >
-            <TouchableOpacity style={styles.backdrop} onPress={onClose}>
+            <View >
                 <View style={styles.modalView}>
                     <View style={styles.modalContent}>
-                        <TouchableOpacity style={styles.topBar} onPress={onClose}>
+                        <TouchableOpacity style={styles.topBar} >
                             <View style={styles.topBarHandle}></View>
                         </TouchableOpacity>
 
@@ -491,7 +496,7 @@ const formatLabel = (date, timeframe) => {
                         )}
                     </View>
                 </View>
-            </TouchableOpacity>
+            </View>
         </Modal>
     );
 };
@@ -499,14 +504,17 @@ const formatLabel = (date, timeframe) => {
 const styles = StyleSheet.create({
     backdrop: {
         flex: 1,
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
-        justifyContent: 'flex-end',
+    
+     margin: 0,
+     justifyContent: 'flex-end',
     },
     modalView: {
+        
         justifyContent: 'flex-end',
     },
     modalContent: {
-        height: '90%',
+       
+        height: height * 0.7,
         backgroundColor: "#F2F2F2",
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,

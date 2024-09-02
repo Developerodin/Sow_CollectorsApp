@@ -578,7 +578,7 @@ export const Market = () => {
             </Block>
           </Block>
 
-          <Block>
+          <Block style={{marginBottom:60}}>
           <View style={{ flexDirection: 'row', justifyContent: 'flex-end', padding: 10,alignItems:'center' }}>
           <Text style={{marginRight: 8,fontSize: 16,color:'teal'}}>
           {/* {sortOrder === 'asc' ? 'Sort' : 'Sort '} */} Sort
@@ -623,7 +623,7 @@ export const Market = () => {
       })
       :
       <Block center>
-        <Text style={{ fontSize: 18, marginTop: 30 }}>No Wholesalers Data Available Right Now</Text>
+        <Text style={{ fontSize: 16,color:'grey', marginTop: 30 }}>No Wholesalers Available Right Now</Text>
       </Block>
   )
 }
@@ -663,8 +663,8 @@ export const Market = () => {
       })
     ) : (
       <Block center>
-        <Text style={{ fontSize: 18, marginTop: 30 }}>
-          No Mediators Data Available Right Now
+        <Text style={{ fontSize: 16,color:'grey', marginTop: 30 }}>
+          No Mediators Available Right Now
         </Text>
       </Block>
     )
@@ -708,8 +708,8 @@ export const Market = () => {
       })
       :
       <Block center>
-        <Text style={{ fontSize: 18, marginTop: 30 }}>
-          No Factory Data Available Right Now
+        <Text style={{ fontSize: 16,color:'grey', marginTop: 30 }}>
+          No Factory Available Right Now
         </Text>
       </Block>
   )
@@ -751,8 +751,8 @@ export const Market = () => {
       })
       :
       <Block center>
-        <Text style={{ fontSize: 18, marginTop: 30 }}>
-          No Factory Data Available Right Now
+        <Text style={{ fontSize: 16,color:'grey', marginTop: 30}}>
+          No Factory Available Right Now
         </Text>
       </Block>
   )
