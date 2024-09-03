@@ -83,9 +83,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.scraponwheelscollectors.app'
+    namespace 'com.scraponwheelscollectorsv1.app'
     defaultConfig {
-        applicationId 'com.scraponwheelscollectors.app'
+        applicationId 'com.scraponwheelscollectorsv1.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

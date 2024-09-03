@@ -33,6 +33,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.scraponwheelscollectors.app"/>
         <data android:scheme="com.scraponwheelscollectors.app"/>
+        <data android:scheme="com.scraponwheelscollectorsv1.app"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

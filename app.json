@@ -40,7 +40,7 @@
         "NOTIFICATIONS"
       ],
       "googleServicesFile": "./android/app/google-services.json",
-      "package": "com.scraponwheelscollectors.app"
+      "package": "com.scraponwheelscollectorsv1.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"

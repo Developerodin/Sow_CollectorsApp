@@ -1,4 +1,4 @@
-package com.scraponwheelscollectors.app
+package com.scraponwheelscollectorsv1.app
 
 import android.app.Application
 import android.content.res.Configuration
