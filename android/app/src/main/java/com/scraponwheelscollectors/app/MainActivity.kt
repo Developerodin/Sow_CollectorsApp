@@ -1,4 +1,4 @@
-package com.scraponwheels_collectors.app
+package com.scraponwheelscollectors.app
 
 import android.os.Build
 import android.os.Bundle
