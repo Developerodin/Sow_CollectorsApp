@@ -78,8 +78,8 @@ const Tabs = ({ navigation }) => {
           paddingTop: 10,
           paddingBottom: 10,
           height: 64,
-          borderTopRightRadius: 20,
-          borderTopLeftRadius: 20,
+          borderTopRightRadius: 30,
+          borderTopLeftRadius: 30,
         },
       }}
     >
@@ -89,8 +89,8 @@ const Tabs = ({ navigation }) => {
         options={{
           tabBarIcon: ({ color, size }) => (
             <Image
-              source={require('./assets/media/home.png')} 
-              style={{ width: size, height: size, tintColor: color }}
+              source={require('./assets/media/home_1.png')} 
+              style={{ width: 25, height: 25, tintColor: color }}
             />
           ),
           headerShown: false,
@@ -104,8 +104,8 @@ const Tabs = ({ navigation }) => {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Image
-              source={require('./assets/media/sell.png')} 
-              style={{ width: size, height: size, tintColor: color }}
+              source={require('./assets/media/sell_1.png')} 
+              style={{ width: 25, height: 25, tintColor: color }}
             />
             ),
             headerShown: false,
@@ -120,8 +120,8 @@ const Tabs = ({ navigation }) => {
           options={{
             tabBarIcon: ({ color, size }) => (
               <Image
-              source={require('./assets/media/rates.png')} 
-              style={{ width: size, height: size, tintColor: color }}
+              source={require('./assets/media/rates_1.png')} 
+              style={{ width: 21, height: 21, tintColor: color }}
             />
             ),
             headerShown: false,
@@ -150,8 +150,8 @@ const Tabs = ({ navigation }) => {
           tabBarIcon: ({ color, size }) => (
             // <FontAwesome name="bookmark" size={size} color={color} />
             <Image
-              source={require('./assets/media/prices.png')} 
-              style={{ width: size, height: size, tintColor: color }}
+              source={require('./assets/media/prices_1.png')} 
+              style={{ width: 10, height: 20, tintColor: color }}
             />
           ),
           headerShown: false,
@@ -164,8 +164,8 @@ const Tabs = ({ navigation }) => {
           tabBarIcon: ({ color, size }) => (
             // <FontAwesome name="bookmark" size={size} color={color} />
             <Image
-            source={require('./assets/media/orders.png')} 
-            style={{ width: size, height: size, tintColor: color }}
+            source={require('./assets/media/orders_1.png')} 
+            style={{ width: 23, height: 23, tintColor: color }}
           />
           ),
           headerShown: false,

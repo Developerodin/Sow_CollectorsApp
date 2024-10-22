@@ -707,7 +707,7 @@ const styles = StyleSheet.create({
 
     alignItems: 'center',
     justifyContent: 'space-between',
-    width: 390, // adjust size to fit design
+    width: 370, // adjust size to fit design
     height: 120,
     
   },
