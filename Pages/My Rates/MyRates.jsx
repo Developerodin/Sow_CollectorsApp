@@ -359,13 +359,15 @@ const handleSubAddChange = (field, value) => {
           activeOpacity={0.9}
           onPress={() => filterItems("All")}
           style={{
-            paddingVertical: 10,
-            paddingHorizontal: 20,
-            borderBottomWidth: activeCategory === "All" ? 2 : 0,
-            borderBottomColor: activeCategory === "All" ? "#239456" : "transparent",
+            marginRight: 10,
+            paddingVertical: 5,
+            paddingHorizontal: 15,
+            
+            backgroundColor: activeCategory === "All" ? "#000" : "#F4F4F4",
+            borderRadius: 30,
           }}
         >
-          <Text style={{ fontWeight: "500", color: "black" }}>All</Text>
+          <Text style={{ fontWeight: "500", color: activeCategory === "All" ? "#fff" : "#000", }}>All</Text>
         </TouchableOpacity>
 
         {UserCategoryData && UserCategoryData.length > 0 && UserCategoryData.map((el, index) => (
@@ -374,13 +376,15 @@ const handleSubAddChange = (field, value) => {
             activeOpacity={0.9}
             onPress={() => filterItems(el.name)}
             style={{
-              paddingVertical: 10,
-              paddingHorizontal: 20,
-              borderBottomWidth: activeCategory === el.name ? 2 : 0,
-              borderBottomColor: activeCategory === el.name ? "#239456" : "transparent",
+              marginRight: 10,
+              paddingVertical: 5,
+              paddingHorizontal: 15,
+              
+              backgroundColor: activeCategory === el.name ? "#000" : "#F4F4F4",
+              borderRadius: 30,
             }}
           >
-            <Text style={{ fontWeight: "500", color: "black" }}>{el.name.toUpperCase()}</Text>
+            <Text style={{ fontWeight: "500", color: activeCategory === el.name ? "#fff" : "#000", }}>{el.name.toUpperCase()}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -396,9 +400,9 @@ const handleSubAddChange = (field, value) => {
        
       </Block>
 
-      <ScrollView style={{ backgroundColor: "#F1F1F1" }}>
+      <ScrollView style={{ backgroundColor: "#fff" }}>
         <Block
-          style={{ backgroundColor: "#F1F1F1", padding: 10, marginBottom: 60 }}
+          style={{ backgroundColor: "#fff", padding: 10, marginBottom: 60 }}
         >
           <Block style={[styles.Space_Between, { marginTop: 10 }]}>
             <Text style={{ fontWeight: 500 ,fontSize:18}}>Normal Recyclables</Text>
@@ -708,6 +712,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    marginTop: 10,
   },
   shadow: {
     shadowColor: "black",

@@ -377,12 +377,12 @@ export const Market = () => {
   return (
     <View style={styles.container}>
       <Header />
-      <ScrollView style={{ flex: 1, backgroundColor: "#F1F1F1" }}>
+      <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
         {/* <Block style={{ padding: 10 }}> */}
           <Block
             style={{
-              borderBottomWidth: 1,
-              paddingBottom: 20,
+              
+              padding: 20,
               borderColor: "#E4E4E4",
             }}
           >
@@ -393,24 +393,26 @@ export const Market = () => {
                 alignItems: "center",
               }}
             >
-              <Text style={{ fontSize: 23, marginTop: 10 }}>Scrap Market</Text>
+              <Text style={{ fontSize: 23, marginTop: 10,color:'#000',fontWeight: 600 }}>Sell your Scrap</Text>
 
-              <Block style={{ marginTop: 18 }}>
+              <Block style={{ marginTop: 10 ,borderRadius:50 ,borderColor:'black',borderWidth: 1 ,backgroundColor: 'black' ,padding: 5}}>
                 <TouchableOpacity>
                   <Ionicons
                     name="refresh"
                     size={24}
-                    color="crimson"
+                    color="white"
                     onPress={resetFilterData}
+                    style={{ transform: [{ rotate: "45deg" }] }}
                   />
                 </TouchableOpacity>
               </Block>
             </Block>
             <Block style={{ marginTop: 20 }}>
+            <Text style={styles.subtitle1}>Category</Text>
               <View
                 style={{
                   borderWidth: 1,
-                  borderColor: "#E4E4E4",
+                  borderColor: "#A6A6A6",
                   padding: 10,
                   backgroundColor: "#fff",
 
@@ -418,9 +420,10 @@ export const Market = () => {
                 }}
               >
                <TouchableOpacity activeOpacity={0.7} onPress={() => setCategoryModalVisible(true)}>
+               
         <View style={styles.Space_Between}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ fontSize: 18, color: `${selectedCategory !== "" ? "#239456" : "black"}` }}>
+            <Text style={{ fontSize: 18, color: `${selectedCategory !== "" ? "black" : "#B7B7B7"}` }}>
               {selectedCategory !== "" ? selectedCategory : "Select Category"}
             </Text>
           </View>
@@ -448,7 +451,7 @@ export const Market = () => {
       {CategoriesData.map((el, index) => (
         <TouchableOpacity key={index} onPress={() => handleCategorySelection(el.name, el._id)}>
           <View style={[styles.categoryItem, selectedCategories.includes(el._id) && styles.selectedCategory]}>
-            <Text style={{ fontSize: 18, color: selectedCategories.includes(el._id) ? "#239456" : "black" }}>
+            <Text style={{ fontSize: 18, color: selectedCategories.includes(el._id) ? "black" : "#B7B7B7" }}>
               {el.name}
             </Text>
           </View>
@@ -463,17 +466,17 @@ export const Market = () => {
 </Modal>
 
 <Block >
-              <View
-                
-              >
+              <View>
 
       {selectedCategory !== "" && (
         <View style={{ marginTop: 20 }}>
+          <Text style={styles.subtitle1}>Sub-Category</Text>
           <View style={styles.subCategoryContainer}>
             <TouchableOpacity activeOpacity={0.7} onPress={() => setSubCategoryModalVisible(true)}>
               <View style={styles.Space_Between}>
+                
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ fontSize: 18, color: `${selectedSubCategory !== "" ? "#239456" : "black"}` }}>
+                  <Text style={{ fontSize: 18, color: `${selectedSubCategory !== "" ? "black" : "#B7B7B7"}` }}>
                     {selectedSubCategory !== "" ? selectedSubCategory : "Select Sub Category"}
                   </Text>
                 </View>
@@ -500,7 +503,7 @@ export const Market = () => {
       {selectedSubCategoriesData.map((el, index) => (
         <TouchableOpacity key={index} onPress={() => handleSubCategorySelection(el.name, el._id)}>
           <View style={[styles.subCategoryItem, selectedSubCategories.includes(el._id) && styles.selectedSubCategory]}>
-            <Text style={{ fontSize: 18, color: selectedSubCategories.includes(el._id) ? "#239456" : "black" }}>
+            <Text style={{ fontSize: 18, color: selectedSubCategories.includes(el._id) ? "black" : "#B7B7B7" }}>
               {el.name}
             </Text>
           </View>
@@ -523,10 +526,11 @@ export const Market = () => {
             
 
             <Block style={{ marginTop: 20 }}>
+            <Text style={styles.subtitle1}>Select City</Text>
               <View
                 style={{
                   borderWidth: 1,
-                  borderColor: "#E4E4E4",
+                  borderColor: "#A6A6A6",
                   padding: 10,
                   backgroundColor: "#fff",
 
@@ -541,7 +545,7 @@ export const Market = () => {
                     <Block
                       style={{ flexDirection: "row", alignItems: "center" }}
                     >
-                      <Text style={{ fontSize: 18, color: "#239456" }}>
+                      <Text style={{ fontSize: 18, color: "black" }}>
                         {selectedCity !== "" ? selectedCity : "Select City"}
                       </Text>
                     </Block>
@@ -629,6 +633,11 @@ export const Market = () => {
                 <FontAwesome5 name="sort" size={22} color="#fff" />
               </TouchableOpacity>
             </View>
+            <Block style={{ marginTop: 20 }}>
+              <Button color="info" style={styles.btn}>
+                Submit
+              </Button>
+              </Block>
 
             {userDetails.registerAs === "Collectors" &&
               WholesalersData &&
@@ -872,6 +881,15 @@ const styles = StyleSheet.create({
     lineHeight: 23,
     letterSpacing: 0.3,
   },
+  subtitle1: {
+    color: "black",
+    fontSize: 15,
+    marginTop: 5,
+    marginBottom: 5,  
+
+    textAlign: "left",
+    
+  },
   title: {
     color: "black",
     fontSize: 22,
@@ -894,8 +912,8 @@ const styles = StyleSheet.create({
   btn: {
     width: "95%",
     height: 55,
-    borderRadius: 5,
-    backgroundColor: "#40A99E",
+    borderRadius: 8,
+    backgroundColor: "#000",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -964,7 +982,7 @@ const styles = StyleSheet.create({
   },
   subCategoryContainer: {
     borderWidth: 1,
-    borderColor: "#E4E4E4",
+    borderColor: "#A6A6A6",
     padding: 10,
     backgroundColor: "#fff",
     borderRadius: 10,
@@ -979,7 +997,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     padding: 10,
     paddingHorizontal: 20,
-    backgroundColor: "#239456",
+    backgroundColor: "#000",
     borderRadius: 5,
     alignItems: "center",
     
