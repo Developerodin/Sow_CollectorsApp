@@ -12,6 +12,7 @@ import { OTPInput } from '../../Components/Otp/OtpInputs';
 export const SignUp = ({navigation}) => {
   const [showOTP,setOTPShow]=useState(false)
   const [otp, setOtp] = useState("");
+  
   const handleOtpComplete = (otp) => {
     // console.log("OTP entered:", otp);
     setOtp(otp);

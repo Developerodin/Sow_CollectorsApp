@@ -56,6 +56,9 @@ export const PersonalDetails = () => {
     const [AddressData,setAddressData] = useState([]);
     const [loading,setLoading] = useState(false)
     
+     const handleAddressChange = () => {
+      navigation.navigate('Address');
+    };
      
     const handleStateChange = (state) => {
       setSelectedState(state);
@@ -473,7 +476,7 @@ export const PersonalDetails = () => {
         <Block style={{marginTop:20}}>
         <Block style={[ customStyle.Card2]}>
                 <TextInput
-
+        
         variant="standard"
         keyboardType="email-address"
         label="Email"
@@ -520,6 +523,11 @@ export const PersonalDetails = () => {
         inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
+      />
+      <Button
+        title="Add Address"
+        onPress={handleAddressChange}
+        color="#65be34"
       />
                 </Block>
         </Block>

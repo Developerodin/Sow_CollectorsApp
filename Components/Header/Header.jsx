@@ -5,7 +5,7 @@ import { Block, Text, Input, theme, Button } from "galio-framework";
 const {width, height} = Dimensions.get('window');
 import { Entypo } from '@expo/vector-icons'; 
 import { FontAwesome5 } from '@expo/vector-icons'; 
-import Logo from "./Logo_1.png"
+import Logo from "./Logo_3.png"
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu ';
 import { useAppContext } from '../../Context/AppContext';
 
@@ -14,7 +14,7 @@ export const Header = () => {
   const {toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible} =useAppContext()
  
   return (
-    <View style={[{marginTop:20,padding:10},styles.container]}>
+    <View style={[{marginTop:30,padding:10},styles.container]}>
         <Block  style={styles.Center}>
         {/* <TouchableOpacity onPress={toggleDrwerMenu}>
           <Entypo name="menu" size={43} color="black"  />
@@ -23,7 +23,7 @@ export const Header = () => {
       <Image
     
         source={Logo}
-        style={{resizeMode: 'contain',width:170,height:51}}
+        style={{width:75,height:74}}
       />
           </Block>
           {/* <Block>
