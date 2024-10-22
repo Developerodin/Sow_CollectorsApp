@@ -1,0 +1,60 @@
+[
+  {
+    "stylers": [
+      {
+        "hue": "#65be34"
+      },
+      {
+        "saturation": 30
+      }
+    ]
+  },
+  {
+    "featureType": "water",
+    "elementType": "geometry.fill",
+    "stylers": [
+      {
+        "color": "#adc7d6"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "geometry",
+    "stylers": [
+      {
+        "color": "#adc7d6"
+      },
+      {
+        "lightness": 1
+      },
+      {
+        "visibility": "on"
+      }
+    ]
+  },
+  {
+    "featureType": "road",
+    "elementType": "labels.text.fill", 
+    "stylers": [
+      {
+        "color": "#000000" 
+      },
+      {
+        "visibility": "on"
+      }
+    ]
+  },
+  {
+    "featureType": "poi",
+    "elementType": "labels.text.fill",
+    "stylers": [
+      {
+        "color": "#000000"  
+      },
+      {
+        "visibility": "on"
+      }
+    ]
+  }
+]

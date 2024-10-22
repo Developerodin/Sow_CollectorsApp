@@ -252,7 +252,7 @@ const LiveRatestwo = () => {
                       fontWeight: 400,
                     }}
                   >
-                    {priceDifference.percentChange}%
+                     ₹ {priceDifference.difference}
                   </Text>
                   <Image
                     source={icon}

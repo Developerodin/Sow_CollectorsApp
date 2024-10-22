@@ -26,6 +26,7 @@ import { Base_url } from "../../Config/BaseUrl";
 import { Feather } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import RejectOrder from "../../Components/Model/RejectOrder";
 
 const { width, height } = Dimensions.get("window");
 
@@ -37,6 +38,7 @@ export const InCommingOrderDetails = ({ route }) => {
     { value: "", category: "Category 1" },
   ]);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible2, setModalVisible2] = useState(false);
   const [orderCompleteStatus, setOrderCompleteStatus] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [quantityCollected, setquantityCollected] = useState(10);
@@ -105,6 +107,11 @@ export const InCommingOrderDetails = ({ route }) => {
     handleOrderUpdate(orderDetails._id,"canceled",quantityCollected)
     setupdate((prev)=>prev+1)
   }
+
+  const handleRejectSubmit = (reason) => {
+    console.log("Order rejected for reason:", reason);
+    // Add any further actions here
+  };
   
   const handelComplete = (otp) => {
     console.log("OTP =>", otp,orderDetails.otp);
@@ -295,7 +302,7 @@ export const InCommingOrderDetails = ({ route }) => {
       <Button color="teal" onPress={handelAccept} style={{ height: 63 }}>
         Accept
       </Button>
-      <Button color="black" onPress={handelReject} style={{ height: 63 }}>
+      <Button color="black" onPress={() => setModalVisible2(true)} style={{ height: 63 }}>
         Reject
       </Button>
     </Block>
@@ -305,7 +312,7 @@ export const InCommingOrderDetails = ({ route }) => {
       <Button color="teal" onPress={handelSubmit} style={{ height: 63 }}>
         Mark Complete
       </Button>
-      <Button color="black" onPress={handelCancel} style={{ height: 63 }}>
+      <Button color="black" onPress={() => setModalVisible2(true)} style={{ height: 63 }}>
         Cancel Order
       </Button>
     </Block>
@@ -313,7 +320,11 @@ export const InCommingOrderDetails = ({ route }) => {
 
     
 
-       
+<RejectOrder
+        isVisible={modalVisible2}
+        onClose={() => setModalVisible2(false)}
+        onSubmit={handleRejectSubmit}
+      />
 
         <OTPModel
           modalVisible={modalVisible}
