@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "807300284499",
-    "project_id": "sow-app-ffa9a",
-    "storage_bucket": "sow-app-ffa9a.appspot.com"
+    "project_number": "696629642688",
+    "project_id": "sowappv1-90afb",
+    "storage_bucket": "sowappv1-90afb.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:807300284499:android:c278b4ed96cc57fe49c6a6",
+        "mobilesdk_app_id": "1:696629642688:android:c2ab157d87ba9f806c7425",
         "android_client_info": {
-          "package_name": "com.scraponwheels_collectors.app"
+          "package_name": "com.scraponwheelscollectorsv1.app"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyDjN3jURoiVLSVC2yv4nLlP70cg-Vhw5Cw"
+          "current_key": "AIzaSyAp57Nro7W9blm-2WrX1jlF22LWnNKTjYc"
         }
       ],
       "services": {

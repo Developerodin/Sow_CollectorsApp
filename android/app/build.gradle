@@ -83,13 +83,13 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace 'com.scraponwheels_collectors.app'
+    namespace 'com.scraponwheelscollectorsv1.app'
     defaultConfig {
-        applicationId 'com.scraponwheels_collectors.app'
+        applicationId 'com.scraponwheelscollectorsv1.app'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.1.0"
+        versionCode 1
+        versionName "1.0.0"
     }
     signingConfigs {
         debug {
