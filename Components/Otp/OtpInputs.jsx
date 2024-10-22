@@ -52,19 +52,19 @@ import { View, TextInput, StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    justifyContent: 'left',
-    marginLeft:-10
+    justifyContent: 'center',
+    
   },
   input: {
-    width: 60,
-    height: 30,
+    width: 50,
+    height: 60,
     fontSize:27,
     textAlign: 'center',
-    borderBottomWidth: 1,
-    borderColor: 'black',
+    borderWidth: 1,
+    borderColor: '#A6A6A6',
     borderRadius:10,
-    marginLeft:5,
-    marginRight:5
+    marginLeft:10,
+    marginRight:10
   },
 });
 

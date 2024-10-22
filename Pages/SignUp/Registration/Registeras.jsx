@@ -4,10 +4,11 @@ import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
 const {width, height} = Dimensions.get('window');
 import Logo from "../../Images/Logo_1.png";
-import Collector from "../../Images/Collector.png";
-import Mediator from "../../Images/Mediator.png";
-import Factory from "../../Images/factory.jpg";
-import Wholesaler from "../../Images/Wholesaler.png";
+import Collector from "../../Images/scrapRetailer.png";
+import Mediator from "../../Images/scrapMediator.png";
+import Factory from "../../Images/recyclingFactory.png";
+import Wholesaler from "../../Images/scrapWholesaler.png";
+import Bg from "../../Images/BgRegisterAs.png";
 import { Feather } from '@expo/vector-icons';
 import { RegisterCard } from '../../../Components/Cards/RegisterCard';
 import { useNavigation } from '@react-navigation/native';
@@ -32,6 +33,10 @@ export const RegisterAs = () => {
       saveRegisterDetails(title)
         navigation.navigate("FillPersonalDetails")
     }
+
+    const login=()=>{
+      navigation.navigate("Login")
+    }
   return (
     <View style={styles.container}>
     <StatusBar style="dark" />
@@ -43,26 +48,34 @@ export const RegisterAs = () => {
        </View>
         
         <Block style={{padding:10}}>
-        <TouchableOpacity onPress={()=>handelCardClick(1,"Collectors")} style={{marginTop:20}}>
-           <RegisterCard Img={Collector} Title={"Scrap Collector"} SubTitle={"If you are a scrap collector"} />
+        <TouchableOpacity activeOpacity={0.9} onPress={()=>handelCardClick(1,"Collectors")} style={{marginTop:20}}>
+           <RegisterCard Img={Collector} Title={"Scrap"} SubTitle={"Retailer"} BG={Bg} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1,"Wholesalers")} style={{marginTop:30}}>
-           <RegisterCard Img={Wholesaler} Title={"Scrap Wholesaler"} SubTitle={"If you are a scrap Wholesaler"} />
+       <TouchableOpacity activeOpacity={0.9} onPress={()=>handelCardClick(1,"Wholesalers")} style={{marginTop:30}}>
+           <RegisterCard Img={Wholesaler} Title={"Scrap"} SubTitle={"Wholesaler"} BG={Bg} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1,"Mediators")}style={{marginTop:30}}>
-           <RegisterCard Img={Mediator} Title={"Scrap Mediator"} SubTitle={"If you are a scrap Mediator"} />
+       <TouchableOpacity activeOpacity={0.9} onPress={()=>handelCardClick(1,"Mediators")}style={{marginTop:30}}>
+           <RegisterCard Img={Mediator} Title={"Scrap"} SubTitle={"Mediator"} BG={Bg} />
        </TouchableOpacity>
 
-       <TouchableOpacity onPress={()=>handelCardClick(1,"Factory")}style={{marginTop:30}}>
-           <RegisterCard Img={Factory} Title={"Scrap Factory"} SubTitle={"If you are a scrap Factory"} />
+       <TouchableOpacity activeOpacity={0.9} onPress={()=>handelCardClick(1,"Factory")}style={{marginTop:30}}>
+           <RegisterCard Img={Factory} Title={"Recycling"} SubTitle={"Factory"}  BG={Bg}/>
        </TouchableOpacity>
 
 
         </Block>
       
-   
+       <Block center style={{marginTop:50}}>
+         <Text style={{fontSize:16,color:"#4C4C4C"}} >
+          Want to login from a different accounts?
+         </Text>
+
+         <TouchableOpacity activeOpacity={0.8} onPress={login} style={{marginTop:10}}>
+          <Text style={{color:"#65C5C4"}}>Login or Signup</Text>
+         </TouchableOpacity>
+       </Block>
       
        </ScrollView>
        </View>
