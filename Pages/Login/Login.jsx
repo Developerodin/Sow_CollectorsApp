@@ -11,18 +11,20 @@ import {
   Animated,
   KeyboardAvoidingView,
   Easing ,
-  ActivityIndicator
+  ActivityIndicator,
+  TextInput
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Block, Text, Input, theme } from "galio-framework";
 const { width, height } = Dimensions.get("window");
 import PhoneInput from "react-native-phone-number-input";
 import Img from "../Images/Onbording.png";
-import Logo from "../Images/Logo_1.png";
+import Logo from "../Images/logo.png";
+import BgCurve from "../Images/onboardingCurve.png";
 import { Feather } from "@expo/vector-icons";
 import { OTPInput } from "../../Components/Otp/OtpInputs";
 import { ToastAndroid } from "react-native";
-import { TextInput, Button } from "@react-native-material/core";
+import { Button } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import Shape from "../Images/shape.png";
 import LoginImg from "../Images/loginImg1.jpg";
@@ -33,6 +35,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from "axios";
 import { Base_url } from "../../Config/BaseUrl";
 import { useAppContext } from "../../Context/AppContext";
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 export const Login = ({ navigation }) => {
   const {setIsLoggedIn,setuserDetails}= useAppContext();
   const initalValuesForm = {
@@ -264,11 +267,11 @@ export const Login = ({ navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar hidden={true} />
+      <StatusBar  translucent={true} />
       <ScrollView>
 
       
-      {!isKeyboardOpen &&  <Block
+      {/* {!isKeyboardOpen &&  <Block
           style={[styles.Space_Between, { marginTop: -12, marginRight: -13 }]}
         >
           <Block>
@@ -282,26 +285,60 @@ export const Login = ({ navigation }) => {
               />
             )}
           </Block>
-            <Image source={Shape} style={{ width: 130, height: 130 }} /> 
+           
          
-        </Block>}
+        </Block>} */}
+
+    
+           <View style={{position:"relative"}}>
+      <Image
+        source={BgCurve}
+        style={{width:width,height:height*0.5}}
+      />
+
+      <View style={{position:"absolute",top:120,left:20}}>
+      <Image
+        source={Logo}
+        
+      />
+      {
+        showOTP ?
+        <Block>
+        <Text style={{fontSize:30,color:"#fff",marginTop:30}}>Enter the OTP sent to</Text>
+      
+        <Block style={{flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
+        <Text style={{color:"#FFFFFF",fontSize:18,marginTop:20}}>+91 {formData.phoneNumber}</Text>
+
+        <TouchableOpacity onPress={handelBack} style={{marginTop:20,marginLeft:20,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+        <MaterialIcons name="edit" size={20} color="#65C5C4" style={{marginRight:3}} />
+          <Text style={{color:"#fff",fontSize:18,color:"#65C5C4"}}>Edit</Text>
+        </TouchableOpacity>
+        </Block>
+      
+    </Block>
+       
+        :
+        <Block>
+          <Text style={{fontSize:30,color:"#fff",marginTop:30}}>Enter your mobile</Text>
+          <Text style={{fontSize:30,color:"#fff"}}>number.</Text>
+
+          <Text style={{color:"#FFFFFF",fontSize:18,marginTop:20}}>Enter your credentials.</Text>
+        </Block>
+      }
+      
+
+      
+      </View>
+      </View>
+       
         
         <View
           style={[
             { marginTop: 0, flexDirection: "row", justifyContent: "center" },
           ]}
         >
-          <Block style={{ padding: 10 }}>
-           {
-            <Block center style={{marginTop:20}}>
-            <LottieView
-              style={styles.lottie}
-              source={require("../../assets/Animations/Animation - 1698917253840.json")}
-              autoPlay
-              loop
-            />
-          </Block>
-           } 
+          <Block>
+         
 
 
 
@@ -315,7 +352,7 @@ export const Login = ({ navigation }) => {
               
               }}
               >
-                <Text style={{ fontSize: 27, fontWeight: 700,letterSpacing:2  }}>
+                {/* <Text style={{ fontSize: 27, fontWeight: 700,letterSpacing:2  }}>
                 {loading ? 
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large"  color="#65be34" />
@@ -326,20 +363,8 @@ export const Login = ({ navigation }) => {
                  
                   
                   
-                  </Text>
-                <Text
-                   style={{
-                    fontSize: 17,
-                    fontWeight: 500,
-                    color: "grey",
-                    marginTop: 7,
-                    letterSpacing:1,
-                    marginLeft:2,
-                    marginTop:10
-                  }}
-                >
-                  OTP Sent to +91 {formData.phoneNumber}
-                </Text>
+                  </Text> */}
+                
               
                 <Block
                   style={[
@@ -347,22 +372,23 @@ export const Login = ({ navigation }) => {
                     { width: "95%", marginTop: 20 },
                   ]}
                 >
-                  <Block style={{ flex: 1 }}>
+                  <Block center style={{ flex: 1}}>
                     <OTPInput length={4} onComplete={handleOtpFill} />
                   </Block>
                 </Block>
 
-                <Block style={{ marginLeft:0 }}>
+                {/* <Block center style={{width: "95%",marginTop:30,marginBottom: -40, }}>
                   <Text
                     style={{
                       fontSize: 16,
                       fontWeight: "400",
-                      marginTop: 30,
+                      
                       color: "#BDBDBD",
+                      marginLeft:-40
                     }}
                   >
                     OTP Not Receive ?{" "}
-                    <Text style={{ color: "#65be34", fontWeight: 500 }}>
+                    <Text style={{ color: "black", fontWeight: 500 }}>
                     {canResend ? (
             <Text onPress={generateOTP}>Resend OTP</Text>
           ) : (
@@ -370,77 +396,91 @@ export const Login = ({ navigation }) => {
           )}
                     </Text>
                   </Text>
-                </Block>
+                </Block> */}
               </View>
             ) : (
               <View
                 style={{
-                  padding: 20,
+                 
                   justifyContent: "center",
                   width: width,
-                  marginTop: 30,
+                  
                 
                 }}
               >
                 <Text style={{ fontSize: 27, fontWeight: 700,letterSpacing:2 }}>
-                {loading ? 
+                {/* {loading ? 
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large"  color="#65be34" />
         </View>
         :
         "Login"
-      }
+      } */}
                 </Text>
-                <Text
+                
+
+                <Block style={{flexDirection:"column",justifyContent:"center",alignItems:"center"}}>
+                  <Block style={{width:width*0.9}}>
+                  <Text
                   style={{
-                    fontSize: 17,
-                    fontWeight: 500,
-                    color: "grey",
-                    marginTop: 7,
-                    letterSpacing:1
+                    fontSize: 15,
+                    
+                    color: "#A6A6A6",
+                   
+                    letterSpacing:1,
+                    marginBottom:5
                   }}
                 >
-                  Please sign in to continue. 
+                  Enter your mobile number. 
                 </Text>
+                  </Block>
+                
+                {/* <TextInput
 
-                <Block style={[customStyle.Card ,{marginTop:50}]}>
-                <TextInput
-
-        variant="standard"
+         style={{width:width*0.9}}
         keyboardType="numeric"
-        label="Mobile Number"
-        leading={(props) => <Icon name={isFocused ? 'phone' : 'account'} {...props} />}
+        label="+91"
+ 
         value={formData.phoneNumber}
         onChangeText={(text) => handleInputChange("phoneNumber", text)}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        color={ 'white'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,color:"black",fontSize:20,letterSpacing:3 }}
-        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
-      />
+        color={ 'black'}
+        inputStyle={{ borderWidth:1,borderRadius:10,borderColor:"grey", paddingBottom:0,fontSize:20,letterSpacing:3,backgroundColor:'#fff' }}
+        
+        
+      /> */}
+
+<TextInput
+          style={styles.input}
+          placeholder="+ 91"
+          keyboardType="numeric"
+          placeholderTextColor="black"
+          value={formData.phoneNumber}
+        onChangeText={(text) => handleInputChange("phoneNumber", text)}
+        />
                 </Block>
       
               </View>
             )}
 
-            <Block right style={[{ padding: 20, marginTop: 40 }]}>
+            <Block center style={[{ marginTop: 40,marginBottom:40 }]}>
               {showOTP ? (
                 <Button
-                  title="Proceed"
-                  color="#65be34"
-                  style={{ width: 150, padding: 5 }}
+                  title="Login"
+                  color="#000000"
+                  style={{ width:width*0.88, padding:10 }}
                   onPress={handelOtpComplete}
-                  trailing={(props) => <Icon name="send" {...props} />}
+                 
                   tintColor="#fff"
                 />
               ) : (
                 <Button
-                  title="Get Otp"
-                  color="#65be34"
-                  style={{ width: 150, padding: 5 }}
+                  title="Send OTP"
+                  color="#000000"
+                 
+                  style={{ width:width*0.88, padding:10 }}
                   onPress={handelMobileNumber}
-                  trailing={(props) => <Icon name="send" {...props} />}
+                  
                   tintColor="#fff"
                 />
               )}
@@ -495,9 +535,14 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    textAlign: "center",
-    padding: 0,
-    fontSize: 22,
+    textAlign: "left",
+    padding:15,
+    fontSize:16,
+    borderWidth:1,
+    borderRadius:8,
+    borderColor:"#A6A6A6",
+    width:width*0.9,
+    letterSpacing:3
     // Remove padding to make it look borderless
   },
   subtitle: {

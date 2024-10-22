@@ -31,7 +31,8 @@ const styles = StyleSheet.create({
     container:{
       flex: 1,
       width:width,
-      height:height
+      height:height,
+      backgroundColor:"#000000"
     },
     Text_Container:{
       flex: 0.9,

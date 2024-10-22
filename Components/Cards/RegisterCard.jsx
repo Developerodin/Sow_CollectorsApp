@@ -5,23 +5,36 @@ import { Block, Text, Input, theme, Button } from "galio-framework";
 const {width, height} = Dimensions.get('window');
 import { Feather } from '@expo/vector-icons';
 export const RegisterCard = (props) => {
-    const {Img,Title,SubTitle} = props
+    const {Img,Title,SubTitle,BG} = props
   return (
-    <View style={{borderRadius:20}}>
-        <Block style={[styles.Space_Around,{marginTop:40,marginBottom:20}]}>
-        <Block>
-            <Image style={{width:60, height:60}} source={Img} />
+    <View style={{borderWidth:1,borderRadius:10,borderColor:"#F9F9F9"}}>
+        <Block style={[styles.Space_Between]}>
+        <Block style={{marginLeft:20}}>
+            <Text style={{fontSize:22,fontWeight:500}}>{Title}</Text>
+            <Text style={{fontSize:22,fontWeight:500}}>{SubTitle}</Text>
+        </Block>
+         
+         <Block style={{position:"relative"}}>
+         <Block>
+         <Image  source={BG} />
+         </Block>
+        <Block 
+         style={{
+          position: "absolute", 
+          bottom:5,  // Adjust this value to move it further up or down from the bottom
+          left: 0, 
+          right: 0, 
+          alignItems: "center",  // Centers horizontally
+        }}
+        >
+            <Image source={Img} />
         </Block>
 
-        <Block>
-            <Text style={{fontSize:20,fontWeight:500}}>{Title}</Text>
-            <Text style={{fontSize:14,fontWeight:300}}>{SubTitle}</Text>
-            <Text style={{fontSize:14,fontWeight:500}}>Tap Here !</Text>
-        </Block>
+         </Block>
+        
 
-        <Block>
-        <Feather name="arrow-right" size={24} color="black" style={{marginLeft:10}} />
-        </Block>
+       
+
         </Block>
        
     </View>
