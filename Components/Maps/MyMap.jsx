@@ -243,8 +243,8 @@ const initialRegion = {
       <Block style={{width:width*0.6}}>
 
 <Block style={{backgroundColor:"#000000",borderRadius:8,padding:5,zIndex:999}}>
-<Text center style={{color:"#fff",fontSize:14,fontWeight:"bold"}}>Order will be pick from here</Text>
-<Text center style={{color:"grey",fontSize:12,fontWeight:"bold"}}>Place the pin accurately on the map</Text>
+<Text center style={{color:"#fff",fontSize:14,fontWeight:"bold"}}>Move the pin to chanage location</Text>
+{/* <Text center style={{color:"grey",fontSize:12,fontWeight:"bold"}}>Place the pin accurately on the map</Text> */}
 </Block>
 
 <Block center>

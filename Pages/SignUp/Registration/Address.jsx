@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableHighlight,
   Dimensions,
+  TextInput
 } from "react-native";
 import { useAppContext } from "../../../Context/AppContext";
 import { useNavigation } from "@react-navigation/native";
@@ -16,7 +17,10 @@ import { Ionicons } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons'; 
 import { MaterialIcons } from '@expo/vector-icons';
 import LottieView from "lottie-react-native"; 
-import { TextInput, Button } from "@react-native-material/core";
+import { Button } from "@react-native-material/core";
+import { Base_url } from "../../../Config/BaseUrl";
+import axios from "axios";
+
 const { width, height } = Dimensions.get("window");
 export const Address = () => {
   const navigation = useNavigation();
@@ -82,7 +86,76 @@ export const Address = () => {
     });
     setIsModalVisible(false)
     setIsAddressModalVisible(false)
+    
   };
+
+  const SubmitSigupData= async()=>{
+    // setLoading(true)
+    console.log("need to do more")
+    const UserDetails = await AsyncStorage.getItem('UserDetails') || null;
+  const UserData = JSON.parse(UserDetails);
+  
+    
+    console.log("Data of user ====>",UserDetails)
+       try {
+        const response = await axios.post(`${Base_url}api/b2b`, UserData);
+           
+        if(response.status === 200){
+             if(response.data){
+              const data = response.data
+                console.log("Data after vsubmit  ==>",data)
+                // ToastAndroid.show(data.error, ToastAndroid.SHORT);
+                // setLoading(false);
+                // setShowPAN(true);
+                // navigation.reset({
+                //   index: 0,
+                //   routes: [{ name: 'FillPersonalDetails' }],
+                // });
+                // navigation.navigate("FillPersonalDetails")
+                return
+             }
+             return
+        }
+        
+        if (response.status === 201) {
+             if(response.data){
+        // ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);
+        // setShowSuccess(true);
+        // setLoading(false)
+        navigation.navigate("VerifyProfileStatus")
+  
+       }
+         else {
+          console.error("Error creating user:", response);
+          // setLoading(false)
+        }
+      }
+      } catch (error) {
+              // ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
+      
+      //  setShowPAN(true);
+        console.error("Error:", error);
+        // setLoading(false)
+      }
+  
+    // try {
+    //   const response = await axios.post(`${Base_url}b2b`, formData); // Update the API endpoint accordingly
+    //   console.log("Res ==>",response.data);
+    //   if(response.data){
+    //     ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);
+    //     setShowSuccess(true);
+  
+    //   }
+      
+    // } catch (error) {
+    //   console.error('Error creating user:', error);
+      
+    //     ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
+      
+    //   setShowPAN(true);
+    // }
+  
+  }
 const setnewAddressinStorage =async(address)=>{
   const Data = [...AllUserAddresses,address]
   // console.log("Data",Data)
@@ -178,6 +251,13 @@ const setnewAddressinStorage =async(address)=>{
    GettAllAddressFromStorage()
    getSelectedAddressFromStorage()
   },[update])
+
+
+  useEffect(()=>{
+    if(AllUserAddresses.length<1){
+      setIsModalVisible(true);
+    }
+  },[AllUserAddresses])
   
 
   const animationRef = useRef(null);
@@ -253,7 +333,7 @@ const setnewAddressinStorage =async(address)=>{
 
       <Block style={styles2.Space_Around}>
       <Button color="#65be34" title="Add New Address" style={{width:width*0.5}} tintColor="#fff" onPress={toggleModal} />
-        
+      <Button color="#65be34" title="Next" style={{width:width*0.3}} tintColor="#fff" onPress={SubmitSigupData} />
       </Block>
 
       <Modal visible={isModalVisible} animationType="slide">
@@ -261,24 +341,36 @@ const setnewAddressinStorage =async(address)=>{
         
             <MyMap navigation={navigation} />
           
-          <Block style={{backgroundColor:"#fff",flexDirection:"row",justifyContent:"left",alignItems:"center",height:50}}>
+          {/* <Block style={{backgroundColor:"#fff",flexDirection:"row",justifyContent:"left",alignItems:"center",height:50}}>
           <Ionicons onPress={toggleModal} name="arrow-back-circle" style={{marginLeft:10}} size={30} color="#65be34" />
           <Text style={{fontSize:18,fontWeight:500,marginLeft:10}}>Select Address</Text>
+          </Block> */}
+
+          <Block style={{flexDirection:"row",justifyContent:"left",alignItems:"center",backgroundColor:"#fff",padding:10}}>
+              
+              <Block style={{backgroundColor:"black",width:50,height:50,flexDirection:"row",justifyContent:"center",alignItems:"center",borderRadius:150,marginLeft:10}}>
+             
+              <MaterialIcons onPress={toggleModal} name="arrow-back-ios" size={22} style={{marginLeft:5}} color="white" />
+              </Block>
+              
+
+              <Text style={{marginLeft:15,fontSize:25,fontWeight:500}}>Select location</Text>
+            
           </Block>
 
 {
  <Block style={{padding:11,backgroundColor:"#fff",height:200,position:"absolute",bottom:0,width:width,borderTopLeftRadius:10,borderTopRightRadius:10}}>
               
-  <Block>
+  {/* <Block>
     <Text  style={{color:"grey",fontSize:13,fontWeight:500,letterSpacing:1}}>SELECT PICKUP LOCATION</Text>
-  </Block>
+  </Block> */}
   
   {
    SelectedAddressFromMap ?  
-    <Block >
+    <Block style={{marginTop:20}}>
     <Block style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginTop:5}}>
          <Block style={{flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
-         <Ionicons name="md-location" size={24} color="crimson" />
+         <Ionicons name="location" size={24} color="crimson" />
          <Text style={{fontSize:18,fontWeight:"bold",letterSpacing:1,marginLeft:5}} >{SelectedAddressFromMap.street}</Text>
          </Block>
 
@@ -308,7 +400,7 @@ const setnewAddressinStorage =async(address)=>{
   
    <Block style={[styles2.AlignCenter,{marginTop:20}]}>
   
-   <Button color="#65be34" title="CONFIRM LOCATION" style={{width:width*0.9}} tintColor="#fff" onPress={ConfirmLoction} />
+   <Button color="black" title="CONFIRM LOCATION" style={{width:width*0.9}} tintColor="#fff" onPress={ConfirmLoction} />
         
    </Block>
 </Block>
@@ -396,7 +488,7 @@ const setnewAddressinStorage =async(address)=>{
             <Block style={{marginTop:20}}>
             <Block style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginTop:5}}>
                  <Block style={{flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
-                 <Ionicons name="md-location" size={24} color="crimson" />
+                 <Ionicons name="location" size={24} color="crimson" />
                  <Text style={{fontSize:18,fontWeight:"bold",letterSpacing:1,marginLeft:5}} >{SelectedAddressFromMap.street}</Text>
                  </Block>
         
@@ -411,8 +503,58 @@ const setnewAddressinStorage =async(address)=>{
 
           <Block style={{marginTop:40}}>
             
+          <Block style={{marginTop:15}}>
+<Block >
+         
+      <TextInput
+          style={styles.input}
+          placeholder="Building / Flat / House / Floor No."
+          
+          placeholderTextColor="#B7B7B7"
+          value={newAddress.house}
+          onChangeText={(text) =>
+            setNewAddress({ ...newAddress, house: text })
+          }
+        />
+                </Block>
+            
+        </Block>
 
-            <TextInput
+        <Block style={{marginTop:15}}>
+<Block >
+         
+      <TextInput
+          style={styles.input}
+          placeholder="Apartment / Road / Area (optional)"
+          
+          placeholderTextColor="#B7B7B7"
+          value={newAddress.area}
+          onChangeText={(text) =>
+            setNewAddress({ ...newAddress, area: text })
+          }
+        />
+                </Block>
+            
+        </Block>
+
+
+        <Block style={{marginTop:15}}>
+<Block >
+         
+      <TextInput
+          style={styles.inputBox}
+          placeholder="Directions to reach (Optional)"
+          
+          placeholderTextColor="#B7B7B7"
+          value={newAddress.directions}
+              onChangeText={(text) =>
+                setNewAddress({ ...newAddress, directions: text })
+              }
+        />
+                </Block>
+            
+        </Block>
+            {/* <TextInput
               value={newAddress.house}
               onChangeText={(text) =>
                 setNewAddress({ ...newAddress, house: text })
@@ -422,9 +564,9 @@ const setnewAddressinStorage =async(address)=>{
               label="House / Flat / Block No"
               color={ 'grey'}
               inputStyle={{ borderWidth: 0, paddingBottom:0,color:"black",fontSize:15 }}
-            />
+            /> */}
 
-            <TextInput
+            {/* <TextInput
              
               value={newAddress.area}
               onChangeText={(text) =>
@@ -436,9 +578,9 @@ const setnewAddressinStorage =async(address)=>{
               color={ 'grey'}
               inputStyle={{ borderWidth: 0, paddingBottom:0,color:"black",fontSize:15 }}
               style={{marginTop:20}}
-            />
+            /> */}
 
-            <TextInput
+            {/* <TextInput
              
               value={newAddress.directions}
               onChangeText={(text) =>
@@ -450,14 +592,14 @@ const setnewAddressinStorage =async(address)=>{
               color={ 'grey'}
               inputStyle={{ borderWidth: 0, paddingBottom:0,color:"black",fontSize:15 }}
               style={{marginTop:20}}
-            />
+            /> */}
 
            
           </Block>
 
           {/* Add similar TextInput fields for other address details */}
 
-          <Block center style={[styles2.Space_Between, { width:width*0.9,position:"absolute",bottom:40 }]}>
+          <Block center style={[styles2.Space_Between, { width:width*0.9,marginTop:60 }]}>
             <Button color="#65be34" title="save" style={{width:width*0.4}} tintColor="#fff" onPress={saveAddress} />
             <Button color="#65be34" title="close" style={{width:width*0.4}} tintColor="#fff" onPress={toggleModal2} />
           </Block>
@@ -481,6 +623,31 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 20,
+  },
+  input: {
+    // flex: 1,
+    // textAlign: "left",
+    padding:15,
+    fontSize:16,
+    borderWidth:1,
+    borderRadius:8,
+    borderColor:"#A6A6A6",
+    width:width*0.9,
+    marginTop:4,
+   
+  },
+  inputBox: {
+    // flex: 1,
+    textAlign: "left",
+    padding:15,
+    fontSize:16,
+    borderWidth:1,
+    borderRadius:8,
+    borderColor:"#A6A6A6",
+    width:width*0.9,
+    marginTop:4,
+    height:200
+   
   },
   addressContainer: {
     backgroundColor: "#fff",
@@ -508,15 +675,30 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
-  input: {
-    width: "100%",
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 20,
-    padding: 10,
-    borderRadius: 15,
+  centeredView: {
+    flex: 1,
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginBottom: -50,
   },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    width: width,
+    height: height - 400,
+  }
 });
 
 const styles2 = StyleSheet.create({
@@ -544,14 +726,7 @@ const styles2 = StyleSheet.create({
     fontWeight: "bold",
     marginBottom: 20,
   },
-  input: {
-    width: "100%",
-    height: 40,
-    borderColor: "grey",
-    borderBottomWidth: 0.5,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-  },
+  
   error: {
     color: "red",
     marginTop: 10,
@@ -568,18 +743,5 @@ const styles2 = StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: "100%",
-  },
-  textContainer: {
-    position: "absolute",
-    bottom: 40, // Adjust as needed
-    left: 0,
-    right: 0,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  text: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+  }
 });

@@ -83,7 +83,7 @@ export const CategoryAddModel = ({
               onPress={handelClose}
               name="close-circle"
               size={24}
-              color="#65be34"
+              color="black"
             />
           </Block>
           <Text style={{fontSize:17}}>Select Categories</Text>
@@ -97,38 +97,30 @@ export const CategoryAddModel = ({
               padding: 12,
             }}
           >
-            
-          <ScrollView style={{ height:300, width: '100%' }}>
+            <ScrollView>
+            <View style={styles.container}>
   
-          {categoriesData.map((category,index) => (
-    <View key={index} style={[{marginTop:10,flexDirection:"row",justifyContent:"space-between",alignItems:"center"}]}>
-
-      <Text>{category.name}</Text>
-      <Checkbox
-      label=""
-      color="info"
-      
-      initialValue={selectedCategories.some(selectedCategory => selectedCategory.name === category.name)}
-        onChange={(el) => {
-            
-                handleCategorySelect(category)
-        }}
-      />
-      
-    </View>
-  ))}
- 
+  {categoriesData.map((category, index) => (
+<TouchableOpacity
+  key={index}
+  style={[
+    styles.categoryBox,
+    selectedCategories.some(selected => selected.name === category.name) && styles.selectedCategoryBox
+  ]}
+  onPress={() => handleCategorySelect(category)}
+>
+  <Text style={[styles.categoryText,selectedCategories.some(selected => selected.name === category.name) && {color:"white"}]}>{category.name}</Text>
+</TouchableOpacity>
+))}
 
 
-</ScrollView>
+
+</View>
+            </ScrollView>
+       
             
           </Block>
-          <TouchableOpacity
-            style={styles.doneButton}
-            onPress={handelClose}
-          >
-            <Text style={styles.doneButtonText}>Done</Text>
-          </TouchableOpacity>
+         
           
         </View>
       </View>
@@ -142,7 +134,28 @@ const styles = StyleSheet.create({
     checkboxContainer:{
         flexDirection:"row"
     },
+    container: {
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      justifyContent: 'space-between',
+      marginTop: 10,
+    },
+    categoryBox: {
+      padding: 10,
+      margin: 5,
+      backgroundColor: '#f0f0f0', // Normal box color
+      borderRadius: 15,
+      borderWidth: 1,
+      borderColor: '#ccc',
+    },
+    selectedCategoryBox: {
+      backgroundColor: 'black', // Grey color when selected
+    },
+    categoryText: {
+      fontSize: 16,
+    },
   viewHalf: {
+    
     justifyContent: "flex-end",
     margin: 0,
   },
@@ -164,15 +177,16 @@ const styles = StyleSheet.create({
   },
   centeredView: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
     marginBottom: -50,
   },
   modalView: {
     margin: 20,
     backgroundColor: "white",
-    borderRadius: 10,
-    padding: 20,
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
+    padding: 35,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -182,8 +196,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: width * 0.9,
-    height: height - 350,
+    width: width,
+    height: height - 500,
   },
   button: {
     borderRadius: 20,

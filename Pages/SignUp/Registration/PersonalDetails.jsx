@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, SafeAreaView,ActivityIndicator, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated } from 'react-native'
+import { FlatList, SafeAreaView,ActivityIndicator,TextInput, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme } from "galio-framework";
 const {width, height} = Dimensions.get('window');
@@ -10,7 +10,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { TextInput, Button } from "@react-native-material/core";
+import { Button } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import LottieView from "lottie-react-native";
 import { AntDesign } from "@expo/vector-icons";
@@ -35,7 +35,8 @@ export const PersonalDetails = () => {
       // gender:"",
       email: "",
       name:"",
-      address:""
+      referralCode:"",
+      businessName:""
     });
     const [CategoriesData, setCategoriesData] = useState([]);
     const [isFocused, setIsFocused] = useState({
@@ -56,7 +57,7 @@ export const PersonalDetails = () => {
     const [AddressData,setAddressData] = useState([]);
     const [loading,setLoading] = useState(false)
     
-     const handleAddressChange = () => {
+     const handleAddress = () => {
       navigation.navigate('Address');
     };
      
@@ -156,16 +157,9 @@ export const PersonalDetails = () => {
 
     const savePersonalDetails = async () => {
       try {
-        // You can use any key you like to store the authentication status
-        const key = 'Details';
-        const data = {
-          ...formData,
-          city:selectedCity,
-          state:selectedState,
-          pincode:pincode
-        }
-        const value = JSON.stringify(data) // Replace with your actual authentication status
-        
+        const RegisterAs = await AsyncStorage.getItem('RegisterAs') || null;
+        const Mobile = await AsyncStorage.getItem('Mobile') || null;
+        // const Category = await AsyncStorage.getItem('selectedCategory') || null;
         const categoryNames = selectedCategories.map(category => {
           return {
             name:category.name,
@@ -177,13 +171,25 @@ export const PersonalDetails = () => {
               }
             ] 
           }});
-        console.log("categoryNames",categoryNames)
-        const key2= 'selectedCategory';
-        const value2 = JSON.stringify(categoryNames);
-        // Use AsyncStorage to save the authentication status
-        await AsyncStorage.setItem(key, value);
-        await AsyncStorage.setItem(key2, value2);
-        console.log('Details saved successfully.');
+        // console.log("categoryNames",categoryNames)
+        const Category = JSON.stringify(categoryNames);
+        const UserData = {
+          name: formData.name,
+          email: formData.email ,
+          password: '1234',
+          mobile: Mobile,
+          Address:[],
+          country: 'India',
+          registerAs: RegisterAs,
+          adharData:'',
+          images:[],
+          categories:Category,
+          businessName:formData.businessName,
+          referralCode:formData.referralCode
+        };
+        const UserDetails = JSON.stringify(UserData);
+        await AsyncStorage.setItem("UserDetails", UserDetails);
+        console.log('Details saved successfully.',UserDetails);
       } catch (error) {
         console.error('Error saving Details :', error);
       }
@@ -204,58 +210,17 @@ export const PersonalDetails = () => {
         // setShowShopDetails(true);
         console.log("Details",formData);
         // savePersonalDetails()
-        SubmitSigupData()
+         
+
+        savePersonalDetails()
+        handleAddress();
         // navigation.navigate("VerificationDetails")
     }
 
     const SubmitSigupData= async()=>{
       setLoading(true)
-      const RegisterAs = await AsyncStorage.getItem('RegisterAs') || null;
-      const Details = await AsyncStorage.getItem('Details') || null;
-      const Mobile = await AsyncStorage.getItem('Mobile') || null;
-      // const Category = await AsyncStorage.getItem('selectedCategory') || null;
-      const categoryNames = selectedCategories.map(category => {
-        return {
-          name:category.name,
-          sub_category:[
-            {
-              name:"test",
-              price:"100",
-              unit:"Kg"
-            }
-          ] 
-        }});
-      console.log("categoryNames",categoryNames)
-      const Category = JSON.stringify(categoryNames);
-     
-      // console.log("Post req",DocumentsImages)
-    
-      // const Data= {
-      //   "RegisterAs": RegisterAs,
-      //   "pan_Number":PANformData.PANNo,
-      //   "adhar_Number":AddharformData.AdhharNo,
-      //   "address":AddharformData.Address,
-      //   "name":AddharformData.Name,
-      // }
-      // const Adhar = JSON.stringify(AddharformData);
-      // const SubCategoryData = [
-      //   {name:"test",price:"20",unit:"kg"}
-      // ]
-      const UserData = {
-        name: formData.name,
-        email: formData.email ,
-        password: '1234',
-        mobile: Mobile,
-        Address: formData.address,
-        city: selectedCity,
-        pincode: pincode,
-        state: selectedState,
-        country: 'India',
-        registerAs: RegisterAs,
-        adharData:'',
-        images:[],
-        categories:Category,
-      };
+      const UserDetails = await AsyncStorage.getItem('UserDetails') || null;
+    const UserData = JSON.parse(UserDetails);
     
       
       // console.log("Data of user ====>",UserData)
@@ -413,18 +378,18 @@ export const PersonalDetails = () => {
   
         <ScrollView>
       
-       <View style={{alignItems:"left",marginTop:35,width:width}}>
+       <View style={{alignItems:"left",marginTop:55,width:width}}>
          
        {!isKeyboardOpen &&
-         <Block>
-           
-              <AntDesign
-                onPress={handelBack}
-                name="arrowleft"
-                size={30}
-                color="grey"
-                style={{ marginLeft: 20 }}
-              />
+         <Block style={{flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
+              
+              <Block style={{backgroundColor:"black",width:50,height:50,flexDirection:"row",justifyContent:"center",alignItems:"center",borderRadius:150,marginLeft:20}}>
+             
+              <MaterialIcons onPress={handelBack} name="arrow-back-ios" size={22} style={{marginLeft:5}} color="white" />
+              </Block>
+              
+
+              <Text style={{marginLeft:15,fontSize:25,fontWeight:500}}>Your Info</Text>
             
           </Block>
 }
@@ -432,21 +397,18 @@ export const PersonalDetails = () => {
        </View>
 
         <Block style={{padding:10}}>
-        <Block style={{marginTop:20}}>
+        <Block style={{marginTop:15}}>
 <Block style={[ customStyle.Card1]}>
-                <TextInput
-
-        variant="standard"
-        
-        label="Name"
-        leading={(props) => <Icon name={'account'} {...props} />}
-        value={formData.name}
-        onChangeText={(text) => handleInputChange("name", text)}
-        color={ 'grey'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
-        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-        
-      />
+          <Text style={{fontSize:16}}>First Name</Text>
+      <TextInput
+          style={styles.input}
+          placeholder="Enter you name"
+          value={formData.name}
+          onChangeText={(text) => handleInputChange("name", text)}
+          placeholderTextColor="#B7B7B7"
+        //   value={formData.phoneNumber}
+        // onChangeText={(text) => handleInputChange("phoneNumber", text)}
+        />
                 </Block>
             
         </Block>
@@ -473,43 +435,72 @@ export const PersonalDetails = () => {
             
         </Block> */}
 
-        <Block style={{marginTop:20}}>
+        <Block style={{marginTop:10}}>
         <Block style={[ customStyle.Card2]}>
-                <TextInput
-        
-        variant="standard"
-        keyboardType="email-address"
-        label="Email"
-        leading={(props) => <Icon name={'email'} {...props} />}
-        value={formData.email}
+        <Text style={{fontSize:16}}>Email Address</Text>
+      <TextInput
+          style={styles.input}
+          placeholder="Enter your email address"
+          value={formData.email}
         onChangeText={(text) => handleInputChange("email", text)}
-        color={ 'grey'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
-        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-        
-      />
+          placeholderTextColor="#B7B7B7"
+        //   value={formData.phoneNumber}
+        // onChangeText={(text) => handleInputChange("phoneNumber", text)}
+        />
+                </Block>
+        </Block>
+
+        <Block style={{marginTop:10}}>
+        <Block style={[ customStyle.Card2]}>
+        <Text style={{fontSize:16}}>Business Name</Text>
+      <TextInput
+          style={styles.input}
+          placeholder="Enter your business name"
+          value={formData.businessName}
+        onChangeText={(text) => handleInputChange("businessName", text)}
+          placeholderTextColor="#B7B7B7"
+        //   value={formData.phoneNumber}
+        // onChangeText={(text) => handleInputChange("phoneNumber", text)}
+        />
                 </Block>
         </Block>
 
        
 
+       
+
         <Block style={{marginTop:10,padding:10}}>
-<Block style={[{paddingBottom:10,borderBottomWidth:1,borderColor:"grey",flexDirection:"row",alignItems:"center"}]}>
-  <Block style={{width:"6%"}}>
-  <MaterialIcons name="category" size={24} color="grey" />
-  </Block>
-  <TouchableOpacity onPress={handelCategoryModelOpen} style={{width:"95%"}}>
+        <Text style={{fontSize:16}}>Category</Text>
+<TouchableOpacity activeOpacity={0.9} onPress={handelCategoryModelOpen} style={[{borderWidth:1,padding:18,borderColor:"#A6A6A6",borderRadius:10,marginTop:4}]}>
+  
+  <Block  style={{width:"95%"}}>
   <Block style={{width:"95%"}} >
-  <Text style={{marginLeft:15}}>{ selectedCategories.length >0 ?selectedCategories.map(category => category.name).join(', '): "Select Category"}</Text>
+  <Text style={[selectedCategories.length >0 ?{color:"black"}:{color:"#B7B7B7",fontSize:16}]} >{ selectedCategories.length >0 ?selectedCategories.map(category => category.name).join(', '): "Select Category"}</Text>
 </Block>
-  </TouchableOpacity>
+  </Block>
 
 
-                </Block>
+                </TouchableOpacity>
             
         </Block>
 
+
         <Block style={{marginTop:10}}>
+        <Block style={[ customStyle.Card2]}>
+        <Text style={{fontSize:16}}>Referral Code</Text>
+      <TextInput
+          style={styles.input}
+          placeholder="0000000000"
+          value={formData.referralCode}
+        onChangeText={(text) => handleInputChange("referralCode", text)}
+          placeholderTextColor="#B7B7B7"
+        //   value={formData.phoneNumber}
+        // onChangeText={(text) => handleInputChange("phoneNumber", text)}
+        />
+                </Block>
+        </Block>
+
+        {/* <Block style={{marginTop:10}}>
         <Block style={[ customStyle.Card3]}>
                 <TextInput
 
@@ -530,98 +521,18 @@ export const PersonalDetails = () => {
         color="#65be34"
       />
                 </Block>
-        </Block>
-
-        <Block style={[{marginTop:10},styles.Space_Between]}>
-    
-        <Block style={[ customStyle.Card3,{width:"100%"}]}>
-                <TextInput
-
-        variant="standard"
-        keyboardType="numeric"
-        label="Pin Code"
-        leading={(props) => <Icon name={ 'city'} {...props} />}
-        name="pincode"
-      
-        value={pincode}
-        onChangeText={(text) => handlePincodeChange(text)}
-        color={ 'grey'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:18,letterSpacing:1 }}
-        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-        
-      />
-                </Block>
-      
-       
-       
-
-                
-       
-        </Block>
-        
-       
-        <Block style={[ customStyle.Card3]}>
-
-
-<View style={{borderBottomWidth:1,borderColor:"grey"}} >
-      <Text>Select a State:</Text>
-      <Block style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
-            <Block >
-            <Icon name={ 'city'} size={24} color={'grey'} />
-            </Block>
-         <Block style={{width:"90%"}}>
-         <Picker
-        selectedValue={selectedState}
-        onValueChange={(itemValue) => handleStateChange(itemValue)}
-        style={[styles.picker]}
-      >
-        {uniqueStates.map((state, index) => (
-          <Picker.Item key={index} label={state} value={state} />
-        ))}
-      </Picker>
-
-         </Block>
-      </Block>
-      {/* <Text>Selected State: {selectedState}</Text> */}
-    </View>
-      {/* <TouchableOpacity onPress={()=>setIsStateModelOpen(true)}>
-        <Text>Sate Model Open</Text>
-      </TouchableOpacity> */}
-                </Block>
-
-                <Block style={[ customStyle.Card3]}>
-        {selectedState !== "" ? (
-        <View style={{borderBottomWidth:1,borderColor:"grey"}}>
-          <Text>Select a City:</Text>
-          <Block style={{flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
-            <Block >
-            <Icon name={ 'city'} size={24} color={'grey'} />
-            </Block>
-         <Block style={{width:"90%"}}>
-         <Picker
-            selectedValue={selectedCity}
-            onValueChange={(itemValue) => handleCityChange(itemValue)}
-            // style={styles.picker}
-          >
-            {filteredCities.map((city, index) => (
-  <Picker.Item key={index} label={city} value={city} />
-))}
-          </Picker>
-         </Block>
-          
-
-          </Block>
-        
-        </View>
-      ) : null}
+        </Block> */}
 
       
-                </Block>
+        
+      
+
+               
 
         <Block style={[{flexDirection:"row",justifyContent:"left",alignItems:"center",marginLeft:10}]}>
         <Checkbox
       style={{marginTop:15}}
-      color="#239456"
+      color="black"
       label={"By checking this box, you accept the terms and conditions"}
       initialValue={termandCondition}
         onChange={(el) => {
@@ -645,11 +556,12 @@ export const PersonalDetails = () => {
         </View>
         :
         <Button
-                  title="Proceed"
-                  color="#65be34"
-                  style={{ width: 150, padding: 5 }}
+                  title="Next"
+                  color="#000000"
+                 
+                  style={{ width:width*0.88, padding:10 }}
                   onPress={handelPersonalDetailSubmit}
-                  trailing={(props) => <Icon name="send" {...props} />}
+                  
                   tintColor="#fff"
                 />
       }
@@ -692,10 +604,16 @@ const styles = StyleSheet.create({
     },
     input: {
       flex: 1,
-      textAlign:"center",
-      padding:0,
-      fontSize:22
-       // Remove padding to make it look borderless
+      textAlign: "left",
+      padding:15,
+      fontSize:16,
+      borderWidth:1,
+      borderRadius:8,
+      borderColor:"#A6A6A6",
+      width:width*0.9,
+      
+      marginTop:4
+      // Remove padding to make it look borderless
     },
     subtitle: {
       color:"black",
