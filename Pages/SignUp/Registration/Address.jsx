@@ -332,8 +332,8 @@ const setnewAddressinStorage =async(address)=>{
      
 
       <Block style={styles2.Space_Around}>
-      <Button color="#65be34" title="Add New Address" style={{width:width*0.5}} tintColor="#fff" onPress={toggleModal} />
-      <Button color="#65be34" title="Next" style={{width:width*0.3}} tintColor="#fff" onPress={SubmitSigupData} />
+      <Button color="black" title="Add New Address" style={{width:width*0.5}} tintColor="#fff" onPress={toggleModal} />
+      <Button color="black" title="Next" style={{width:width*0.3}} tintColor="#fff" onPress={SubmitSigupData} />
       </Block>
 
       <Modal visible={isModalVisible} animationType="slide">
@@ -479,7 +479,7 @@ const setnewAddressinStorage =async(address)=>{
         <View style={styles.modalContainer2}>
           
           <Block style={{backgroundColor:"#fff",flexDirection:"row",justifyContent:"left",alignItems:"center",height:50}}>
-          <Ionicons onPress={toggleModal2} name="arrow-back-circle" style={{marginLeft:10}} size={30} color="#65be34" />
+          <Ionicons onPress={toggleModal2} name="arrow-back-circle" style={{marginLeft:10}} size={30} color="black" />
           {/* <Text style={{fontSize:18,fontWeight:500,marginLeft:10}}>Select Address</Text> */}
           </Block>
 
@@ -600,8 +600,8 @@ const setnewAddressinStorage =async(address)=>{
           {/* Add similar TextInput fields for other address details */}
 
           <Block center style={[styles2.Space_Between, { width:width*0.9,marginTop:60 }]}>
-            <Button color="#65be34" title="save" style={{width:width*0.4}} tintColor="#fff" onPress={saveAddress} />
-            <Button color="#65be34" title="close" style={{width:width*0.4}} tintColor="#fff" onPress={toggleModal2} />
+            <Button color="black" title="save" style={{width:width*0.9}} tintColor="#fff" onPress={saveAddress} />
+            {/* <Button color="black" title="close" style={{width:width*0.4}} tintColor="#fff" onPress={toggleModal2} /> */}
           </Block>
         </View>
       </Modal>
@@ -658,7 +658,7 @@ const styles = StyleSheet.create({
   },
   selectedAddress: {
     borderWidth:2,
-    borderColor: "#65be34",
+    borderColor: "black",
     borderRadius:20
   },
   modalContainer: {

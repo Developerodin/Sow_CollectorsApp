@@ -46,8 +46,8 @@ const HamburgerMenu = ({ isVisible, onClose }) => {
             backgroundColor: 'white',
             padding: 16,
             height: 300,
-            width:200, // Adjust the height as needed,
-            borderWidth:1
+            width:400, // Adjust the height as needed,
+           
           }}
         >
           <Text>Hamburger Menu</Text>

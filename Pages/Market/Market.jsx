@@ -239,7 +239,7 @@ export const Market = () => {
 
     if (city) {
       filteredData = filteredData.filter(
-        (vendor) => vendor.city.toLowerCase() === city.toLowerCase()
+        (vendor) => vendor.city && vendor.city.toLowerCase() === city && city.toLowerCase()
       );
       // console.log("Filter data  cat and subcategory ==>",filteredData)
     }
@@ -571,7 +571,7 @@ export const Market = () => {
                   <View style={{ height: 200 }}>
                     <ScrollView>
                       {AllVendorsData.map((el, index) => {
-                        const lowerCaseCity = el.city.toLowerCase();
+                        const lowerCaseCity = el.city && el.city.toLowerCase();
 
                         // Check if the lowercased category is not in the set, then add it to the set and render the JSX
                         if (!uniqueCitySet.has(lowerCaseCity)) {

@@ -317,10 +317,10 @@ export default function App() {
     <AppProvider>
       <NavigationContainer onLayout={onLayoutRootView}>
         {/* {
-       isAppFirstLaunched !== null && Auth !== null && */}
+       isAppFirstLaunched ? "AppSlides" : Auth ? "Tabs" : "Login" */}
         <Stack.Navigator
           initialRouteName={
-            isAppFirstLaunched ? "AppSlides" : Auth ? "Tabs" : "Login"
+           Auth ? "Tabs" : "Login"
           }
         >
           {/* <Stack.Navigator initialRouteName={'AppSlides'}> */}
