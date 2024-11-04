@@ -12,9 +12,10 @@ import MarketModal from "./MarketModal";
 import logo from "./scrap-img.jpeg";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import { Base_url } from "../../Config/BaseUrl";
-import icon from "./trend.png";
+import icon from "./trend1.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "../../Context/AppContext";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 
 const LiveRatestwo = () => {
@@ -201,13 +202,13 @@ const LiveRatestwo = () => {
           activeOpacity={0.5}
           onPress={() => handleItemPress(item)}
         >
-          <Block
+           <Block
             style={{
               width: "100%",
-              borderRadius: 10,
+              borderRadius: 8,
               padding: 5,
               borderWidth: 1,
-              borderColor: "#C8C8C8",
+              borderColor: "#65C5C4",
               flexDirection: "row",
               justifyContent: "flex-start",
               alignItems: "center",
@@ -215,27 +216,30 @@ const LiveRatestwo = () => {
             }}
           >
             <Block>
-              <Image
+            <Image
                 source={logo}
-                style={{ resizeMode: "cover", width: 50, height: 50 }}
+                style={{ resizeMode: "cover", width: 40, height: 40,marginLeft:5,borderRadius: 8,marginVertical:5 }}
               />
             </Block>
-            <Block style={{ width: "60%", marginLeft: 15 }}>
+            <Block style={{ width: "60%", marginLeft: 10 }}>
               <Text
-                style={{ fontWeight: "700", color: "#002379", fontSize: 13 }}
+                style={{ fontWeight: "700", color: "#000", fontSize: 13 }}
               >
                 {item.mandi?.mandiname || "Unknown Mandi"}
               </Text>
               <Text style={{ fontSize: 13, fontWeight: "600" }}>
                 {priceItem.category}
               </Text>
-              <Text style={{ fontSize: 12, fontWeight: "600" }}>
-                {formatDate(item.updatedAt)}
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <Ionicons name="calendar" size={14} color="#65C5C4" />
+      <Text style={{ fontSize: 12, fontWeight: "600", marginLeft: 5 }}>
+        {formatDate(item.updatedAt)}
+      </Text>
+    </View>
             </Block>
             <Block style={{ textAlign: "right" }}>
               <Text
-                style={{ fontWeight: "500", color: "#002379", fontSize: 13 }}
+                style={{ fontWeight: "700", color: "#000", fontSize: 13 }}
               >
                 ₹ {priceItem.price}
               </Text>
@@ -247,7 +251,7 @@ const LiveRatestwo = () => {
                       fontSize: 13,
                       color:
                         priceDifference.tag === "Increment"
-                          ? "#239456"
+                          ? "#65C5C4"
                           : "#e41010",
                       fontWeight: 400,
                     }}
@@ -291,9 +295,11 @@ const LiveRatestwo = () => {
             onPress={() => handleStatePress(state)}
             style={{
               marginRight: 10,
-              padding: 10,
-              backgroundColor: selectedState === state ? "#239456" : "#fff",
-              borderRadius: 10,
+              
+              paddingVertical: 5,
+              paddingHorizontal: 15,
+              backgroundColor: selectedState === state ? "#000" : "#F4F4F4",
+              borderRadius: 30,
             }}
           >
             <Text style={{ color: selectedState === state ? "#fff" : "black" }}>
