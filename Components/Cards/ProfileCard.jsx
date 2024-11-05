@@ -13,7 +13,7 @@ export const ProfileCard = (props) => {
    const {Title,Img,Link,Fun} = props
   return (
     <TouchableOpacity activeOpacity={0.8} onPress={Fun}>
- <View style={{borderBottomWidth:0.5,borderColor:"#C8C8C8",padding:10,backgroundColor:"#fff", marginTop:20,borderRadius:5}}>
+ <View style={{padding:10,backgroundColor:"#fff", marginTop:20,borderRadius:5}}>
     <Block  style={{flexDirection:"row",marginBottom:10}}>
 
       <Block style={{flexDirection:"row",alignItems:"center",width:"10%",}}>
