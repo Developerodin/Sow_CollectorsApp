@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { useAppContext } from '../../Context/AppContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ProfileLogo from "../../assets/profileMenu.png"
 export const Profile = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
@@ -27,12 +28,12 @@ export const Profile = () => {
   const ProfileTabs=[
     
     // {icon:<FontAwesome name="address-book" size={24} color="#2dd36f" />,title:"Manage Address",link:"Address",color:"dark"},
-    {icon:<AntDesign name="idcard" size={24} color="#5356FF" />,title:"Kyc",link:"Update Kyc"},
-    {icon:<FontAwesome name="history" size={24} color="#989aa2" />,title:"Order History",link:"Orders"},
-    {icon:<MaterialIcons name="pending-actions" size={24} color="#62ceff" />,title:"Pending Orders",link:"Orders"},
-    {icon:<FontAwesome name="building" size={24} color="#4854e0" />,title:"About Comapny",link:"About Company"},
-    {icon:<AntDesign name="infocirlce" size={24} color="#222428" />,title:"Terms & Conditions",link:"Terms and Condition"},
-    {icon:<MaterialIcons name="privacy-tip" size={24} color="green" />,title:"Privacy Policy",link:"Privacy Policy"},
+    {icon:<AntDesign name="idcard" size={24} color="#65C5C4" />,title:"Kyc",link:"Update Kyc"},
+    {icon:<FontAwesome name="history" size={24} color="#65C5C4" />,title:"Order History",link:"Orders"},
+    {icon:<MaterialIcons name="pending-actions" size={24} color="#65C5C4" />,title:"Pending Orders",link:"Orders"},
+    {icon:<FontAwesome name="building" size={24} color="#65C5C4" />,title:"About Comapny",link:"About Company"},
+    {icon:<AntDesign name="infocirlce" size={24} color="#65C5C4" />,title:"Terms & Conditions",link:"Terms and Condition"},
+    {icon:<MaterialIcons name="privacy-tip" size={24} color="#65C5C4" />,title:"Privacy Policy",link:"Privacy Policy"},
    
     // {icon:<Foundation name="torso-business" size={28} color="#4854e0" />,title:"Upgrade to business profile",link:"Upgrade Profile"},
 
@@ -158,36 +159,46 @@ export const Profile = () => {
   return (
     <View style={styles.container}>
     {/* <Header/> */}
-    <StatusBar  style="dark"/>
-    <ScrollView style={{padding:10,marginBottom:70}}>
-     <Block style={{marginTop:100,backgroundColor:"#FFF"}}>
+    <StatusBar  style="dark" hidden={true}/>
+    <ScrollView style={{marginBottom:70}}>
+     <Block style={{marginTop:0,backgroundColor:"#FFF"}}>
     
-        <Block>
+        <Block style={{borderWidth:1,backgroundColor:'black',marginTop:0}}>
 
-          <Block center style={[styles.Center,{width:120,height:120,borderRadius:500,marginTop:20,borderRadius:100,marginTop:-60,backgroundColor:"#fff",elevation:2}]}>
+          <Block center style={[{position:'realtive',width:80,height:80,borderRadius:500,marginTop:30,borderRadius:100,backgroundColor:"#fff",elevation:2}]}>
          {
-          image === null &&  <Image style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}}   source={{uri:"https://static.vecteezy.com/system/resources/thumbnails/000/439/863/small/Basic_Ui__28186_29.jpg"}} />
+          image === null &&  <Image style={{resizeMode: 'contain',width:'100%',height:'100%',borderRadius:100}}   source={ProfileLogo} />
          }
          
          
           {image && <Image source={{ uri: image }} style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}} />}
           
+          
+          <TouchableOpacity activeOpacity={0.8} onPress={() => showImagePicker('camera')} center style={{width:25,height:25,borderRadius:100,position:'absolute',bottom:2,right:5,display:'flex',justifyContent:"center",alignItems:'center',backgroundColor:'#65C5C4'}}>
+          <Feather name="edit-2" size={14}  color="black" />
+          </TouchableOpacity>
+          
           </Block>
           
 
-           <Block  style={{marginTop:20}}>
-            <Text center style={{fontSize:20,fontWeight:"500"}}>{userDetails && userDetails.name} </Text>
-            <Text center style={{fontSize:14,fontWeight:"500"}}>   {userDetails && userDetails.mobile}  ( {userDetails && userDetails.registerAs} )</Text>
-            <Block center >
-           <Button onPress={() => showImagePicker('camera')} color='#0F2C59'>
-           
+           <Block  style={{marginTop:20,marginBottom:30}}>
+            <Text center style={{fontSize:25,fontWeight:"500",color:"#fff"}}>{userDetails && userDetails.name} </Text>
+            
+            <Block center style={{padding:5,borderRadius:20,marginTop:20,paddingHorizontal:20,display:'flex',justifyContent:"center",alignItems:'center',backgroundColor:'#65C5C4'}} >
+           {/* <Button onPress={() => showImagePicker('camera')} color='#0F2C59'>
+           ,border
            
             <Text style={{color:"#fff"}}>
            
             Edit {" "} 
             <Feather name="edit-2" size={14}  color="#fff" />
             </Text>
-           </Button>
+           </Button> */}
+
+           <Text style={{color:"black"}}>
+            {/* {userDetails && userDetails.role} */}
+            Wholesaler
+            </Text>
            </Block>
            </Block>
         </Block>
@@ -210,7 +221,7 @@ export const Profile = () => {
 
 </Block> */}
 
-        <Block style={{marginTop:10}}>
+        <Block style={{marginTop:10,padding:20}}>
           {
             ProfileTabs.map((el,index)=>{
               return (
@@ -219,11 +230,11 @@ export const Profile = () => {
             })
           }
 
-<ProfileCard  Title={"Share App"} Img={<Entypo name="share" size={24} color="#ff5b71" />}  Fun={handleShare}/>
-<ProfileCard  Title={"Rate the app"} Img={<AntDesign name="star" size={24} color="orange" /> } Fun={handelRateAppliction}/>
-<ProfileCard  Title={"Delete account"} Img={<AntDesign name="delete" size={24} color="crimson" /> } Fun={handelDeleteAccount}/>
+<ProfileCard  Title={"Share App"} Img={<Entypo name="share" size={24} color="#65C5C4" />}  Fun={handleShare}/>
+<ProfileCard  Title={"Rate the app"} Img={<AntDesign name="star" size={24} color="#65C5C4" /> } Fun={handelRateAppliction}/>
+<ProfileCard  Title={"Delete account"} Img={<AntDesign name="delete" size={24} color="#65C5C4" /> } Fun={handelDeleteAccount}/>
 <Block style={{marginBottom:10}}>
-<ProfileCard  Title={"Logout"} Img={<AntDesign name="logout" size={24} color="#ff9238" /> } Fun={handelLogout}/> 
+<ProfileCard  Title={"Logout"} Img={<AntDesign name="logout" size={24} color="#65C5C4" /> } Fun={handelLogout}/> 
   </Block>       
    
        

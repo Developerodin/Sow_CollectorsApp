@@ -157,12 +157,12 @@ const Tabs = ({ navigation }) => {
           headerShown: false,
         }}
       />
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
           tabBarIcon: ({ color, size }) => (
-            // <FontAwesome name="bookmark" size={size} color={color} />
+            
             <Image
             source={require('./assets/media/orders_1.png')} 
             style={{ width: 23, height: 23, tintColor: color }}
@@ -170,7 +170,7 @@ const Tabs = ({ navigation }) => {
           ),
           headerShown: false,
         }}
-      />
+      /> */}
       {/* <Tab.Screen
         name="Inventory"
         component={Inventory}
@@ -367,6 +367,14 @@ export default function App() {
             component={LiveRatestwo}
             options={{
               headerShown: true,
+            }}
+          />
+
+<Stack.Screen
+            name="Profile"
+            component={Profile}
+            options={{
+              headerShown: false,
             }}
           />
 

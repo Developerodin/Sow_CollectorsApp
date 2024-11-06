@@ -273,8 +273,8 @@ export const Orders = () => {
         />
       }
     >
-    <Header/>
-   
+    {/* <Header/> */}
+   <Block style={{marginTop:30}}></Block>
     <TabView
       navigationState={{ index, routes }}
       renderScene={renderScene}
