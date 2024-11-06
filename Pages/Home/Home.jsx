@@ -171,20 +171,32 @@ export const Home = () => {
         }
       >
         <Block style={{ backgroundColor: "#FFF", padding: 10 }}>
-        <View style={styles.topContainer}>
-      <View style={styles.textContainer}>
-        <Text style={styles.mainText}>Start <Text style={styles.highlight}>Selling</Text></Text>
-        <Text style={styles.subText}>your scrap  today! </Text>
+        <Block>
+        <Text style={{textAlign:'left',paddingLeft: 12,fontWeight: 700,fontSize:20,marginTop:20}}>Your Sales Summary</Text>
+        <View style={styles.middleContainer}>
+      <View style={styles.cardContainer}>
+        <View style={styles.card1}>
+          <Text style={styles.title1}>Net Amount Earned</Text>
+          <Text style={styles.amountGreen}>₹ 0</Text>
+        </View>
+        <View style={styles.card1}>
+          <Text style={styles.title1}>Net Scrap Sold</Text>
+          <Text style={styles.amountBlue}>0 Kgs</Text>
+        </View>
+        <View style={styles.card1}>
+          <Text style={styles.title1}>Net Scrap Pending</Text>
+          <Text style={styles.amountOrange}>0 Kgs</Text>
+        </View>
       </View>
-      
-      <View style={styles.imageBackground}>
-        <Image
-          source={require('./Frame3.png')} // replace with your image path
-          style={styles.image}
-          resizeMode="contain"
-        />
-      </View>
+
+      {/* <TouchableOpacity style={styles.button1}>
+        <Text style={styles.buttonText1}>Start Selling</Text>
+        <Text style={styles.arrow}>→</Text>
+      </TouchableOpacity> */}
     </View>
+        </Block>
+
+     
         
        
 
@@ -439,30 +451,21 @@ export const Home = () => {
         </Block>
        
 
-    <Block>
-        <Text style={{textAlign:'left',paddingLeft: 12,fontWeight: 700,fontSize:20,marginTop:20}}>Your Sales Summary</Text>
-        <View style={styles.middleContainer}>
-      <View style={styles.cardContainer}>
-        <View style={styles.card1}>
-          <Text style={styles.title1}>Net Amount Earned</Text>
-          <Text style={styles.amountGreen}>₹ 0</Text>
-        </View>
-        <View style={styles.card1}>
-          <Text style={styles.title1}>Net Scrap Sold</Text>
-          <Text style={styles.amountBlue}>0 Kgs</Text>
-        </View>
-        <View style={styles.card1}>
-          <Text style={styles.title1}>Net Scrap Pending</Text>
-          <Text style={styles.amountOrange}>0 Kgs</Text>
-        </View>
+   
+        <View style={styles.topContainer}>
+      <View style={styles.textContainer}>
+        <Text style={styles.mainText}>Start <Text style={styles.highlight}>Selling</Text></Text>
+        <Text style={styles.subText}>your scrap  today! </Text>
       </View>
-
-      {/* <TouchableOpacity style={styles.button1}>
-        <Text style={styles.buttonText1}>Start Selling</Text>
-        <Text style={styles.arrow}>→</Text>
-      </TouchableOpacity> */}
+      
+      <View style={styles.imageBackground}>
+        <Image
+          source={require('./Frame3.png')} // replace with your image path
+          style={styles.image}
+          resizeMode="contain"
+        />
+      </View>
     </View>
-        </Block>
 
         <Block style={[styles.bottomContainer]}>
       <Text style={styles.headerText}>Talk to us for free</Text>

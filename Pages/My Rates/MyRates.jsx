@@ -8,6 +8,7 @@ import {
   Dimensions,
   TouchableOpacity,
   ActivityIndicator,
+  Image,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -30,6 +31,7 @@ import { TextInput } from "@react-native-material/core";
 import {Picker} from '@react-native-picker/picker';
 import { CategoryAddModel } from "../../Components/CategoryAddModel/CategoryAddModel";
 import { CategoryAddModel2 } from "../../Components/CategoryAddModel/CategoryAddModel2";
+import icon from './icon.png'
 
 export const MyRates = () => {
   const navigation = useNavigation();
@@ -341,17 +343,32 @@ const handleSubAddChange = (field, value) => {
     <View style={styles.container}>
       <StatusBar style="dark" />
       <Header />
+      <View style={styles.topContainer}>
+      <View style={styles.textContainer}>
+        <Text style={styles.mainText}>Add your Custom </Text>
+        <Text style={styles.subText}>Scrap Rate. </Text>
+      </View>
+      
+      <View style={styles.imageBackground}>
+        <Image
+          source={require('./icon.png')} // replace with your image path
+          style={{ width: 78, height: 93 }}
+          resizeMode="contain"
+        />
+      </View>
+    </View>
 
-      <Block style={{ padding: 10 }}>
+      <Block style={{ padding: 8 }}>
         <Input
           placeholder="Search for an item..."
-          right
+          left
           icon="search1"
           family="antdesign"
           iconSize={20}
           iconColor="grey"
           value={query}
           onChangeText={(text) => setQuery(text)}
+          style={{ borderRadius: 16, borderWidth: 1, borderColor: "#A6A6A6",paddingVertical:10 ,paddingHorizontal:20}}
         />
         <Block style={styles.Space_Between}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -389,26 +406,36 @@ const handleSubAddChange = (field, value) => {
         ))}
       </ScrollView>
 
-      <TouchableOpacity
-        onPress={() => handelCategoryModelOpen(activeCategory)}
-        style={[styles.Center, { marginRight: 10 }]}
-      >
-        <Ionicons name="add-circle-outline" size={24} color="#239456" />
-      </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => handelCategoryModelOpen(activeCategory)}
+              style={[styles.Center, { marginRight: 8 }]}
+            >
+              <View style={{ backgroundColor: 'black', borderRadius: 35, padding: 10 }}>
+                <Ionicons name="add" size={14} color="#fff" />
+              </View>
+            </TouchableOpacity>
     </Block>
       
        
       </Block>
+      <View style={styles3.container}>
+      <Text style={styles3.text}>
+        Add pricing for{' '}
+        <Text style={styles3.linkText}>sub categories</Text> of{' '}
+        <Text style={styles3.highlightText}>Aluminium</Text> -
+      </Text>
+      <TouchableOpacity style={styles3.button}>
+        <Text style={styles3.buttonText}>+ Update Pricing</Text>
+      </TouchableOpacity>
+    </View>
 
       <ScrollView style={{ backgroundColor: "#fff" }}>
         <Block
-          style={{ backgroundColor: "#fff", padding: 10, marginBottom: 60 }}
+          style={{ backgroundColor: "#fff", paddingHorizontal: 10, marginBottom: 60 }}
         >
-          <Block style={[styles.Space_Between, { marginTop: 10 }]}>
+          {/* <Block style={[styles.Space_Between, { marginTop: 10 }]}>
             <Text style={{ fontWeight: 500 ,fontSize:18}}>Normal Recyclables</Text>
-            {/* {
-    CartInStorage.length > 0 &&  <Button onPress={handelCartProceed} color='#29BD7F' size={"small"}>Proceed</Button>
-  } */}
+   
 
 <Button
   size={"small"}
@@ -417,9 +444,9 @@ const handleSubAddChange = (field, value) => {
 >
   Add
 </Button>
-          </Block>
+          </Block> */}
 
-          <Block style={{ marginTop: 10, marginBottom: 100 }}>
+          <Block style={{ marginTop: 10, marginBottom: 100 , }}>
             {filteredData.map((el, index) => {
               return (
                 <MarketCard
@@ -622,6 +649,47 @@ showCartSuggestion && CartInStorage.length >0 && <Block center style={{position:
 };
 
 const styles = StyleSheet.create({
+  topContainer: {
+    flexDirection: 'row',
+    backgroundColor: '#f9f9f9',
+    borderRadius: 15,
+    paddingLeft: 20,
+
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    // adjust size to fit design
+    height: 110,
+    
+  },
+  textContainer: {
+    flex: 1,
+  },
+  mainText: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: 'black',
+  },
+  highlight: {
+    color: '#65c5c4', // matching color for "Selling"
+  },
+  subText: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: 'black',
+    
+  },
+  imageBackground: {
+    
+    backgroundColor: '#65c5c4', 
+    
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopLeftRadius: 50,
+    borderBottomLeftRadius: 50,
+    borderTopRightRadius: 20,
+    borderBottomRightRadius: 20,
+    width: 150,
+  },
   container: {
     flex: 1,
     backgroundColor: "#FFF",
@@ -794,4 +862,37 @@ const styles2 = StyleSheet.create({
     fontWeight: "bold",
     color: "#2DA194",
   },
+});
+
+const styles3 = StyleSheet.create({
+  container: {
+    padding: 10
+  },
+  text: {
+    fontSize: 16,
+    color: '#000000', // Black color for the main text
+  },
+  linkText: {
+    color: '#65C5C4', // Color for "sub categories" text
+    
+  },
+  highlightText: {
+    color: '#65C5C4', // Color for "Aluminium" text
+  },
+  button: {
+    marginTop: 14,
+    borderColor: '#65C5C4',
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    width: 250,
+  },
+  buttonText: {
+    color: '#65C5C4',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+
 });
