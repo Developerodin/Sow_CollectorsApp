@@ -3,7 +3,7 @@ import { FlatList,RefreshControl, SafeAreaView, StyleSheet,ScrollView,  View,Dim
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
 
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, Feather, Ionicons } from '@expo/vector-icons';
 import { Header } from '../../Components/Header/Header';
 import { OrdersCard } from '../../Components/Cards/OrdersCard';
 const {width, height} = Dimensions.get('window');
@@ -209,25 +209,33 @@ export const Orders = () => {
   const routes = [
     {key:"zero",title:"Purchase"},
     { key: 'first', title: 'Sell' },
-    { key: 'second', title: 'Completed' },
-    { key: 'third', title: 'Rejected' },
+    // { key: 'second', title: 'Completed' },
+    // { key: 'third', title: 'Rejected' },
   ];
 
   const renderTabBar = (props) => {
     const inputRange = props.navigationState.routes.map((x, i) => i);
 
     return (
+      <View>
+     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20, marginLeft: 20, marginRight: 20 }}>
+    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
+      Your Order
+    </Text>
+    <Feather name="filter" size={24} color="#000" />
+  </View>
+  
       <View style={styles.tabBar}>
         {props.navigationState.routes.map((route, i) => {
         const isTabActive = i === index;
-        const tabBackgroundColor = isTabActive ? '#F3F3F3' : '#F3F3F3';
-        const textColor = isTabActive ? 'black' : 'grey';
+        const tabBackgroundColor = isTabActive ? '#000' : '#F4F4F4';
+        const textColor = isTabActive ? '#fff' : '#000';
         const borderWidth = isTabActive ? 2 : 0;
         const borderColor = isTabActive ? '#239456' : 'grey'; 
             
         const tabStyle = [
           styles.tabItem,
-          { borderRadius:0,borderBottomWidth:borderWidth,borderColor:borderColor },
+          { borderRadius:30,padding:10 ,backgroundColor:tabBackgroundColor},
         ];
 
         const textStyles = [
@@ -245,6 +253,7 @@ export const Orders = () => {
           </TouchableOpacity>
         );
       })}
+      </View>
       </View>
     );
   };
@@ -265,7 +274,7 @@ export const Orders = () => {
 
   return (
      <ScrollView
-      contentContainerStyle={{ flex: 1 }}
+      contentContainerStyle={{ flex: 1 ,backgroundColor:"#ffffff"}}
       refreshControl={
         <RefreshControl
           refreshing={refreshing}
@@ -298,7 +307,9 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // paddingTop: StatusBar.currentHeight,
     padding:10,
-    backgroundColor:"#f1f1f1"
+    backgroundColor:"#fff",
+    width: '60%',
+    alignSelf: 'center',
     
   },
   tabItem: {

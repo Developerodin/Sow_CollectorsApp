@@ -1,177 +1,137 @@
-import React, { useRef, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
-import { StatusBar } from 'expo-status-bar';
-import { Block, Text, Input, theme, Button } from "galio-framework";
-const {width, height} = Dimensions.get('window');
-import { Feather } from '@expo/vector-icons';
-import { Ionicons } from '@expo/vector-icons'; 
-import { AntDesign } from '@expo/vector-icons';
+import React from 'react';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { Block, Text } from "galio-framework";
+import { Ionicons, AntDesign, Feather, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
-export const PendingOrderCard = ({data}) => {
+export const PendingOrderCard = ({ data }) => {
   const navigation = useNavigation();
+
   if (!data) {
-    console.log("no c data ==>")
-    return null; // or return some placeholder
+    console.log("No data available");
+    return null;
   }
-  const handeViewDetail=()=>{
-    navigation.navigate("Pending Order",{id:data._id})
-  }
-    // const {Img,Title,SubTitle} = props
+
+  const handleViewDetail = () => {
+    navigation.navigate("Pending Order", { id: data._id });
+  };
+
   return (
-    <View style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:5}}>
-      <Block>
-      <Block right>
-        <Text style={[{color:"grey",fontSize:13}]} >{(data.status).toUpperCase()}</Text>
-        </Block>
-        
-        <Block style={[styles.displayF]}>
-        <Ionicons name="person" size={18} color="black" />
-        <Text style={[styles.text1]} >{data && data.to.name}</Text>
-        </Block>
+    
+    <View style={styles.cardContainer}>
+      
 
-        <Block style={{marginTop:15}}>
-          <Text style={{fontSize:18,fontWeight:400}}>Estimated Value</Text>
-          <Text style={{fontSize:20,fontWeight:500,marginTop:3}}>₹ {data && data.totalAmount}</Text>
-        </Block>
+      <Block style={styles.row}>
+        <View style={styles.column}>
+        <Text style={{fontSize: 16,fontWeight: 600}}>{data.to.name}</Text>
+                   <View style={{ flexDirection: 'row', alignItems: 'center',marginTop: 5 }}>
+            <AntDesign name="calendar" size={20} color="#65C5C4" />
+            <Text style={[styles.text, { marginLeft: 8 }]}>
+              <Text style={styles.blueText}>{new Date(data.orderDate).toLocaleDateString('en-GB')}</Text>
+            </Text>
+          </View>
+        </View>
 
-        <Block style={[styles.displayF,{marginTop:10}]}>
-        <AntDesign name="calendar" size={20} color="black" />
-        <Text style={[styles.text1]} >Order Date : <Text style={{color:"#6096FF"}}>{new Date(data.orderDate).toLocaleDateString('en-GB')}</Text> </Text>
-        </Block>
+        <View style={[styles.column, styles.divider]}>
+        <Text style={{fontSize: 16,fontWeight: 600}}>Est. Value</Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center',marginTop: 5 }}>
+          <View style={{ backgroundColor: '#65C5C4', borderRadius: 50, padding: 5 }}>
+            <FontAwesome name="rupee" size={10} color="#fff" />
+          </View>
+          <Text style={styles.amountText}>₹{data.totalAmount}</Text>
+          </View>
+        </View>
 
-        <Block style={[styles.displayF,{marginTop:10}]}>
-        <Ionicons name="location" size={20} color="black" />
-        <Text style={[styles.text1]} >Pickup Location : {data && data.from && data.from.Address}, {data && data.from && data.from.pincode}, {data && data.from && data.from.city}, {data && data.from && data.from.country} </Text>
-        </Block>
-
-        <Block style={[styles.Center]} >
-        <Block style={[styles.Center,{marginTop:20}]} >
-        <TouchableOpacity
-                activeOpacity={1}
-                style={[
-                  styles.btn,
-                  {
-                    borderColor:"black",
-                    borderWidth: 1,
-                    backgroundColor: 'black',
-                    flexDirection:"row",
-                    alignItems:"center"
-                  },
-                ]}
-                onPress={handeViewDetail}
-                >
-                <Text
-                  style={{
-                  
-                    fontSize: 15,
-                    color:"#fff",
-                   
-                  }}>
-                   Details
-                  
-                </Text>
-                
-               
-        </TouchableOpacity>
-        </Block>
-        </Block>
+        <View style={styles.column}>
+          <Text style={[styles.text,{fontSize: 16,fontWeight: 600}]}>Items</Text>
+          <Text style={[styles.text,{marginTop: 5}]}>{data.details.category}</Text>
+         
+        </View>
       </Block>
-   
-</View>
-  )
-}
+
+
+            <View style={{ flexDirection: 'row', alignItems: 'center',paddingTop: 15 }}>
+        <Ionicons name="location" size={26} color="#65C5C4" />
+        <Text style={[styles.text, { flex: 1,paddingRight: 24 }]}>
+          Pickup Location: {data.from.Address}, {data.from.pincode}, {data.from.city}, {data.from.country}
+        </Text>
+        <TouchableOpacity style={styles.viewDetailsButton} onPress={handleViewDetail}>
+          <Text style={styles.viewDetailsText}>View Details</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
-    container:{
-      flex: 1,
-      backgroundColor:"#FFF"
-    },
-    displayF:{
-    flexDirection:"row",
-    alignItems:"center"
-    },
-    text1:{
-      fontSize:15,
-       marginLeft:10
-    },
-    inputContainer: {
-      width: '100%',
-      height: 66,
-      borderBottomWidth: 1, // Add a bottom border for the input
-      borderColor: 'transparent', // Make the border color transparent
-    },
-    input: {
-      flex: 1,
-      textAlign:"center",
-      padding:0,
-      fontSize:22
-       // Remove padding to make it look borderless
-    },
-    subtitle: {
-      color:"black",
-      fontSize: 20,
-      marginTop: 10,
+  cardContainer: {
+    borderWidth: 1,
+    borderColor: "#65C5C4",
+    borderRadius: 15,
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    backgroundColor: "#FFFFFF",
+    marginTop: 20,
     
-      textAlign: 'left',
-      lineHeight: 23,
-      letterSpacing:0.3
-    },
-    title: {
-      color:"black",
-      fontSize: 22,
-      fontWeight: 'bold',
-      marginTop: 20,
-      textAlign: 'center',
-    },
-    image: {
-      height: '100%',
-      width: '100%',
-      resizeMode: 'contain',
-    },
-    indicator: {
-      height: 10,
-      width: 10,
-      backgroundColor: 'grey',
-      marginHorizontal: 3,
-      borderRadius: 52,
-    },
-    btn: {
-     width: '100%',
-      height: 46,
-      borderRadius: 5,
-      backgroundColor: '#40A99E',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    border: {
-        borderWidth: 1,
-        borderColor: "blue",
-      },
-      Center: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      Space_Around: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-      },
-      Space_Between: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-      },
-      shadow: {
-        shadowColor: "black",
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 4,
-        shadowOpacity: 0.2,
-        elevation: 2,
-      },
-      button: {
-        width: width,
-      },
-  
-    });
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    marginBottom: 10,
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    backgroundColor: "#FFF5CC",
+  },
+  statusText: {
+    color: "#000",
+    fontSize: 12,
+    fontWeight: '600',
+    marginLeft: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  column: {
+    flex: 1,
+    alignItems: 'center',
+    marginRight: 10,
+  },
+  divider: {
+    borderRightWidth: 1,
+    borderRightColor: "#65C5C4",
+    borderLeftWidth: 1,
+    borderLeftColor: "#65C5C4",
+    paddingHorizontal: 12,
+    
+  },
+  amountText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: "#000",
+    
+    marginLeft: 5,
+  },
+  text: {
+    fontSize: 14,
+    color: "#000",
+    textAlign: 'center',
+    
+  },
+  blueText: {
+    color: "#000",
+    fontWeight: '500',
+  },
+  viewDetailsButton: {
+    
+  },
+  viewDetailsText: {
+    fontSize: 16,
+    color: "#65C5C4",
+    fontWeight: '600',
+    textDecorationLine: 'underline',
+  },
+});
