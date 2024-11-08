@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput,Modal } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons, MaterialIcons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons';
 import DynamicInputField from '../../Components/DynamicInput/DynamicInputField ';
 import { OTPModel } from '../../Components/Model/OTPModel';
@@ -100,11 +100,11 @@ export const PendingOrderDetails = ({route}) => {
   
   return (
    <View style={styles.container}>
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
 
    
-    <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:10}}>
-    <Block style={styles.Space_Between}>
+    <Block style={{padding:15,backgroundColor:"#fff", marginTop:0,borderRadius:10}}>
+    {/* <Block style={styles.Space_Between}>
          <Text style={{fontSize:20,color:"grey"}}>OTP :{orderDetails && orderDetails.otp}</Text>
          <Button  style={{backgroundColor:"crimson",borderRadius:10}}>
               <Text style={{fontSize:16,fontWeight:400,color:"#fff"}}>
@@ -112,53 +112,110 @@ export const PendingOrderDetails = ({route}) => {
               </Text>
             
               </Button>
-        </Block>
-    <Block style={{marginTop:20}} >
-        <Block>
-         <Text style={styles.text1}>Order Collector</Text>
-        </Block>
-        <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> <Entypo name="user" size={14}  color="black" />  {orderDetails && orderDetails.to && orderDetails.to.name}</Text>
-        </Block>
-        <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> <Feather name="phone" size={14} color="black" />  +91 {orderDetails && orderDetails.to && orderDetails.to.mobile}</Text>
-        </Block>
-        <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> <AntDesign name="infocirlceo" size={14} color="black" />  {orderDetails && orderDetails.to && orderDetails.to.registerAs}</Text>
-        </Block>
-        
-     </Block>
-
-     <Block style={{marginTop:20}} >
-        <Block>
-         <Text style={styles.text1}>Order Details</Text>
-        </Block>
-        <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> Qty :  {orderDetails && orderDetails.details && orderDetails.details.quantity} {orderDetails && orderDetails.details && orderDetails.details.unit}</Text>
-        </Block>
-        <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> Category :  {orderDetails && orderDetails.details && orderDetails.details.category}</Text>
-        </Block>
-        <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> Sub category : {orderDetails && orderDetails.details && orderDetails.details.sub_category}</Text>
-        </Block>
-       
-        <Block style={{marginTop:10}}>
-        <Text style={{fontSize:16}}> Amount :  ₹ {orderDetails && orderDetails.totalAmount}</Text>
-        </Block>
-        
-     </Block>
-
-     <Block style={{marginTop:20}} >
-        <Block>
-         <Text style={styles.text1}>Pick Up Location</Text>
-        </Block>
-        <Block style={{marginTop:10}}>
+        </Block> */}
+             <Block style={{ marginTop: 0 }}>
           
-        <Text style={{fontSize:16}}>{orderDetails && orderDetails.from && orderDetails.from.Address}, {orderDetails && orderDetails.from && orderDetails.from.pincode}, {orderDetails && orderDetails.from && orderDetails.from.city}</Text>
+          <Block style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="document" size={20} color="black" />
+            <Text style={{ fontSize: 20, marginLeft: 8 ,fontWeight : 600 }}>
+              Order No. : #0100
+            </Text>
+          </Block>
+          <Block style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="calendar" size={20} color="black" />
+            <Text style={{ fontSize: 20, marginLeft: 8 ,fontWeight : 600}}>
+              {orderDetails && new Date(orderDetails.orderDate).toLocaleDateString('en-GB')}
+            </Text>
+          </Block>
+          <Block style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
+            <Ionicons name="location" size={20} color="black" />
+            <Text style={{ fontSize: 20, marginLeft: 8 ,fontWeight : 600}}>
+              Pickup Location :   {orderDetails && orderDetails.to && orderDetails.to.Address}, {orderDetails && orderDetails.to && orderDetails.to.pincode}, {orderDetails && orderDetails.to && orderDetails.to.city}
+            </Text>
+          </Block>
+          <Block style={{ marginTop: 8, flexDirection: 'row', alignItems: 'center' }}>
+            
+            <Text style={{ fontSize: 20, fontWeight: 600, marginLeft: 26 ,color: '#65C5C4',textDecorationLine: 'underline'}}>
+              View on Map 
+            </Text>
+            </Block>
+            <Block style={{ marginTop: 25, flexDirection: 'row', alignItems: 'center' }}>
+                        <MaterialIcons name="category" size={20} color="black" />
+            <Text style={{ fontSize: 20, marginLeft: 8,fontWeight: 600 }}>
+            {orderDetails && orderDetails.details && orderDetails.details.category}
+            </Text>
+            </Block>
         </Block>
-        
-     </Block>
+
+        <Block style={styles.tableContainer}>
+      
+
+      {/* Table Header */}
+      <View style={[styles.tableRow, styles.tableHeader]}>
+        <Text style={[styles.headerText, styles.tableCell]}>Unit</Text>
+        <Text style={[styles.headerText, styles.tableCell]}>Estimated</Text>
+        <Text style={[styles.headerText, styles.tableCell]}>Actual</Text>
+      </View>
+
+      {/* Table Rows */}
+      <View style={styles.tableRow}>
+        <Text style={[styles.cellText, styles.tableCell]}>
+          {orderDetails?.details?.unit || "-"}
+        </Text>
+        <Text style={[styles.cellText, styles.tableCell]}>
+          {orderDetails?.details?.estimated || "50 kg"}
+        </Text>
+        <Text style={[styles.cellText, styles.tableCell]}>
+          {orderDetails?.details?.actual || "75 kg"}
+        </Text>
+      </View>
+
+      {/* <View style={styles.tableRow}>
+        <Text style={[styles.cellText, styles.tableCell]}>
+          {orderDetails?.details?.category || "-"}
+        </Text>
+        <Text style={[styles.cellText, styles.tableCell]}>
+          {orderDetails?.details?.estimated_category || "-"}
+        </Text>
+        <Text style={[styles.cellText, styles.tableCell]}>
+          {orderDetails?.details?.actual_category || "-"}
+        </Text>
+      </View> */}
+
+      {/* <View style={styles.tableRow}>
+        <Text style={[styles.cellText, styles.tableCell]}>
+          Sub Category
+        </Text>
+        <Text style={[styles.cellText, styles.tableCell]}>
+          {orderDetails?.details?.estimated_sub_category || "-"}
+        </Text>
+        <Text style={[styles.cellText, styles.tableCell]}>
+          {orderDetails?.details?.actual_sub_category || "-"}
+        </Text>
+      </View> */}
+
+      <View style={styles.tableRow}>
+        <Text style={[styles.cellText, styles.tableCell]}>₹</Text>
+        <Text style={[styles.cellText, styles.tableCell]}>₹ {orderDetails?.totalAmount || "-"}</Text>
+        <Text style={[styles.cellText, styles.tableCell]}>₹ {orderDetails?.Amount || "30000"}</Text>
+      </View>
+    </Block>
+ 
+
+
+      <Text style={{fontSize: 24 ,fontWeight : 700, color: '#000' ,marginVertical: 15}}>Photos</Text>
+    <View style={styles.boxContainer}>
+      <View style={styles.row}>
+        <View style={styles.box} />
+        <View style={styles.box} />
+        <View style={styles.box} />
+      </View>
+      <View style={styles.row}>
+        <View style={styles.box} />
+        <View style={styles.box} />
+        <View style={styles.box} />
+      </View>
+    </View>
 
 {
   orderDetails && orderDetails.details.discription &&<Block style={{marginTop:20}} >
@@ -177,21 +234,17 @@ export const PendingOrderDetails = ({route}) => {
 
      <Block style={{marginTop:20}} >
 
-      <Block >
+      {/* <Block >
       <Block>
          <Text style={styles.text1}>Booked Date</Text>
         </Block>
         <Block style={{marginTop:10}}>
         <Text style={styles.text2}>{orderDetails && new Date(orderDetails.orderDate).toLocaleDateString('en-GB')}</Text>
         </Block>
-      </Block>
+      </Block> */}
        
 
-        {/* <Block right>
-    <Button size={"small"} color='teal' onPress={toggleModal}>
-     Address
-    </Button>
-        </Block> */}
+       
         
      </Block>
     </Block>
@@ -383,7 +436,7 @@ export const PendingOrderDetails = ({route}) => {
 const styles = StyleSheet.create({
     container:{
       flex: 1,
-      backgroundColor:"#ffffff",
+      backgroundColor:"#fff",
       padding:10
   
     },
@@ -489,5 +542,69 @@ const styles = StyleSheet.create({
       button: {
         width: width,
       },
+      tableContainer: {
+        marginTop : 15,
+        paddingRight : 30
+        
+      },
+      title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 15,
+        color: '#333',
+        textAlign: 'center',
+      },
+      tableHeader: {
+        backgroundColor: '#fff',
+        borderBottomWidth: 2,
+        borderBottomColor: '#000',
+        borderTopColor: '#000',
+        borderTopWidth: 2,
+      },
+      tableRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        borderBottomWidth: 2,
+        borderBottomColor: '#000',
+      },
+      headerText: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: '#000',
+        textAlign: 'center',
+      },
+      cellText: {
+        fontSize: 16,
+        color: '#000',
+        textAlign: 'center',
+        fontWeight : 500
+      },
+      tableCell: {
+        flex: 1,
+        paddingVertical: 5,
+        borderRightWidth: 1,
+        borderRightColor: '#000',
+        borderLeftWidth: 2,
+        borderLeftColor: '#000',
+      },
+      boxContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        padding: 10,
+      },
+      row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '100%',
+        marginBottom: 10,
+      },
+      box: {
+        width: '25%', // Adjusts the width of each box in the row
+        aspectRatio: 1, // Ensures boxes are square
+        backgroundColor: '#D3D3D3', // Light grey color
+        borderRadius: 8,
+      },
+      
   
     });

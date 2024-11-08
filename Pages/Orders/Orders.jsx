@@ -218,11 +218,11 @@ export const Orders = () => {
 
     return (
       <View>
-     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 20, marginLeft: 20, marginRight: 20 }}>
-    <Text style={{ fontSize: 20, fontWeight: 'bold' }}>
-      Your Order
+     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginTop: 25, marginLeft: 30, marginRight: 30 }}>
+    <Text style={{ fontSize: 22, fontWeight: 'bold'  }}>
+      Your Orders
     </Text>
-    <Feather name="filter" size={24} color="#000" />
+    <Ionicons name="filter" size={26} color="#000" />
   </View>
   
       <View style={styles.tabBar}>
