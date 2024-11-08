@@ -224,12 +224,22 @@ export const Orders = () => {
     </Text>
     <Ionicons name="filter" size={26} color="#000" />
   </View>
+
+  <View style={styles.tabContainer}>
+      <View style={[styles.tab, styles.leftTab]}>
+        <Text style={styles.tabText}>Upcoming</Text>
+      </View>
+      <View style={[styles.tab, styles.rightTab]}>
+        <Text style={{fontSize: 16,
+      color: '#fff',}}>Previous</Text>
+      </View>
+    </View>
   
       <View style={styles.tabBar}>
         {props.navigationState.routes.map((route, i) => {
         const isTabActive = i === index;
         const tabBackgroundColor = isTabActive ? '#000' : '#F4F4F4';
-        const textColor = isTabActive ? '#fff' : '#000';
+        const textColor = isTabActive ? '#65C5C4' : '#000';
         const borderWidth = isTabActive ? 2 : 0;
         const borderColor = isTabActive ? '#239456' : 'grey'; 
             
@@ -396,6 +406,35 @@ const styles = StyleSheet.create({
     },
     button: {
       width: width,
+    },
+
+    tabContainer: {
+      flexDirection: 'row',
+      width: '100%',
+      borderWidth: 1,
+      borderColor: '#ddd',
+      borderRadius: 8,
+      overflow: 'hidden',
+      alignSelf: 'center',
+      marginTop: 20
+    },
+    tab: {
+      flex: 1,
+      alignItems: 'center',
+      justifyContent: 'center',
+      paddingVertical: 10,
+    },
+    leftTab: {
+      backgroundColor: '#fff',
+      borderRightWidth: 1,
+      borderRightColor: '#ddd',
+    },
+    rightTab: {
+      backgroundColor: '#000',
+    },
+    tabText: {
+      fontSize: 16,
+      color: '#000',
     },
 
   });
