@@ -160,7 +160,7 @@ export const Profile = () => {
     <View style={styles.container}>
     {/* <Header/> */}
     <StatusBar  style="dark" hidden={true}/>
-    <ScrollView style={{marginBottom:70}}>
+    <ScrollView >
      <Block style={{marginTop:0,backgroundColor:"#FFF"}}>
     
         <Block style={{borderWidth:1,backgroundColor:'black',marginTop:0}}>

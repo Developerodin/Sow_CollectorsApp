@@ -668,7 +668,7 @@ const styles = StyleSheet.create({
     padding: 20,
     width: 120, // Adjust card width as needed
     alignItems: 'center',
-    borderWidth:1,
+   
     borderColor:'#A6A6A6'
   },
   title1: {

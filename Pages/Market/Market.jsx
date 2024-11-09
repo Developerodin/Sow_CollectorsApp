@@ -589,7 +589,7 @@ export const Market = () => {
                               style={[styles.Space_Between, { marginTop: 10 }]}
                             >
                               <Text style={{ fontSize: 18 }}>
-                                {el.city.toUpperCase()}
+                                {el.city &&el.city.toUpperCase()}
                               </Text>
                             </TouchableOpacity>
                           );

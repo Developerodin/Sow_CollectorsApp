@@ -14,7 +14,8 @@ import { Ionicons } from '@expo/vector-icons';
 import * as TaskManager from "expo-task-manager";
 import Geocoder from 'react-native-geocoding';
 import { useAppContext } from '../../Context/AppContext';
-Geocoder.init("AIzaSyB0nGuxGIXDDJwRlogVWki1gDNMuYmaXgo");
+Geocoder.init("AIzaSyAW5IiW5X1wMYJY8lpEOascXPYNdoghLxE");
+// AIzaSyB0nGuxGIXDDJwRlogVWki1gDNMuYmaXgo
 const {width,height} = Dimensions.get("window");
 const ASPECT_RATIO = width / height;
 const latitude_Delta=0.02;

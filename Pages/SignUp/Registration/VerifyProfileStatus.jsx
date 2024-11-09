@@ -59,7 +59,7 @@ export const VerifyProfileStatus = () => {
                      styles.btn,
                      {
                        flexDirection:"row",
-                       backgroundColor: '#96DE20',
+                       backgroundColor: 'black',
                        textAlign:"center"
                      },
                    ]}
@@ -70,7 +70,7 @@ export const VerifyProfileStatus = () => {
                      style={{
                        fontWeight:500,
                        fontSize: 22,
-                       color:"black",
+                       color:"white",
                      }}>
                      Login 
                    </Text>
@@ -137,7 +137,7 @@ const styles = StyleSheet.create({
      width: '95%',
       height: 55,
       borderRadius: 5,
-      backgroundColor: '#40A99E',
+      backgroundColor: 'black',
       justifyContent: 'center',
       alignItems: 'center',
     },
@@ -172,68 +172,4 @@ const styles = StyleSheet.create({
       },
   
     });
-  
-    const styles2 = StyleSheet.create({
-      container: {
-        flex: 1,
-        backgroundColor: "#fff",
-      },
-      AlignCenter: {
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      Space_Around: {
-        flexDirection: "row",
-        justifyContent: "space-around",
-        alignItems: "center",
-      },
-      Space_Between: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        alignItems: "center",
-      },
-      title: {
-        fontSize: 20,
-        fontWeight: "bold",
-        marginBottom: 20,
-      },
-      input: {
-        width: "100%",
-        height: 40,
-        borderColor: "grey",
-        borderBottomWidth: 0.5,
-        marginBottom: 20,
-        paddingHorizontal: 10,
-      },
-      error: {
-        color: "red",
-        marginTop: 10,
-      },
-      borderView: {
-        borderWidth: 1,
-        borderColor: "red",
-        height: 100,
-        width: 100,
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      bottomBlock: {
-        position: "absolute",
-        bottom: 0,
-        width: "100%",
-      },
-      textContainer: {
-        position: "absolute",
-        bottom: 40, // Adjust as needed
-        left: 0,
-        right: 0,
-        justifyContent: "center",
-        alignItems: "center",
-      },
-      text: {
-        color: "white",
-        fontSize: 16,
-        fontWeight: "bold",
-      },
-    });
+ 
