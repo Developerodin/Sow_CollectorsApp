@@ -37,8 +37,15 @@
         "backgroundColor": "#ffffff"
       },
       "permissions": [
-        "NOTIFICATIONS"
+        "NOTIFICATIONS",
+        "ACCESS_BACKGROUND_LOCATION"
       ],
+      "config": {
+        "googleMaps": {
+          
+          "apiKey":"AIzaSyAW5IiW5X1wMYJY8lpEOascXPYNdoghLxE"
+        }
+      },
       "googleServicesFile": "./android/app/google-services.json",
       "package": "com.scraponwheelscollectorsv1.app"
     },
