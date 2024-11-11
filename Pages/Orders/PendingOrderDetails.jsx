@@ -115,33 +115,33 @@ export const PendingOrderDetails = ({route}) => {
         </Block> */}
              <Block style={{ marginTop: 0 }}>
           
-          <Block style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
+          <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
             <Ionicons name="document" size={20} color="black" />
-            <Text style={{ fontSize: 20, marginLeft: 8 ,fontWeight : 600 }}>
+            <Text style={{ fontSize: 18, marginLeft: 8 ,fontWeight : 500 }}>
               Order No. : #0100
             </Text>
           </Block>
-          <Block style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
+          <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
             <Ionicons name="calendar" size={20} color="black" />
-            <Text style={{ fontSize: 20, marginLeft: 8 ,fontWeight : 600}}>
+            <Text style={{ fontSize: 18, marginLeft: 8 ,fontWeight : 500}}>
               {orderDetails && new Date(orderDetails.orderDate).toLocaleDateString('en-GB')}
             </Text>
           </Block>
-          <Block style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center' }}>
+          <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
             <Ionicons name="location" size={20} color="black" />
-            <Text style={{ fontSize: 20, marginLeft: 8 ,fontWeight : 600}}>
+            <Text style={{ fontSize: 18, marginLeft: 8 ,fontWeight : 500}}>
               Pickup Location :   {orderDetails && orderDetails.to && orderDetails.to.Address}, {orderDetails && orderDetails.to && orderDetails.to.pincode}, {orderDetails && orderDetails.to && orderDetails.to.city}
             </Text>
           </Block>
           <Block style={{ marginTop: 8, flexDirection: 'row', alignItems: 'center' }}>
             
-            <Text style={{ fontSize: 20, fontWeight: 600, marginLeft: 26 ,color: '#65C5C4',textDecorationLine: 'underline'}}>
+            <Text style={{ fontSize: 18, fontWeight: 500, marginLeft: 26 ,color: '#65C5C4',textDecorationLine: 'underline'}}>
               View on Map 
             </Text>
             </Block>
             <Block style={{ marginTop: 25, flexDirection: 'row', alignItems: 'center' }}>
                         <MaterialIcons name="category" size={20} color="black" />
-            <Text style={{ fontSize: 20, marginLeft: 8,fontWeight: 600 }}>
+            <Text style={{ fontSize: 20, marginLeft: 8,fontWeight: 500 }}>
             {orderDetails && orderDetails.details && orderDetails.details.category}
             </Text>
             </Block>
@@ -556,15 +556,15 @@ const styles = StyleSheet.create({
       },
       tableHeader: {
         backgroundColor: '#fff',
-        borderBottomWidth: 2,
+        borderBottomWidth: 1,
         borderBottomColor: '#000',
         borderTopColor: '#000',
-        borderTopWidth: 2,
+        borderTopWidth: 1,
       },
       tableRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        borderBottomWidth: 2,
+        borderBottomWidth: 1,
         borderBottomColor: '#000',
       },
       headerText: {
@@ -582,9 +582,9 @@ const styles = StyleSheet.create({
       tableCell: {
         flex: 1,
         paddingVertical: 5,
-        borderRightWidth: 1,
+        borderRightWidth: 0.5,
         borderRightColor: '#000',
-        borderLeftWidth: 2,
+        borderLeftWidth: 0.5,
         borderLeftColor: '#000',
       },
       boxContainer: {

@@ -19,6 +19,10 @@ export const Header = () => {
   const handelProfileClick = ()=>{
     navigation.navigate('Profile')
   }
+
+  const handelNotificationClick = ()=>{
+    navigation.navigate('Notification') 
+  }
   return (
     <View style={[{marginTop:40,padding:10},styles.container]}>
         <Block  style={styles.Space_Between}>
@@ -37,7 +41,9 @@ export const Header = () => {
       />
           </Block>
           <Block>
+            <TouchableOpacity activeOpacity={0.9} onPress={handelNotificationClick}>
           <FontAwesome5 name="bell" size={30} color="black" />
+          </TouchableOpacity>
           </Block>
         </Block>
        <HamburgerMenu/>
