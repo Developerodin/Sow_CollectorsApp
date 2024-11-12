@@ -482,7 +482,7 @@ export const Market = () => {
       {CategoriesData.map((el, index) => (
         <TouchableOpacity key={index} onPress={() => handleCategorySelection(el.name, el._id)}>
           <View style={[styles.categoryItem, selectedCategories.includes(el._id) && styles.selectedCategory]}>
-            <Text style={{ fontSize: 18, color: selectedCategories.includes(el._id) ? "#fff" : "#B7B7B7" }}>
+            <Text style={{ fontSize: 18, color: selectedCategories.includes(el._id) ? "#fff" : "#000" }}>
               {el.name}
             </Text>
           </View>
@@ -556,7 +556,7 @@ export const Market = () => {
       {selectedSubCategoriesData.map((el, index) => (
         <TouchableOpacity key={index} onPress={() => handleSubCategorySelection(el.name, el._id)}>
           <View style={[styles.categoryItem, selectedSubCategories.includes(el._id) && styles.selectedCategory]}>
-            <Text style={{ fontSize: 18, color: selectedSubCategories.includes(el._id) ? "#fff" : "#B7B7B7" }}>
+            <Text style={{ fontSize: 18, color: selectedSubCategories.includes(el._id) ? "#fff" : "#000" }}>
               {el.name}
             </Text>
           </View>
@@ -1017,7 +1017,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: width * 1,
-    height: height - 500,
+    height: height - 380,
   },
   
   checkboxContainer: {

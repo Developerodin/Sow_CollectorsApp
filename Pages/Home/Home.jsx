@@ -652,12 +652,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 20,
     
     
   },
   cardContainer: {
     flexDirection: 'row',
-   gap: 15,
+    justifyContent: 'space-between',
+    gap: 20,
     marginBottom: 10,
     marginHorizontal: 20,
   },
@@ -665,7 +667,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
     borderRadius: 10,
     padding: 20,
-    width: 120, // Adjust card width as needed
+    width: 170, // Adjust card width as needed
     alignItems: 'center',
    
     borderColor:'#A6A6A6'

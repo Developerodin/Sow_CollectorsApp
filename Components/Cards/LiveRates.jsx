@@ -325,7 +325,7 @@ const LiveRates = () => {
         
         <View>
         <View style={{height:320}} >
-        <Text style={{ fontSize: 15, fontWeight: "700", color: "#000" }}>Live Rates</Text> 
+        <Text style={{ fontSize: 15, fontWeight: "500", color: "#000",marginLeft: 15 }}>Live Market rates as of <Text style={{color : '#65C5C4'}}>12.11.2024</Text> </Text> 
           
           <FlatList
             data={displayedData}
