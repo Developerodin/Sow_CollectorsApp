@@ -461,13 +461,13 @@ const formatLabel = (date, timeframe) => {
             propsForDots: {
                 r: "6",
                 strokeWidth: "2",
-                stroke: "#000000",
+                stroke: "#65C5C4",
             },
             // propsForLabels: {
             //     fontSize: 8, 
             //   },
             propsForBackgroundLines: {
-                stroke: '#cccccc',
+                stroke: '#A3E5E4',
                 strokeDasharray: "",
             },
             fillShadowGradient: 'transparent',
@@ -491,7 +491,10 @@ const formatLabel = (date, timeframe) => {
       renderItem={({ item }) => (
         <TouchableOpacity onPress={() => console.log(`Item pressed: ${item.date}`)}>
           <View style={styles.infoRow}>
-            <Text style={styles.infoRowText}>{formatDate(item.date)}</Text>
+            
+            <Ionicons name="calendar" size={20} color="#65C5C4" /> 
+            <Text style={styles.infoRowText}> {formatDate(item.date)}</Text>
+            
             <Text style={styles.infoRowTextRight}>₹ {item.price}</Text>
           </View>
         </TouchableOpacity>
@@ -521,7 +524,7 @@ const styles = StyleSheet.create({
     modalContent: {
        
         height: height * 0.7,
-        backgroundColor: "#F2F2F2",
+        backgroundColor: "#fff",
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
         padding: 20,
@@ -556,7 +559,7 @@ const styles = StyleSheet.create({
         borderColor: '#F2F2F2',
         borderWidth: 1,
         marginBottom: 10,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#f4f4f4',
         paddingHorizontal: 26,
 
     
@@ -589,16 +592,16 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         padding: 8,
         borderRadius: 50,
-        borderColor: '#F2F2F2',
-        borderWidth: 1,
+        
         marginBottom: 10,
-        backgroundColor: '#ffffff',
+        
         fontSize: 16,
     },
     buttonGroupTexttwo: {
         textAlign: 'center',
         color: 'black',
         fontSize : 11.5,
+
     },
    
     buttonGroupItem: {
@@ -607,10 +610,13 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 5,
         fontSize: 16,
+        textAlign: 'center',
+        backgroundColor: '#f4f4f4',
+        borderRadius: 30,
         
     },
     activeButton: {
-        backgroundColor: '#0073B1',
+        backgroundColor: '#000',
         textAlign: 'center',
         color: 'white',
         borderRadius: 30,
@@ -627,7 +633,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '500',
         alignItems: 'center',
-        color: 'teal',
+        color: '#000',
     },
     scrollView: {
         width: '100%',
@@ -639,9 +645,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         paddingHorizontal: 10,
-        paddingVertical: 8,
-        borderRadius: 8,
-        borderColor: '#65C5C4',
+        paddingVertical: 10,
+        borderRadius: 12,
+        borderColor: '#b3b3b3',
         borderWidth: 1,
         marginBottom: 10,
         
@@ -650,7 +656,7 @@ const styles = StyleSheet.create({
     infoRowText: {
         flex: 1,
         textAlign: 'left',
-        paddingLeft: 10,
+        paddingLeft: 5,
         color: '#000',
     },
     infoRowTextRight: {
@@ -675,13 +681,13 @@ const styles = StyleSheet.create({
         
 
         marginBottom: 10,
-        backgroundColor: '#ffffff',
+        backgroundColor: '#f4f4f4',
         
     },
     priceValueText: {
         fontSize: 16,
         fontWeight: '500',
-        color: '#0073B1',
+        color: '#000',
     },
 });
 

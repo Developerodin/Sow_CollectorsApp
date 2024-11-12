@@ -38,6 +38,7 @@ import { Schedule } from "./Pages/Schedule/Schedule";
 import { AboutCompany } from "./Pages/Profile/ProfileTabs/AboutCompany";
 import { TermsCondition } from "./Pages/Profile/ProfileTabs/TermsCondition";
 import { UpgradeTo } from "./Pages/Profile/ProfileTabs/UpgradeTo";
+import  { Notification } from "./Pages/Notification/Notification";
 // import { Address } from './Pages/Profile/ProfileTabs/Address/Address';
 import {
   VerifyProfile,
@@ -543,6 +544,13 @@ export default function App() {
             component={Address}
             options={{
               headerShown: true,
+            }}
+          />
+          <Stack.Screen
+            name="Notification"
+            component={Notification}
+            options={{
+              headerShown: false,
             }}
           />
         </Stack.Navigator>

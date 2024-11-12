@@ -168,6 +168,16 @@ export const Market = () => {
       console.log('No subcategory selected to save');
     }
   };
+
+
+  const handelClose = () => {
+    setCategoryModalVisible(false);
+  };
+
+  const handelClosetwo = () => {
+    setSubCategoryModalVisible(false);
+  };
+
   
 
   const fetchB2BUser = async () => {
@@ -443,24 +453,46 @@ export const Market = () => {
       onSwipeComplete={() => setCategoryModalVisible(false)}
       backdropOpacity={0.1}
       onBackdropPress={() => setCategoryModalVisible(false)}
-      swipeDirection={["right"]}>
-        <View style={styles.centeredView}>
+      swipeDirection={["down"]}
+      style ={styles.viewHalf}>
+        <View >
 
   <View style={styles.modalContainer}>
-    <ScrollView>
+  <Block right style={{ width: width * 0.8 }}>
+            <Ionicons
+              onPress={handelClose}
+              name="close-circle"
+              size={24}
+              color="black"
+            />
+          </Block>
+          <Text style={{fontSize:18 ,textAlign : 'center'}}>Select Category</Text>
+          <Block
+            style={{
+             
+              flexDirection: "row",
+              justifyContent: "left",
+              alignItems: "start",
+              width: width * 0.9,
+              padding: 12,
+              marginBottom: 40,
+            }}
+          >
+        <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',marginBottom : 50 }}>
       {CategoriesData.map((el, index) => (
         <TouchableOpacity key={index} onPress={() => handleCategorySelection(el.name, el._id)}>
           <View style={[styles.categoryItem, selectedCategories.includes(el._id) && styles.selectedCategory]}>
-            <Text style={{ fontSize: 18, color: selectedCategories.includes(el._id) ? "black" : "#B7B7B7" }}>
+            <Text style={{ fontSize: 18, color: selectedCategories.includes(el._id) ? "#fff" : "#000" }}>
               {el.name}
             </Text>
           </View>
         </TouchableOpacity>
       ))}
     </ScrollView>
-    <TouchableOpacity onPress={handleSaveCategory} style={styles.saveButton}>
+    </Block>
+    {/* <TouchableOpacity onPress={handleSaveCategory} style={styles.saveButton}>
       <Text style={styles.saveButtonText}>Done</Text>
-    </TouchableOpacity>
+    </TouchableOpacity> */}
   </View>
   </View>
 </Modal>
@@ -496,23 +528,45 @@ export const Market = () => {
             onSwipeComplete={() => setSubCategoryModalVisible(false)}
             backdropOpacity={0.1}
             onBackdropPress={() => setSubCategoryModalVisible(false)}
-            swipeDirection={["right"]} >
-        <View style={styles.centeredView}>
+            swipeDirection={["down"]} 
+            style={styles.viewHalf}>
+        <View >
   <View style={styles.modalContainer}>
-    <ScrollView>
+  <Block right style={{ width: width * 0.8 }}>
+            <Ionicons
+              onPress={handelClosetwo}
+              name="close-circle"
+              size={24}
+              color="black"
+            />
+          </Block>
+          <Text style={{fontSize:18 ,textAlign : 'center'}}>Select Sub Category</Text>
+          <Block
+            style={{
+             
+              flexDirection: "row",
+              justifyContent: "left",
+              alignItems: "start",
+              width: width * 0.9,
+              padding: 12,
+              marginBottom: 40,
+            }}
+          >
+        <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',marginBottom : 50 }}>
       {selectedSubCategoriesData.map((el, index) => (
         <TouchableOpacity key={index} onPress={() => handleSubCategorySelection(el.name, el._id)}>
-          <View style={[styles.subCategoryItem, selectedSubCategories.includes(el._id) && styles.selectedSubCategory]}>
-            <Text style={{ fontSize: 18, color: selectedSubCategories.includes(el._id) ? "black" : "#B7B7B7" }}>
+          <View style={[styles.categoryItem, selectedSubCategories.includes(el._id) && styles.selectedCategory]}>
+            <Text style={{ fontSize: 18, color: selectedSubCategories.includes(el._id) ? "#fff" : "#000" }}>
               {el.name}
             </Text>
           </View>
         </TouchableOpacity>
       ))}
     </ScrollView>
-    <TouchableOpacity onPress={handleSaveSubCategory} style={styles.saveButton}>
+    </Block>
+    {/* <TouchableOpacity onPress={handleSaveSubCategory} style={styles.saveButton}>
       <Text style={styles.saveButtonText}>Done</Text>
-    </TouchableOpacity>
+    </TouchableOpacity> */}
   </View>
   </View>
 </Modal>
@@ -633,11 +687,11 @@ export const Market = () => {
                 <FontAwesome5 name="sort" size={22} color="#fff" />
               </TouchableOpacity>
             </View>
-            <Block style={{ marginTop: 20 }}>
+            {/* <Block style={{ marginTop: 20 }}>
               <Button color="info" style={styles.btn}>
                 Submit
               </Button>
-              </Block>
+              </Block> */}
 
             {userDetails.registerAs === "Collectors" &&
               WholesalersData &&
@@ -951,6 +1005,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     borderRadius: 10,
     padding: 20,
+    borderTopLeftRadius: 35,
+    borderTopRightRadius: 35,
     
     shadowColor: "#000",
     shadowOffset: {
@@ -960,8 +1016,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: width * 0.9,
-    height: height - 500,
+    width: width * 1,
+    height: height - 380,
   },
   
   checkboxContainer: {
@@ -993,6 +1049,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: -50,
   },
+  viewHalf: {
+    
+    justifyContent: "flex-end",
+    margin: 0,
+  },
   saveButton: {
     marginTop: 20,
     padding: 10,
@@ -1006,5 +1067,19 @@ const styles = StyleSheet.create({
   saveButtonText: {
     color: "#fff",
     fontSize: 18,
+  },
+  categoryItem : {
+    flexBasis: '30%', // Adjust the percentage to fit the number of items per row
+    padding: 10,
+    margin: 5,
+    backgroundColor: '#f0f0f0', // Normal box color
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    alignItems: 'center',
+  },
+  selectedCategory: {
+    backgroundColor: '#000', // Selected box color
+    
   },
 });

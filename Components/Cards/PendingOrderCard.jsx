@@ -19,6 +19,16 @@ export const PendingOrderCard = ({ data }) => {
   return (
     
     <View style={styles.cardContainer}>
+      <View style={[styles.header, {backgroundColor: data.status === 'canceled' ? '#FF2020' : (data.status === 'pending' ? '#FFD12C' : '#FFD12C'),}]}>
+               {data.status === 'pending' ? (
+          <Feather name="clock" size={18} color="#000" />
+        ) : data.status === 'canceled' ? (
+          <Feather name="x-circle" size={18} color="#fff" />
+        ) : null}
+        <Text style={[styles.statusText,{color : data.status === 'canceled' ? '#fff' : (data.status === 'pending' ? '#000' : '#000'),}]}>{data.status}</Text>
+        
+      </View>
+
       
 
       <Block style={styles.row}>
@@ -72,21 +82,25 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: "#FFFFFF",
     marginTop: 20,
+    marginBottom: 15,
     
   },
-  header: {
+   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-end',
-    marginBottom: 10,
+    justifyContent: 'center',
     paddingVertical: 5,
-    paddingHorizontal: 10,
-    borderRadius: 5,
-    backgroundColor: "#FFF5CC",
+    paddingHorizontal: 5,
+    borderRadius: 15,
+     // Default to #FFD12C if status is not 'canceled' or 'pending'
+    width: 110,
+    position: 'absolute',
+    right: 10,
+    top: -15,
   },
   statusText: {
     color: "#000",
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: '600',
     marginLeft: 5,
   },

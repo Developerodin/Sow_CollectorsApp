@@ -170,31 +170,30 @@ export const Home = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        <Block style={{ backgroundColor: "#FFF", padding: 10 }}>
-        <Block>
-        <Text style={{textAlign:'left',paddingLeft: 12,fontWeight: 700,fontSize:20,marginTop:20}}>Your Sales Summary</Text>
-        <View style={styles.middleContainer}>
-      <View style={styles.cardContainer}>
-        <View style={styles.card1}>
-          <Text style={styles.title1}>Net Amount Earned</Text>
-          <Text style={styles.amountGreen}>₹ 0</Text>
-        </View>
-        <View style={styles.card1}>
-          <Text style={styles.title1}>Net Scrap Sold</Text>
-          <Text style={styles.amountBlue}>0 Kgs</Text>
-        </View>
-        <View style={styles.card1}>
-          <Text style={styles.title1}>Net Scrap Pending</Text>
-          <Text style={styles.amountOrange}>0 Kgs</Text>
-        </View>
-      </View>
+                          <Block style={{ backgroundColor: "#FFF", padding: 10 }}>
+                  <Block>
+                    <Text style={{ textAlign: 'left', paddingLeft: 12, fontWeight: '700', fontSize: 20, marginTop: 20 }}>Your Sales Summary</Text>
+                    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
+                      <View style={styles.middleContainer}>
+                        <View style={styles.cardContainer}>
+                          <View style={styles.card1}>
+                            <Text style={styles.title1}>Net Amount Earned</Text>
+                            <Text style={styles.amountGreen}>₹ 0</Text>
+                          </View>
+                          <View style={styles.card1}>
+                            <Text style={styles.title1}>Net Scrap Sold</Text>
+                            <Text style={styles.amountBlue}>0 Kgs</Text>
+                          </View>
+                          <View style={styles.card1}>
+                            <Text style={styles.title1}>Net Scrap Pending</Text>
+                            <Text style={styles.amountOrange}>0 Kgs</Text>
+                          </View>
+                        </View>
+                      </View>
+                    </ScrollView>
+                  </Block>
+                </Block>
 
-      {/* <TouchableOpacity style={styles.button1}>
-        <Text style={styles.buttonText1}>Start Selling</Text>
-        <Text style={styles.arrow}>→</Text>
-      </TouchableOpacity> */}
-    </View>
-        </Block>
 
      
         
@@ -448,7 +447,7 @@ export const Home = () => {
           >
             Hey {userDetails && userDetails.name}
           </Text> */}
-        </Block>
+        
        
 
    
@@ -653,12 +652,14 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 20,
     
-    padding: 20,
+    
   },
   cardContainer: {
     flexDirection: 'row',
-   gap: 15,
+    justifyContent: 'space-between',
+    gap: 20,
     marginBottom: 10,
     marginHorizontal: 20,
   },
@@ -666,7 +667,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
     borderRadius: 10,
     padding: 20,
-    width: 120, // Adjust card width as needed
+    width: 170, // Adjust card width as needed
     alignItems: 'center',
    
     borderColor:'#A6A6A6'

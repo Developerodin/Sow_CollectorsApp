@@ -164,6 +164,9 @@ export const Profile = () => {
      <Block style={{marginTop:0,backgroundColor:"#FFF"}}>
     
         <Block style={{borderWidth:1,backgroundColor:'black',marginTop:0}}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 10, marginLeft: 10, }}>
+  <Ionicons name="arrow-back" size={24} color="white" />
+</TouchableOpacity>
 
           <Block center style={[{position:'realtive',width:80,height:80,borderRadius:500,marginTop:30,borderRadius:100,backgroundColor:"#fff",elevation:2}]}>
          {
