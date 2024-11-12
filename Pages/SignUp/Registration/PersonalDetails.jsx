@@ -22,7 +22,7 @@ import {Picker} from '@react-native-picker/picker';
 import axios from 'axios';
 import { Base_url } from '../../../Config/BaseUrl';
 import { ToastAndroid } from "react-native";
-import MultiSelect from 'react-native-multiple-select';
+
 import { CategoryAddModel } from '../../../Components/CategoryAddModel/CategoryAddModel';
 import { Checkbox } from 'galio-framework';
 import { StateSelectModel } from '../../../Components/Model/StateSelectModel';
