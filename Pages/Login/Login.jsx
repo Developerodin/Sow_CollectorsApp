@@ -493,7 +493,7 @@ export const Login = ({ navigation }) => {
           style={{
             fontSize: 16,
             fontWeight: "500",
-            marginTop: 30,
+            marginTop: 30,`
             color: "#BDBDBD",
           }}
         >
