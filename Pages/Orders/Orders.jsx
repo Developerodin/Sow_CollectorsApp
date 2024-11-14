@@ -26,8 +26,10 @@ import axios from "axios";
 import { useAppContext } from "../../Context/AppContext";
 import { InCommingOrderCard } from "../../Components/Cards/InCommingOrderCard";
 import { RejectedOrderCard } from "../../Components/Cards/RejectedOrderCard";
+import { useNavigation } from "@react-navigation/native";
 
 export const Orders = () => {
+  const navigation = useNavigation();
   const { userDetails, update } = useAppContext();
   const [index, setIndex] = useState(0);
   const [orders, setOrders] = useState([]);
@@ -49,6 +51,10 @@ export const Orders = () => {
   };
 
   const handleIndexChange = (newIndex) => setIndex(newIndex);
+
+  const handleMandiRates = () => {
+    navigation.navigate("MandiRates");
+  };
 
   const getOrders = async () => {
     try {
@@ -232,7 +238,9 @@ export const Orders = () => {
           }}
         >
           <Text style={{ fontSize: 22, fontWeight: "bold" }}>Your Orders</Text>
+          <TouchableOpacity onPress={handleMandiRates}>
           <Ionicons name="filter" size={26} color="#000" />
+          </TouchableOpacity>
         </View>
 
         <View style={styles.tabContainer}>

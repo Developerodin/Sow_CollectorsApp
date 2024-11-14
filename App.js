@@ -58,6 +58,8 @@ import { LiveRating } from "./Pages/LiveRating/LiveRating";
 import { DailyRates } from "./Pages/LiveRating/DailyRates";
 import LiveRatestwo from "./Components/Cards/LiveRatestwo";
 import { Address } from "./Pages/SignUp/Registration/Address";
+import { MandiRates} from "./Pages/Market/MandiRates";
+
 import * as Notifications from "expo-notifications";
 import usePushNotifications from "./usePushNotifications";
 const Stack = createNativeStackNavigator();
@@ -549,6 +551,14 @@ export default function App() {
           <Stack.Screen
             name="Notification"
             component={Notification}
+            options={{
+              headerShown: false,
+            }}
+          />
+
+          <Stack.Screen
+            name="MandiRates"
+            component={MandiRates}
             options={{
               headerShown: false,
             }}
