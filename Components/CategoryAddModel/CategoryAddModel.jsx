@@ -139,6 +139,7 @@ const styles = StyleSheet.create({
       flexWrap: 'wrap',
       justifyContent: 'space-between',
       marginTop: 10,
+      marginBottom: 50,
     },
     categoryBox: {
       padding: 10,
@@ -147,6 +148,7 @@ const styles = StyleSheet.create({
       borderRadius: 15,
       borderWidth: 1,
       borderColor: '#ccc',
+      
     },
     selectedCategoryBox: {
       backgroundColor: 'black', // Grey color when selected

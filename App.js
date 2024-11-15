@@ -62,6 +62,7 @@ import { MandiRates} from "./Pages/Market/MandiRates";
 
 import * as Notifications from "expo-notifications";
 import usePushNotifications from "./usePushNotifications";
+import { ThemeData } from "./Theme/Theme";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -70,11 +71,11 @@ const Tabs = ({ navigation }) => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: "#65C5C4",
-        tabBarInactiveTintColor: "#fff",
-        tabBarLabelStyle: { color: "#fff" },
+        tabBarActiveTintColor: ThemeData.color,
+        tabBarInactiveTintColor: ThemeData.activeColor,
+        // tabBarLabelStyle: { color: "#fff" },
         tabBarStyle: {
-          backgroundColor: "#000",
+          backgroundColor: ThemeData.backgroundColor,
           
           position: "absolute",
           bottom: 0,

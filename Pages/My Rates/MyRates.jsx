@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Image,
+  TextInput
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -27,7 +28,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Modal from "react-native-modal";
 import axios from "axios";
 import { Base_url } from "../../Config/BaseUrl";
-import { TextInput } from "@react-native-material/core";
+// import { TextInput } from "@react-native-material/core";
 import {Picker} from '@react-native-picker/picker';
 import { CategoryAddModel } from "../../Components/CategoryAddModel/CategoryAddModel";
 import { CategoryAddModel2 } from "../../Components/CategoryAddModel/CategoryAddModel2";
@@ -424,7 +425,7 @@ const handleSubAddChange = (field, value) => {
         <Text style={styles3.linkText}>sub categories</Text> of{' '}
         <Text style={styles3.highlightText}>Aluminium</Text> -
       </Text>
-      <TouchableOpacity style={styles3.button}>
+      <TouchableOpacity style={styles3.button} onPress={handelSubCategoryModelOpen}>
         <Text style={styles3.buttonText}>+ Update Pricing</Text>
       </TouchableOpacity>
     </View>
@@ -446,7 +447,7 @@ const handleSubAddChange = (field, value) => {
 </Button>
           </Block> */}
 
-          <Block style={{ marginTop: 10, marginBottom: 100 , }}>
+          <Block style={{  marginBottom: 100 , }}>
             {filteredData.map((el, index) => {
               return (
                 <MarketCard
@@ -497,7 +498,7 @@ const handleSubAddChange = (field, value) => {
                 onPress={handelSubCategoryModelClose}
                 name="close-circle"
                 size={26}
-                color="teal"
+                color="#000"
               />
             </Block>
 
@@ -509,7 +510,7 @@ const handleSubAddChange = (field, value) => {
                 value={subAddForm.name}
                 onChangeText={(text) => handleSubAddInputChange("name", text)}
               /> */}
-           <Block style={{ marginTop: 10, borderColor: "grey", borderWidth: 1,borderRadius:10 }}>
+           <Block style={{ marginTop: 10, borderColor: "black", borderWidth: 1,borderRadius:10 }}>
           <Picker
             selectedValue={subAddForm.categoryName}
             onValueChange={(itemValue) => {
@@ -527,7 +528,7 @@ const handleSubAddChange = (field, value) => {
         </Block>
 
         {/* {isCategorySelected && ( */}
-          <Block style={{ borderWidth: 1, borderColor: "grey", marginTop: 20,borderRadius:10 }}>
+          <Block style={{ borderWidth: 1, borderColor: "black", marginTop: 20,borderRadius:10 }}>
             <Picker
               selectedValue={subAddForm.name}
               onValueChange={(itemValue) => handleSubAddChange('name', itemValue)}
@@ -545,12 +546,14 @@ const handleSubAddChange = (field, value) => {
              
 
               <TextInput
-                variant="outlined"
+                
                 keyboardType="numeric"
-                label="Price"
+                placeholder="Price"
+                color="black"
                 value={subAddForm.price}
+                placeholderTextColor="#000"
                 onChangeText={(text) => handleSubAddChange("price", text)}
-                style={{ marginTop: 20,borderRadius:10 }}
+                style={{ marginTop: 20,borderRadius:10,borderWidth:1,borderColor: 'black',paddingHorizontal : 15,paddingVertical: 10,color:'black' }}
               />
 
               {/* <TextInput
@@ -561,7 +564,7 @@ const handleSubAddChange = (field, value) => {
                 onChangeText={(text) => handleSubAddInputChange("unit", text)}
                 style={{ marginTop: 20 }}
               /> */}
-               <Block style={{borderWidth:1,borderColor:"grey",marginTop: 20,borderRadius:10}}>
+               <Block style={{borderWidth:1,borderColor:"black",marginTop: 20,borderRadius:10}}>
               <Picker
           selectedValue={subAddForm.unit}
           onValueChange={(itemValue) => handleSubAddChange('unit', itemValue)}
@@ -575,15 +578,15 @@ const handleSubAddChange = (field, value) => {
         </Picker>
               </Block>
               
-              <Block center style={{ marginTop: 30 }}>
-      <Button
-        size={"small"}
-        style={{ backgroundColor: "teal", color: "#fff" }}
-        onPress={handelSubCategoryModelSubmit}
-        disabled={loading}
-      >
-        {loading ? <ActivityIndicator color="#fff" /> : <Text style={{ color: "#fff" }} >Submit</Text>}
-      </Button>
+              <Block center style={{ marginTop: 20,marginBottom: 10 }}>
+      
+      <TouchableOpacity onPress={handelSubCategoryModelSubmit}>
+        <Text style={{ color: "#fff", marginTop: 10,backgroundColor: 'black',
+    borderRadius: 30,
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+   }}>Submit</Text>
+      </TouchableOpacity>
     </Block>
             </View>
           </View>
@@ -827,14 +830,7 @@ const styles2 = StyleSheet.create({
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    
     width: width * 0.9,
     minHeight:300,
   },
@@ -880,7 +876,7 @@ const styles3 = StyleSheet.create({
     color: '#65C5C4', // Color for "Aluminium" text
   },
   button: {
-    marginTop: 14,
+    marginTop: 18,
     borderColor: '#65C5C4',
     borderWidth: 1,
     borderRadius: 20,

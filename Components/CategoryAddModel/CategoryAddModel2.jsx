@@ -15,6 +15,7 @@ import Modal from "react-native-modal";
 import { TextInput } from "@react-native-material/core";
 import { Checkbox } from 'galio-framework';
 import { FlatList } from 'react-native';
+import { TouchableOpacity } from "react-native";
 
 const { width, height } = Dimensions.get("screen");
 export const CategoryAddModel2 = ({
@@ -82,20 +83,20 @@ export const CategoryAddModel2 = ({
       onSwipeComplete={() => setModalVisible(false)}
       backdropOpacity={0.1}
       onBackdropPress={() => setModalVisible(false)}
-      swipeDirection={["right"]}
+      swipeDirection={["down"]}
       style={styles.viewHalf}
     >
-      <View style={[styles.centeredView]}>
+      <View >
         <View style={styles.modalView}>
           <Block right style={{ width: width * 0.8 }}>
             <Ionicons
               onPress={handelClose}
               name="close-circle"
-              size={24}
-              color="#239456"
+              size={26}
+              color="#000"
             />
           </Block>
-          <Text style={{fontSize:17}}>Select Categories </Text>
+          <Text style={{fontSize:18}}>Select Categories </Text>
           <Block
             style={{
              
@@ -109,26 +110,43 @@ export const CategoryAddModel2 = ({
             
           <ScrollView style={{ marginTop: 0,height:270,paddingBottom:5 }}>
   
-  {categoriesData.map((category,index) => (
-    <View key={index} style={[styles.checkboxContainer]}>
-      <Checkbox
-      style={{marginTop:15}}
-      color="#239456"
-      label={category.name}
-      initialValue={selectedCategories && selectedCategories.length > 0 && selectedCategories.some(selectedCategory => selectedCategory.name === category.name)}
-        onChange={(el) => {
-            
-                handleCategorySelect(category)
-        }}
-      />
-      
-    </View>
-  ))}
+          <View style={styles.categoriesContainer}>
+            {categoriesData.map((category, index) => (
+              <TouchableOpacity
+                key={index}
+                style={[
+                  styles.categoryContainer,
+                  selectedCategories.some(
+                    (selectedCategory) => selectedCategory.name === category.name
+                  ) && styles.selectedCategory,
+                ]}
+                onPress={() => handleCategorySelect(category)}
+              >
+                <Text
+                  style={[
+                    styles.categoryName,
+                    selectedCategories.some(
+                      (selectedCategory) => selectedCategory.name === category.name
+                    ) && styles.selectedCategoryText,
+                  ]}
+                >
+                  {category.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </View>
 </ScrollView>
            
           </Block>
 
-          <Button onPress={handelComplete} color="#239456">Submit</Button>
+          
+          <TouchableOpacity onPress={handelComplete}>
+            <Text style={{color:"#fff",marginTop:10,backgroundColor: 'black',fontSize: 18,
+    borderRadius: 30,
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    }}>Submit</Text>
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -171,9 +189,10 @@ const styles = StyleSheet.create({
     marginBottom: -50,
   },
   modalView: {
-    margin: 20,
+    
     backgroundColor: "white",
-    borderRadius: 10,
+    borderTopRightRadius: 35,
+    borderTopLeftRadius: 35,
     padding: 20,
     alignItems: "center",
     shadowColor: "#000",
@@ -184,8 +203,8 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
-    width: width * 0.9,
-    height: height - 350,
+    width: width * 1,
+    height: height - 450,
   },
   button: {
     borderRadius: 20,
@@ -210,6 +229,32 @@ const styles = StyleSheet.create({
     fontSize: 45,
     fontWeight: "bold",
     color: "#2DA194",
+  },
+  categoriesContainer: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "flex-start",
+  },
+  categoryContainer: {
+    padding: 10,
+    margin: 5,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 30,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  selectedCategory: {
+    backgroundColor: "#000",
+    borderColor: "#000",
+  },
+  categoryName: {
+    fontSize: 18,
+    color: "#000",
+  },
+  selectedCategoryText: {
+    color: "#fff",
   },
 });
 

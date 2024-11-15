@@ -40,34 +40,34 @@ export const RegisterAs = () => {
   return (
     <View style={styles.container}>
     <StatusBar style="dark" />
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
       
-       <View style={{alignItems:"left",marginTop:35,width:width}}>
+       <View style={{alignItems:"left",marginTop:10,width:width}}>
          
    
        </View>
         
         <Block style={{padding:10}}>
-        <TouchableOpacity activeOpacity={0.9} onPress={()=>handelCardClick(1,"Collectors")} style={{marginTop:20}}>
+        <TouchableOpacity activeOpacity={0.7} onPress={()=>handelCardClick(1,"Collectors")} style={{marginTop:20}}>
            <RegisterCard Img={Collector} Title={"Scrap"} SubTitle={"Retailer"} BG={Bg} />
        </TouchableOpacity>
 
-       <TouchableOpacity activeOpacity={0.9} onPress={()=>handelCardClick(1,"Wholesalers")} style={{marginTop:30}}>
+       <TouchableOpacity activeOpacity={0.7} onPress={()=>handelCardClick(1,"Wholesalers")} style={{marginTop:30}}>
            <RegisterCard Img={Wholesaler} Title={"Scrap"} SubTitle={"Wholesaler"} BG={Bg} />
        </TouchableOpacity>
 
-       <TouchableOpacity activeOpacity={0.9} onPress={()=>handelCardClick(1,"Mediators")}style={{marginTop:30}}>
+       <TouchableOpacity activeOpacity={0.7} onPress={()=>handelCardClick(1,"Mediators")}style={{marginTop:30}}>
            <RegisterCard Img={Mediator} Title={"Scrap"} SubTitle={"Mediator"} BG={Bg} />
        </TouchableOpacity>
 
-       <TouchableOpacity activeOpacity={0.9} onPress={()=>handelCardClick(1,"Factory")}style={{marginTop:30}}>
+       <TouchableOpacity activeOpacity={0.7} onPress={()=>handelCardClick(1,"Factory")}style={{marginTop:30}}>
            <RegisterCard Img={Factory} Title={"Recycling"} SubTitle={"Factory"}  BG={Bg}/>
        </TouchableOpacity>
 
 
         </Block>
       
-       <Block center style={{marginTop:50}}>
+       <Block center style={{marginTop:50,marginBottom: 100}}>
          <Text style={{fontSize:16,color:"#4C4C4C"}} >
           Want to login from a different accounts?
          </Text>

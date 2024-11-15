@@ -40,7 +40,7 @@ export const Orders = () => {
   const [InCommingpendingOrders, setInCommingPendingOrders] = useState([]);
   const [InCommingcompletedOrders, setInCommingCompletedOrders] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
-
+  const [selectedTab, setSelectedTab] = useState('Upcoming');
   const onRefresh = () => {
     setRefreshing(true);
     // Call your functions here
@@ -242,15 +242,25 @@ export const Orders = () => {
           <Ionicons name="filter" size={26} color="#000" />
           </TouchableOpacity>
         </View>
-
+       <ScrollView >
         <View style={styles.tabContainer}>
-          <View style={[styles.tab, styles.leftTab]}>
-            <Text style={styles.tabText}>Upcoming</Text>
-          </View>
-          <View style={[styles.tab, styles.rightTab]}>
-            <Text style={{ fontSize: 16, color: "#fff" }}>Previous</Text>
-          </View>
-        </View>
+        <TouchableOpacity
+          style={[styles.tab, selectedTab === 'Upcoming' ? styles.activeTab : styles.inactiveTab]}
+          onPress={() => setSelectedTab('Upcoming')}
+        >
+          <Text style={[styles.tabText, selectedTab === 'Upcoming' ? styles.activeTabText : styles.inactiveTabText]}>
+            Upcoming
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.tab, selectedTab === 'Previous' ? styles.activeTab : styles.inactiveTab]}
+          onPress={() => setSelectedTab('Previous')}
+        >
+          <Text style={[styles.tabText, selectedTab === 'Previous' ? styles.activeTabText : styles.inactiveTabText]}>
+            Previous
+          </Text>
+        </TouchableOpacity>
+      </View>
 
         <View style={styles.tabBar}>
           {props.navigationState.routes.map((route, i) => {
@@ -287,6 +297,7 @@ export const Orders = () => {
             );
           })}
         </View>
+        </ScrollView>
       </View>
     );
   };
@@ -424,28 +435,32 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     borderWidth: 1,
-    borderColor: "#ddd",
-    borderRadius: 8,
-    overflow: "hidden",
+    borderColor: "#000",
+    
+    
     alignSelf: "center",
     marginTop: 20,
   },
   tab: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
     paddingVertical: 10,
+    
+    
   },
-  leftTab: {
-    backgroundColor: "#fff",
-    borderRightWidth: 1,
-    borderRightColor: "#ddd",
+  activeTab: {
+    backgroundColor: '#000',
   },
-  rightTab: {
-    backgroundColor: "#000",
+  inactiveTab: {
+    backgroundColor: '#fff',
   },
   tabText: {
     fontSize: 16,
-    color: "#000",
+  },
+  activeTabText: {
+    color: '#fff',
+  },
+  inactiveTabText: {
+    color: '#000',
   },
 });

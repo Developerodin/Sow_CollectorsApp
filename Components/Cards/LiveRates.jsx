@@ -5,6 +5,7 @@ import {
   Image,
   ScrollView,
   FlatList,
+  ActivityIndicator
 } from "react-native";
 import { Block, Text } from "galio-framework";
 import axios from "axios";
@@ -29,6 +30,7 @@ const LiveRates = () => {
   const [priceDifferences, setPriceDifferences] = useState({});
   const [userId, setUserId] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const getAllData = async () => {
     try {
@@ -55,6 +57,7 @@ const LiveRates = () => {
         (item) => item.mandi && item.mandi.mandiname
       );
       setMarketRates(filteredData);
+      setLoading(false);
 
       for (const item of filteredData) {
         for (const priceItem of item.categoryPrices) {
@@ -283,98 +286,103 @@ const LiveRates = () => {
       );
     });
 
-  return (
+   return (
     <View style={{ flex: 1 }}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        style={{ marginVertical: 10, paddingLeft: 10 }}
-      >
-        {states.map((state) => (
-          <TouchableOpacity
-            key={state}
-            onPress={() => handleStatePress(state)}
-            style={{
-              marginRight: 10,
-              
-              paddingVertical: 5,
-              paddingHorizontal: 15,
-              backgroundColor: selectedState === state ? "#000" : "#F4F4F4",
-              borderRadius: 30,
-            }}
-          >
-            <Text style={{ color: selectedState === state ? "#fff" : "black" }}>
-              {state}
-            </Text>
-          </TouchableOpacity>
-           
-        ))}
-      </ScrollView>
-
-      {selectedState === "Favourite" && filteredData.length === 0 ? (
-        <Image
-          source={require("../../assets/media/5-dark.png")}
-          style={{
-            width: 300,
-            height: 300,
-            marginRight: 10,
-            alignSelf: "center",
-          }}
-        />
-      ) : (
-        
-        <View>
-        <View style={{height:320}} >
-        <Text style={{ fontSize: 15, fontWeight: "500", color: "#000",marginLeft: 15 }}>Live Market rates as of <Text style={{color : '#65C5C4'}}>12.11.2024</Text> </Text> 
-          
-          <FlatList
-            data={displayedData}
-            renderItem={renderMarketItem}
-            keyExtractor={(item) => item._id}
-            contentContainerStyle={{ paddingHorizontal: 10 }}
-          />
-         
+      {loading ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" color="#65C5C4" />
         </View>
-  
-        {/* {filteredData.length > visibleItems ? (
-          <TouchableOpacity
-            onPress={handleShowMore}
-            style={{ marginVertical: 20, alignSelf: "center" }}
+      ) : (
+        <View style={{ flex: 1 }}>
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ marginVertical: 10, paddingLeft: 10 }}
           >
-            <EvilIcons
-              name="arrow-down"
-              size={32}
-              color="#239456"
-              style={{ marginBottom: 10 }}
+            {states.map((state) => (
+              <TouchableOpacity
+                key={state}
+                onPress={() => handleStatePress(state)}
+                style={{
+                  marginRight: 10,
+                  paddingVertical: 5,
+                  paddingHorizontal: 15,
+                  backgroundColor: selectedState === state ? "#000" : "#F4F4F4",
+                  borderRadius: 30,
+                }}
+              >
+                <Text style={{ color: selectedState === state ? "#fff" : "black" }}>
+                  {state}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+  
+          {selectedState === "Favourite" && filteredData.length === 0 ? (
+            <Image
+              source={require("../../assets/media/5-dark.png")}
+              style={{
+                width: 300,
+                height: 300,
+                marginRight: 10,
+                alignSelf: "center",
+              }}
             />
-          </TouchableOpacity>
-        ) : (
-          visibleItems > 4 && (
-            <TouchableOpacity
-              onPress={handleShowLess}
-              style={{ marginVertical: 20, alignSelf: "center" }}
-            >
-              <EvilIcons
-                name="arrow-up"
-                size={32}
-                color="#239456"
-                style={{ marginBottom: 10 }}
-              />
-            </TouchableOpacity>
-          )
-        )} */}
-      </View>
+          ) : (
+            <View>
+              <View style={{ height: 320 }}>
+                <Text style={{ fontSize: 15, fontWeight: "500", color: "#000", marginLeft: 15 }}>
+                  Live Market rates as of <Text style={{ color: '#65C5C4' }}>12.11.2024</Text>
+                </Text>
+  
+                <FlatList
+                  data={displayedData}
+                  renderItem={renderMarketItem}
+                  keyExtractor={(item) => item._id}
+                  contentContainerStyle={{ paddingHorizontal: 10 }}
+                />
+              </View>
+  
+              {/* {filteredData.length > visibleItems ? (
+                <TouchableOpacity
+                  onPress={handleShowMore}
+                  style={{ marginVertical: 20, alignSelf: "center" }}
+                >
+                  <EvilIcons
+                    name="arrow-down"
+                    size={32}
+                    color="#239456"
+                    style={{ marginBottom: 10 }}
+                  />
+                </TouchableOpacity>
+              ) : (
+                visibleItems > 4 && (
+                  <TouchableOpacity
+                    onPress={handleShowLess}
+                    style={{ marginVertical: 20, alignSelf: "center" }}
+                  >
+                    <EvilIcons
+                      name="arrow-up"
+                      size={32}
+                      color="#239456"
+                      style={{ marginBottom: 10 }}
+                    />
+                  </TouchableOpacity>
+                )
+              )} */}
+            </View>
+          )}
+  
+          <MarketModal
+            modalVisible={modalVisible}
+            selectedItem={selectedItem}
+            onClose={closeModel}
+            setModalVisible={setModalVisible}
+            formatDate={formatDate}
+            formatTime={formatTime}
+          />
+        </View>
       )}
-       
-
-      <MarketModal
-        modalVisible={modalVisible}
-        selectedItem={selectedItem}
-        onClose={closeModel}
-        setModalVisible={setModalVisible}
-        formatDate={formatDate}
-        formatTime={formatTime}
-      />
     </View>
   );
 };

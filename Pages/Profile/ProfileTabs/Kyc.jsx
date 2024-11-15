@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated} from 'react-native'
+import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated,TextInput} from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme } from "galio-framework";
 
@@ -16,7 +16,7 @@ import { useNavigation } from '@react-navigation/native';
 import Logo from "../../Images/Logo_1.png";
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Feather } from '@expo/vector-icons';
-import { TextInput, Button } from "@react-native-material/core";
+import {  Button } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -46,10 +46,12 @@ export const KYC = () => {
   const customStyle ={
     Card1: {
     
-      borderRadius:5,
+      borderRadius:8,
       padding:10,
       backgroundColor:"#fff",
-      elevation:isFocused.ForPan ? 4 : 0
+      
+      borderWidth:1,
+
     },
     Card2: {
     
@@ -470,12 +472,12 @@ const getUserDetails = async ()=>{
           <Block style={{ marginTop: 20 }}>
          
           <Block style={{marginTop:20}}>
-   <View style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:15}}>
+   <View style={{borderWidth:1,borderColor:"#A6A6A6",paddingVertical:15,paddingHorizontal: 10,backgroundColor:"#fff", marginTop:10,borderRadius:8}}>
       <TouchableOpacity  activeOpacity={0.7} onPress={toggleAccordion}>
         <Block style={styles.Space_Between}>
           <Block style={{flexDirection:"row",alignItems:"center"}}>
-          <FontAwesome5 name="image" size={24} color="#65be34" style={{marginRight:10}} />
-          <Text style={{fontSize:16,fontWeight:500}}>Uplode Pan Card Images</Text>
+          <FontAwesome5 name="image" size={24} color="#000" style={{marginRight:10}} />
+          <Text style={{fontSize:16,fontWeight:500,color:'#b3b3b3'}}>Upload Pan Card Images</Text>
           </Block>
 
           <Block>
@@ -527,22 +529,18 @@ const getUserDetails = async ()=>{
    
 
             </Block>
-            <Block style={[ customStyle.Card1,{marginTop:60}]}>
-                <TextInput
-
-        variant="standard"
-        
-        label="PAN CARD NUMBER"
-        leading={(props) => <Icon name={isFocused.ForPan ? 'bank' : 'bank'} {...props} />}
-        value={PANformData.PANNo}
-        onChangeText={(text) => handlePANInputChange("PANNo", text)}
-        onFocus={()=>handleFocus("pan")}
-        onBlur={()=>handleBlur("ForPan")}
-        color={ 'white'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
-        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-        
-      />
+            <Block style={{marginTop:60}}>
+            {/* <Icon name={isFocused.ForPan ? 'bank' : 'bank'} /> */}
+            <TextInput
+          placeholder="Enter PAN Number"
+          value={PANformData.PANNo}
+          
+          onChangeText={(text) => handlePANInputChange("PANNo", text)}
+          onFocus={() => handleFocus("ForPan")}
+          onBlur={() => handleBlur("ForPan")}
+          style={[styles.input1, isFocused.ForPan && styles.inputFocused]}
+          placeholderTextColor="#b3b3b3"
+        />
                 </Block>
 
 
@@ -592,7 +590,7 @@ const getUserDetails = async ()=>{
         <Block style={styles.Space_Between}>
           <Block style={{flexDirection:"row",alignItems:"center"}}>
           <FontAwesome5 name="image" size={24} color="#65be34" style={{marginRight:10}} />
-          <Text style={{fontSize:16,fontWeight:500}}>Uplode Addhar Card Images</Text>
+          <Text style={{fontSize:16,fontWeight:500}}>Upload Addhar Card Images</Text>
           </Block>
 
           <Block>
@@ -644,21 +642,19 @@ const getUserDetails = async ()=>{
    
 
             </Block>
-<Block style={{marginTop:40}}>
+<Block style={{marginTop:60}}>
           
-            <Block style={[ customStyle.Card2]}>
+            <Block >
                 <TextInput
 
-        variant="standard"
-        
-        label="Name"
-        leading={(props) => <Icon name={isFocused.ForAdharName ? 'account-circle' : 'account'} {...props} />}
+        placeholder='Name'
         value={AddharformData.Name}
         onChangeText={(text) => handleAddharInputChange("Name", text)}
         onFocus={()=>handleFocus("aname")}
         onBlur={()=>handleBlur("ForAdharName")}
-        color={ 'white'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
+        placeholderTextColor='#b3b3b3'
+        style={[styles.input1, isFocused.ForPan && styles.inputFocused]}
+        
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
       />
@@ -667,19 +663,19 @@ const getUserDetails = async ()=>{
 
                <Block style={{marginTop:40}}>
            
-            <Block style={[ customStyle.Card3]}>
+            <Block >
                 <TextInput
 
-        variant="standard"
         
-        label="Addhar Number"
-        leading={(props) => <Icon name={isFocused.ForAdharNumber ? 'bank' : 'bank'} {...props} />}
+        
+        placeholder="Addhar Number"
+        
         value={AddharformData.AdhharNo}
         onChangeText={(text) => handleAddharInputChange("AdhharNo", text)}
         onFocus={()=>handleFocus("anumber")}
         onBlur={()=>handleBlur("ForAdharNumber")}
-        color={ 'white'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
+        placeholderTextColor='#b3b3b3'
+        style={[styles.input1, isFocused.ForPan && styles.inputFocused]}
         // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
         
       />
@@ -691,20 +687,20 @@ const getUserDetails = async ()=>{
 
         <Block style={{marginTop:40}}>
            
-            <Block style={[ customStyle.Card4]}>
+            <Block >
                 <TextInput
 
-        variant="standard"
+        placeholder="Addhar Address"
         
-        label="Addhar Address"
-        leading={(props) => <Icon name={isFocused.ForAdharAddress ? 'bank' : 'bank'} {...props} />}
+        
+        
         value={AddharformData.Address}
         onChangeText={(text) => handleAddharInputChange("Address", text)}
         onFocus={()=>handleFocus("aaddress")}
         onBlur={()=>handleBlur("ForAdharAddress")}
-        color={ 'white'}
-        inputStyle={{ borderWidth: 0, paddingBottom:0,fontSize:20,letterSpacing:3 }}
-        // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
+        style={[styles.input1, isFocused.ForPan && styles.inputFocused]}
+          placeholderTextColor="#b3b3b3"
+        
         
       />
                 </Block>
@@ -759,7 +755,7 @@ const getUserDetails = async ()=>{
            <Block right style={{width:width*0.9}}>
              <Button
            title="Verify Pan"
-           color="#65be34"
+           color="#000"
            style={{ width: 150, padding: 5,marginTop:50 }}
            onPress={VerifyPAN}
            trailing={(props) => <Icon name="send" {...props} />}
@@ -775,7 +771,7 @@ const getUserDetails = async ()=>{
           <Block right style={{width:width*0.9,marginTop:30,marginBottom:60}}>
                     <Button
                 title="SUBMIT"
-                color="#65be34"
+                color="#000"
                 style={{ width: 150, padding: 5 }}
                 onPress={handelSubmitAddharData}
                 trailing={(props) => <Icon name="send" {...props} />}
@@ -792,7 +788,7 @@ const getUserDetails = async ()=>{
               
 <Button
 title="Done"
-color="#65be34"
+color="#000"
 style={{ width: 150, padding: 5 }}
 onPress={handelSuccess}
 trailing={(props) => <Icon name="send" {...props} />}
@@ -858,6 +854,18 @@ const styles = StyleSheet.create({
     padding:0,
     fontSize:22
      // Remove padding to make it look borderless
+  },
+  input1: {
+    flex: 1,
+    textAlign: "left",
+    padding:15,
+    fontSize:15,
+    borderWidth:1,
+    borderRadius:8,
+    borderColor:"#A6A6A6",
+    width:width*0.95,
+    letterSpacing:3
+    // Remove padding to make it look borderless
   },
   subtitle: {
     color:"black",

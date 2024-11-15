@@ -60,6 +60,8 @@ export const PersonalDetails = () => {
      const handleAddress = () => {
       navigation.navigate('Address');
     };
+
+   
      
     const handleStateChange = (state) => {
       setSelectedState(state);

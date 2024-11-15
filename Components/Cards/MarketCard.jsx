@@ -113,46 +113,61 @@ export const MarketCard = (props) => {
   const formattedDateTime = `${formattedDate} ${formattedTime}`;
 
   return (
+    <TouchableOpacity activeOpacity={0.8} onPress={handelAddClick}>
     <View
       style={{
         borderRadius: 8,
-              padding: 5,
-              borderWidth: 1,
-              borderColor: "#65C5C4",
+        padding: 5,
+        borderWidth: 1,
+        borderColor: "#65C5C4",
         backgroundColor: "#fff",
         marginTop: 10,
-       
       }}
     >
-      <Block style={{ flexDirection: "row" }}>
-       
-
+      <Block style={{ flexDirection: "row" }} >
+      
         <Block style={[styles.Space_Between, { width: "80%", marginLeft: 10 }]}>
           <Block>
             <Block>
-              <Text
-                style={{ fontSize: 14, color: "#000", fontWeight: "bold" }}
-              >
+              <Text style={{ fontSize: 14, color: "#000", fontWeight: "bold" }}>
                 {Title}
               </Text>
             </Block>
 
-                      <Block style={{ marginRight: 30, flexDirection: 'row', alignItems: 'center' }}>
+            <Block
+              style={{
+                marginRight: 30,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
               <Ionicons name="calendar" size={14} color="#65C5C4" />
-              <Text style={{ color: "#000", fontSize: 14, fontWeight: 600, marginLeft: 8 }}>
+              <Text
+                style={{
+                  color: "#000",
+                  fontSize: 14,
+                  fontWeight: 600,
+                  marginLeft: 8,
+                }}
+              >
                 {formattedDateTime}
               </Text>
             </Block>
           </Block>
-                
-
-          
         </Block>
-        <Text style={{ color: "#000", fontSize: 15, fontWeight: 700 ,marginTop: 10 }}>
-            ₹ {Value}/kg
-          </Text>
+        <Text
+          style={{
+            color: "#000",
+            fontSize: 15,
+            fontWeight: 700,
+            marginTop: 10,
+          }}
+        >
+          ₹ {Value}/kg
+        </Text>
       </Block>
     </View>
+    </TouchableOpacity>
   );
 };
 

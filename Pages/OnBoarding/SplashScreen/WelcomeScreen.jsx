@@ -1,49 +1,43 @@
-import React from 'react'
-import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
+import React, { useEffect, useRef } from 'react';
+import { Animated, View, Image, StyleSheet, Dimensions } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Block, Text, Input, theme, Button } from "galio-framework";
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 import Logo from "../../Images/Logo_1.png";
-import Img from "../../Images/Onbording.png";
-import { Feather } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
+
 export const WelcomeScreen = () => {
+  const fadeAnim = useRef(new Animated.Value(0)).current; // Initial opacity value of 0
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1, // Final opacity value of 1
+      duration: 3000, // Duration of 3 seconds
+      useNativeDriver: true,
+    }).start();
+  }, [fadeAnim]);
+
   return (
     <View style={styles.container}>
-    <StatusBar  hidden={true} />
-  
-   
-    
-      
-    <View style={{flexDirection:"row",justifyContent:"center",alignItems:"center",flex:1}}>
-      <Image
-        source={Logo}
-        style={{resizeMode: 'contain'}}
-      />
+      <StatusBar hidden={true} />
+      <View style={{ flexDirection: "row", justifyContent: "center", alignItems: "center", flex: 1 }}>
+        <Animated.Image
+          source={Logo}
+          style={{ ...styles.logo, opacity: fadeAnim }}
+        />
       </View>
-    
+    </View>
+  );
+};
 
-
-</View>
-  )
-}
 const styles = StyleSheet.create({
-    container:{
-      flex: 1,
-      width:width,
-      height:height,
-      backgroundColor:"#000000"
-    },
-    Text_Container:{
-      flex: 0.9,
-      justifyContent:"center",
-      alignItems:"left",
-      padding:30
-    },
-    Image: {
-      ...StyleSheet.absoluteFillObject,
-      height:height,
-      width : width
+  container: {
+    flex: 1,
+    width: width,
+    height: height,
+    backgroundColor: "#000000",
   },
-  
-    });
+  logo: {
+    resizeMode: 'contain',
+  },
+});
+
+export default WelcomeScreen;

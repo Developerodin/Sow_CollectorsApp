@@ -4,14 +4,16 @@ import {
   View,
   Dimensions,
   Image,
+  TextInput
 } from "react-native";
 import { Block, Text, Input, theme,Button } from "galio-framework";
 
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 import Modal from "react-native-modal";
+import { TouchableOpacity } from "react-native";
 
-import { TextInput } from "@react-native-material/core";
+
 
 
 const { width, height } = Dimensions.get("screen");
@@ -81,7 +83,7 @@ export const ItemAddModel = ({
               onPress={handelClose}
               name="close-circle"
               size={24}
-              color="#65be34"
+              color="#000"
             />
           </Block>
 
@@ -89,22 +91,14 @@ export const ItemAddModel = ({
             style={{
               marginTop: 10,
               flexDirection: "row",
-              justifyContent: "left",
+              justifyContent: "center",
               alignItems: "start",
               width: width * 0.9,
               padding: 10,
             }}
           >
-            <Image
-              source={{ uri: ItemModelData.image }}
-              style={{
-                resizeMode: "contain",
-                width: 30,
-                height: 30,
-                marginRight: 10,
-              }}
-            />
-            <Text style={{ fontSize: 20 }}>
+           <MaterialIcons name="category" size={24} color="#65c5c4" />
+            <Text style={{ fontSize: 18,marginLeft:10,color: '#000' }}>
               {ItemModelData.title} {"( ₹" + ItemModelData.value + " / KG)"}
             </Text>
           </Block>
@@ -113,7 +107,7 @@ export const ItemAddModel = ({
             style={{
               marginTop: 20,
               flexDirection: "row",
-              justifyContent: "left",
+              justifyContent: "center",
               alignItems: "start",
               width: width * 0.9,
               padding: 10,
@@ -126,16 +120,16 @@ export const ItemAddModel = ({
                 // label="Price"
                 value={formData.price}
                 onChangeText={(text) => handleInputChange("price", text)}
-                color={"grey"}
-                inputStyle={{
-                  borderWidth: 0,
-                  paddingBottom: 0,
-                  color: "black",
-                  fontSize: 20,
-                  letterSpacing: 3,
-                }}
+                color={"black"}
+                // inputStyle={{
+                //   borderWidth: 0,
+                //   paddingBottom: 0,
+                //   color: "black",
+                //   fontSize: 20,
+                //   letterSpacing: 3,
+                // }}
                 // inputContainerStyle={{ borderBottomWidth:1, paddingBottom:0,borderColor:`${isFocused ? "#65be34" : "#fff" }`}}
-                style={{ width: 200 }}
+                style={{ width: 150,borderWidth:1,borderRadius:8,paddingHorizontal:15,paddingVertical:5 }}
               />
             </Block>
 
@@ -146,7 +140,7 @@ export const ItemAddModel = ({
                 label="unit"
                 value={formData.unit}
                 onChangeText={(text) => handleInputChange("unit", text)}
-                color={"grey"}
+                color={"black"}
                 inputStyle={{
                   borderWidth: 0,
                   paddingBottom: 0,
@@ -155,29 +149,46 @@ export const ItemAddModel = ({
                   letterSpacing: 3,
                 }}
                 
-                style={{ width: 80, marginLeft: 10 }}
+                style={{ width: 150,borderWidth:1,borderRadius:8,marginLeft: 10,paddingHorizontal:15,paddingVertical:5  }}
               />
             </Block>
           </Block>
 
-          <Block style={{flexDirection:"row",marginTop:20}}>
+          <Block style={{flexDirection:"row",marginTop:20,gap: 10}}>
             {/* <Button onPress={()=>handelDone(otp)} color="success"> Done</Button> */}
-            <Button
+            {/* <Button
              
               
-              color="crimson"
+              color="black"
               onPress={() => handelDelete(ItemModelData.index)}
            
               size="small"
-            > Delete</Button>
+            > Delete</Button> */}
 
-            <Button
-            color="teal"
+            <TouchableOpacity onPress={() => handelDelete(ItemModelData.index)}>
+              <Text style={{color:"#fff",marginTop:10,backgroundColor: 'black',fontSize: 18,
+      borderRadius: 30,
+      paddingVertical: 10,
+      paddingHorizontal: 30,
+      }}>Delete</Text>
+            </TouchableOpacity>
+
+            {/* <Button
+            color="black"
              
              onPress={() => handelComplete(formData)}
           
              size="small"
-           > Update</Button>
+           > Update</Button> */}
+            <TouchableOpacity onPress={() => handelComplete(formData)}>
+              <Text style={{color:"#fff",marginTop:10,backgroundColor: 'black',fontSize: 18,
+      borderRadius: 30,
+      paddingVertical: 10,
+      paddingHorizontal: 30,
+      }}>Update</Text>
+            </TouchableOpacity>
+
+
            
           </Block>
         </View>
@@ -221,19 +232,12 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 15,
     padding: 20,
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
+    
     width: width * 0.9,
-    height: height - 500,
+    height: height - 600,
   },
   button: {
     borderRadius: 20,

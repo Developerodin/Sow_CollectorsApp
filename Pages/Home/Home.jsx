@@ -164,7 +164,7 @@ export const Home = () => {
   return (
     <View style={styles.container}>
       <Header />
-      <StatusBar hidden={false} color={"light"} />
+      <StatusBar hidden={false} color={"dark"} />
       <ScrollView
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
