@@ -29,6 +29,7 @@ import { MarketRatesCard } from "../../Components/Cards/MarketRatesCard";
 import axios from "axios";
 import { Base_url } from "../../Config/BaseUrl";
 import Modal from "react-native-modal";
+import { ThemeData } from "../../Theme/Theme";
 
 export const Market = () => {
   const navigation = useNavigation();
@@ -403,14 +404,14 @@ export const Market = () => {
                 alignItems: "center",
               }}
             >
-              <Text style={{ fontSize: 23, marginTop: 10,color:'#000',fontWeight: 600 }}>Sell your Scrap</Text>
+              <Text style={{ fontSize: 23, marginTop: 10,color: ThemeData.textColor,fontWeight: 600 }}>Sell your Scrap</Text>
 
-              <Block style={{ marginTop: 10 ,borderRadius:50 ,borderColor:'black',borderWidth: 1 ,backgroundColor: 'black' ,padding: 5}}>
+              <Block style={{ marginTop: 10 ,borderRadius:50 ,borderColor:ThemeData.textColor,borderWidth: 1 ,backgroundColor: 'black' ,padding: 5}}>
                 <TouchableOpacity>
                   <Ionicons
                     name="refresh"
                     size={24}
-                    color="white"
+                    color={ThemeData.buttonColor}
                     onPress={resetFilterData}
                     style={{ transform: [{ rotate: "45deg" }] }}
                   />
@@ -424,7 +425,7 @@ export const Market = () => {
                   borderWidth: 1,
                   borderColor: "#A6A6A6",
                   padding: 10,
-                  backgroundColor: "#fff",
+                  backgroundColor: ThemeData.containerBackgroundColor,
 
                   borderRadius: 10,
                 }}
@@ -433,15 +434,15 @@ export const Market = () => {
                
         <View style={styles.Space_Between}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Text style={{ fontSize: 18, color: `${selectedCategory !== "" ? "black" : "#B7B7B7"}` }}>
+            <Text style={{ fontSize: 18, color: `${selectedCategory !== "" ? ThemeData.textColor : "#B7B7B7"}` }}>
               {selectedCategory !== "" ? selectedCategory : "Select Category"}
             </Text>
           </View>
           <View>
             {expanded ? (
-              <MaterialIcons name="keyboard-arrow-up" size={28} color="black" />
+            <MaterialIcons name="keyboard-arrow-up" size={28} color={ThemeData.textColor} />
             ) : (
-              <MaterialIcons name="keyboard-arrow-down" size={28} color="black" />
+              <MaterialIcons name="keyboard-arrow-down" size={28} color={ThemeData.textColor}  />
             )}
           </View>
         </View>
@@ -463,7 +464,7 @@ export const Market = () => {
               onPress={handelClose}
               name="close-circle"
               size={24}
-              color="black"
+              color={ThemeData.textColor} 
             />
           </Block>
           <Text style={{fontSize:18 ,textAlign : 'center'}}>Select Category</Text>
@@ -508,15 +509,15 @@ export const Market = () => {
               <View style={styles.Space_Between}>
                 
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <Text style={{ fontSize: 18, color: `${selectedSubCategory !== "" ? "black" : "#B7B7B7"}` }}>
+                  <Text style={{ fontSize: 18, color: `${selectedSubCategory !== "" ? ThemeData.textColor  : "#B7B7B7"}` }}>
                     {selectedSubCategory !== "" ? selectedSubCategory : "Select Sub Category"}
                   </Text>
                 </View>
                 <View>
                   {expanded4 ? (
-                    <MaterialIcons name="keyboard-arrow-up" size={28} color="black" />
+                    <MaterialIcons name="keyboard-arrow-up" size={28} color={ThemeData.textColor}  />
                   ) : (
-                    <MaterialIcons name="keyboard-arrow-down" size={28} color="black" />
+                    <MaterialIcons name="keyboard-arrow-down" size={28} color={ThemeData.textColor}  />
                   )}
                 </View>
               </View>
@@ -537,7 +538,7 @@ export const Market = () => {
               onPress={handelClosetwo}
               name="close-circle"
               size={24}
-              color="black"
+              color={ThemeData.textColor} 
             />
           </Block>
           <Text style={{fontSize:18 ,textAlign : 'center'}}>Select Sub Category</Text>
@@ -556,7 +557,7 @@ export const Market = () => {
       {selectedSubCategoriesData.map((el, index) => (
         <TouchableOpacity key={index} onPress={() => handleSubCategorySelection(el.name, el._id)}>
           <View style={[styles.categoryItem, selectedSubCategories.includes(el._id) && styles.selectedCategory]}>
-            <Text style={{ fontSize: 18, color: selectedSubCategories.includes(el._id) ? "#fff" : "#000" }}>
+            <Text style={{ fontSize: 18, color: selectedSubCategories.includes(el._id) ? ThemeData.activeColor : ThemeData.textColor }}>
               {el.name}
             </Text>
           </View>

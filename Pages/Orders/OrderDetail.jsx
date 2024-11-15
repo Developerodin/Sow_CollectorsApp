@@ -8,6 +8,7 @@ import axios from 'axios';
 import { Base_url } from '../../Config/BaseUrl';
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
+import { ThemeData } from '../../Theme/Theme';
 const {width, height} = Dimensions.get('window');
 
 export const OrderDetail = ({route}) => {
@@ -35,7 +36,7 @@ export const OrderDetail = ({route}) => {
     <ScrollView>
 
    
-    <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:"#fff", marginTop:10,borderRadius:10}}>
+    <Block style={{borderWidth:1,borderColor:"#C8C8C8",padding:15,backgroundColor:ThemeData.containerBackgroundColor, marginTop:10,borderRadius:10}}>
     
     
     

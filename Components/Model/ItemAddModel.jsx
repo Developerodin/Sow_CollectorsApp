@@ -12,6 +12,7 @@ import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 import Modal from "react-native-modal";
 import { TouchableOpacity } from "react-native";
+import { ThemeData } from "../../Theme/Theme";
 
 
 
@@ -83,7 +84,7 @@ export const ItemAddModel = ({
               onPress={handelClose}
               name="close-circle"
               size={24}
-              color="#000"
+              color={ThemeData.textColor}
             />
           </Block>
 
@@ -97,8 +98,8 @@ export const ItemAddModel = ({
               padding: 10,
             }}
           >
-           <MaterialIcons name="category" size={24} color="#65c5c4" />
-            <Text style={{ fontSize: 18,marginLeft:10,color: '#000' }}>
+           <MaterialIcons name="category" size={24} color={ThemeData.color} />
+            <Text style={{ fontSize: 18,marginLeft:10,color: ThemeData.textColor }}>
               {ItemModelData.title} {"( ₹" + ItemModelData.value + " / KG)"}
             </Text>
           </Block>
@@ -140,7 +141,7 @@ export const ItemAddModel = ({
                 label="unit"
                 value={formData.unit}
                 onChangeText={(text) => handleInputChange("unit", text)}
-                color={"black"}
+                color={ThemeData.textColor}
                 inputStyle={{
                   borderWidth: 0,
                   paddingBottom: 0,
@@ -166,7 +167,7 @@ export const ItemAddModel = ({
             > Delete</Button> */}
 
             <TouchableOpacity onPress={() => handelDelete(ItemModelData.index)}>
-              <Text style={{color:"#fff",marginTop:10,backgroundColor: 'black',fontSize: 18,
+              <Text style={{color: ThemeData.activeColor,marginTop:10,backgroundColor: ThemeData.textColor,fontSize: 18,
       borderRadius: 30,
       paddingVertical: 10,
       paddingHorizontal: 30,
@@ -181,7 +182,7 @@ export const ItemAddModel = ({
              size="small"
            > Update</Button> */}
             <TouchableOpacity onPress={() => handelComplete(formData)}>
-              <Text style={{color:"#fff",marginTop:10,backgroundColor: 'black',fontSize: 18,
+              <Text style={{color:ThemeData.activeColor,marginTop:10,backgroundColor: ThemeData.textColor,fontSize: 18,
       borderRadius: 30,
       paddingVertical: 10,
       paddingHorizontal: 30,
@@ -251,7 +252,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#2196F3",
   },
   textStyle: {
-    color: "white",
+    color: ThemeData.activeColor,
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -268,7 +269,7 @@ const styles = StyleSheet.create({
 const styles2 = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: ThemeData.containerBackgroundColor,
   },
 
   AlignCenter: {
@@ -325,7 +326,7 @@ const styles2 = StyleSheet.create({
     alignItems: "center",
   },
   text: {
-    color: "white",
+    color: ThemeData.activeColor,
     fontSize: 16,
     fontWeight: "bold",
   },

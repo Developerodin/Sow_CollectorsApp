@@ -14,6 +14,7 @@ import { Base_url } from '../../Config/BaseUrl';
 import { Feather } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { ThemeData } from '../../Theme/Theme';
 
 const {width, height} = Dimensions.get('window');
 
@@ -103,7 +104,7 @@ export const PendingOrderDetails = ({route}) => {
     <ScrollView showsVerticalScrollIndicator={false}>
 
    
-    <Block style={{padding:15,backgroundColor:"#fff", marginTop:0,borderRadius:10}}>
+    <Block style={{padding:15,backgroundColor:ThemeData.containerBackgroundColor, marginTop:0,borderRadius:10}}>
     {/* <Block style={styles.Space_Between}>
          <Text style={{fontSize:20,color:"grey"}}>OTP :{orderDetails && orderDetails.otp}</Text>
          <Button  style={{backgroundColor:"crimson",borderRadius:10}}>
@@ -116,14 +117,14 @@ export const PendingOrderDetails = ({route}) => {
              <Block style={{ marginTop: 0 }}>
           
           <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons name="document" size={20} color="black" />
-            <Text style={{ fontSize: 18, marginLeft: 8 ,fontWeight : 500 }}>
+            <Ionicons name="document" size={20} color={ThemeData.textColor } />
+            <Text style={{ fontSize: 18, marginLeft: 8 ,fontWeight : 500 ,color : ThemeData.textColor }}>
               Order No. : #0100
             </Text>
           </Block>
           <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons name="calendar" size={20} color="black" />
-            <Text style={{ fontSize: 18, marginLeft: 8 ,fontWeight : 500}}>
+            <Ionicons name="calendar" size={20} color={ThemeData.textColor }  />
+            <Text style={{ fontSize: 18, marginLeft: 8 ,fontWeight : 500,color : ThemeData.textColor}}>
               {orderDetails && new Date(orderDetails.orderDate).toLocaleDateString('en-GB')}
             </Text>
           </Block>
@@ -135,12 +136,12 @@ export const PendingOrderDetails = ({route}) => {
           </Block>
           <Block style={{ marginTop: 8, flexDirection: 'row', alignItems: 'center' }}>
             
-            <Text style={{ fontSize: 18, fontWeight: 500, marginLeft: 26 ,color: '#65C5C4',textDecorationLine: 'underline'}}>
+            <Text style={{ fontSize: 18, fontWeight: 500, marginLeft: 26 ,color: ThemeData.color,textDecorationLine: 'underline'}}>
               View on Map 
             </Text>
             </Block>
             <Block style={{ marginTop: 25, flexDirection: 'row', alignItems: 'center' }}>
-                        <MaterialIcons name="category" size={20} color="black" />
+                        <MaterialIcons name="category" size={20} color={ThemeData.textColor}/>
             <Text style={{ fontSize: 20, marginLeft: 8,fontWeight: 500 }}>
             {orderDetails && orderDetails.details && orderDetails.details.category}
             </Text>
@@ -298,7 +299,7 @@ export const PendingOrderDetails = ({route}) => {
 
           <Block
             style={{
-              backgroundColor: "#fff",
+              backgroundColor:  ThemeData.containerBackgroundColor ,
               flexDirection: "row",
               justifyContent: "left",
               alignItems: "center",
@@ -436,7 +437,7 @@ export const PendingOrderDetails = ({route}) => {
 const styles = StyleSheet.create({
     container:{
       flex: 1,
-      backgroundColor:"#fff",
+      backgroundColor: ThemeData.containerBackgroundColor,
       padding:10
   
     },
@@ -555,27 +556,27 @@ const styles = StyleSheet.create({
         textAlign: 'center',
       },
       tableHeader: {
-        backgroundColor: '#fff',
+        backgroundColor:  ThemeData.containerBackgroundColor,
         borderBottomWidth: 1,
-        borderBottomColor: '#000',
-        borderTopColor: '#000',
+        borderBottomColor: ThemeData.textColor,
+        borderTopColor: ThemeData.textColor,
         borderTopWidth: 1,
       },
       tableRow: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         borderBottomWidth: 1,
-        borderBottomColor: '#000',
+        borderBottomColor: ThemeData.textColor,
       },
       headerText: {
         fontSize: 16,
         fontWeight: '700',
-        color: '#000',
+        color: ThemeData.textColor,
         textAlign: 'center',
       },
       cellText: {
         fontSize: 16,
-        color: '#000',
+        color: ThemeData.textColor,
         textAlign: 'center',
         fontWeight : 500
       },
@@ -583,9 +584,9 @@ const styles = StyleSheet.create({
         flex: 1,
         paddingVertical: 5,
         borderRightWidth: 0.5,
-        borderRightColor: '#000',
+        borderRightColor: ThemeData.textColor,
         borderLeftWidth: 0.5,
-        borderLeftColor: '#000',
+        borderLeftColor: ThemeData.textColor,
       },
       boxContainer: {
         flex: 1,

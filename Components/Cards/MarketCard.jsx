@@ -20,6 +20,7 @@ import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAppContext } from "../../Context/AppContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ThemeData } from "../../Theme/Theme";
 export const MarketCard = (props) => {
   const navigation = useNavigation();
   const {
@@ -119,8 +120,8 @@ export const MarketCard = (props) => {
         borderRadius: 8,
         padding: 5,
         borderWidth: 1,
-        borderColor: "#65C5C4",
-        backgroundColor: "#fff",
+        borderColor: ThemeData.color,
+        backgroundColor: ThemeData.containerBackgroundColor,
         marginTop: 10,
       }}
     >
@@ -129,7 +130,7 @@ export const MarketCard = (props) => {
         <Block style={[styles.Space_Between, { width: "80%", marginLeft: 10 }]}>
           <Block>
             <Block>
-              <Text style={{ fontSize: 14, color: "#000", fontWeight: "bold" }}>
+              <Text style={{ fontSize: 14, color: ThemeData.textColor, fontWeight: "bold" }}>
                 {Title}
               </Text>
             </Block>
@@ -141,10 +142,10 @@ export const MarketCard = (props) => {
                 alignItems: "center",
               }}
             >
-              <Ionicons name="calendar" size={14} color="#65C5C4" />
+              <Ionicons name="calendar" size={14} color= {ThemeData.color} />
               <Text
                 style={{
-                  color: "#000",
+                  color: ThemeData.textColor,
                   fontSize: 14,
                   fontWeight: 600,
                   marginLeft: 8,
@@ -157,7 +158,7 @@ export const MarketCard = (props) => {
         </Block>
         <Text
           style={{
-            color: "#000",
+            color: ThemeData.textColor,
             fontSize: 15,
             fontWeight: 700,
             marginTop: 10,

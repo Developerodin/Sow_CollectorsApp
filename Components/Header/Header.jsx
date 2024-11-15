@@ -10,6 +10,7 @@ import ProfileLogo from "../../assets/profileMenu.png"
 import HamburgerMenu from '../HamburgerMenu/HamburgerMenu ';
 import { useAppContext } from '../../Context/AppContext';
 import { useNavigation } from '@react-navigation/native';
+import { ThemeData } from '../../Theme/Theme';
 
 export const Header = () => {
   const navigation = useNavigation()
@@ -42,7 +43,7 @@ export const Header = () => {
           </Block>
           <Block>
             <TouchableOpacity activeOpacity={0.9} onPress={handelNotificationClick}>
-          <FontAwesome5 name="bell" size={30} color="black" />
+          <FontAwesome5 name="bell" size={30} color= {ThemeData.textColor}/>
           </TouchableOpacity>
           </Block>
         </Block>
@@ -54,7 +55,7 @@ export const Header = () => {
 
 const styles = StyleSheet.create({
     container:{
-      backgroundColor:"#FFFFFF",
+      backgroundColor:ThemeData.containerBackgroundColor,
       
   
     },

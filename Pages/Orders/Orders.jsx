@@ -27,6 +27,7 @@ import { useAppContext } from "../../Context/AppContext";
 import { InCommingOrderCard } from "../../Components/Cards/InCommingOrderCard";
 import { RejectedOrderCard } from "../../Components/Cards/RejectedOrderCard";
 import { useNavigation } from "@react-navigation/native";
+import { ThemeData } from "../../Theme/Theme";
 
 export const Orders = () => {
   const navigation = useNavigation();
@@ -237,9 +238,9 @@ export const Orders = () => {
             marginRight: 30,
           }}
         >
-          <Text style={{ fontSize: 22, fontWeight: "bold" }}>Your Orders</Text>
+          <Text style={{ fontSize: 22, fontWeight: "bold",color: ThemeData.textColor }}>Your Orders</Text>
           <TouchableOpacity onPress={handleMandiRates}>
-          <Ionicons name="filter" size={26} color="#000" />
+        <Ionicons name="filter" size={26} color={ThemeData.textColor} />
           </TouchableOpacity>
         </View>
        <ScrollView >
@@ -265,8 +266,8 @@ export const Orders = () => {
         <View style={styles.tabBar}>
           {props.navigationState.routes.map((route, i) => {
             const isTabActive = i === index;
-            const tabBackgroundColor = isTabActive ? "#000" : "#F4F4F4";
-            const textColor = isTabActive ? "#65C5C4" : "#000";
+            const tabBackgroundColor = isTabActive ? ThemeData.textColor : ThemeData.activeBackgroundColor;
+            const textColor = isTabActive ? ThemeData.color : ThemeData.textColor;
             const borderWidth = isTabActive ? 2 : 0;
             const borderColor = isTabActive ? "#239456" : "grey";
 
@@ -316,7 +317,7 @@ export const Orders = () => {
 
   return (
     <ScrollView
-      contentContainerStyle={{ flex: 1, backgroundColor: "#ffffff" }}
+      contentContainerStyle={{ flex: 1, backgroundColor: ThemeData.containerBackgroundColor }}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
@@ -336,13 +337,13 @@ export const Orders = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
+    backgroundColor: ThemeData.containerBackgroundColor,
   },
   tabBar: {
     flexDirection: "row",
     // paddingTop: StatusBar.currentHeight,
     padding: 10,
-    backgroundColor: "#fff",
+    backgroundColor: ThemeData.containerBackgroundColor,
     width: "60%",
     alignSelf: "center",
   },
@@ -366,7 +367,7 @@ const styles = StyleSheet.create({
     // Remove padding to make it look borderless
   },
   subtitle: {
-    color: "black",
+    color: ThemeData.textColor,
     fontSize: 20,
     marginTop: 10,
 
@@ -375,7 +376,7 @@ const styles = StyleSheet.create({
     letterSpacing: 0.3,
   },
   title: {
-    color: "black",
+    color: ThemeData.textColor,
     fontSize: 22,
     fontWeight: "bold",
     marginTop: 20,
@@ -421,7 +422,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   shadow: {
-    shadowColor: "black",
+    shadowColor: ThemeData.textColor,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     shadowOpacity: 0.2,
@@ -449,18 +450,18 @@ const styles = StyleSheet.create({
     
   },
   activeTab: {
-    backgroundColor: '#000',
+    backgroundColor: ThemeData.backgroundColor,
   },
   inactiveTab: {
-    backgroundColor: '#fff',
+    backgroundColor: ThemeData.cardBackgroundColor,
   },
   tabText: {
     fontSize: 16,
   },
   activeTabText: {
-    color: '#fff',
+    color: ThemeData.activeColor,
   },
   inactiveTabText: {
-    color: '#000',
+    color: ThemeData.textColor,
   },
 });

@@ -19,6 +19,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useAppContext } from '../../Context/AppContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProfileLogo from "../../assets/profileMenu.png"
+import { ThemeData } from '../../Theme/Theme';
 export const Profile = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
@@ -161,14 +162,14 @@ export const Profile = () => {
     {/* <Header/> */}
     <StatusBar  style="dark" hidden={true}/>
     <ScrollView >
-     <Block style={{marginTop:0,backgroundColor:"#FFF"}}>
+     <Block style={{marginTop:0,backgroundColor:ThemeData.containerBackgroundColor}}>
     
-        <Block style={{borderWidth:1,backgroundColor:'black',marginTop:0}}>
+        <Block style={{borderWidth:1,backgroundColor: ThemeData.backgroundColor,marginTop:0}}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 10, marginLeft: 10, }}>
-  <Ionicons name="arrow-back" size={24} color="white" />
+  <Ionicons name="arrow-back" size={24} color={ThemeData.activeColor}/>
 </TouchableOpacity>
 
-          <Block center style={[{position:'realtive',width:80,height:80,borderRadius:500,marginTop:30,borderRadius:100,backgroundColor:"#fff",elevation:2}]}>
+          <Block center style={[{position:'realtive',width:80,height:80,borderRadius:500,marginTop:30,borderRadius:100,backgroundColor:ThemeData.containerBackgroundColor,elevation:2}]}>
          {
           image === null &&  <Image style={{resizeMode: 'contain',width:'100%',height:'100%',borderRadius:100}}   source={ProfileLogo} />
          }
@@ -178,16 +179,16 @@ export const Profile = () => {
           
           
           <TouchableOpacity activeOpacity={0.8} onPress={() => showImagePicker('camera')} center style={{width:25,height:25,borderRadius:100,position:'absolute',bottom:2,right:5,display:'flex',justifyContent:"center",alignItems:'center',backgroundColor:'#65C5C4'}}>
-          <Feather name="edit-2" size={14}  color="black" />
+          <Feather name="edit-2" size={14}  color={ThemeData.textColor} />
           </TouchableOpacity>
           
           </Block>
           
 
            <Block  style={{marginTop:20,marginBottom:30}}>
-            <Text center style={{fontSize:25,fontWeight:"500",color:"#fff"}}>{userDetails && userDetails.name} </Text>
+            <Text center style={{fontSize:25,fontWeight:"500",color: ThemeData.activeColor}}>{userDetails && userDetails.name} </Text>
             
-            <Block center style={{padding:5,borderRadius:20,marginTop:20,paddingHorizontal:20,display:'flex',justifyContent:"center",alignItems:'center',backgroundColor:'#65C5C4'}} >
+            <Block center style={{padding:5,borderRadius:20,marginTop:20,paddingHorizontal:20,display:'flex',justifyContent:"center",alignItems:'center',backgroundColor: ThemeData.color}} >
            {/* <Button onPress={() => showImagePicker('camera')} color='#0F2C59'>
            ,border
            
@@ -198,7 +199,7 @@ export const Profile = () => {
             </Text>
            </Button> */}
 
-           <Text style={{color:"black"}}>
+           <Text style={{color: ThemeData.textColor}}>
             {/* {userDetails && userDetails.role} */}
             Wholesaler
             </Text>
@@ -233,11 +234,11 @@ export const Profile = () => {
             })
           }
 
-<ProfileCard  Title={"Share App"} Img={<Entypo name="share" size={24} color="#65C5C4" />}  Fun={handleShare}/>
-<ProfileCard  Title={"Rate the app"} Img={<AntDesign name="star" size={24} color="#65C5C4" /> } Fun={handelRateAppliction}/>
-<ProfileCard  Title={"Delete account"} Img={<AntDesign name="delete" size={24} color="#65C5C4" /> } Fun={handelDeleteAccount}/>
+<ProfileCard  Title={"Share App"} Img={<Entypo name="share" size={24} color={ThemeData.color} />}  Fun={handleShare}/>
+<ProfileCard  Title={"Rate the app"} Img={<AntDesign name="star" size={24} color={ThemeData.color} /> } Fun={handelRateAppliction}/>
+<ProfileCard  Title={"Delete account"} Img={<AntDesign name="delete" size={24} color={ThemeData.color} /> } Fun={handelDeleteAccount}/>
 <Block style={{marginBottom:10}}>
-<ProfileCard  Title={"Logout"} Img={<AntDesign name="logout" size={24} color="#65C5C4" /> } Fun={handelLogout}/> 
+<ProfileCard  Title={"Logout"} Img={<AntDesign name="logout" size={24} color={ThemeData.color} /> } Fun={handelLogout}/> 
   </Block>       
    
        
@@ -271,7 +272,7 @@ const styles = StyleSheet.create({
      // Remove padding to make it look borderless
   },
   subtitle: {
-    color:"black",
+    color:ThemeData.textColor,
     fontSize: 20,
     marginTop: 10,
   
@@ -280,7 +281,7 @@ const styles = StyleSheet.create({
     letterSpacing:0.3
   },
   title: {
-    color:"black",
+    color: ThemeData.textColor,
     fontSize: 22,
     fontWeight: 'bold',
     marginTop: 20,

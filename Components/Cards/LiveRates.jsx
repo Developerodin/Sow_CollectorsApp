@@ -17,6 +17,7 @@ import icon from "./trend1.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "../../Context/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { ThemeData } from "../../Theme/Theme";
 
 
 const LiveRates = () => {
@@ -213,11 +214,11 @@ const LiveRates = () => {
               borderRadius: 8,
               padding: 5,
               borderWidth: 1,
-              borderColor: "#65C5C4",
+              borderColor: ThemeData.color,
               flexDirection: "row",
               justifyContent: "flex-start",
               alignItems: "center",
-              backgroundColor: "#FFFFFF",
+              backgroundColor: ThemeData.cardBackgroundColor,
             }}
           >
             <Block >
@@ -228,7 +229,7 @@ const LiveRates = () => {
             </Block>
             <Block style={{ width: "60%", marginLeft: 10 }}>
               <Text
-                style={{ fontWeight: "700", color: "#000", fontSize: 13 }}
+                style={{ fontWeight: "700", color: ThemeData.textColor, fontSize: 13 }}
               >
                 {item.mandi?.mandiname || "Unknown Mandi"}
               </Text>
@@ -236,15 +237,15 @@ const LiveRates = () => {
                 {priceItem.category}
               </Text>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Ionicons name="calendar" size={14} color="#65C5C4" />
-      <Text style={{ fontSize: 12, fontWeight: "600", marginLeft: 5 }}>
+      <Ionicons name="calendar" size={14} color={ThemeData.color} />
+      <Text style={{ fontSize: 12, fontWeight: "600",color: ThemeData.textColor, marginLeft: 5 }}>
         {formatDate(item.updatedAt)}
       </Text>
     </View>
             </Block>
             <Block style={{ textAlign: "right" }}>
               <Text
-                style={{ fontWeight: "700", color: "#000", fontSize: 13 }}
+                style={{ fontWeight: "700",color: ThemeData.textColor, fontSize: 13 }}
               >
                 ₹ {priceItem.price}
               </Text>
@@ -256,7 +257,7 @@ const LiveRates = () => {
                       fontSize: 13,
                       color:
                         priceDifference.tag === "Increment"
-                          ? "#65C5C4"
+                          ? ThemeData.color
                           : "#e41010",
                       fontWeight: 400,
                     }}
@@ -290,7 +291,7 @@ const LiveRates = () => {
     <View style={{ flex: 1 }}>
       {loading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#65C5C4" />
+          <ActivityIndicator size="large" color={ThemeData.color} />
         </View>
       ) : (
         <View style={{ flex: 1 }}>
@@ -307,11 +308,11 @@ const LiveRates = () => {
                   marginRight: 10,
                   paddingVertical: 5,
                   paddingHorizontal: 15,
-                  backgroundColor: selectedState === state ? "#000" : "#F4F4F4",
+                  backgroundColor: selectedState === state ? ThemeData.backgroundColor : ThemeData.activeBackgroundColor,
                   borderRadius: 30,
                 }}
               >
-                <Text style={{ color: selectedState === state ? "#fff" : "black" }}>
+                <Text style={{ color: selectedState === state ? ThemeData.activeColor : ThemeData.textColor }}>
                   {state}
                 </Text>
               </TouchableOpacity>
@@ -331,8 +332,8 @@ const LiveRates = () => {
           ) : (
             <View>
               <View style={{ height: 320 }}>
-                <Text style={{ fontSize: 15, fontWeight: "500", color: "#000", marginLeft: 15 }}>
-                  Live Market rates as of <Text style={{ color: '#65C5C4' }}>12.11.2024</Text>
+                <Text style={{ fontSize: 15, fontWeight: "500", color: ThemeData.textColor, marginLeft: 15 }}>
+                  Live Market rates as of <Text style={{ color: ThemeData.color }}>12.11.2024</Text>
                 </Text>
   
                 <FlatList

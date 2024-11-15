@@ -30,6 +30,7 @@ import usePushNotifications from "../../usePushNotifications";
 import LiveRates from "../../Components/Cards/LiveRates";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import icon from "./icon.png";
+import { ThemeData } from "../../Theme/Theme";
 
 export const Home = () => {
   const animationRef = useRef(null);
@@ -170,9 +171,9 @@ export const Home = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-                          <Block style={{ backgroundColor: "#FFF", padding: 10 }}>
+                          <Block style={{ backgroundColor: ThemeData.containerBackgroundColor, padding: 10 }}>
                   <Block>
-                    <Text style={{ textAlign: 'left', paddingLeft: 12, fontWeight: '700', fontSize: 20, marginTop: 20 }}>Your Sales Summary</Text>
+                    <Text style={{ textAlign: 'left', paddingLeft: 12, fontWeight: '700', fontSize: 20, marginTop: 20,color: ThemeData.textColor }}>Your Sales Summary</Text>
                     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false} >
                       <View style={styles.middleContainer}>
                         <View style={styles.cardContainer}>
@@ -503,7 +504,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: ThemeData.containerBackgroundColor,
     borderWidth: 1,
   },
   lottie: {
@@ -634,18 +635,18 @@ const styles = StyleSheet.create({
   consultationText: {
     fontSize: 24,
     fontWeight: '700',
-    color: '#fff',
+    color: ThemeData.textColor,
     marginTop: 5,
   },
   button: {
-    backgroundColor: 'black',
+    backgroundColor: ThemeData.backgroundColor,
     borderRadius: 30,
     paddingVertical: 10,
     paddingHorizontal: 40,
     marginTop: 20,
   },
   buttonText: {
-    color: 'white',
+    color: ThemeData.buttonColor,
     fontSize: 18,
   },
   middleContainer: {
@@ -675,7 +676,7 @@ const styles = StyleSheet.create({
   title1: {
     fontSize: 14,
     fontWeight: '500',
-    color: 'black',
+    color: ThemeData.textColor,
     marginBottom: 10,
   },
   amountGreen: {
@@ -731,20 +732,20 @@ const styles = StyleSheet.create({
   mainText: {
     fontSize: 22,
     fontWeight: '700',
-    color: 'black',
+    color: ThemeData.textColor,
   },
   highlight: {
-    color: '#65c5c4', // matching color for "Selling"
+    color: ThemeData.color, // matching color for "Selling"
   },
   subText: {
     fontSize: 22,
     fontWeight: '700',
-    color: 'black',
+    color: ThemeData.textColor,
     
   },
   imageBackground: {
     
-    backgroundColor: '#65c5c4', 
+    backgroundColor: ThemeData.color, 
     
     justifyContent: 'center',
     alignItems: 'center',

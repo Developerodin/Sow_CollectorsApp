@@ -33,6 +33,7 @@ import {Picker} from '@react-native-picker/picker';
 import { CategoryAddModel } from "../../Components/CategoryAddModel/CategoryAddModel";
 import { CategoryAddModel2 } from "../../Components/CategoryAddModel/CategoryAddModel2";
 import icon from './icon.png'
+import { ThemeData } from "../../Theme/Theme";
 
 export const MyRates = () => {
   const navigation = useNavigation();
@@ -381,11 +382,11 @@ const handleSubAddChange = (field, value) => {
             paddingVertical: 5,
             paddingHorizontal: 15,
             
-            backgroundColor: activeCategory === "All" ? "#000" : "#F4F4F4",
+            backgroundColor: activeCategory === "All" ? ThemeData.textColor : ThemeData.activeBackgroundColor,
             borderRadius: 30,
           }}
         >
-          <Text style={{ fontWeight: "500", color: activeCategory === "All" ? "#fff" : "#000", }}>All</Text>
+          <Text style={{ fontWeight: "500", color: activeCategory === "All" ? ThemeData.activeColor : ThemeData.textColor, }}>All</Text>
         </TouchableOpacity>
 
         {UserCategoryData && UserCategoryData.length > 0 && UserCategoryData.map((el, index) => (
@@ -398,11 +399,11 @@ const handleSubAddChange = (field, value) => {
               paddingVertical: 5,
               paddingHorizontal: 15,
               
-              backgroundColor: activeCategory === el.name ? "#000" : "#F4F4F4",
+              backgroundColor: activeCategory === el.name ? ThemeData.textColor : ThemeData.activeBackgroundColor,
               borderRadius: 30,
             }}
           >
-            <Text style={{ fontWeight: "500", color: activeCategory === el.name ? "#fff" : "#000", }}>{el.name.toUpperCase()}</Text>
+            <Text style={{ fontWeight: "500", color: activeCategory === el.name ? ThemeData.activeColor : ThemeData.textColor, }}>{el.name.toUpperCase()}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -411,8 +412,8 @@ const handleSubAddChange = (field, value) => {
               onPress={() => handelCategoryModelOpen(activeCategory)}
               style={[styles.Center, { marginRight: 8 }]}
             >
-              <View style={{ backgroundColor: 'black', borderRadius: 35, padding: 10 }}>
-                <Ionicons name="add" size={14} color="#fff" />
+              <View style={{ backgroundColor: ThemeData.backgroundColor, borderRadius: 35, padding: 10 }}>
+                <Ionicons name="add" size={14} color={ThemeData.activeColor} />
               </View>
             </TouchableOpacity>
     </Block>
@@ -430,9 +431,9 @@ const handleSubAddChange = (field, value) => {
       </TouchableOpacity>
     </View>
 
-      <ScrollView style={{ backgroundColor: "#fff" }}>
+      <ScrollView style={{ backgroundColor: ThemeData.containerBackgroundColor }}>
         <Block
-          style={{ backgroundColor: "#fff", paddingHorizontal: 10, marginBottom: 60 }}
+          style={{ backgroundColor: ThemeData.containerBackgroundColor, paddingHorizontal: 10, marginBottom: 60 }}
         >
           {/* <Block style={[styles.Space_Between, { marginTop: 10 }]}>
             <Text style={{ fontWeight: 500 ,fontSize:18}}>Normal Recyclables</Text>
@@ -498,7 +499,7 @@ const handleSubAddChange = (field, value) => {
                 onPress={handelSubCategoryModelClose}
                 name="close-circle"
                 size={26}
-                color="#000"
+                color={ThemeData.textColor}
               />
             </Block>
 
@@ -510,15 +511,15 @@ const handleSubAddChange = (field, value) => {
                 value={subAddForm.name}
                 onChangeText={(text) => handleSubAddInputChange("name", text)}
               /> */}
-           <Block style={{ marginTop: 10, borderColor: "black", borderWidth: 1,borderRadius:10 }}>
+           <Block style={{ marginTop: 10, borderColor: ThemeData.textColor, borderWidth: 1,borderRadius:10 }}>
           <Picker
             selectedValue={subAddForm.categoryName}
             onValueChange={(itemValue) => {
               console.log("Value selected ==>", itemValue);
               handleSubAddChange('categoryName', itemValue);
             }}
-            style={{ color: 'black', height: 50, fontSize: 18 }}
-            itemStyle={{ color: 'black' }}
+            style={{ color: ThemeData.textColor, height: 50, fontSize: 18 }}
+            itemStyle={{ color: ThemeData.textColor }}
           >
             <Picker.Item label="Select Category" value="" />
             {UserCategoryData && UserCategoryData.length > 0 && UserCategoryData.map((el, index) => (
@@ -528,7 +529,7 @@ const handleSubAddChange = (field, value) => {
         </Block>
 
         {/* {isCategorySelected && ( */}
-          <Block style={{ borderWidth: 1, borderColor: "black", marginTop: 20,borderRadius:10 }}>
+          <Block style={{ borderWidth: 1, borderColor: ThemeData.textColor, marginTop: 20,borderRadius:10 }}>
             <Picker
               selectedValue={subAddForm.name}
               onValueChange={(itemValue) => handleSubAddChange('name', itemValue)}
@@ -549,11 +550,11 @@ const handleSubAddChange = (field, value) => {
                 
                 keyboardType="numeric"
                 placeholder="Price"
-                color="black"
+                color={ThemeData.textColor}
                 value={subAddForm.price}
                 placeholderTextColor="#000"
                 onChangeText={(text) => handleSubAddChange("price", text)}
-                style={{ marginTop: 20,borderRadius:10,borderWidth:1,borderColor: 'black',paddingHorizontal : 15,paddingVertical: 10,color:'black' }}
+                style={{ marginTop: 20,borderRadius:10,borderWidth:1,borderColor: ThemeData.textColor,paddingHorizontal : 15,paddingVertical: 10,color:ThemeData.textColor }}
               />
 
               {/* <TextInput
@@ -564,7 +565,7 @@ const handleSubAddChange = (field, value) => {
                 onChangeText={(text) => handleSubAddInputChange("unit", text)}
                 style={{ marginTop: 20 }}
               /> */}
-               <Block style={{borderWidth:1,borderColor:"black",marginTop: 20,borderRadius:10}}>
+               <Block style={{borderWidth:1,borderColor: ThemeData.textColor,marginTop: 20,borderRadius:10}}>
               <Picker
           selectedValue={subAddForm.unit}
           onValueChange={(itemValue) => handleSubAddChange('unit', itemValue)}
@@ -581,7 +582,7 @@ const handleSubAddChange = (field, value) => {
               <Block center style={{ marginTop: 20,marginBottom: 10 }}>
       
       <TouchableOpacity onPress={handelSubCategoryModelSubmit}>
-        <Text style={{ color: "#fff", marginTop: 10,backgroundColor: 'black',
+        <Text style={{ color: "#fff", marginTop: 10,backgroundColor: ThemeData.backgroundColor,
     borderRadius: 30,
     paddingVertical: 12,
     paddingHorizontal: 40,
@@ -670,7 +671,7 @@ const styles = StyleSheet.create({
   mainText: {
     fontSize: 22,
     fontWeight: '700',
-    color: 'black',
+    color: ThemeData.textColor,
   },
   highlight: {
     color: '#65c5c4', // matching color for "Selling"
@@ -678,12 +679,12 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: 22,
     fontWeight: '700',
-    color: 'black',
+    color: ThemeData.textColor,
     
   },
   imageBackground: {
     
-    backgroundColor: '#65c5c4', 
+    backgroundColor: ThemeData.color, 
     
     justifyContent: 'center',
     alignItems: 'center',
@@ -695,7 +696,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: "#FFF",
+    backgroundColor: ThemeData.containerBackgroundColor,
   },
   container1: {
     borderWidth: 1,
@@ -730,7 +731,7 @@ const styles = StyleSheet.create({
     // Remove padding to make it look borderless
   },
   subtitle: {
-    color: "black",
+    color: ThemeData.textColor,
     fontSize: 20,
     marginTop: 10,
 
@@ -786,7 +787,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   shadow: {
-    shadowColor: "black",
+    shadowColor: ThemeData.textColor,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 4,
     shadowOpacity: 0.2,
@@ -826,7 +827,7 @@ const styles2 = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    backgroundColor: "white",
+    backgroundColor: ThemeData.containerBackgroundColor,
     borderRadius: 10,
     padding: 20,
     alignItems: "center",
@@ -866,18 +867,18 @@ const styles3 = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    color: '#000000', // Black color for the main text
+    color: ThemeData.textColor, // Black color for the main text
   },
   linkText: {
-    color: '#65C5C4', // Color for "sub categories" text
+    color: ThemeData.color // Color for "sub categories" text
     
   },
   highlightText: {
-    color: '#65C5C4', // Color for "Aluminium" text
+    color: ThemeData.color, // Color for "Aluminium" text
   },
   button: {
     marginTop: 18,
-    borderColor: '#65C5C4',
+    borderColor: ThemeData.color,
     borderWidth: 1,
     borderRadius: 20,
     paddingVertical: 10,
@@ -886,7 +887,7 @@ const styles3 = StyleSheet.create({
     width: 250,
   },
   buttonText: {
-    color: '#65C5C4',
+    color: ThemeData.color,
     fontSize: 16,
     fontWeight: '600',
   },
