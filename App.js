@@ -59,6 +59,8 @@ import { DailyRates } from "./Pages/LiveRating/DailyRates";
 import LiveRatestwo from "./Components/Cards/LiveRatestwo";
 import { Address } from "./Pages/SignUp/Registration/Address";
 import { MandiRates} from "./Pages/Market/MandiRates";
+import { NewOrders} from "./Pages/New Orders/NewOrders";
+import { B2cOrderDetails } from "./Pages/New Orders/B2cOrderDetails";
 
 import * as Notifications from "expo-notifications";
 import usePushNotifications from "./usePushNotifications";
@@ -156,6 +158,21 @@ const Tabs = ({ navigation }) => {
             <Image
               source={require('./assets/media/prices_1.png')} 
               style={{ width: 10, height: 20, tintColor: color }}
+            />
+          ),
+          headerShown: false,
+        }}
+      />
+
+<Tab.Screen
+        name="New Orders"
+        component={NewOrders}
+        options={{
+          tabBarIcon: ({ color, size }) => (
+            // <FontAwesome name="bookmark" size={size} color={color} />
+            <Image
+              source={require('./assets/media/orders_1.png')} 
+              style={{ width: 18, height: 18, tintColor: color }}
             />
           ),
           headerShown: false,
@@ -560,6 +577,13 @@ export default function App() {
           <Stack.Screen
             name="MandiRates"
             component={MandiRates}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="B2cOrderDetails"
+            component={B2cOrderDetails}
             options={{
               headerShown: false,
             }}
