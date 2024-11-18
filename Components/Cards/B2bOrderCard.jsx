@@ -15,7 +15,7 @@ export const B2bOrderCard = ({ data }) => {
   }
 
   const handleViewDetail = () => {
-    navigation.navigate("Pending Order", { id: data._id });
+    navigation.navigate("B2bOrderDetails", { id: data._id });
   };
 
   return (
@@ -78,7 +78,7 @@ export const B2bOrderCard = ({ data }) => {
 
       <View style={{marginTop: 20 ,paddingHorizontal :0}}>
           <View style={styles.cardActions}>
-              <TouchableOpacity  >
+              <TouchableOpacity onPress={handleViewDetail} >
                 <View style={styles.acceptButton}>
                 <Text style={styles.acceptText}>Accept</Text>
                 </View>

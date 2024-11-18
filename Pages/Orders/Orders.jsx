@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
     width: "100%",
-    borderWidth: 1,
+    borderWidth: 1.5,
     borderColor: "#000",
     
     

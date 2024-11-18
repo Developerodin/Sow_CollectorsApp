@@ -1,30 +1,48 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import { ThemeData } from '../../Theme/Theme';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import QuoteModal from "../../Components/Model/QuoteModal";
+import { ThemeData } from "../../Theme/Theme";
 
 export const B2cOrderDetails = () => {
-    const navigation = useNavigation();
-    const handleBack = () => {
-        navigation.goBack();
-    };
-    
+  const navigation = useNavigation();
+  const [isModalVisible, setModalVisible] = useState(false);
+
+  const handleBack = () => {
+    navigation.goBack();
+  };
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-            <View style={{backgroundColor: '#000',borderRadius: 35,padding:8}}>
-          <Ionicons  name="chevron-back" style={styles.backIcon} />
-            </View >
+          <View style={{ backgroundColor: "#000", borderRadius: 35, padding: 8 }}>
+            <Ionicons name="chevron-back" style={styles.backIcon} />
+          </View>
         </TouchableOpacity>
         <Text style={styles.title}>Iron scrap</Text>
       </View>
 
       {/* Image */}
       <Image
-        source={require("../../assets/IronScrap.png")} 
+        source={require("../../assets/IronScrap.png")}
         style={styles.image}
         resizeMode="cover"
       />
@@ -39,23 +57,26 @@ export const B2cOrderDetails = () => {
 
       {/* Details Section */}
       <View style={styles.detailsContainer}>
-        {renderDetailRow('Availability', 'For Buy')}
-        {renderDetailRow('Expected', 'Aluminium Boring')}
-        {renderDetailRow('Quantity', '100 Ton')}
-        {renderDetailRow('Price', '₹40 / Kg')}
-        {renderDetailRow('Date', '01.10.2024')}
-        {renderDetailRow('Time', '11 : 42 AM')}
-        {renderDetailRow('Description', 'Aluminium Boring for sale')}
+        {renderDetailRow("Availability", "For Buy")}
+        {renderDetailRow("Expected", "Aluminium Boring")}
+        {renderDetailRow("Quantity", "100 Ton")}
+        {renderDetailRow("Price", "₹40 / Kg")}
+        {renderDetailRow("Date", "01.10.2024")}
+        {renderDetailRow("Time", "11 : 42 AM")}
+        {renderDetailRow("Description", "Aluminium Boring for sale")}
         {renderDetailRow(
-          'Location',
-          'Near Dmart, Mahavir Nagar, 302033, Jaipur, India.'
+          "Location",
+          "Near Dmart, Mahavir Nagar, 302033, Jaipur, India."
         )}
       </View>
 
       {/* Quote Button */}
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={openModal}>
         <Text style={styles.buttonText}>Quote your Price</Text>
       </TouchableOpacity>
+
+      {/* Quote Modal */}
+      <QuoteModal isVisible={isModalVisible} onClose={closeModal} />
     </ScrollView>
   );
 };
@@ -65,7 +86,6 @@ const renderDetailRow = (label, value) => (
     <Text style={styles.detailLabel}>{label}</Text>
     <Text style={styles.detail}>: </Text>
     <Text style={styles.detailValue}>{value}</Text>
-
   </View>
 );
 

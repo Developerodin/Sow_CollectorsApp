@@ -4,6 +4,7 @@ import { ThemeData } from "../../Theme/Theme";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
+
 const B2cOrderCard = () => {
     const navigation = useNavigation();
     const handelCardClick = () => {

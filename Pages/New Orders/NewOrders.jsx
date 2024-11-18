@@ -9,9 +9,11 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import B2bOrderCard from "../../Components/Cards/B2bOrderCard"; // Ensure the correct import
 import B2cOrderCard from "../../Components/Cards/B2cOrderCard"; // Ensure the correct import
+import { ThemeData } from "../../Theme/Theme";
 
 export const NewOrders = () => {
   const [activeTab, setActiveTab] = useState("B2B");
+  const [activeFilter, setActiveFilter] = useState("All"); // State for the new tabs
 
   const b2bOrders = [
     {
@@ -69,20 +71,41 @@ export const NewOrders = () => {
       </View>
 
       {/* Order Info */}
-      <Text style={styles.orderInfo}>There are 5 New orders today!</Text>
+      <Text style={styles.orderInfo}>There are <Text style={{color: ThemeData.color}}>5 New orders</Text> today!</Text>
 
-      <ScrollView showsVerticalScrollIndicator={false}>
-        {activeTab === 'B2B' ? (
+      
+      <View style={styles.filterTabsContainer}>
+        {["All", "Today", "Last week", "Last month"].map((filter) => (
+          <TouchableOpacity
+            key={filter}
+            style={[
+              styles.filterTab,
+              activeFilter === filter ? styles.activeFilterTab : styles.inactiveFilterTab,
+            ]}
+            onPress={() => setActiveFilter(filter)}
+          >
+            <Text
+              style={[
+                styles.filterTabText,
+                activeFilter === filter ? styles.activeFilterTabText : styles.inactiveFilterTabText,
+              ]}
+            >
+              {filter}
+            </Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false} style={{ paddingHorizontal: 16 }}>
+        {activeTab === "B2B" ? (
           b2bOrders.map((order) => <B2bOrderCard key={order.id} data={order} />)
         ) : (
           <>
-          <B2cOrderCard />
-          <B2cOrderCard />
-          <B2cOrderCard />
+            <B2cOrderCard />
+            <B2cOrderCard />
+            <B2cOrderCard />
           </>
-
         )}
-        
       </ScrollView>
     </View>
   );
@@ -91,8 +114,8 @@ export const NewOrders = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fafafa",
-    paddingHorizontal: 16,
+    backgroundColor: "#f8f8f8",
+    paddingHorizontal: 0,
     paddingTop: 40,
     marginBottom: 60,
   },
@@ -102,7 +125,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
     marginTop: 20,
-    paddingHorizontal: 5,
+    paddingHorizontal: 21,
   },
   headerTitle: {
     fontSize: 20,
@@ -118,38 +141,57 @@ const styles = StyleSheet.create({
   },
   tab: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 10,
   },
   activeTab: {
-    backgroundColor: '#000',
+    backgroundColor: "#000",
   },
   inactiveTab: {
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   tabText: {
     fontSize: 16,
   },
   activeTabText: {
-    color: '#fff',
+    color: "#fff",
   },
   inactiveTabText: {
-    color: '#000',
+    color: "#000",
   },
   orderInfo: {
-    fontSize: 14,
-    color: "#444",
+    fontSize: 16,
+    color: "#000",
     marginBottom: 16,
+    paddingHorizontal: 16,
+    marginTop: 10,
+    fontWeight: "500",
   },
-  comingSoonContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 200,
+  filterTabsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginTop: 5,
   },
-  comingSoonText: {
-    fontSize: 18,
-    color: '#888',
+  filterTab: {
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    borderRadius: 20,
+  },
+  activeFilterTab: {
+    backgroundColor: "#000",
+  },
+  inactiveFilterTab: {
+    backgroundColor: "#f0f0f0",
+  },
+  filterTabText: {
+    fontSize: 14,
+    fontWeight: "400",
+  },
+  activeFilterTabText: {
+    color: "#fff",
+  },
+  inactiveFilterTabText: {
+    color: "#000",
   },
 });
 
