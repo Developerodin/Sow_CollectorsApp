@@ -43,6 +43,7 @@ export const Address = () => {
 
   const selectAddress = (address) => {
     setSelectedAddress(address);
+    console.log("Selected Address =>", address);
     saveSelectedAddress(address);
   };
 
@@ -92,26 +93,7 @@ export const Address = () => {
     
   };
 
-  // const userDetailsFromStorage = async (token) => {
-  //   // console.log("Token in user details check ===>",token)
-  //   try {
-  //     const Details = (await AsyncStorage.getItem("userDetails")) || null;
-  //     // console.log("step 6 ===>",Details)
-  //     const ParseData = JSON.parse(Details);
-  //     setUserId(ParseData.id);
-  //     console.log("User ID ==>",  ParseData.id);
-
-  //     // console.log("Parse Data of user  ===>", ParseData);
-  //     const data = ParseData;
-
-  //     console.log("User Data 2 ==>", data);
-      
-
-  //     return;
-  //   } catch (err) {
-  //     console.log("Error in getting user ==.", err);
-  //   }
-  // };
+ 
 
 
  const SubmitAddressData = async()=>{
@@ -134,7 +116,15 @@ export const Address = () => {
     console.log("Res ==>",response.data);
     if(response.data){
       console.log("Address save to database")
-      navigation.navigate("VerifyProfileStatus");
+      setNewAddress({
+        house:"",
+        area:"",
+        directions:"",
+      });
+      setIsModalVisible(false)
+    setIsAddressModalVisible(false)
+    setUpdate((prev) => prev + 1);
+      
     }
     
   } catch (error) {
@@ -146,73 +136,10 @@ export const Address = () => {
   }
  }
 
-  // const SubmitSigupData= async()=>{
-    // setLoading(true)
-  //   console.log("need to do more")
-  //   const UserDetails = await AsyncStorage.getItem('UserDetails') || null;
-  // const UserData = JSON.parse(UserDetails);
-  
-    
-  //   console.log("Data of user ====>",UserDetails)
-  //      try {
-  //       const response = await axios.post(`${Base_url}b2bUser`, UserData);
-           
-  //       if(response.status === 200){
-  //            if(response.data){
-  //             const data = response.data
-  //               console.log("Data after vsubmit  ==>",data)
-                // ToastAndroid.show(data.error, ToastAndroid.SHORT);
-                // setLoading(false);
-                // setShowPAN(true);
-                // navigation.reset({
-                //   index: 0,
-                //   routes: [{ name: 'FillPersonalDetails' }],
-                // });
-                // navigation.navigate("FillPersonalDetails")
-        //         return
-        //      }
-        //      return
-        // }
-        
-        // if (response.status === 201) {
-        //      if(response.data){
-        // ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);
-        // setShowSuccess(true);
-        // setLoading(false)
-      //   navigation.navigate("VerifyProfileStatus")
-  
-      //  }
-      //    else {
-      //     console.error("Error creating user:", response);
-          // setLoading(false)
-      //   }
-      // }
-      // } catch (error) {
-              // ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
-      
-      //  setShowPAN(true);
-        // console.error("Error:", error);
-        // setLoading(false)
-      // }
-  
-    // try {
-    //   const response = await axios.post(`${Base_url}b2b`, formData); // Update the API endpoint accordingly
-    //   console.log("Res ==>",response.data);
-    //   if(response.data){
-    //     ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);
-    //     setShowSuccess(true);
-  
-    //   }
-      
-    // } catch (error) {
-    //   console.error('Error creating user:', error);
-      
-    //     ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
-      
-    //   setShowPAN(true);
-    // }
-  
-  // }
+ const handleNextButton = () => {
+  navigation.navigate("VerifyProfileStatus");
+};
+ 
 const setnewAddressinStorage =async(address)=>{
   const Data = [...AllUserAddresses,address]
   // console.log("Data",Data)
@@ -243,37 +170,39 @@ const setnewAddressinStorage =async(address)=>{
     }
   };
 
-  const GettAllAddressFromStorage=async()=>{
-    AsyncStorage.getItem("UserAllAddress").then((storedData) => {
-      if (storedData !== null) {
-        const parsedData = JSON.parse(storedData);
-        setAllUsersAddresses(parsedData)
-        console.log("All Address =>",parsedData);
+  const GettAllAddressFromStorage= async () => {
+    try {
+      const response = await axios.get(`${Base_url}b2bUser/address/${userId}`); // Update the API endpoint accordingly
+      if (response.status === 200) {
+        const addresses = response.data.data;
+        setAllUsersAddresses(addresses);
+        console.log("All Address =>", addresses);
       } else {
-        setAllUsersAddresses([])
-        console.log("All Address Data not found in AsyncStorage");
+        setAllUsersAddresses([]);
+        console.log("All Address Data not found in API");
       }
-    }).catch((error) => {
-      setAllUsersAddresses([])
-      console.error("Error retrieving data from AsyncStorage: ", error);
-    });
-  }
+    } catch (error) {
+      setAllUsersAddresses([]);
+      console.error("Error retrieving data from API: ", error);
+    }
+  };
 
-  const getSelectedAddressFromStorage = async ()=>{
-    AsyncStorage.getItem("UserAddress").then((storedData) => {
-      if (storedData !== null) {
-        const parsedData = JSON.parse(storedData);
-        setSelectedAddress(parsedData)
-        console.log("All Address",parsedData);
+    const getSelectedAddressFromStorage = async () => {
+    try {
+      const response = await axios.get(`${Base_url}b2bUser/address/${userId}`); // Update the API endpoint accordingly
+      if (response.status === 200) {
+        const selectedAddress = response.data.data;
+        setSelectedAddress(selectedAddress);
+        console.log("Selected Address =>", selectedAddress);
       } else {
-        setSelectedAddress({})
-        console.log("All Address Data not found in AsyncStorage");
+        setSelectedAddress({});
+        console.log("Selected Address Data not found in API");
       }
-    }).catch((error) => {
-      setSelectedAddress({})
-      console.error("Error retrieving data from AsyncStorage: ", error);
-    });
-  }
+    } catch (error) {
+      setSelectedAddress({});
+      console.error("Error retrieving selected address from API: ", error);
+    }
+  };
 
   const DeleteAddress = async(name)=>{
     const Data = AllUserAddresses.filter ((el)=>el.name !== name)
@@ -332,69 +261,67 @@ const setnewAddressinStorage =async(address)=>{
     <View style={styles.container}>
       {/* <Text style={styles.heading}>Your Addresses</Text> */}
 
-      {
-         AllUserAddresses.length > 0  ?
-         <FlatList
-         data={AllUserAddresses}
-         keyExtractor={(item, index) => index.toString()}
-         renderItem={({ item }) => (
-           <TouchableHighlight
-             onPress={() => selectAddress(item)}
-             underlayColor="#fff"
-             style={[
-               styles.addressContainer,
-               selectedAddress && selectedAddress.name === item.name && styles.selectedAddress,
-             ]}
-           >
-             <View style={{ backgroundColor: "#fff", padding: 15,borderRadius:25 }}>
-               <Block style={styles2.Space_Between}>
-               <Text style={{ fontSize: 16, fontWeight: 500 ,letterSpacing:1}}>{item.name}</Text> 
-               <Ionicons  onPress={()=>DeleteAddress(item.name)} name="close-circle" size={20} color="crimson" />
-               </Block>
+           {
+        AllUserAddresses.length > 0 ? (
+          <FlatList
+            data={AllUserAddresses}
+            keyExtractor={(item) => item.id}
+            extraData={selectedAddress}
+            renderItem={({ item }) => (
               
-               {
-                 item.house !== "null" && <Text style={{ fontSize: 12, fontWeight: 500,marginTop:5,letterSpacing:1 }}>
-                 {item.house},{item.area}
-                </Text>
-               }
-               {
-                 item.address !== "null" &&  <Text style={{ fontSize: 12, fontWeight: 500,marginTop:5,letterSpacing:1 }}>
-                 {item.address} 
-                 </Text>
-               }
- 
-               {
-                 item.city !== "null" && <Text style={{ fontSize: 12, fontWeight: 500,marginTop:5,letterSpacing:1 }}>{item.city},{item.postalCode},{item.state}</Text>
-               }
-              
-               {
-                 item.country !== "null" && <Text style={{ fontSize: 12, fontWeight: 500,marginTop:5,letterSpacing:1 }}>
-                 {item.country}
-               </Text>
-               }
-             
-             </View>
-           </TouchableHighlight>
-         )}
-       />
-       :
-       <Block style={{flex:0.9,justifyContent:"center",alignItems:"center"}}>
-             <Block center>
-             <LottieView
+              <TouchableHighlight
+                onPress={() => selectAddress(item)}
+                underlayColor="#fff"
+                style={[
+                  styles.addressContainer,
+                  selectedAddress && selectedAddress.id === item.id
+                    && styles.selectedAddress
+                    ,
+                ]}
+              >
+                <View style={{ backgroundColor: "#fff", padding: 15, borderRadius: 25 }}>
+                  <Block style={styles2.Space_Between}>
+                    <Text style={{ fontSize: 16, fontWeight: 500, letterSpacing: 1 }}>{item.buildingName}</Text>
+                    <Ionicons onPress={() => DeleteAddress(item.name)} name="close-circle" size={20} color="crimson" />
+                  </Block>
+      
+                  {item.roadArea !== "null" && (
+                    <Text style={{ fontSize: 12, fontWeight: 500, marginTop: 5, letterSpacing: 1 }}>
+                      {item.roadArea}
+                    </Text>
+                  )}
+                  {item.googleAddress !== "null" && (
+                    <Text style={{ fontSize: 12, fontWeight: 500, marginTop: 5, letterSpacing: 1 }}>
+                      {item.googleAddress}
+                    </Text>
+                  )}
+                  {item.note !== "null" && (
+                    <Text style={{ fontSize: 12, fontWeight: 500, marginTop: 5, letterSpacing: 1 }}>
+                      {item.note}
+                    </Text>
+                  )}
+                </View>
+              </TouchableHighlight>
+            )}
+          />
+        ) : (
+          <Block style={{ flex: 0.9, justifyContent: "center", alignItems: "center" }}>
+            <Block center>
+              <LottieView
                 style={styles.lottie}
                 source={require("../../../assets/Animations/Animation - 1699520734986.json")}
                 autoPlay
                 loop
               />
-       </Block>
-       </Block>
-      
+            </Block>
+          </Block>
+        )
       }
      
 
       <Block style={styles2.Space_Around}>
       <Button color="black" title="Add New Address" style={{width:width*0.5}} tintColor="#fff" onPress={toggleModal} />
-      <Button color="black" title="Next" style={{width:width*0.3}} tintColor="#fff" onPress={SubmitAddressData}  />
+      <Button color="black" title="Next" style={{width:width*0.3}} tintColor="#fff"  onPress={handleNextButton} />
       </Block>
 
       <Modal visible={isModalVisible} animationType="slide">
@@ -661,7 +588,7 @@ const setnewAddressinStorage =async(address)=>{
           {/* Add similar TextInput fields for other address details */}
 
           <Block center style={[styles2.Space_Between, { width:width*0.9,marginTop:60 }]}>
-            <Button color="black" title="save" style={{width:width*0.9}} tintColor="#fff" onPress={saveAddress} />
+            <Button color="black" title="save" style={{width:width*0.9}} tintColor="#fff" onPress={SubmitAddressData} />
             {/* <Button color="black" title="close" style={{width:width*0.4}} tintColor="#fff" onPress={toggleModal2} /> */}
           </Block>
         </View>
@@ -721,6 +648,7 @@ const styles = StyleSheet.create({
     borderWidth:2,
     borderColor: "black",
     borderRadius:20
+
   },
   modalContainer: {
     flex: 1,

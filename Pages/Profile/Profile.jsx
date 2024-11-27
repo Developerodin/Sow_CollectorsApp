@@ -25,6 +25,7 @@ export const Profile = () => {
   const [image, setImage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [userDetails,setuserDetails] = useState({})
+  const [userId, setUserId] = useState(null);
   const {CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion} = useAppContext()
   const ProfileTabs=[
     
@@ -39,10 +40,21 @@ export const Profile = () => {
     // {icon:<Foundation name="torso-business" size={28} color="#4854e0" />,title:"Upgrade to business profile",link:"Upgrade Profile"},
 
   ]
+    
+  const handleNavigate = (link) => {
+    if (link === 'Address' && userId) {
+      navigation.navigate(link, { userId });
+    } else {
+      navigation.navigate(link);
+    }
+  };
+  
 
   const getCurrentUser=async()=>{
     const user = await AsyncStorage.getItem('userDetails');
     const ParseUser = JSON.parse(user)
+    console.log(ParseUser);
+    setUserId(ParseUser.id);
     if(user){
       setuserDetails(ParseUser);
     }
@@ -168,6 +180,13 @@ export const Profile = () => {
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 10, marginLeft: 10, }}>
   <Ionicons name="arrow-back" size={24} color={ThemeData.activeColor}/>
 </TouchableOpacity>
+{/* <TouchableOpacity
+        
+        onPress={() => handleNavigate('Address')}
+      >
+        <FontAwesome name="address-book" size={24} color="#2dd36f" />
+        <Text style={styles.menuItemText}>Manage Address</Text>
+      </TouchableOpacity> */}
 
           <Block center style={[{position:'realtive',width:80,height:80,borderRadius:500,marginTop:30,borderRadius:100,backgroundColor:ThemeData.containerBackgroundColor,elevation:2}]}>
          {
@@ -200,8 +219,8 @@ export const Profile = () => {
            </Button> */}
 
            <Text style={{color: ThemeData.textColor}}>
-            {/* {userDetails && userDetails.role} */}
-            Wholesaler
+            {userDetails && userDetails.registerAs}
+            {/* Wholesaler */}
             </Text>
            </Block>
            </Block>

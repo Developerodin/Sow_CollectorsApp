@@ -65,7 +65,7 @@ const usePushNotifications = () => {
     if (token) {
       // console.log("Token update api call ===>",userId,token)
       try {
-        const res = await axios.post(`${Base_url}api/b2b/${userId}/update-token`, { notificationToken: token });
+        const res = await axios.post(`${Base_url}b2bUser/${userId}/update-token`, { notificationToken: token });
         console.log("Response from token update:==>", res.data);
       } catch (error) {
         console.error("Error updating token on backend:", error.response ? error.response.data : error.message);
@@ -82,7 +82,7 @@ const usePushNotifications = () => {
     // console.log("Parse Data of user  ===>", ParseData);
     const data = ParseData;
     if(data){
-      saveToken(token,data._id)
+      saveToken(token,data.id)
     }
     return ;
     }
