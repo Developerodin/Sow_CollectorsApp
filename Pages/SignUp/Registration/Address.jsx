@@ -11,7 +11,7 @@ import {
   TextInput
 } from "react-native";
 import { useAppContext } from "../../../Context/AppContext";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation ,useRoute} from "@react-navigation/native";
 import { MyMap } from "../../../Components/Maps/MyMap";
 import { Ionicons } from '@expo/vector-icons'; 
 import { AntDesign } from '@expo/vector-icons'; 
@@ -24,12 +24,15 @@ import axios from "axios";
 const { width, height } = Dimensions.get("window");
 export const Address = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+  const { userId } = route.params;
   const { update, setUpdate,SelectedAddressFromMap,setSelectedAddressFromMap } = useAppContext();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isAddressModalVisible, setIsAddressModalVisible] = useState(false);
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [AllUserAddresses, setAllUsersAddresses] = useState([]);
+  
   const [newAddress, setNewAddress] = useState({
     house: "",
     area: "",
@@ -89,21 +92,75 @@ export const Address = () => {
     
   };
 
-  const SubmitSigupData= async()=>{
+  // const userDetailsFromStorage = async (token) => {
+  //   // console.log("Token in user details check ===>",token)
+  //   try {
+  //     const Details = (await AsyncStorage.getItem("userDetails")) || null;
+  //     // console.log("step 6 ===>",Details)
+  //     const ParseData = JSON.parse(Details);
+  //     setUserId(ParseData.id);
+  //     console.log("User ID ==>",  ParseData.id);
+
+  //     // console.log("Parse Data of user  ===>", ParseData);
+  //     const data = ParseData;
+
+  //     console.log("User Data 2 ==>", data);
+      
+
+  //     return;
+  //   } catch (err) {
+  //     console.log("Error in getting user ==.", err);
+  //   }
+  // };
+
+
+ const SubmitAddressData = async()=>{
+  
+  console.log("save address to database")
+  const UserAddress ={
+    userId : userId,
+    latitude: 1.3456,
+    longitude: 1.3456,
+    googleAddress: SelectedAddressFromMap.formattedAddress,
+    buildingName: newAddress.house,
+    roadArea: newAddress.area,
+    note: newAddress.directions,
+    addressType: "Warehouse",
+  }
+  console.log("User Address",UserAddress)
+
+  try {
+    const response = await axios.post(`${Base_url}b2bUser/address`, UserAddress); // Update the API endpoint accordingly
+    console.log("Res ==>",response.data);
+    if(response.data){
+      console.log("Address save to database")
+      navigation.navigate("VerifyProfileStatus");
+    }
+    
+  } catch (error) {
+    console.error('Error save address to database:', error);
+    
+      // ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
+    
+    // setShowPAN(true);
+  }
+ }
+
+  // const SubmitSigupData= async()=>{
     // setLoading(true)
-    console.log("need to do more")
-    const UserDetails = await AsyncStorage.getItem('UserDetails') || null;
-  const UserData = JSON.parse(UserDetails);
+  //   console.log("need to do more")
+  //   const UserDetails = await AsyncStorage.getItem('UserDetails') || null;
+  // const UserData = JSON.parse(UserDetails);
   
     
-    console.log("Data of user ====>",UserDetails)
-       try {
-        const response = await axios.post(`${Base_url}api/b2b`, UserData);
+  //   console.log("Data of user ====>",UserDetails)
+  //      try {
+  //       const response = await axios.post(`${Base_url}b2bUser`, UserData);
            
-        if(response.status === 200){
-             if(response.data){
-              const data = response.data
-                console.log("Data after vsubmit  ==>",data)
+  //       if(response.status === 200){
+  //            if(response.data){
+  //             const data = response.data
+  //               console.log("Data after vsubmit  ==>",data)
                 // ToastAndroid.show(data.error, ToastAndroid.SHORT);
                 // setLoading(false);
                 // setShowPAN(true);
@@ -112,31 +169,31 @@ export const Address = () => {
                 //   routes: [{ name: 'FillPersonalDetails' }],
                 // });
                 // navigation.navigate("FillPersonalDetails")
-                return
-             }
-             return
-        }
+        //         return
+        //      }
+        //      return
+        // }
         
-        if (response.status === 201) {
-             if(response.data){
+        // if (response.status === 201) {
+        //      if(response.data){
         // ToastAndroid.show("Signup Successfull", ToastAndroid.SHORT);
         // setShowSuccess(true);
         // setLoading(false)
-        navigation.navigate("VerifyProfileStatus")
+      //   navigation.navigate("VerifyProfileStatus")
   
-       }
-         else {
-          console.error("Error creating user:", response);
+      //  }
+      //    else {
+      //     console.error("Error creating user:", response);
           // setLoading(false)
-        }
-      }
-      } catch (error) {
+      //   }
+      // }
+      // } catch (error) {
               // ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
       
       //  setShowPAN(true);
-        console.error("Error:", error);
+        // console.error("Error:", error);
         // setLoading(false)
-      }
+      // }
   
     // try {
     //   const response = await axios.post(`${Base_url}b2b`, formData); // Update the API endpoint accordingly
@@ -155,7 +212,7 @@ export const Address = () => {
     //   setShowPAN(true);
     // }
   
-  }
+  // }
 const setnewAddressinStorage =async(address)=>{
   const Data = [...AllUserAddresses,address]
   // console.log("Data",Data)
@@ -191,7 +248,7 @@ const setnewAddressinStorage =async(address)=>{
       if (storedData !== null) {
         const parsedData = JSON.parse(storedData);
         setAllUsersAddresses(parsedData)
-        console.log("All Address",parsedData);
+        console.log("All Address =>",parsedData);
       } else {
         setAllUsersAddresses([])
         console.log("All Address Data not found in AsyncStorage");
@@ -247,6 +304,10 @@ const setnewAddressinStorage =async(address)=>{
     console.error("Error saving address to AsyncStorage:", error);
   }
   }
+
+  
+
+
   useEffect(()=>{
    GettAllAddressFromStorage()
    getSelectedAddressFromStorage()
@@ -333,7 +394,7 @@ const setnewAddressinStorage =async(address)=>{
 
       <Block style={styles2.Space_Around}>
       <Button color="black" title="Add New Address" style={{width:width*0.5}} tintColor="#fff" onPress={toggleModal} />
-      <Button color="black" title="Next" style={{width:width*0.3}} tintColor="#fff" onPress={SubmitSigupData} />
+      <Button color="black" title="Next" style={{width:width*0.3}} tintColor="#fff" onPress={SubmitAddressData}  />
       </Block>
 
       <Modal visible={isModalVisible} animationType="slide">

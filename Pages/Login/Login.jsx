@@ -168,31 +168,42 @@ export const Login = ({ navigation }) => {
       useNativeDriver: false,
     }).start();
   };
-
+ 
   const generateOTP = async () => {
-    setLoading(true)
+    setLoading(true);
     setCanResend(false);
-      setCountdown(30);
+    setCountdown(30);
+  
     try {
-      const response = await axios.post(`${Base_url}api/b2b/generate-otp`, { mobile_number: formData.phoneNumber });
-      // handelNewUser();
-      console.log(response.data.message);
+      console.log('Phone Number:', formData.phoneNumber);
+      const response = await axios.post(`${Base_url}b2bUser/generateOTP`, { phoneNumber: formData.phoneNumber });
+  
+      console.log('Response:', response);
+      console.log('Message:', response.data.message);
+  
       setLoading(false);
-      if( response.data.message === "User not found"){
-        handelNewUser()
-        return ;
+  
+      if (response.data.message === "User not found") {
+        handelNewUser(); // Ensure this function is defined
+        return;
       }
-      ToastAndroid.show("Otp send to mobile number", ToastAndroid.SHORT);
+  
+      ToastAndroid.show("OTP sent to mobile number", ToastAndroid.SHORT);
       setOTPShow(true);
-      // setCanResend(false);
-      // setCountdown(30);
     } catch (error) {
-      console.error('Error:', error);
+      if (error.response) {
+        console.error('Server Response Error:', error.response.data);
+        console.error('Status Code:', error.response.status);
+      } else if (error.request) {
+        console.error('No Response Received:', error.request);
+      } else {
+        console.error('Axios Error:', error.message);
+      }
       ToastAndroid.show("Try After Some Time", ToastAndroid.SHORT);
       setLoading(false);
-      console.log('Failed to generate OTP. Please try again.');
     }
   };
+  
 
   useEffect(() => {
     let timer;
@@ -208,40 +219,49 @@ export const Login = ({ navigation }) => {
   }, [countdown, showOTP, canResend]);
 
   const loginWithOTP = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const response = await axios.post(`${Base_url}api/b2b/login-with-otp`, { mobile_number: formData.phoneNumber, otp: otp });
-      setLoading(false)
-        if(response.data.message === "Login successful"){
-          const User = JSON.stringify(response.data.data);
-         const data = response.data.data;
-          await AsyncStorage.setItem("userDetails", User);
-          if(data.status === false){
-            saveMobileNumber()
-           
-            setOTPShow(false)
-            setOtp("")
-            navigation.navigate("VerifyProfileStatus");
-            return
-          }
-          setuserDetails(response.data.data);
-          saveAuthStatus()
-          handelPreviousUser();
-          console.log("res =>",response.data.data);
-        }
-
-        if(response.data.message === "User not found") {
-          handelNewUser()
-        }
-
-      
+      const response = await axios.post(`${Base_url}b2bUser/loginWithOTP`, {
+        phoneNumber: formData.phoneNumber,
+        otp: otp,
+      });
+  
+      setLoading(false);
+  
+      // Handle different messages
+      if (response.data.message === "Login successful") {
+        // Get user and token from response
+        const User = JSON.stringify(response.data.user); // Access 'user' field here
+        const token = response.data.token;
+  
+        // Save user details and token in AsyncStorage
+        await AsyncStorage.setItem("userDetails", User);
+        await AsyncStorage.setItem("authToken", token);
+  
+        // Check user status
+        // if (response.data.user.status === false) {
+        //   saveMobileNumber();
+        //   setOTPShow(false);
+        //   setOtp("");
+        //   navigation.navigate("VerifyProfileStatus");
+        //   return;
+        // }
+  
+        setuserDetails(response.data.user);
+        saveAuthStatus();
+        handelPreviousUser();
+        console.log("res =>", response.data.user);
+      } else if (response.data.message === "User not found") {
+        handelNewUser();
+      }
     } catch (error) {
-      setLoading(false)
-      console.error('Error:', error);
-      console.log('Failed to login. Please try again.');
-      ToastAndroid.show("Wrong Otp", ToastAndroid.SHORT);
+      setLoading(false);
+      console.error("Error:", error);
+      console.log("Failed to login. Please try again.");
+      ToastAndroid.show("Wrong OTP", ToastAndroid.SHORT);
     }
   };
+  
 
   const animationRef = useRef(null);
 

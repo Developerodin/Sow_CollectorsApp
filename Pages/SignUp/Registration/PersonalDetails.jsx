@@ -157,43 +157,68 @@ export const PersonalDetails = () => {
       }
     };
 
-    const savePersonalDetails = async () => {
+       const savePersonalDetails = async () => {
       try {
         const RegisterAs = await AsyncStorage.getItem('RegisterAs') || null;
-        const Mobile = await AsyncStorage.getItem('Mobile') || null;
-        // const Category = await AsyncStorage.getItem('selectedCategory') || null;
+        const PhoneNumber = await AsyncStorage.getItem('Mobile') || null;
         const categoryNames = selectedCategories.map(category => {
           return {
-            name:category.name,
-            sub_category:[
+            name: category.name,
+            sub_category: [
               {
-                name:"test",
-                price:"100",
-                unit:"Kg"
+                name: "test",
+                price: "100",
+                unit: "Kg"
               }
-            ] 
-          }});
-        // console.log("categoryNames",categoryNames)
-        const Category = JSON.stringify(categoryNames);
+            ]
+          }
+        });
+        const Category = categoryNames.length > 0 
+          ? categoryNames.map((category) => ({ name: category })) 
+          : [];
         const UserData = {
           name: formData.name,
-          email: formData.email ,
-          password: '1234',
-          mobile: Mobile,
-          Address:[],
-          country: 'India',
+          email: formData.email,
+          phoneNumber: PhoneNumber,
           registerAs: RegisterAs,
-          adharData:'',
-          images:[],
-          categories:Category,
-          businessName:formData.businessName,
-          referralCode:formData.referralCode
+          category: Category,
+          businessName: formData.businessName,
+          referralCode: formData.referralCode,
         };
         const UserDetails = JSON.stringify(UserData);
         await AsyncStorage.setItem("UserDetails", UserDetails);
-        console.log('Details saved successfully.',UserDetails);
+        console.log('Details saved successfully.', UserDetails);
+    
+        // Call SubmitSigupData to save details in the database
+        await SubmitSigupData();
       } catch (error) {
         console.error('Error saving Details :', error);
+      }
+    };
+    
+    const SubmitSigupData = async () => {
+      console.log("need to do more");
+      const UserDetails = await AsyncStorage.getItem('UserDetails') || null;
+      const UserData = JSON.parse(UserDetails);
+    
+      console.log("Data of user ====>", UserDetails);
+      try {
+        const response = await axios.post(`${Base_url}b2bUser`, UserData);
+        console.log("Response of user ====>", response.data);
+        const data = response.data;
+            const userId = data.id;
+            console.log("Data after submit  ==>", data,userId);
+            navigation.navigate('Address', { userId });
+    
+        if (response.status === 200) {
+          if (response.data) {
+            
+            return;
+          }
+          return;
+        }
+      } catch (error) {
+        console.error('Error submitting data:', error);
       }
     };
     
@@ -215,11 +240,11 @@ export const PersonalDetails = () => {
          
 
         savePersonalDetails()
-        handleAddress();
+        
         // navigation.navigate("VerificationDetails")
     }
 
-    const SubmitSigupData= async()=>{
+    const SubmitSigup= async()=>{
       setLoading(true)
       const UserDetails = await AsyncStorage.getItem('UserDetails') || null;
     const UserData = JSON.parse(UserDetails);
@@ -227,7 +252,7 @@ export const PersonalDetails = () => {
       
       // console.log("Data of user ====>",UserData)
          try {
-          const response = await axios.post(`${Base_url}api/b2b`, UserData);
+          const response = await axios.post(`${Base_url}b2bUser`, UserData);
              
           if(response.status === 200){
                if(response.data){

@@ -215,7 +215,7 @@ const initialRegion = {
       });
 
       // `address` is an array of address components. You can format it as needed.
-      console.log('Address:', address);
+      console.log('Address =>', address, newRegion);
       setSelectedAddressFromMap(address[0]);
 
       // You can save the address or do something with it here

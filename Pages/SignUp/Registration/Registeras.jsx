@@ -48,15 +48,15 @@ export const RegisterAs = () => {
        </View>
         
         <Block style={{padding:10}}>
-        <TouchableOpacity activeOpacity={0.7} onPress={()=>handelCardClick(1,"Collectors")} style={{marginTop:20}}>
+        <TouchableOpacity activeOpacity={0.7} onPress={()=>handelCardClick(1,"Retailer")} style={{marginTop:20}}>
            <RegisterCard Img={Collector} Title={"Scrap"} SubTitle={"Retailer"} BG={Bg} />
        </TouchableOpacity>
 
-       <TouchableOpacity activeOpacity={0.7} onPress={()=>handelCardClick(1,"Wholesalers")} style={{marginTop:30}}>
+       <TouchableOpacity activeOpacity={0.7} onPress={()=>handelCardClick(1,"Wholesaler")} style={{marginTop:30}}>
            <RegisterCard Img={Wholesaler} Title={"Scrap"} SubTitle={"Wholesaler"} BG={Bg} />
        </TouchableOpacity>
 
-       <TouchableOpacity activeOpacity={0.7} onPress={()=>handelCardClick(1,"Mediators")}style={{marginTop:30}}>
+       <TouchableOpacity activeOpacity={0.7} onPress={()=>handelCardClick(1,"Mediator")}style={{marginTop:30}}>
            <RegisterCard Img={Mediator} Title={"Scrap"} SubTitle={"Mediator"} BG={Bg} />
        </TouchableOpacity>
 
