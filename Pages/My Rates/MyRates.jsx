@@ -74,6 +74,8 @@ export const MyRates = () => {
     setCart,
   } = useAppContext();
   const [CategoriesData, setCategoriesData] = useState([]);
+
+  const [SubCategoriesData, setSubCategoriesData] = useState([]);
   const [ catmodalVisible,setcatModalVisible] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [updatedCategoriesData,setUpdatedCategoriesData] = useState([])
@@ -119,7 +121,7 @@ export const MyRates = () => {
     console.log("Add Subcategory ========>");
     try {
       const response = await axios.post(
-        `${Base_url}api/b2b/${categoryId}/subcategories`,
+        `${Base_url}b2bUser/${userDetails.id}/category/${categoryId}/subcategory`,
         subcategoryData
       );
       setupdate((prev) => prev + 1);
@@ -193,11 +195,12 @@ export const MyRates = () => {
     try {
       
       const response = await axios.get(
-        `${Base_url}api/b2b/${userId}/category-subcategory`
+        `${Base_url}b2bUser/${userId}/category`
       );
+      console.log("CategoriesData 1 =====================>",response.data)
       const CategoriesData =  response.data.data.categories
       
-      // console.log("CategoriesData =====================>",CategoriesData)
+      console.log("CategoriesData 2 =====================>",CategoriesData)
       // console.log("res of category and subcategory =>", CategoriesData);
       const transformedData = [].concat(...CategoriesData.map(category => {
         console.log("Category Data ==>",category)
@@ -246,11 +249,24 @@ export const MyRates = () => {
   const getCategories = async () => {
       
     try {
-      const response = await axios.get(`${Base_url}api/category`);
+      const response = await axios.get(`${Base_url}categories`);
       setCategoriesData(response.data);
       return response.data;
     } catch (error) {
       throw error.response.data;
+    }
+  };
+
+  const getSubCategoriesByCategoryId = async (id) => {
+      console.log('Getting SubCategories',id)
+    try {
+      const response = await axios.get(`${Base_url}subcategories/category/${id}`);
+      
+      console.log("sub category data of selected category ==>",response.data);
+      setSubCategoriesData(response.data);
+      return response.data;
+    } catch (error) {
+      console.log("Error getting subcategory ==>",error)
     }
   };
 
@@ -272,21 +288,14 @@ export const MyRates = () => {
         const Data = selectedCategories.map(category => {
           return {
             name:category.name,
-            sub_category:[
-              {
-                name:"test",
-                price:"100",
-                unit:"Kg"
-              }
-            ] 
           }});
-        console.log("categoryNames",Data)
-        const UpdatedData = JSON.stringify(Data);
+        console.log("categoryNames",selectedCategories[0].name)
+        const UpdatedData = Data;
     
         try {
           const response = await axios.post(
-            `${Base_url}api/b2b/${userDetails._id}/addCategories`,{
-             Data : UpdatedData
+            `${Base_url}b2bUser/${userDetails.id}/category`,{
+             "name":selectedCategories[0].name
             }
             
           );
@@ -318,7 +327,7 @@ export const MyRates = () => {
   }, [query,update]);
 
   useEffect(() => {
-    fetchCategoryData(userDetails._id);
+    fetchCategoryData(userDetails.id);
   }, [update]);
 
   useEffect(()=>{
@@ -335,8 +344,9 @@ const handleSubAddChange = (field, value) => {
     [field]: value
   }));
   if (field === 'categoryName') {
-    setIsCategorySelected(value !== '');
-    setSelectedCategories(value)
+    setIsCategorySelected(value.name !== '');
+    setSelectedCategories(value.name)
+    getSubCategoriesByCategoryId(value._id)
   }
 };
 
@@ -523,7 +533,7 @@ const handleSubAddChange = (field, value) => {
           >
             <Picker.Item label="Select Category" value="" />
             {UserCategoryData && UserCategoryData.length > 0 && UserCategoryData.map((el, index) => (
-              <Picker.Item key={index} label={el.name} value={el.name} />
+              <Picker.Item key={index} label={el.name} value={el} />
             ))}
           </Picker>
         </Block>
@@ -536,11 +546,11 @@ const handleSubAddChange = (field, value) => {
               style={{ color: 'black', height: 50, fontSize: 18 }}
             >
               <Picker.Item label="Select Sub Category" value="" />
-              {CategoriesData && CategoriesData.map((el) => (
+              {/* {CategoriesData && CategoriesData.map((el) => (
                 el.name === subAddForm.categoryName && el.sub_category.map((item, index) => (
                   <Picker.Item key={index} label={item.name} value={item.name} />
                 ))
-              ))}
+              ))} */}
             </Picker> 
           </Block>
         {/* )}  */}
