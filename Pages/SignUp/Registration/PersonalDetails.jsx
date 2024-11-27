@@ -163,16 +163,21 @@ export const PersonalDetails = () => {
         const PhoneNumber = await AsyncStorage.getItem('Mobile') || null;
         const categoryNames = selectedCategories.map(category => {
           return {
-            name: category.name,
-            sub_category: [
-              {
-                name: "test",
-                price: "100",
-                unit: "Kg"
-              }
-            ]
-          }
+            name: category.name
+          };
         });
+        // const categoryNames = selectedCategories.map(category => {
+        //   return {
+        //     name: category.name,
+        //     sub_category: [
+        //       {
+        //         name: "test",
+        //         price: "100",
+        //         unit: "Kg"
+        //       }
+        //     ]
+        //   }
+        // });
         const Category = categoryNames.length > 0 
           ? categoryNames.map((category) => ({ name: category })) 
           : [];
@@ -181,7 +186,7 @@ export const PersonalDetails = () => {
           email: formData.email,
           phoneNumber: PhoneNumber,
           registerAs: RegisterAs,
-          category: Category,
+          category: categoryNames,
           businessName: formData.businessName,
           referralCode: formData.referralCode,
         };
@@ -341,7 +346,7 @@ export const PersonalDetails = () => {
     const getCategories = async () => {
       
       try {
-        const response = await axios.get(`${Base_url}api/category`);
+        const response = await axios.get(`${Base_url}categories`);
         setCategoriesData(response.data);
         console.log("Categories all", response.data)
         return response.data;
