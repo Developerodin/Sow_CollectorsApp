@@ -35,7 +35,7 @@ const LiveRates = () => {
 
   const getAllData = async () => {
     try {
-      const response = await axios.get(`${Base_url}api/mandi_rates/all-data`);
+      const response = await axios.get(`${Base_url}mandiRates`);
       const allData = response.data;
 
       const latestData = Object.values(
@@ -74,7 +74,7 @@ const LiveRates = () => {
     try {
       console.log("Fetching price difference for:", mandiId, category);
       const response = await axios.get(
-        `${Base_url}api/mandi_rates/price-difference/${mandiId}/${category}`
+        `${Base_url}mandiRates/difference/${mandiId}/${category}`
       );
       if (response.data) {
         setPriceDifferences((prevState) => ({
@@ -113,7 +113,8 @@ const LiveRates = () => {
       const Details = (await AsyncStorage.getItem("userDetails")) || null;
       const ParseData = JSON.parse(Details);
       const data = ParseData;
-      setUserId(data._id);
+      setUserId(data.id);
+      console.log("User ID  ==>", data.id);
     } catch (err) {
       console.log("Error in getting user ==.", err);
     }

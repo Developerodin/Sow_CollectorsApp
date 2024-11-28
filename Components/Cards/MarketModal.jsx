@@ -22,7 +22,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
 
     const getHistoryByTimeframe = async (mandiId, category, timeframe) => {
         try {
-            const response = await axios.get(`${Base_url}api/mandi_rates/history/timeframe/${mandiId}/${category}/${timeframe}`);
+            const response = await axios.get(`${Base_url}mandiRates/history/timeframe/${mandiId}/${category}/${timeframe}`);
             return response.data;
         } catch (error) {
             console.error('Error fetching history by timeframe:', error);
@@ -266,7 +266,7 @@ const formatLabel = (date, timeframe) => {
         
         const data = ParseData;
          console.log("User Data 2 ==>",data)
-            setUserId(ParseData._id);
+            setUserId(data.id);
             console.log("User ID ==>",userId)
          
         
