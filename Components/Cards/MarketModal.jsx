@@ -36,7 +36,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
             console.log('userId:', userId);
             console.log('listType:', listType);
 
-            const response = await axios.post(`${Base_url}api/b2b/add-mandi`, {
+            const response = await axios.post(`${Base_url}b2bUser/add-mandi`, {
                 userId,
                 mandiId,
                 listType
@@ -61,7 +61,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
 
     const removeMandiFromList = async (userId, mandiId, listType) => {
         try {
-            const response = await axios.post(`${Base_url}api/b2b/remove-mandi`, {
+            const response = await axios.post(`${Base_url}b2bUser/remove-mandi`, {
                 userId,
                 mandiId,
                 listType
@@ -84,7 +84,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
 
     const fetchUserMandis = async (userId, mandiId) => {
         try {
-            const response = await axios.get(`${Base_url}api/b2b/${userId}/mandis`);
+            const response = await axios.get(`${Base_url}b2bUser/${userId}/mandis`);
             
             const favoriteMandis = response.data.favoriteMandis?.map(mandi => mandi._id) || [];
             const notificationMandis = response.data.notificationFormMandiList?.map(mandi => mandi._id) || [];

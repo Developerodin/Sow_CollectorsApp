@@ -24,6 +24,10 @@ export const Header = () => {
   const handelNotificationClick = ()=>{
     navigation.navigate('Notification') 
   }
+
+  const handelDailyRatesClick = ()=>{
+    navigation.navigate('Daily Rates')
+  }
   return (
     <View style={[{marginTop:40,padding:10},styles.container]}>
         <Block  style={[styles.Space_Between]}>
@@ -36,7 +40,7 @@ export const Header = () => {
   />
           </TouchableOpacity>
 
-          <Block style={{marginLeft:-15}}>
+          <Block style={{marginLeft: 35}}>
       <Image
     
         source={Logo}
@@ -44,9 +48,12 @@ export const Header = () => {
       />
           </Block>
 
-          <Block >
+          <Block style={{flexDirection: 'row',gap: 20}} >
             <TouchableOpacity activeOpacity={0.9} onPress={handelNotificationClick}>
           <FontAwesome5 name="bell" size={30} color= {ThemeData.textColor}/>
+          </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.9} onPress={handelDailyRatesClick}>
+            <FontAwesome5 name="envelope" size={30} color= {ThemeData.textColor}/>
           </TouchableOpacity>
           </Block>
         </Block>

@@ -11,10 +11,15 @@ import axios from 'axios';
 import { Base_url } from '../../Config/BaseUrl';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import logo from "./scrap-img.jpeg";
+import { FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 
 export const DailyRates = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
+
+  const handleBack = () => {
+    navigation.goBack();
+  };
   // const route = useRoute();
   // const { value } = route.params;
   const { userDetails, update } = useAppContext();
@@ -35,12 +40,12 @@ export const DailyRates = () => {
 
   const fetchDailyRates = async () => {
     try {
-      const response = await axios.get(`${Base_url}api/daily_rates`);
-      console.log('Fetched plans:', response.data);
+      const response = await axios.get(`${Base_url}dailyRates`);
+      console.log('Fetched Daily Rates:', response.data);
       const Data = response.data;
       setData(Data);
     } catch (error) {
-      console.error('Error fetching plans:', error);
+      console.error('Error fetching Rates:', error);
     }
   };
 
@@ -75,6 +80,73 @@ export const DailyRates = () => {
 
   return (
     <View style={styles.container}>
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 10,
+        marginTop: 65,
+        height: 50,
+      }}
+    >
+      {/* Left Icon */}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+        onPress={() => {
+          // Add back navigation logic here
+          console.log("Back pressed");
+        }}
+      >  
+      <TouchableOpacity onPress={handleBack} activeOpacity={0.9}>
+        <View style={{padding: 10,backgroundColor:'#000',borderRadius:30,width: 50, height: 50,flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+
+        <MaterialIcons name="arrow-back-ios" size={22} color="#fff" style={{ marginLeft: 5 }}/>
+        </View>
+      </TouchableOpacity>
+        <Text
+          style={{
+            color: "#000",
+            fontSize: 25,
+            marginLeft: 10,
+            fontWeight: 500,
+          }}
+        >
+          Message
+        </Text>
+      </View>
+
+      {/* Right Icons */}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+      >
+        <TouchableOpacity
+          onPress={() => {
+            // Add action for first icon
+            console.log("First icon pressed");
+          }}
+          style={{ marginHorizontal: 10 }}
+        >
+          <Ionicons name="search" size={30} color="#000" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => {
+            // Add action for second icon
+            console.log("Second icon pressed");
+          }}
+        >
+          <Ionicons name="notifications" size={30} color="#000" style={{marginRight: 10}} />
+        </TouchableOpacity>
+      </View>
+    </View>
+  
       <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <Block style={{ backgroundColor: "#FFF", padding: 10 }}>
           {Data && Data.length > 0 ? (
@@ -85,29 +157,32 @@ export const DailyRates = () => {
                     <Block style={{ marginTop: 15 }} activeOpacity={0.5} key={index}>
                       <Block style={styles.card}>
                         <Block>
-                          <Block style={{ padding: 10, backgroundColor: "teal", borderTopLeftRadius: 15, borderTopRightRadius: 15 }}>
-                            <Text left style={{ fontWeight: 500, color: "#fff", fontSize: 16 }}>Price Update : {el.name}</Text>
+                          <Block style={{margin:18, padding: 14, backgroundColor: "#000", borderRadius: 10,  }}>
+                            <Text left style={{ fontWeight: 500, color: "#65C5C4", fontSize: 18,marginLeft: 10 }}>Price Update : {el.name}</Text>
                           </Block>
-                          <Block style={{ padding: 10 }}>
-                            <Text style={{ fontSize: 14, fontWeight: "bold", color: "grey" }}>Date : {formatDate(el.date)} </Text>
-                          </Block>
-                          <Block style={{ padding: 10, height: expandedCardIndex === index ? 'auto' : 100, overflow: 'hidden' }}>
+                          <Block style={{ marginHorizontal: 18, padding: 10, flexDirection: 'row', alignItems: 'center' }}>
+      <FontAwesome5 name="calendar-alt" size={20} color="black" style={{ marginRight: 8 }} />
+      <Text style={{ fontSize: 16, fontWeight: "bold", color: "black" }}>
+        Date : {formatDate(el.date)}
+      </Text>
+    </Block>
+                          <Block style={{marginHorizontal:18, padding: 10, height: expandedCardIndex === index ? 'auto' : 100, overflow: 'hidden' }}>
                             {expandedCardIndex === index ? (
                               <>
                                 {el.text.split(',').map((textPart, idx) => (
-                                  <Text key={idx} style={{ fontSize: 14, fontWeight: "bold", color: "grey" }}>{textPart}</Text>
+                                  <Text key={idx} style={{ fontSize: 14, fontWeight: 500, color: "black" }}>{textPart}</Text>
                                 ))}
                                 <TouchableOpacity onPress={() => toggleExpandCard(index)}>
-                                  <Text style={{ color: "#0F2C59", marginTop: 5, textAlign: 'right' }}>Close</Text>
+                                  <Text style={{ fontWeight: 700,color: "black",marginTop: 5, textAlign: 'right',fontSize: 16 }}>Close</Text>
                                 </TouchableOpacity>
                               </>
                             ) : (
                               <>
                                 {el.text.split(',').slice(0, 2).map((textPart, idx) => (
-                                  <Text key={idx} style={{ fontSize: 14, fontWeight: "bold", color: "grey" }}>{textPart}</Text>
+                                  <Text key={idx} style={{ fontSize: 14, fontWeight: "bold", color: "black" }}>{textPart}</Text>
                                 ))}
                                 <TouchableOpacity onPress={() => toggleExpandCard(index)} >
-                                  <Text style={{ color: "#0F2C59",marginTop: -10, textAlign: 'right' }}>Read more...</Text>
+                                  <Text style={{ fontWeight: 700,color: "black", textAlign: 'right',fontSize: 16 }}>Read more...</Text>
                                 </TouchableOpacity>
                               </>
                             )}
@@ -264,18 +339,19 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   card: {
-    backgroundColor: "#fff",
+    backgroundColor: "#f4f4f4",
     padding: 0,
     borderRadius: 15,
     width: width * 0.9,
      
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 1,
+    // shadowColor: "#000",
+    // shadowOffset: { width: 0, height: 1 },
+    // shadowOpacity: 0.2,
+    // shadowRadius: 2,
+    // elevation: 1,
     marginBottom: 10,
     minHeight: 200,
+    marginHorizontal: 10,
   },
 });
 

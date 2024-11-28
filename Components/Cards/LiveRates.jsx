@@ -98,7 +98,7 @@ const LiveRates = () => {
 
   const getUserMandis = async (userId) => {
     try {
-      const response = await axios.get(`${Base_url}api/b2b/${userId}/mandis`);
+      const response = await axios.get(`${Base_url}b2bUser/${userId}/mandis`);
       const favoriteMandis = response.data.favoriteMandis || [];
       setIsEmpty(favoriteMandis.length === 0); // Check if the data is empty
       return favoriteMandis;
