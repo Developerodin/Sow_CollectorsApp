@@ -26,7 +26,8 @@ export const Header = () => {
   }
   return (
     <View style={[{marginTop:40,padding:10},styles.container]}>
-        <Block  style={styles.Space_Between}>
+        <Block  style={[styles.Space_Between]}>
+
         <TouchableOpacity activeOpacity={0.9} onPress={handelProfileClick}>
         <Image
     
@@ -34,14 +35,16 @@ export const Header = () => {
     style={{width:45,height:44}}
   />
           </TouchableOpacity>
-          <Block style={{alignItems:"center"}}>
+
+          <Block style={{marginLeft:-15}}>
       <Image
     
         source={Logo}
         style={{width:65,height:64}}
       />
           </Block>
-          <Block>
+
+          <Block >
             <TouchableOpacity activeOpacity={0.9} onPress={handelNotificationClick}>
           <FontAwesome5 name="bell" size={30} color= {ThemeData.textColor}/>
           </TouchableOpacity>

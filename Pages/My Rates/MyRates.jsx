@@ -101,12 +101,12 @@ export const MyRates = () => {
     subcategoryId,
     subcategoryData
   ) => {
-    console.log("Update Subcategory ========>",categoryId,
+    console.log("Update Subcategory ========>",userDetails.id,categoryId,
     subcategoryId,
     subcategoryData);
     try {
-      const response = await axios.patch(
-        `${Base_url}api/b2b/${categoryId}/subcategories/${subcategoryId}`,
+      const response = await axios.put(
+        `${Base_url}b2bUser/${userDetails.id}/category/${categoryId}/subcategory/${subcategoryId}`,
         subcategoryData
       );
       setupdate((prev) => prev + 1);
@@ -157,7 +157,9 @@ export const MyRates = () => {
   const handelSubCategoryModelSubmit = async () => {
     setLoading(true);
     try {
-      const category = UserCategoryData.filter((el) => el.name === subAddForm.categoryName);
+      console.log("Submit dat of new sub category =>",UserCategoryData)
+      console.log("Submit dat of new sub category =>",subAddForm)
+      const category = UserCategoryData.filter((el) => el.name === subAddForm.categoryName.name);
       console.log("after submit", category);
       await addSubcategory(category[0]._id, subAddForm);
       setsubAddForm({
@@ -205,9 +207,9 @@ export const MyRates = () => {
       const transformedData = [].concat(...CategoriesData.map(category => {
         console.log("Category Data ==>",category)
         
-        return category.sub_category.map(subCategory => ({
+        return category.sub_category && category.sub_category.map(subCategory => ({
           id: subCategory._id,
-          title: subCategory.name.toUpperCase(),
+          title: subCategory && subCategory.name.toUpperCase(),
           value: subCategory.price,
           image: "https://tse4.mm.bing.net/th?id=OIP.OQh1ykyaCVyCvt2aNHJ-LwHaHa&pid=Api&P=0&h=220", // Replace with the actual image URL
           category: category.name,
@@ -257,10 +259,12 @@ export const MyRates = () => {
     }
   };
 
-  const getSubCategoriesByCategoryId = async (id) => {
-      console.log('Getting SubCategories',id)
+  const getSubCategoriesByCategoryName = async (name) => {
+      console.log('Getting SubCategories',name)
     try {
-      const response = await axios.get(`${Base_url}subcategories/category/${id}`);
+      const response = await axios.post(`${Base_url}subcategories/category`,{
+        categoryName:name
+      });
       
       console.log("sub category data of selected category ==>",response.data);
       setSubCategoriesData(response.data);
@@ -300,6 +304,7 @@ export const MyRates = () => {
             
           );
           setupdate((prev) => prev + 1);
+          setSelectedCategories("")
           setcatModalVisible(false)
           return response.data;
         } catch (error) {
@@ -346,7 +351,7 @@ const handleSubAddChange = (field, value) => {
   if (field === 'categoryName') {
     setIsCategorySelected(value.name !== '');
     setSelectedCategories(value.name)
-    getSubCategoriesByCategoryId(value._id)
+    getSubCategoriesByCategoryName(value.name)
   }
 };
 
@@ -413,7 +418,7 @@ const handleSubAddChange = (field, value) => {
               borderRadius: 30,
             }}
           >
-            <Text style={{ fontWeight: "500", color: activeCategory === el.name ? ThemeData.activeColor : ThemeData.textColor, }}>{el.name.toUpperCase()}</Text>
+            <Text style={{ fontWeight: "500", color: activeCategory === el.name ? ThemeData.activeColor : ThemeData.textColor, }}>{el.name && el.name.toUpperCase()}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -551,6 +556,11 @@ const handleSubAddChange = (field, value) => {
                   <Picker.Item key={index} label={item.name} value={item.name} />
                 ))
               ))} */}
+             {
+                SubCategoriesData && SubCategoriesData.map((item, index) => (
+                  <Picker.Item key={index} label={item.name} value={item.name} />
+                ))
+              }
             </Picker> 
           </Block>
         {/* )}  */}

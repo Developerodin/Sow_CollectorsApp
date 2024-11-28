@@ -68,12 +68,12 @@ export const CategoryAddModel2 = ({
   };
 
   const handelData  = ()=>{
-    console.log("Data of category ==> add",categoriesData)
+    // console.log("Data of category ==> add",categoriesData)
   }
 
 
-  console.log("selectedCategories===>",selectedCategories)
-
+  // console.log("selectedCategories===>",selectedCategories)
+  // console.log("Data of category ==> add",categoriesData)
   return (
     <Modal
    
@@ -111,29 +111,29 @@ export const CategoryAddModel2 = ({
           <ScrollView style={{ marginTop: 0,height:270,paddingBottom:5 }}>
   
           <View style={styles.categoriesContainer}>
-            {categoriesData.map((category, index) => (
-              <TouchableOpacity
-                key={index}
-                style={[
-                  styles.categoryContainer,
-                  selectedCategories.some(
-                    (selectedCategory) => selectedCategory.name === category.name
-                  ) && styles.selectedCategory,
-                ]}
-                onPress={() => handleCategorySelect(category)}
-              >
-                <Text
-                  style={[
-                    styles.categoryName,
-                    selectedCategories.some(
-                      (selectedCategory) => selectedCategory.name === category.name
-                    ) && styles.selectedCategoryText,
-                  ]}
-                >
-                  {category.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
+          {categoriesData && categoriesData.map((category, index) => (
+  <TouchableOpacity
+    key={index}
+    style={[
+      styles.categoryContainer,
+      Array.isArray(selectedCategories) && selectedCategories.some(
+        (selectedCategory) => selectedCategory.name === category.name
+      ) && styles.selectedCategory,
+    ]}
+    onPress={() => handleCategorySelect(category)}
+  >
+    <Text
+      style={[
+        styles.categoryName,
+        Array.isArray(selectedCategories) && selectedCategories.some(
+          (selectedCategory) => selectedCategory.name === category.name
+        ) && styles.selectedCategoryText,
+      ]}
+    >
+      {category.name}
+    </Text>
+  </TouchableOpacity>
+))}
           </View>
 </ScrollView>
            
