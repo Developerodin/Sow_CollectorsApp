@@ -71,23 +71,35 @@ export const Market = () => {
     getCategories();
   }, []);
 
+  // const getCategories = async () => {
+  //   try {
+  //     const response = await axios.get(`${Base_url}api/category`);
+  //     setCategoriesData(response.data);
+  //     // console.log("Categories all", response.data)
+  //     return response.data;
+  //   } catch (error) {
+  //     throw error.response.data;
+  //   }
+  // };
+
   const getCategories = async () => {
+      
     try {
-      const response = await axios.get(`${Base_url}api/category`);
+      const response = await axios.get(`${Base_url}categories`);
       setCategoriesData(response.data);
-      // console.log("Categories all", response.data)
       return response.data;
     } catch (error) {
       throw error.response.data;
     }
   };
 
-  const getCategoryById = async (id) => {
+  const getSubCategoryById = async (id) => {
+    console.log('getSubCategoryById ==>', id);
     try {
-      const response = await axios.get(`${Base_url}api/category/${id}`);
-
-      setSelectedSubCategoriesData(response.data[0].sub_category);
-      // console.log("SubCategory data", response.data[0].sub_category)
+      const response =  await axios.get(`${Base_url}subcategories/category/6746a66f780748007ff99651`);;
+      console.log("SubCategory data", response.data)
+      setSelectedSubCategoriesData(response.data);
+     
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -137,7 +149,7 @@ export const Market = () => {
     console.log(`Category selected: ${name}, ID: ${id}`);
     setSelectedCategory(name);  // Set the selected category name
     setSelectedCategories([id]);  // Store the selected category ID (you can allow multiple selections if needed)
-    getCategoryById(id);  // Fetch subcategories after selecting the category
+    getSubCategoryById(id);  // Fetch subcategories after selecting the category
   };
   
   
