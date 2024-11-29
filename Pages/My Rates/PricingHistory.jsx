@@ -35,7 +35,7 @@ import { CategoryAddModel2 } from "../../Components/CategoryAddModel/CategoryAdd
 import icon from './icon.png'
 import { ThemeData } from "../../Theme/Theme";
 
-export const MyRates = () => {
+export const PricingHistory = () => {
   const navigation = useNavigation();
   const { userDetails } = useAppContext();
   const [expanded, setExpanded] = useState(false);
