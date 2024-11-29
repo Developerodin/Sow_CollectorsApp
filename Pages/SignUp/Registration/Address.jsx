@@ -64,9 +64,29 @@ export const Address = () => {
     
   }
 
+  const newAddress1 ={
+      
+    address: `${SelectedAddressFromMap.district}`,
+    landmark:`${SelectedAddressFromMap.street}`,
+    postalCode:SelectedAddressFromMap.postalCode,
+    city: `${SelectedAddressFromMap.city}`,
+    state:SelectedAddressFromMap.region,
+    country: `${SelectedAddressFromMap.country}`,
+    mobileNumber: "",
+    name: SelectedAddressFromMap.name,
+    house:newAddress.house,
+    area:newAddress.area,
+    directions:newAddress.directions,
+    latitude: SelectedAddressFromMap.latitude,
+    longitude: `${SelectedAddressFromMap.longitude}`,
+  }
+  // setAddresses([...addresses, newAddress1]);
+  console.log("New Address 123456 =>",newAddress1)
+
   const saveAddress = () => {
    
     const newAddress1 ={
+      
       address: `${SelectedAddressFromMap.district}`,
       landmark:`${SelectedAddressFromMap.street}`,
       postalCode:SelectedAddressFromMap.postalCode,
@@ -77,9 +97,12 @@ export const Address = () => {
       name: SelectedAddressFromMap.name,
       house:newAddress.house,
       area:newAddress.area,
-      directions:newAddress.directions
+      directions:newAddress.directions,
+      latitude: SelectedAddressFromMap.latitude,
+      longitude: SelectedAddressFromMap.longitude,
     }
     // setAddresses([...addresses, newAddress1]);
+    console.log("New Address 123456 =>",newAddress1)
     setnewAddressinStorage(newAddress1)
     toggleModal();
     // Clear input fields
@@ -101,13 +124,15 @@ export const Address = () => {
   console.log("save address to database")
   const UserAddress ={
     userId : userId,
-    latitude: 1.3456,
-    longitude: 1.3456,
+    latitude:  SelectedAddressFromMap.latitude || 1.3456 ,
+    longitude:  SelectedAddressFromMap.longitude || 1.3456,
     googleAddress: SelectedAddressFromMap.formattedAddress,
     buildingName: newAddress.house,
     roadArea: newAddress.area,
     note: newAddress.directions,
     addressType: "Warehouse",
+    city: SelectedAddressFromMap.city,
+    state: SelectedAddressFromMap.region,
   }
   console.log("User Address",UserAddress)
 
