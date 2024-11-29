@@ -60,6 +60,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
     };
 
     const removeMandiFromList = async (userId, mandiId, listType) => {
+        console.log('Removing Mandi from list:', userId, mandiId, listType);
         try {
             const response = await axios.post(`${Base_url}b2bUser/remove-mandi`, {
                 userId,

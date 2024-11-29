@@ -180,13 +180,13 @@ export const Profile = () => {
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 10, marginLeft: 10, }}>
   <Ionicons name="arrow-back" size={24} color={ThemeData.activeColor}/>
 </TouchableOpacity>
-{/* <TouchableOpacity
+<TouchableOpacity
         
         onPress={() => handleNavigate('Address')}
       >
         <FontAwesome name="address-book" size={24} color="#2dd36f" />
         <Text style={styles.menuItemText}>Manage Address</Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
 
           <Block center style={[{position:'realtive',width:80,height:80,borderRadius:500,marginTop:30,borderRadius:100,backgroundColor:ThemeData.containerBackgroundColor,elevation:2}]}>
          {
