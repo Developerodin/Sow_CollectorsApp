@@ -404,7 +404,7 @@ export default function App() {
             name="Daily Rates"
             component={DailyRates}
             options={{
-              headerShown: true,
+              headerShown: false,
             }}
           />
 
