@@ -66,6 +66,10 @@ export const Market = () => {
   const [subCategoryModalVisible, setSubCategoryModalVisible] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedSubCategories, setSelectedSubCategories] = useState([]);
+  const [city, setCity] = useState([]);
+  const [uniqueCity, setUniqueCity] = useState([]);
+  const [userId, setUserId] = useState("");
+  
 
   useEffect(() => {
     getCategories();
@@ -114,6 +118,25 @@ export const Market = () => {
     });
   };
 
+  const handelSubmit =( userId, selectedCategory, selectedSubCategory, selectedCity) => {
+    console.log("button clicked");
+    navigation.navigate("MediatorRates", {
+      userId: userId,
+      categoryName: selectedCategory,
+      subCategoryName: selectedSubCategory,
+      city: selectedCity,
+    });
+  };
+
+  //  const data = {
+  //   userId : userDetails.id,
+  //   categoryName: selectedCategory,
+  //   subCategoryName: selectedSubCategory,
+  //   city: selectedCity,
+  // };
+  
+  // console.log("Data ==>", data);
+
   const toggleAccordion = () => {
     setExpanded(!expanded);
   };
@@ -124,8 +147,8 @@ export const Market = () => {
     setCityExpand(!CityExpand);
   };
 
-  const handelCity = (data) => {
-    setselectedCity(data);
+  const handelCity = (city) => {
+    setselectedCity(city);
     toggleCityAccordion();
   };
   const handelCategory = (data, id) => {
@@ -192,7 +215,24 @@ export const Market = () => {
     setSubCategoryModalVisible(false);
   };
 
-  
+  const fetchCities = async () => {
+    try {
+      const response = await axios.post(`${Base_url}b2bUser/address/citystate`);
+      console.log("City data before filtering", response.data.data.uniqueCities);
+      
+      // Filter out null values
+      const filteredCities = response.data.data.uniqueCities.filter(city => city !== null);
+      
+      console.log("City data after filtering", filteredCities);
+      setCity(filteredCities);
+      return filteredCities;
+    } catch (error) {
+      console.log("Error in fetching cities", error);
+      throw error.response.data;
+    }
+  };
+
+ 
 
   const fetchB2BUser = async () => {
     try {
@@ -311,6 +351,8 @@ export const Market = () => {
       const Details = (await AsyncStorage.getItem("userDetails")) || null;
       // console.log("step 6 ===>",Details)
       const ParseData = JSON.parse(Details);
+      setUserId(ParseData.id);
+      console.log("User Data 1 ==>", userId);
 
       // console.log("Parse Data of user  ===>", ParseData);
       const data = ParseData;
@@ -333,6 +375,7 @@ export const Market = () => {
     fetchB2BUser();
     getCategories();
     userDetailsFromStorage();
+    fetchCities();
     // console.log("User Data ", userDetails);
   }, [refreshData, update]);
 
@@ -637,36 +680,19 @@ export const Market = () => {
                 </TouchableOpacity>
                 {CityExpand && (
                   <View style={{ height: 200 }}>
-                    <ScrollView>
-                      {AllVendorsData.map((el, index) => {
-                        const lowerCaseCity = el.city && el.city.toLowerCase();
-
-                        // Check if the lowercased category is not in the set, then add it to the set and render the JSX
-                        if (!uniqueCitySet.has(lowerCaseCity)) {
-                          uniqueCitySet.add(lowerCaseCity);
-                          console.log(
-                            "Lower city not prsent   ===>",
-                            lowerCaseCity,
-                            uniqueCitySet
-                          );
-                          return (
-                            <TouchableOpacity
-                              activeOpacity={0.6}
-                              onPress={() => handelCity(el.city)}
-                              key={index}
-                              style={[styles.Space_Between, { marginTop: 10 }]}
-                            >
-                              <Text style={{ fontSize: 18 }}>
-                                {el.city &&el.city.toUpperCase()}
-                              </Text>
-                            </TouchableOpacity>
-                          );
-                        } else {
-                          // If the lowercased category is already in the set, return null (no rendering)
-                          //  console.log("City alred prsent  ==>",lowerCaseCity)
-                          return null;
-                        }
-                      })}
+                                       <ScrollView>
+                      {city.map((el, index) => (
+                        <TouchableOpacity
+                          activeOpacity={0.6}
+                          onPress={() => handelCity(el)}
+                          key={index}
+                          style={[styles.Space_Between, { marginTop: 10 }]}
+                        >
+                          <Text style={{ fontSize: 18 }}>
+                            {el}
+                          </Text>
+                        </TouchableOpacity>
+                      ))}
                     </ScrollView>
                   </View>
                 )}
@@ -701,11 +727,16 @@ export const Market = () => {
                 <FontAwesome5 name="sort" size={22} color="#fff" />
               </TouchableOpacity>
             </View>
-            {/* <Block style={{ marginTop: 20 }}>
-              <Button color="info" style={styles.btn}>
+
+            <Block style={{ marginTop: 20 }}>
+              <TouchableOpacity onPress={() => handelSubmit(userId, selectedCategory, selectedSubCategory, selectedCity)}>
+              <Block style={styles.btn}>
+                <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>
                 Submit
-              </Button>
-              </Block> */}
+                </Text>
+              </Block>
+              </TouchableOpacity>
+              </Block>
 
             {userDetails.registerAs === "Collectors" &&
               WholesalersData &&
@@ -978,12 +1009,13 @@ const styles = StyleSheet.create({
     borderRadius: 52,
   },
   btn: {
-    width: "95%",
+    width: "100%",
     height: 55,
     borderRadius: 8,
     backgroundColor: "#000",
     justifyContent: "center",
     alignItems: "center",
+    
   },
   border: {
     borderWidth: 1,
