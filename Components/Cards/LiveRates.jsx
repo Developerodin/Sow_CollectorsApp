@@ -18,11 +18,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "../../Context/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemeData } from "../../Theme/Theme";
-
+import AntDesign from '@expo/vector-icons/AntDesign';
 
 const LiveRates = () => {
   const { favouriteMandi, setFavouriteMandi, updateMandi } = useAppContext();
   const [selectedState, setSelectedState] = useState("All"); // Default to 'All'
+  const [selectedCategory, setselectedCategory] = useState("Iron");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [marketRates, setMarketRates] = useState([]);
@@ -32,7 +33,7 @@ const LiveRates = () => {
   const [userId, setUserId] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
   const [loading, setLoading] = useState(true);
-
+  const [CategoriesData,setCategoriesData] =useState([]);
   const getAllData = async () => {
     try {
       const response = await axios.get(`${Base_url}mandiRates`);
@@ -69,6 +70,20 @@ const LiveRates = () => {
       console.error("Error fetching all data:", error);
     }
   };
+
+  const getCategories = async () => {
+      
+    try {
+      const response = await axios.get(`${Base_url}categories`);
+      setCategoriesData(response.data);
+      setselectedCategory(response.data[0].name)
+      console.log("All categorires ===>",response.data )
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  };
+
 
   const fetchPriceDifference = async (mandiId, category) => {
     try {
@@ -127,14 +142,15 @@ const LiveRates = () => {
   useEffect(() => {
     if (userId) {
       getAllData();
+      getCategories();
       getUserMandis(userId).then(setFavoriteMandis);
     }
   }, [userId, updateMandi]);
 
   // Add 'All' to the states array
   const states = [
-    "All",
     "Favourite",
+    "All",
     ...new Set(
       marketRates.map((item) => item.mandi?.state).filter((state) => state)
     ),
@@ -187,6 +203,9 @@ const LiveRates = () => {
     setVisibleItems(5);
   };
 
+  const handlCategoryPress = (data) =>{
+    setselectedCategory(data)
+  }
   const handleItemPress = (item) => {
     setSelectedItem(item);
     setModalVisible(true);
@@ -296,6 +315,26 @@ const LiveRates = () => {
         </View>
       ) : (
         <View style={{ flex: 1 }}>
+
+<TouchableOpacity
+              
+                style={{
+                  
+                  maxWidth:250,
+                  margin:10,
+                  paddingVertical: 10,
+                  paddingHorizontal: 15,
+                  backgroundColor: ThemeData.backgroundColor,
+                  borderRadius: 30,
+                }}
+              >
+                <Text style={{ color:'#fff',fontSize:14 }}>
+                  Select Category : {selectedCategory}
+                </Text>
+              </TouchableOpacity>
+
+
+
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -306,15 +345,47 @@ const LiveRates = () => {
                 key={state}
                 onPress={() => handleStatePress(state)}
                 style={{
-                  marginRight: 10,
+                  marginRight:8,
                   paddingVertical: 5,
                   paddingHorizontal: 15,
-                  backgroundColor: selectedState === state ? ThemeData.backgroundColor : ThemeData.activeBackgroundColor,
+                  backgroundColor: selectedState === state ? ThemeData.backgroundColor : "#fff",
                   borderRadius: 30,
                 }}
               >
-                <Text style={{ color: selectedState === state ? ThemeData.activeColor : ThemeData.textColor }}>
-                  {state}
+                  {
+                    state === "Favourite" ?
+                    <AntDesign name="hearto" size={18} color={selectedState === state ? ThemeData.activeColor : ThemeData.textColor} />
+                    :
+                    <Text style={{ fontWeight:"bold",color: selectedState === state ? ThemeData.activeColor : ThemeData.textColor }}>
+                    {state}
+                  </Text>
+                  }
+                
+
+                
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
+
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ marginVertical: 10, paddingLeft: 10 }}
+          >
+            {CategoriesData.map((item,index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => handlCategoryPress(item.name)}
+                style={{
+                  marginRight:3,
+                  paddingVertical: 5,
+                  paddingHorizontal: 15,
+                  backgroundColor: selectedCategory === item.name ? ThemeData.color : "#fff",
+                  borderRadius: 30,
+                }}
+              >
+                <Text style={{fontWeight:500,fontSize:15, color: selectedCategory === item.name ? ThemeData.backgroundColor : ThemeData.textColor }}>
+                  {item.name}
                 </Text>
               </TouchableOpacity>
             ))}
@@ -332,7 +403,7 @@ const LiveRates = () => {
             />
           ) : (
             <View>
-              <View style={{ height: 320 }}>
+              <View style={{ height: 320,marginTop:10 }}>
                 <Text style={{ fontSize: 15, fontWeight: "500", color: ThemeData.textColor, marginLeft: 15 }}>
                   Live Market rates as of <Text style={{ color: ThemeData.color }}>12.11.2024</Text>
                 </Text>
