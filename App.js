@@ -63,6 +63,7 @@ import { NewOrders} from "./Pages/New Orders/NewOrders";
 import { B2cOrderDetails } from "./Pages/New Orders/B2cOrderDetails";
 import { B2bOrderDetails } from "./Pages/New Orders/B2bOrderDetails";
 import { MediatorRates } from "./Pages/Market/MediatorRates";
+import { PricingHistory } from "./Pages/My Rates/PricingHistory";
 
 import * as Notifications from "expo-notifications";
 import usePushNotifications from "./usePushNotifications";
@@ -600,6 +601,13 @@ export default function App() {
           <Stack.Screen
             name="MediatorRates"
             component={MediatorRates}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="PricingHistory"
+            component={PricingHistory}
             options={{
               headerShown: false,
             }}

@@ -117,6 +117,10 @@ export const MyRates = () => {
     }
   };
 
+  const handelPricingHistory = () => {
+    navigation.navigate("PricingHistory");
+  };
+
   const addSubcategory = async (categoryId, subcategoryData) => {
     console.log("Add Subcategory ========>");
     try {
@@ -365,7 +369,7 @@ const handleSubAddChange = (field, value) => {
         <Text style={{fontSize:25,fontWeight:"bold"}}>My Rates</Text>
        </Block>
 
-       <TouchableOpacity>
+       <TouchableOpacity onPress={handelPricingHistory}>
         <Text style={{textDecorationLine: 'underline',fontSize:14}}>Pricing History</Text>
        </TouchableOpacity>
      </Block>
