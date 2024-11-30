@@ -373,7 +373,7 @@ export default function App() {
             name="Rate Details"
             component={RateDetails}
             options={{
-              headerShown: true,
+              headerShown: false,
             }}
           />
 

@@ -14,7 +14,7 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { Block, Text, Input, theme, Button } from "galio-framework";
 
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import axios from "axios";
@@ -24,16 +24,16 @@ const { width, height } = Dimensions.get("window");
 import { useNavigation } from "@react-navigation/native";
 import { ToastAndroid } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import icon1 from "./profile.png";
-import icon2 from "./company.png";
-import icon3 from "./location.png";
-import icon4 from "./cat.png";
-import icon5 from "./price.png";
-import icon6 from "./calender.png";
+import icon1 from "../../assets/business.png";
+import icon2 from "../../assets/ruppee.png";
+import icon3 from "../../assets/calender.png";
+import icon4 from "../../assets/user.png";
+import icon5 from "../../assets/tag.png";
+import icon6 from "../../assets/location.png";
 
 export const RateDetails = ({ route }) => {
   const navigation = useNavigation();
-  const { itemId, subIndex, categoryIndex } = route.params;
+  const {userId, categoryId, subCategoryId } = route.params;
   const { update, userDetails, setUpdate } = useAppContext();
   const [details, setDetails] = useState(null);
   const [weight, setWeight] = useState("");
@@ -53,7 +53,7 @@ export const RateDetails = ({ route }) => {
       const totalWeight =
         parseInt(w) *
         parseInt(
-          details.categories[categoryIndex].sub_category[subIndex].price
+           details.category._doc.sub_category[0].price 
         );
       setTotalAmount(totalWeight);
     }
@@ -63,41 +63,42 @@ export const RateDetails = ({ route }) => {
     setDiscription(text);
   };
 
-  const handleSubmit = () => {
+  const handleBack = () => {
+    navigation.goBack();
+  };
+
+   const handleSubmit = () => {
     if (weight === "" || TotalAmount === "") {
       ToastAndroid.show("Please Fill All Details", ToastAndroid.SHORT);
       return;
     }
-
+  
+   
+  
     const Orderdetails = {
-      category: details.categories[categoryIndex].name,
-      sub_category:
-        details.categories[categoryIndex].sub_category[subIndex].name,
-      quantity: weight,
-      discription: discription,
+      
+      category: details.category._doc._id,
+      subCategory: details.category._doc.sub_category[0]._id,
+      orderBy: userDetails.id,
+      orderTo: userId,
+      weight: weight,
       unit: selectedValue,
+      notes: discription,
+      value: details.category._doc.sub_category[0].price,
+      totalPrice: TotalAmount,
+      photos: "",
+      location: "674950d3390a9600916b98a8",
+      orderStatus: "Pending"
     };
-    console.log("data >>>", Orderdetails);
-
-    console.log(userDetails._id, details._id, Orderdetails, TotalAmount);
-    createOrder(
-      userDetails._id,
-      details._id,
-      Orderdetails,
-      TotalAmount,
-      discription
-    );
+  
+    console.log("Order details >>>", Orderdetails);
+  
+    createOrder(Orderdetails);
   };
-
-  const createOrder = async (from, to, details, totalAmount, discription) => {
+  
+  const createOrder = async (orderDetails) => {
     try {
-      const response = await axios.post(`${Base_url}api/b2b_orders`, {
-        from,
-        to,
-        details,
-        totalAmount,
-        discription,
-      });
+      const response = await axios.post(`${Base_url}b2bOrder`, orderDetails);
       navigation.navigate("Order Status", { status: "success" });
       setUpdate((prev) => prev + 1);
       return response.data;
@@ -106,19 +107,22 @@ export const RateDetails = ({ route }) => {
       console.log("error", error);
     }
   };
-
   const fetchData = async () => {
     try {
-      const response = await axios.get(`${Base_url}api/b2b/${itemId}`);
+      const response = await axios.post(`${Base_url}b2bOrder/getratedetails`, {
+        userId,
+        categoryId,
+        subCategoryId
+      });
 
       if (response.status === 200) {
-        console.log("Data of vender =====>", response.data);
-        setDetails(response.data);
+        console.log("Data of vendor =====>", response.data);
+        setDetails(response.data.data);
       } else {
-        console.log("Error fetching data:", response.data.message);
+        console.log("Error fetching data =>>:", response.data.message);
       }
     } catch (error) {
-      console.log("Error fetching data:", error.message);
+      console.log("Error fetching data: =>>", error.message);
     }
   };
 
@@ -141,17 +145,56 @@ export const RateDetails = ({ route }) => {
   };
 
   useEffect(() => {
-    console.log("Id ===>", itemId);
+    console.log("Id ===>", userId, categoryId, subCategoryId);
     fetchData();
-  }, []);
+  }, [update]);
   return (
     <View style={styles.container}>
+      <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingHorizontal: 10,
+        marginTop: 65,
+        height: 50,
+      }}
+    >
+      
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}
+        onPress={() => {
+          // Add back navigation logic here
+          console.log("Back pressed");
+        }}
+      >  
+      <TouchableOpacity onPress={handleBack} activeOpacity={0.9}>
+        <View style={{padding: 10,backgroundColor:'#000',borderRadius:30,width: 50, height: 50,flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+
+        <MaterialIcons name="arrow-back-ios" size={22} color="#fff" style={{ marginLeft: 5 }}/>
+        </View>
+      </TouchableOpacity>
+        <Text
+          style={{
+            color: "#000",
+            fontSize: 25,
+            marginLeft: 10,
+            fontWeight: 500,
+          }}
+        >
+          Rate Details
+        </Text>
+      </View>
+      </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Block
           style={{
             padding: 15,
             backgroundColor: "#fff",
-            marginTop: 10,
+            marginTop: 15,
             borderRadius: 10,
             padding: 10,
           }}
@@ -159,8 +202,22 @@ export const RateDetails = ({ route }) => {
           <Block>
             <Block>
               <Text style={{ fontSize: 22, fontWeight: 700 }}>
-                {details && details.categories[categoryIndex].name}
+                {details && details.category._doc.name}
               </Text>
+            </Block>
+          </Block>
+
+          <Block
+            style={[
+              { marginTop: 10, flexDirection: "row", alignItems: "center" },
+            ]}
+          >
+            <Block style={{ marginRight: 8 }}>
+              
+              <Image source={icon4} style={{height:16,width:16}} />
+            </Block>
+            <Block>
+              <Text style={{ fontSize: 15,fontWeight: 500 }}>{details && details.userDetails.name}</Text>
             </Block>
           </Block>
 
@@ -170,11 +227,11 @@ export const RateDetails = ({ route }) => {
             ]}
           >
             <Block style={{ marginRight: 8 }}>
-              <Ionicons name="person" size={20} color="black" />
-              {/* <Image source={icon1} style={{height:14,width:14}} /> */}
+              {/* <Ionicons name="person" size={20} color="black" /> */}
+              <Image source={icon1} style={{height:16,width:16}} />
             </Block>
             <Block>
-              <Text style={{ fontSize: 15,fontWeight: 500 }}>{details && details.name}</Text>
+              <Text style={{ fontSize: 15,fontWeight: 500 }}>{details && details.userDetails.businessName}</Text>
             </Block>
           </Block>
 
@@ -184,11 +241,11 @@ export const RateDetails = ({ route }) => {
             ]}
           >
             <Block style={{ marginRight: 8 }}>
-              <Ionicons name="location-sharp" size={20} color="black" />
+            <Image source={icon6} style={{height:16,width:13}} />
             </Block>
             <Block>
               <Text style={{ fontSize: 14,fontWeight: 500  }}>
-                {details && details.Address}, {details && details.pincode}, {details && details.city}, {details && details.country}
+              {details && details.addresses.length > 0 ? `${details.addresses[0].Address}, ${details.addresses[0].pincode}, ${details.addresses[0].city}, ${details.addresses[0].country}` : "No Address Available"}
               </Text>
             </Block>
           </Block>
@@ -199,12 +256,11 @@ export const RateDetails = ({ route }) => {
             ]}
           >
             <Block style={{ marginRight: 8 }}>
-              <FontAwesome name="tags" size={16} color="black" />
+            <Image source={icon5} style={{height:14,width:14}} />
             </Block>
             <Block>
               <Text style={{ fontSize: 15,fontWeight: 500  }}>
-                {details &&
-                  details.categories[categoryIndex].sub_category[subIndex].name}
+              {details && details.category._doc.sub_category.length > 0 ? details.category._doc.sub_category[0].name : "No Subcategory Available"}
               </Text>
             </Block>
           </Block>
@@ -215,13 +271,11 @@ export const RateDetails = ({ route }) => {
             ]}
           >
             <Block style={{ marginRight: 8 }}>
-              <FontAwesome name="money" size={16} color="black" />
+            <Image source={icon2} style={{height:16,width:16}} />
             </Block>
             <Block>
               <Text style={{ fontSize: 15,fontWeight: 700 }}> ₹
-                {details &&
-                  details.categories[categoryIndex].sub_category[subIndex]
-                    .price}
+              {details && details.category._doc.sub_category.length > 0 ? details.category._doc.sub_category[0].price : "N/A"}
                 /KG
               </Text>
             </Block>
@@ -233,15 +287,11 @@ export const RateDetails = ({ route }) => {
             ]}
           >
             <Block style={{ marginRight: 8 }}>
-              <FontAwesome name="calendar" size={16} color="black" />
+            <Image source={icon3} style={{height:16,width:16}} />
             </Block>
             <Block>
               <Text style={{ fontSize: 15,fontWeight: 500  }}>
-                {details &&
-                  convertUTCToIST(
-                    details.categories[categoryIndex].sub_category[subIndex]
-                      .updatedAt
-                  )}
+                               {details && convertUTCToIST(details.category._doc.sub_category[0].updatedAt)}
               </Text>
             </Block>
           </Block>
@@ -257,7 +307,7 @@ export const RateDetails = ({ route }) => {
                     style={{
                       height: 60,
                      width: width * 0.5,
-                      borderColor: 'black',
+                      borderColor: '#A6A6A6',
                     }}
                     placeholder="Enter Weight ..."
                     value={weight}
@@ -272,7 +322,7 @@ export const RateDetails = ({ route }) => {
                   style={{
                     height: 60,
                     width: width * 0.35,
-                    borderColor: 'black',
+                    borderColor: '#A6A6A6',
                     borderWidth: 1,
                     borderRadius: 10,
                   }}
@@ -297,7 +347,7 @@ export const RateDetails = ({ route }) => {
                   style={{
                     height: 80,
                     width: width * 0.9,
-                    borderColor: "black",
+                    borderColor: "#A6A6A6",
                   }}
                   placeholder="Add notes ..."
                   value={discription}
@@ -321,7 +371,7 @@ export const RateDetails = ({ route }) => {
                     marginTop: 13,
                     height: 60,
                     width: width * 0.9,
-                    borderColor: "black",
+                    borderColor: "#A6A6A6",
                     fontSize: 20,
                     borderWidth: 1,
                     padding: 10,
@@ -338,7 +388,7 @@ export const RateDetails = ({ route }) => {
           </Block>
         </Block>
 
-        <Block style={{ marginTop: 15 }}>
+        <Block style={{ marginTop: 5 }}>
           <Text style={{ fontSize: 22, padding: 10, fontWeight: 600 }}>
             Upload Photos
           </Text>
@@ -373,7 +423,8 @@ export const RateDetails = ({ route }) => {
             style={{
               borderWidth: 1,
               width: width * 0.9,
-              height: 60,
+              height: 54,
+              borderRadius: 8,
               backgroundColor: "black",
             }}
           >
@@ -403,8 +454,9 @@ const styles = StyleSheet.create({
     color: "#9B9B9B",
   },
   text2: {
-    fontSize: 24,
+    fontSize: 22,
     color: "#040404",
+    fontWeight: "600",
   },
   tabBar: {
     flexDirection: "row",
