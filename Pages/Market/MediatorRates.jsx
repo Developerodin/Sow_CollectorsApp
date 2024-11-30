@@ -29,7 +29,7 @@ export const MediatorRates = () => {
   const { userDetails, update } = useAppContext();
  
   const [Data, setData] = useState([]);
-
+  const [Role,setRole] = useState("")
    
   
   const [refreshing, setRefreshing] = useState(false);
@@ -51,7 +51,9 @@ export const MediatorRates = () => {
     });
     console.log('Fetched Filter User =>:', response.data.data[0].category[0].sub_category);
     const Data = response.data.data;
+    const Role = response.data.role;
     setData(Data);
+    setRole(Role);
   } catch (error) {
     console.error('Error fetching Rates:', error);
   }
@@ -175,7 +177,7 @@ const formatDate = (dateString) => {
             fontWeight: 500,
           }}
         >
-          Mediator rates
+          {Role} Rates
         </Text>
       </View>
 
@@ -214,7 +216,7 @@ const formatDate = (dateString) => {
       </View>
       <View style={{padding: 5}}>
         <Text style={{marginLeft: 20,fontSize: 17,fontWeight: 600,color: '#000'}}>
-           <Text style={{color : ThemeData.color}}>12 Buyers</Text>  available for <Text style={{color : ThemeData.color}}>{categoryName}</Text> Purchase in <Text style={{color : ThemeData.color}}>{city}</Text> area.   
+           <Text style={{color : ThemeData.color}}>{Data ? Data.length : 0} Buyers</Text>  available for <Text style={{color : ThemeData.color}}>{categoryName}</Text> Purchase in <Text style={{color : ThemeData.color}}>{city}</Text> area.   
         </Text>
       </View>
           <View style={{ paddingVertical: 7, paddingHorizontal: 13, backgroundColor: "#000", justifyContent: 'flex-start', borderRadius: 30, alignSelf: 'flex-start',marginLeft:20,marginTop: 10 }}>
