@@ -21,6 +21,14 @@ export const MediatorRates = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
 
+
+    const handleItemPress = (userId, categoryId, subCategoryId) => {
+    console.log("User ID:", userId);
+    console.log("Category ID:", categoryId);
+    console.log("SubCategory ID:", subCategoryId);
+    navigation.navigate("Rate Details", { userId, categoryId, subCategoryId });
+  };
+
   const handleBack = () => {
     navigation.goBack();
   };
@@ -49,6 +57,7 @@ export const MediatorRates = () => {
       city: city,
       userId: userId
     });
+    console.log('Fetched Filter categoey =>:', response.data.data[0].category);
     console.log('Fetched Filter User =>:', response.data.data[0].category[0].sub_category);
     const Data = response.data.data;
     setData(Data);
@@ -80,63 +89,68 @@ const formatDate = (dateString) => {
   };
 
 
-  const renderMarketItem = ({ item }) => (
-    <TouchableOpacity
-      style={{ marginTop: 10 }}
-      activeOpacity={0.5}
-      onPress={() => handleItemPress(item)}
-    >
-      <Block
-        style={{
-          width: "90%",
-          borderRadius: 8,
-          padding: 5,
-          borderWidth: 1,
-          borderColor: ThemeData.color,
-          flexDirection: "row",
-          justifyContent: "flex-start",
-          alignItems: "center",
-          marginHorizontal: 20,
-          backgroundColor: ThemeData.cardBackgroundColor,
-        }}
+    const renderMarketItem = ({ item }) => {
+    const categoryId = item.category.length > 0 ? item.category[0]._doc._id : null;
+    const subCategoryId = item.category.length > 0 && item.category[0].sub_category.length > 0 ? item.category[0].sub_category[0]._id : null;
+  
+    return (
+      <TouchableOpacity
+        style={{ marginTop: 10 }}
+        activeOpacity={0.5}
+        onPress={() => handleItemPress(item._id, categoryId, subCategoryId)}
       >
-        <Block>
-          <Image
-            source={logo}
-            style={{ resizeMode: "cover", width: 40, height: 40, marginLeft: 5, borderRadius: 8, marginVertical: 5 }}
-          />
-        </Block>
-        <Block style={{ width: "60%", marginLeft: 10 }}>
-          <Text
-            style={{ fontWeight: "700", color: ThemeData.textColor, fontSize: 13 }}
-          >
-            {item.name || "Unknown Name"}
-          </Text>
-          <Text style={{ fontSize: 13, fontWeight: "600" }}>
-  {item.category.length > 0 && item.category[0].sub_category.length > 0
-    ? item.category[0].sub_category.map(sub => sub.name).join(', ')
-    : "Hardcoded Category"}
-   </Text>
-          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-            <Ionicons name="calendar" size={14} color={ThemeData.color} />
-            <Text style={{ fontSize: 12, fontWeight: "600", color: ThemeData.textColor, marginLeft: 5 }}>
-              {formatDate(item.updatedAt)}
+        <Block
+          style={{
+            width: "90%",
+            borderRadius: 8,
+            padding: 5,
+            borderWidth: 1,
+            borderColor: ThemeData.color,
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            alignItems: "center",
+            marginHorizontal: 20,
+            backgroundColor: ThemeData.cardBackgroundColor,
+          }}
+        >
+          <Block>
+            <Image
+              source={logo}
+              style={{ resizeMode: "cover", width: 40, height: 40, marginLeft: 5, borderRadius: 8, marginVertical: 5 }}
+            />
+          </Block>
+          <Block style={{ width: "60%", marginLeft: 10 }}>
+            <Text
+              style={{ fontWeight: "700", color: ThemeData.textColor, fontSize: 13 }}
+            >
+              {item.name || "Unknown Name"}
             </Text>
-          </View>
+            <Text style={{ fontSize: 13, fontWeight: "600" }}>
+              {item.category.length > 0 && item.category[0].sub_category.length > 0
+                ? item.category[0].sub_category.map(sub => sub.name).join(', ')
+                : "Hardcoded Category"}
+            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="calendar" size={14} color={ThemeData.color} />
+              <Text style={{ fontSize: 12, fontWeight: "600", color: ThemeData.textColor, marginLeft: 5 }}>
+                {formatDate(item.updatedAt)}
+              </Text>
+            </View>
+          </Block>
+          <Block style={{ textAlign: "right", flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <Text
+              style={{ fontWeight: "700", color: ThemeData.textColor, fontSize: 13 }}
+            >
+              ₹ {item.category.length > 0 && item.category[0].sub_category.length > 0
+                ? item.category[0].sub_category.map(sub => sub.price).join(', ')
+                : "N/A"}/kg
+            </Text>
+            <Ionicons name='arrow-forward' size={18} color={ThemeData.textColor} style={{ alignSelf: 'flex-end', marginLeft: 5 }} />
+          </Block>
         </Block>
-        <Block style={{ textAlign: "right" }}>
-          <Text
-            style={{ fontWeight: "700", color: ThemeData.textColor, fontSize: 14 }}
-          >
-            ₹ {item.category.length > 0 && item.category[0].sub_category.length > 0
-    ? item.category[0].sub_category.map(sub => sub.price).join(', ')
-    : "Hardcoded Category"}/kg
-          </Text>
-          <Ionicons name='arrow-forward' size={18} color={ThemeData.textColor} style={{alignSelf: 'flex-end',marginTop: 4}} />
-        </Block>
-      </Block>
-    </TouchableOpacity>
-  );
+      </TouchableOpacity>
+    );
+  };
 
   return (
     <View style={styles.container}>
@@ -150,7 +164,7 @@ const formatDate = (dateString) => {
         height: 50,
       }}
     >
-      {/* Left Icon */}
+      
       <View
         style={{
           flexDirection: "row",
