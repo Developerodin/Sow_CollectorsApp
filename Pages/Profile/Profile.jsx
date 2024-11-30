@@ -20,12 +20,15 @@ import { useAppContext } from '../../Context/AppContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import ProfileLogo from "../../assets/profileMenu.png"
 import { ThemeData } from '../../Theme/Theme';
+import { Base_url } from '../../Config/BaseUrl';
+import axios from 'axios';
 export const Profile = () => {
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
   const [visible, setVisible] = useState(false);
   const [userDetails,setuserDetails] = useState({})
   const [userId, setUserId] = useState(null);
+  const [updated, setUpdated] = useState(0);
   const {CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion} = useAppContext()
   const ProfileTabs=[
     
@@ -57,6 +60,7 @@ export const Profile = () => {
     setUserId(ParseUser.id);
     if(user){
       setuserDetails(ParseUser);
+      getUserImage(ParseUser.id);
     }
    
     }
@@ -145,29 +149,83 @@ export const Profile = () => {
   }
 
   const showImagePicker = async (sourceType) => {
+    // Request media library permission
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-
+  
     if (permissionResult.granted === false) {
       alert('Permission to access the gallery is required!');
       return;
     }
-
+  
+    // Launch image picker
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
       sourceType: sourceType,
+      base64: true,  // Request base64 encoding
     });
-
+  
+    // Check if the user selected an image
     if (!result.canceled) {
-      setImage(result.uri);
+      // console.log("URI of image library ==> ", result.assets[0]);
+      const dataImage = result.assets[0]
+
+      if(dataImage){
+        // console.log("Base64 of selected image ==> ", result.assets[0].base64);
+      const base64data = `data:${dataImage.mimeType};base64,${dataImage.base64}`  // Base64 string
+      setImage(base64data);  // Or you can set the base64 if needed
+      updateUserImage(userDetails.id,base64data)
+      }
+      
+    }
+  };
+
+
+  const updateUserImage = async (userId, imageBase64) => {
+    try {
+      const response = await axios.post(
+        `${Base_url}b2bUser/profilepic`, // Replace with your actual API endpoint
+        { image: imageBase64,
+          userId: userId
+         },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+      setUpdated((prev)=>prev+1)
+      // console.log('Image updated successfully:', response.data);
+    } catch (error) {
+      console.error('Error updating image:', error.response ? error.response.data : error.message);
+    }
+  };
+
+  const getUserImage = async (id) => {
+    try {
+      // Replace 'yourapiurl' with your actual API endpoint URL
+      const response = await axios.get( `${Base_url}b2bUser/profilepic/${id}`);
+  
+      // Assuming the response contains the image data as a base64 string
+      const imageBase64 = response.data.image;
+      setImage(imageBase64)
+      // Log or return the image base64 string
+      console.log('User image fetched successfully:');
+      
+      return imageBase64;
+    } catch (error) {
+      // Handle errors
+      console.error('Error fetching user image:', error.response ? error.response.data : error.message);
+      throw error; // Throw error to be caught by the caller
     }
   };
 
   useEffect(()=>{
     getCurrentUser();
-  },[])
+   
+  },[updated])
 
   return (
     <View style={styles.container}>
@@ -180,13 +238,13 @@ export const Profile = () => {
         <TouchableOpacity onPress={() => navigation.goBack()} style={{ marginTop: 10, marginLeft: 10, }}>
   <Ionicons name="arrow-back" size={24} color={ThemeData.activeColor}/>
 </TouchableOpacity>
-<TouchableOpacity
+{/* <TouchableOpacity
         
         onPress={() => handleNavigate('Address')}
       >
         <FontAwesome name="address-book" size={24} color="#2dd36f" />
         <Text style={styles.menuItemText}>Manage Address</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
           <Block center style={[{position:'realtive',width:80,height:80,borderRadius:500,marginTop:30,borderRadius:100,backgroundColor:ThemeData.containerBackgroundColor,elevation:2}]}>
          {
@@ -194,7 +252,7 @@ export const Profile = () => {
          }
          
          
-          {image && <Image source={{ uri: image }} style={{resizeMode: 'contain',width:100,height:100,borderRadius:100}} />}
+          {image && <Image source={{ uri: image }} style={{resizeMode: 'contain',width:'100%',height:'100%',borderRadius:100}} />}
           
           
           <TouchableOpacity activeOpacity={0.8} onPress={() => showImagePicker('camera')} center style={{width:25,height:25,borderRadius:100,position:'absolute',bottom:2,right:5,display:'flex',justifyContent:"center",alignItems:'center',backgroundColor:'#65C5C4'}}>
