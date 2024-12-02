@@ -148,7 +148,7 @@ export const RateDetails = ({ route }) => {
 
   const showImagePicker = async (sourceType) => {
     // Request media library permission
-    if(images.length < 3){
+    if(images.length < 1){
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
   
     if (permissionResult.granted === false) {
@@ -184,7 +184,7 @@ export const RateDetails = ({ route }) => {
     }
   }
   else{
-    ToastAndroid.show("You can uplode only 3 Images", ToastAndroid.SHORT);
+    ToastAndroid.show("You can uplode only 1 Image", ToastAndroid.SHORT);
   }
   };
 
