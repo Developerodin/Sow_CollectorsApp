@@ -219,7 +219,7 @@ export const PendingOrderDetails = ({ route }) => {
           <View style={styles.boxContainer}>
             <View style={styles.row}>
               {
-                images.map((img,index)=>{
+               images &&  images.map((img,index)=>{
                   return img && <View style={[styles.box,{position:"relative"}]}>
                      <Image key={index} source={{ uri: img }} style={{height:"100%",width:"100%",borderRadius:8}} />
                      
