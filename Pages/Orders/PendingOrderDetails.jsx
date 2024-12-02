@@ -214,8 +214,10 @@ export const PendingOrderDetails = ({ route }) => {
               <Text style={[styles.cellText, styles.tableCell]}>₹ {orderDetails?.Amount || "-"}</Text>
             </View>
           </Block>
-
-          <Text style={{ fontSize: 24, fontWeight: 700, color: '#000', marginVertical: 15 }}>Photos</Text>
+          {
+            images && images.length >0 &&  <Text style={{ fontSize: 24, fontWeight: 700, color: '#000', marginVertical: 15 }}>Photos</Text>
+          }
+         
           <View style={styles.boxContainer}>
             <View style={styles.row}>
               {
