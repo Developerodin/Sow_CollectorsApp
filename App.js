@@ -68,6 +68,7 @@ import { PricingHistory } from "./Pages/My Rates/PricingHistory";
 import * as Notifications from "expo-notifications";
 import usePushNotifications from "./usePushNotifications";
 import { ThemeData } from "./Theme/Theme";
+import { Kyc } from "./Pages/SignUp/Registration/Kyc";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -367,6 +368,14 @@ export default function App() {
             component={OrderDetail}
             options={{
               headerShown: true,
+            }}
+          />
+
+<Stack.Screen
+            name="Almost there"
+            component={Kyc}
+            options={{
+              headerShown: false,
             }}
           />
 
