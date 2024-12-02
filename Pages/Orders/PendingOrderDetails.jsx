@@ -21,7 +21,7 @@ export const PendingOrderDetails = ({ route }) => {
   const [inputFields, setInputFields] = useState([{ value: '', category: 'Category 1' }]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [orderCompleteStatus, setOrderCompleteStatus] = useState(false);
-
+  const [images, setImages] = useState([]);
   const handleBack = () => {
     navigation.goBack();
   };
@@ -31,6 +31,7 @@ export const PendingOrderDetails = ({ route }) => {
       const response = await axios.get(`${Base_url}b2bOrder/${id}`);
       const data = response.data;
       console.log("orders by id ==>", response.data);
+      setImages(data.photos || [])
       setOrderDetails(data);
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -217,15 +218,18 @@ export const PendingOrderDetails = ({ route }) => {
           <Text style={{ fontSize: 24, fontWeight: 700, color: '#000', marginVertical: 15 }}>Photos</Text>
           <View style={styles.boxContainer}>
             <View style={styles.row}>
-              <View style={styles.box} />
-              <View style={styles.box} />
-              <View style={styles.box} />
+              {
+                images.map((img,index)=>{
+                  return img && <View style={[styles.box,{position:"relative"}]}>
+                     <Image key={index} source={{ uri: img }} style={{height:"100%",width:"100%",borderRadius:8}} />
+                     
+                  </View>
+                })
+              }
+              
+              
             </View>
-            <View style={styles.row}>
-              <View style={styles.box} />
-              <View style={styles.box} />
-              <View style={styles.box} />
-            </View>
+            
           </View>
 
           <Block style={{ marginTop: 20 }}>
