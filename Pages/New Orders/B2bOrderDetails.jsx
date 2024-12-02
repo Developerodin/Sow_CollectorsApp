@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -19,20 +19,59 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { FontAwesome } from "@expo/vector-icons";
 import Modal from "react-native-modal";
-
+import { Base_url } from "../../Config/BaseUrl";
+import axios from "axios";
+import { useAppContext } from '../../Context/AppContext';
 const { width, height } = Dimensions.get("window");
 
-export const B2bOrderDetails = () => {
+export const B2bOrderDetails = ({route}) => {
+  const { orderId } = route.params;
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
+  const [orderDetails, setOrderDetails] = useState({});
+  const { userDetails, update, setUpdate } = useAppContext();
+  const [images, setImages] = useState([]);
 
   const handleBack = () => {
     navigation.goBack();
   };
 
+  const getOrdersById = async () => {
+    try {
+      const response = await axios.get(`${Base_url}b2bOrder/${orderId}`);
+      const data = response.data;
+      console.log("orders by id ==>", response.data);
+      setImages(data.photos || [])
+      setOrderDetails(data);
+    } catch (error) {
+      console.error('Error fetching orders:', error);
+    }
+  };
+
+  const postUserAccept = async ( status) => {
+    console.log(orderId, status);
+    try {
+      const response = await axios.post(`${Base_url}b2bOrder/updateOrderStatus`, {
+        orderId: orderId,
+        status: status
+      });
+      if(status === 'Pending'){
+        toggleModal();
+      }
+      console.log(response.data);
+      setUpdate(!update); 
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
+
+  useEffect(() => {
+    getOrdersById();
+  }, [update]);
 
   return (
     <View style={styles.container}>
@@ -96,7 +135,7 @@ export const B2bOrderDetails = () => {
             >
               <Ionicons name="people" size={20} color="#000" />
               <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500 }}>
-                Vishal Rao
+              {orderDetails?.orderTo?.name || "N/A"}
               </Text>
             </Block>
 
@@ -109,7 +148,7 @@ export const B2bOrderDetails = () => {
             >
               <MaterialIcons name="category" size={20} color="#000" />
               <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500 }}>
-                Aluminium, Paper.
+              {orderDetails?.category || "N/A"}
               </Text>
             </Block>
 
@@ -127,7 +166,7 @@ export const B2bOrderDetails = () => {
                 style={{ marginLeft: 5 }}
               />
               <Text style={{ fontSize: 20, marginLeft: 10, fontWeight: 700 }}>
-                Est. value : ₹3000
+                Est. value : ₹{orderDetails?.totalPrice || "-"}
               </Text>
             </Block>
 
@@ -140,7 +179,7 @@ export const B2bOrderDetails = () => {
             >
               <Ionicons name="square" size={20} color="#000" />
               <Text style={{ fontSize: 20, marginLeft: 8, fontWeight: 700 }}>
-                Est. weight : 50 kg
+                Est. weight : {orderDetails?.weight || "-"}kg
               </Text>
             </Block>
             <Block
@@ -152,7 +191,7 @@ export const B2bOrderDetails = () => {
             >
               <Ionicons name="calendar" size={20} color="#000" />
               <Text style={{ fontSize: 16, marginLeft: 8, fontWeight: 500 }}>
-                11 Nov 2024
+              {orderDetails && new Date(orderDetails.createdAt).toLocaleDateString('en-GB')}
               </Text>
             </Block>
             <Block
@@ -164,7 +203,7 @@ export const B2bOrderDetails = () => {
             >
               <Ionicons name="location" size={24} color="#000" />
               <Text style={{ fontSize: 16, marginLeft: 8, fontWeight: 500 }}>
-                Pickup Location : Near Dmart, Mahavir Nagar, 302033,Jaipur
+                Pickup Location : {orderDetails?.location?.googleAddress || "N/A"}
               </Text>
             </Block>
           </Block>
@@ -180,21 +219,26 @@ export const B2bOrderDetails = () => {
             Photos
           </Text>
           <View style={styles.boxContainer}>
+           
             <View style={styles.row}>
-              <View style={styles.box} />
-              <View style={styles.box} />
-              <View style={styles.box} />
+              {
+               images &&  images.map((img,index)=>{
+                  return img && <View style={[styles.box,{position:"relative"}]}>
+                     <Image key={index} source={{ uri: img }} style={{height:"100%",width:"100%",borderRadius:8}} />
+                     
+                  </View>
+                })
+              }
+              
+              
             </View>
-            <View style={styles.row}>
-              <View style={styles.box} />
-              <View style={styles.box} />
-              <View style={styles.box} />
-            </View>
+            
+         
           </View>
 
           <View style={{ marginTop: 20, paddingHorizontal: 15 }}>
             <View style={styles.cardActions}>
-              <TouchableOpacity onPress={toggleModal}>
+              <TouchableOpacity  onPress={() => postUserAccept('Pending')}>
                 <View style={styles.acceptButton}>
                   <View style={{ flexDirection: "row" }}>
                     <Ionicons name="checkmark" size={18} color="#FF2020" />
@@ -202,7 +246,7 @@ export const B2bOrderDetails = () => {
                   </View>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity  onPress={() => postUserAccept('Rejected')}>
                 <View style={styles.declineButton}>
                   <View style={{ flexDirection: "row" }}>
                     <Ionicons name="close" size={18} color="#FF2020" />
