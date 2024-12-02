@@ -68,6 +68,8 @@ import { PricingHistory } from "./Pages/My Rates/PricingHistory";
 import * as Notifications from "expo-notifications";
 import usePushNotifications from "./usePushNotifications";
 import { ThemeData } from "./Theme/Theme";
+import { AccountSettings } from "./Pages/Profile/ProfileTabs/AccountSettings";
+
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -608,6 +610,13 @@ export default function App() {
           <Stack.Screen
             name="PricingHistory"
             component={PricingHistory}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="AccountSettings"
+            component={AccountSettings}
             options={{
               headerShown: false,
             }}
