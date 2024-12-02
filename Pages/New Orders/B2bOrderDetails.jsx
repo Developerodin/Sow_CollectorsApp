@@ -138,9 +138,9 @@ export const B2bOrderDetails = ({route}) => {
               {/* {orderDetails?.orderTo?.name || "N/A"} */}
               {
             orderDetails.orderTo && orderDetails.orderTo.id === userDetails.id ?
-            orderDetails.orderBy.name
+            orderDetails.orderBy?.name
             :
-            orderDetails.orderTo.name
+            orderDetails.orderTo?.name
           }
               </Text>
             </Block>

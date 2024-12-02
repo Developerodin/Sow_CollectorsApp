@@ -20,6 +20,7 @@ import LottieView from "lottie-react-native";
 import { Button } from "@react-native-material/core";
 import { Base_url } from "../../../Config/BaseUrl";
 import axios from "axios";
+import { TouchableOpacity } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 export const Address = () => {
@@ -39,6 +40,9 @@ export const Address = () => {
     directions: "",
   });
 
+  const handleBack = () => {
+    navigation.goBack();
+  };
   
 
   const selectAddress = (address) => {
@@ -285,6 +289,43 @@ const setnewAddressinStorage =async(address)=>{
   return (
     <View style={styles.container}>
       {/* <Text style={styles.heading}>Your Addresses</Text> */}
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "space-between",
+          paddingHorizontal: 0,
+          marginTop: 15,
+          height: 50,
+          marginBottom: 30,
+        }}
+      >
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+          onPress={() => {
+            console.log("Back pressed");
+          }}
+        >
+          <TouchableOpacity onPress={handleBack} activeOpacity={0.9}>
+            <View style={{  backgroundColor: '#000', borderRadius: 30, width: 50, height: 50, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+              <MaterialIcons name="arrow-back-ios" size={22} color="#fff" style={{ marginLeft: 5 }} />
+            </View>
+          </TouchableOpacity>
+          <Text
+            style={{
+              color: "#000",
+              fontSize: 25,
+              marginLeft: 10,
+              fontWeight: 500,
+            }}
+          >
+            Select Location
+          </Text>
+        </View>
+      </View>
 
            {
         AllUserAddresses.length > 0 ? (
@@ -382,7 +423,7 @@ const setnewAddressinStorage =async(address)=>{
    SelectedAddressFromMap ?  
     <Block style={{marginTop:20}}>
     <Block style={{flexDirection:"row",justifyContent:"space-between",alignItems:"center",marginTop:5}}>
-         <Block style={{flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
+         <Block style={{flexDirection:"row",justifyContent:"left",alignItems:"center",marginLeft: 10}}>
          <Ionicons name="location" size={24} color="crimson" />
          <Text style={{fontSize:18,fontWeight:"bold",letterSpacing:1,marginLeft:5}} >{SelectedAddressFromMap.street}</Text>
          </Block>
@@ -391,9 +432,9 @@ const setnewAddressinStorage =async(address)=>{
          <Button color="#65be34" size={"small"} style={{width:80,height:26}}>CHANGE</Button>
          </Block> */}
      </Block>
-     <Block left style={{width:width*0.7,marginTop:0}} >
+     <Block left style={{width:width*0.7,marginTop:5,marginLeft: 5}} >
       <Text style={{fontSize:13,fontWeight:400,letterSpacing:1}}>{SelectedAddressFromMap.name},{SelectedAddressFromMap.district}</Text>
-      <Text style={{fontSize:13,fontWeight:400,letterSpacing:1,marginTop:4}}>{SelectedAddressFromMap.city},{SelectedAddressFromMap.region} {SelectedAddressFromMap.postalCode},{SelectedAddressFromMap.country}</Text>
+      <Text style={{fontSize:13,fontWeight:400,letterSpacing:1,marginTop:2}}>{SelectedAddressFromMap.city},{SelectedAddressFromMap.region} {SelectedAddressFromMap.postalCode},{SelectedAddressFromMap.country}</Text>
      </Block>
     </Block>
     :
@@ -413,7 +454,10 @@ const setnewAddressinStorage =async(address)=>{
   
    <Block style={[styles2.AlignCenter,{marginTop:20}]}>
   
-   <Button color="black" title="CONFIRM LOCATION" style={{width:width*0.9}} tintColor="#fff" onPress={ConfirmLoction} />
+   {/* <Button color="black" title="CONFIRM LOCATION" style={{width:width*0.9 ,borderRadius: 10,height: 40}} tintColor="#fff" onPress={ConfirmLoction} /> */}
+   <TouchableOpacity onPress={ConfirmLoction} style={{backgroundColor:"#000",width:width*0.9 ,borderRadius: 8,height: 50,justifyContent:"center",alignItems:"center"}}>
+      <Text style={{color:"#fff",fontSize:17,fontWeight:600}}>Confirm Location</Text>
+    </TouchableOpacity>
         
    </Block>
 </Block>
