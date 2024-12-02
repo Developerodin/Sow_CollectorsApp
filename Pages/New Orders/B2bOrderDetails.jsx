@@ -30,6 +30,7 @@ export const B2bOrderDetails = ({route}) => {
   const [isModalVisible, setModalVisible] = useState(false);
   const [orderDetails, setOrderDetails] = useState({});
   const { userDetails, update, setUpdate } = useAppContext();
+  const [images, setImages] = useState([]);
 
   const handleBack = () => {
     navigation.goBack();
@@ -40,6 +41,7 @@ export const B2bOrderDetails = ({route}) => {
       const response = await axios.get(`${Base_url}b2bOrder/${orderId}`);
       const data = response.data;
       console.log("orders by id ==>", response.data);
+      setImages(data.photos || [])
       setOrderDetails(data);
     } catch (error) {
       console.error('Error fetching orders:', error);
@@ -133,7 +135,7 @@ export const B2bOrderDetails = ({route}) => {
             >
               <Ionicons name="people" size={20} color="#000" />
               <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500 }}>
-              {orderDetails?.orderTo.name || "N/A"}
+              {orderDetails?.orderTo?.name || "N/A"}
               </Text>
             </Block>
 
@@ -217,16 +219,21 @@ export const B2bOrderDetails = ({route}) => {
             Photos
           </Text>
           <View style={styles.boxContainer}>
+           
             <View style={styles.row}>
-              <View style={styles.box} />
-              <View style={styles.box} />
-              <View style={styles.box} />
+              {
+               images &&  images.map((img,index)=>{
+                  return img && <View style={[styles.box,{position:"relative"}]}>
+                     <Image key={index} source={{ uri: img }} style={{height:"100%",width:"100%",borderRadius:8}} />
+                     
+                  </View>
+                })
+              }
+              
+              
             </View>
-            <View style={styles.row}>
-              <View style={styles.box} />
-              <View style={styles.box} />
-              <View style={styles.box} />
-            </View>
+            
+         
           </View>
 
           <View style={{ marginTop: 20, paddingHorizontal: 15 }}>

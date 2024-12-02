@@ -139,7 +139,7 @@ const formatDate = (dateString) => {
               </Text>
             </View>
           </Block>
-          <Block style={{ textAlign: "right", flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <Block style={{  flexDirection: 'coloumn', justifyContent: 'flex-end'  }}>
             <Text
               style={{ fontWeight: "700", color: ThemeData.textColor, fontSize: 13 }}
             >
