@@ -568,7 +568,7 @@ export default function App() {
             name="Address"
             component={Address}
             options={{
-              headerShown: true,
+              headerShown: false,
             }}
           />
           <Stack.Screen
