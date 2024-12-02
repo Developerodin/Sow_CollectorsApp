@@ -47,7 +47,12 @@ export const B2bOrderCard = ({ data }) => {
 
       <Block style={styles.row}>
         <View style={styles.column}>
-          <Text style={{ fontSize: 14, fontWeight: 600 }}>{data.orderTo.name}</Text>
+          <Text style={{ fontSize: 14, fontWeight: 600 }}>{
+            data.orderTo && data.orderTo.id === userDetails.id ?
+            data.orderBy.name
+            :
+          data.orderTo.name
+          }</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
             <AntDesign name="calendar" size={20} color={ThemeData.color} />
             <Text style={[styles.text, { marginLeft: 8 }]}>
@@ -81,8 +86,9 @@ export const B2bOrderCard = ({ data }) => {
           <Text style={styles.viewDetailsText}>View Details</Text>
         </TouchableOpacity>
       </View>
-
-      <View style={{ marginTop: 20, paddingHorizontal: 0 }}>
+       {
+        data.orderBy && data.orderBy.id !== userDetails.id && 
+        <View style={{ marginTop: 20, paddingHorizontal: 0 }}>
         <View style={styles.cardActions}>
           <TouchableOpacity onPress={() => postUserAccept(data._id, 'Pending')}>
             <View style={styles.acceptButton}>
@@ -96,6 +102,8 @@ export const B2bOrderCard = ({ data }) => {
           </TouchableOpacity>
         </View>
       </View>
+       }
+    
     </View>
   );
 };
