@@ -1,46 +1,57 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
-  Text,
+  
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
+  Image
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Block, Text } from "galio-framework";
 import B2bOrderCard from "../../Components/Cards/B2bOrderCard"; // Ensure the correct import
 import B2cOrderCard from "../../Components/Cards/B2cOrderCard"; // Ensure the correct import
 import { ThemeData } from "../../Theme/Theme";
+import { Base_url } from "../../Config/BaseUrl";
+import axios from "axios";
+import { useAppContext } from '../../Context/AppContext';
 
 export const NewOrders = () => {
   const [activeTab, setActiveTab] = useState("B2B");
   const [activeFilter, setActiveFilter] = useState("All"); // State for the new tabs
+  const { userDetails, update, setUpdate } = useAppContext();
+  const [refreshing, setRefreshing] = useState(false);
+  const [b2bOrders, setB2bOrders] = useState([]);
+  const [errorFetchingOrders, setErrorFetchingOrders] = useState(false);
 
-  const b2bOrders = [
-    {
-      id: "1",
-      weight: "50Kg",
-      price: "₹3000",
-      location: "Mahavir Nagar",
-      name: "Vishal Rao",
-      date: "21/11/24",
-      time: "10:00 AM",
-      estValue: "₹3000",
-      items: ["Aluminium"],
-      address: "Pickup Location : Near Dmart, Mahavir Nagar, 302033, Jaipur, India.",
-    },
-    {
-      id: "2",
-      weight: "50Kg",
-      price: "₹3000",
-      location: "Mahavir Nagar",
-      name: "Vishal Rao",
-      date: "21/11/24",
-      time: "10:00 AM",
-      estValue: "₹3000",
-      items: ["Aluminium"],
-      address: "Pickup Location : Near Dmart, Mahavir Nagar, 302033, Jaipur, India.",
-    },
-  ];
+  const onRefresh = () => {
+    setRefreshing(true);
+    getB2bOrders(activeFilter.toLowerCase());
+    setRefreshing(false);
+  };
+
+  const getB2bOrders = async (period) => {
+    console.log(userDetails.id, activeFilter.toLowerCase());
+    try {
+      const response = await axios.post(`${Base_url}b2bOrder/getNewOrdersForUser`, {
+        userId: userDetails.id,
+        period: period.toLowerCase()
+      });
+      console.log(response.data);
+      setB2bOrders(response.data);
+      setErrorFetchingOrders(false); // Reset error state on successful fetch
+    } catch (error) {
+      console.log(error);
+      if (error.response && error.response.status === 404) {
+        setErrorFetchingOrders(true); // Set error state if 404 error occurs
+      }
+    }
+  };
+
+  useEffect(() => {
+    getB2bOrders(activeFilter.toLowerCase());
+  }, [activeFilter, update]);
 
   return (
     <View style={styles.container}>
@@ -71,9 +82,11 @@ export const NewOrders = () => {
       </View>
 
       {/* Order Info */}
-      <Text style={styles.orderInfo}>There are <Text style={{color: ThemeData.color}}>5 New orders</Text> today!</Text>
+      <Text style={styles.orderInfo}>
+        There are <Text style={{ color: ThemeData.color }}>{b2bOrders.length} New orders</Text> today!
+      </Text>
 
-      
+      {/* Filter Tabs */}
       <View style={styles.filterTabsContainer}>
         {["All", "Today", "Last week", "Last month"].map((filter) => (
           <TouchableOpacity
@@ -96,15 +109,39 @@ export const NewOrders = () => {
         ))}
       </View>
 
-      <ScrollView showsVerticalScrollIndicator={false} style={{ paddingHorizontal: 16 }}>
-        {activeTab === "B2B" ? (
-          b2bOrders.map((order) => <B2bOrderCard key={order.id} data={order} />)
+      {/* Orders List */}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ paddingHorizontal: 16 }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {errorFetchingOrders ? (
+          <Block center style={{ marginTop: 40 }}>
+            <Image
+              source={require("../../assets/media/5-dark.png")}
+              style={{
+                width: 300,
+                height: 300,
+                marginRight: 10,
+              }}
+            />
+          </Block>
         ) : (
-          <>
-            <B2cOrderCard />
-            <B2cOrderCard />
-            <B2cOrderCard />
-          </>
+          activeTab === "B2B" ? (
+            b2bOrders.length > 0 ? (
+              b2bOrders.map((order) => <B2bOrderCard key={order._id} data={order} />)
+            ) : (
+              <Text style={styles.noOrdersText}>No B2B orders available.</Text>
+            )
+          ) : (
+            <>
+              <B2cOrderCard />
+              <B2cOrderCard />
+              <B2cOrderCard />
+            </>
+          )
         )}
       </ScrollView>
     </View>
@@ -176,6 +213,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 20,
+    marginHorizontal: 10,
   },
   activeFilterTab: {
     backgroundColor: "#000",
@@ -184,7 +222,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#f0f0f0",
   },
   filterTabText: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: "400",
   },
   activeFilterTabText: {
@@ -192,6 +230,12 @@ const styles = StyleSheet.create({
   },
   inactiveFilterTabText: {
     color: "#000",
+  },
+  noOrdersText: {
+    textAlign: 'center',
+    marginTop: 20,
+    fontSize: 16,
+    color: '#888',
   },
 });
 
