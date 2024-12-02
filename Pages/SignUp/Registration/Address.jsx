@@ -8,7 +8,8 @@ import {
   StyleSheet,
   TouchableHighlight,
   Dimensions,
-  TextInput
+  TextInput,
+  Image,
 } from "react-native";
 import { useAppContext } from "../../../Context/AppContext";
 import { useNavigation ,useRoute} from "@react-navigation/native";
@@ -21,6 +22,7 @@ import { Button } from "@react-native-material/core";
 import { Base_url } from "../../../Config/BaseUrl";
 import axios from "axios";
 import { TouchableOpacity } from "react-native";
+import Logo from "../../../assets/addressIcon.png";
 
 const { width, height } = Dimensions.get("window");
 export const Address = () => {
@@ -345,7 +347,7 @@ const setnewAddressinStorage =async(address)=>{
                     ,
                 ]}
               >
-                <View style={{ backgroundColor: "#fff", padding: 15, borderRadius: 25 }}>
+                {/* <View style={{ backgroundColor: "#fff", padding: 15, borderRadius: 25 }}>
                   <Block style={styles2.Space_Between}>
                     <Text style={{ fontSize: 16, fontWeight: 500, letterSpacing: 1 }}>{item.buildingName}</Text>
                     <Ionicons onPress={() => DeleteAddress(item.name)} name="close-circle" size={20} color="crimson" />
@@ -366,7 +368,16 @@ const setnewAddressinStorage =async(address)=>{
                       {item.note}
                     </Text>
                   )}
-                </View>
+                </View> */}
+                <View style={styles.addressCard}>
+      <View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image source={Logo} style={{ width: 15, height: 15 }} />
+          <Text style={styles.addressTitle}>{item.buildingName}</Text>
+        </View>
+        <Text style={styles.addressDetail}>{item.googleAddress}</Text>
+      </View>
+    </View>
               </TouchableHighlight>
             )}
           />
@@ -708,14 +719,12 @@ const styles = StyleSheet.create({
   },
   addressContainer: {
     backgroundColor: "#fff",
-    marginBottom: 25,
-    elevation:1,
-    borderBottomWidth:1,
-    borderColor:"grey"
+    marginBottom: 10,
+    
+    
   },
   selectedAddress: {
-    borderWidth:2,
-    borderColor: "black",
+    
     borderRadius:20
 
   },
@@ -756,7 +765,19 @@ const styles = StyleSheet.create({
     elevation: 5,
     width: width,
     height: height - 400,
-  }
+  },
+  addressCard: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 15,
+    padding: 13,
+    borderWidth: 1,
+    borderColor: "#b3b3b3",
+    borderRadius: 8,
+  },
+  addressTitle: { fontWeight: "600", fontSize: 18, color: "#000", marginBottom: 5, marginLeft: 10 },
+  addressDetail: { fontSize: 14, color: "#666" }
 });
 
 const styles2 = StyleSheet.create({
