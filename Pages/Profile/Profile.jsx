@@ -34,7 +34,7 @@ export const Profile = () => {
     
     // {icon:<FontAwesome name="address-book" size={24} color="#2dd36f" />,title:"Manage Address",link:"Address",color:"dark"},
     {icon:<AntDesign name="setting" size={24} color="#65C5C4" />,title:"Account Settings",link:"AccountSettings"},
-    {icon:<AntDesign name="idcard" size={24} color="#65C5C4" />,title:"Kyc",link:"Update Kyc"},
+    // {icon:<AntDesign name="idcard" size={24} color="#65C5C4" />,title:"Kyc",link:"Update Kyc"},
     {icon:<FontAwesome name="history" size={24} color="#65C5C4" />,title:"Order History",link:"Orders"},
     {icon:<MaterialIcons name="pending-actions" size={24} color="#65C5C4" />,title:"Pending Orders",link:"Orders"},
     {icon:<FontAwesome name="building" size={24} color="#65C5C4" />,title:"About Comapny",link:"About Company"},
