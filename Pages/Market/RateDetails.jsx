@@ -24,13 +24,14 @@ const { width, height } = Dimensions.get("window");
 import { useNavigation } from "@react-navigation/native";
 import { ToastAndroid } from "react-native";
 import { Picker } from "@react-native-picker/picker";
+import * as ImagePicker from 'expo-image-picker';
 import icon1 from "../../assets/business.png";
 import icon2 from "../../assets/ruppee.png";
 import icon3 from "../../assets/calender.png";
 import icon4 from "../../assets/user.png";
 import icon5 from "../../assets/tag.png";
 import icon6 from "../../assets/location.png";
-
+import Entypo from '@expo/vector-icons/Entypo';
 export const RateDetails = ({ route }) => {
   const navigation = useNavigation();
   const {userId, categoryId, subCategoryId } = route.params;
@@ -40,6 +41,7 @@ export const RateDetails = ({ route }) => {
   const [TotalAmount, setTotalAmount] = useState("");
   const [discription, setDiscription] = useState("");
   const [selectedValue, setSelectedValue] = useState("Kg");
+  const [images, setImages] = useState([]);
   const handleInputChange = (text) => {
     setWeight(text);
   };
@@ -86,7 +88,7 @@ export const RateDetails = ({ route }) => {
       notes: discription,
       value: details.category._doc.sub_category[0].price,
       totalPrice: TotalAmount,
-      photos: "",
+      photos: JSON.stringify(images),
       location: "674950d3390a9600916b98a8",
       
     };
@@ -142,6 +144,52 @@ export const RateDetails = ({ route }) => {
     const timeString = date.toLocaleTimeString("en-IN", options).toUpperCase();
 
     return `${day}-${month}-${year} ${timeString}`;
+  };
+
+  const showImagePicker = async (sourceType) => {
+    // Request media library permission
+    if(images.length < 3){
+    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+  
+    if (permissionResult.granted === false) {
+      alert('Permission to access the gallery is required!');
+      return;
+    }
+  
+    // Launch image picker
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+      sourceType: sourceType,
+      base64: true,  // Request base64 encoding
+    });
+  
+    // Check if the user selected an image
+    if (!result.canceled) {
+      // console.log("URI of image library ==> ", result.assets[0]);
+      const dataImage = result.assets[0]
+
+      if(dataImage){
+        // console.log("Base64 of selected image ==> ", result.assets[0].base64);
+      const base64data = `data:${dataImage.mimeType};base64,${dataImage.base64}`  // Base64 string
+      setImages((prev)=>[...prev,base64data]); 
+     
+      
+        // Or you can set the base64 if needed
+      // updateUserImage(userDetails.id,base64data)
+      }
+      
+    }
+  }
+  else{
+    ToastAndroid.show("You can uplode only 3 Images", ToastAndroid.SHORT);
+  }
+  };
+
+  const deleteImage = (index) => {
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
   };
 
   useEffect(() => {
@@ -388,11 +436,32 @@ export const RateDetails = ({ route }) => {
           </Block>
         </Block>
 
+        <View style={styles.boxContainer}>
+            <View style={styles.row}>
+              {
+                images.map((img,index)=>{
+                  return img && <View style={[styles.box,{position:"relative"}]}>
+                     <Image key={index} source={{ uri: img }} style={{height:"100%",width:"100%",borderRadius:8}} />
+                     <Entypo onPress={()=>deleteImage(index)} name="circle-with-cross" size={24} color="red" style={{position:"absolute",top:0,right:-4}} />
+                  </View>
+                })
+              }
+              
+              
+            </View>
+            
+          </View>
+        
+
+
+
+
+
         <Block style={{ marginTop: 5 }}>
           <Text style={{ fontSize: 22, padding: 10, fontWeight: 600 }}>
             Upload Photos
           </Text>
-          <Button color="white" style={styles.button1}>
+          <Button onPress={() => showImagePicker('camera')} color="white" style={styles.button1}>
             <Ionicons
               name="camera"
               size={24}
@@ -403,7 +472,7 @@ export const RateDetails = ({ route }) => {
               Open Camera
             </Text>
           </Button>
-          <Button color="white" style={styles.button1}>
+          {/* <Button color="white" style={styles.button1}>
             <Ionicons
               name="images"
               size={24}
@@ -413,7 +482,7 @@ export const RateDetails = ({ route }) => {
             <Text style={{ fontSize: 18, fontWeight: 400, color: "#000" }}>
               Open Gallary
             </Text>
-          </Button>
+          </Button> */}
         </Block>
 
         <Block style={[{ marginTop: 15 }, styles.Center]}>
@@ -448,6 +517,24 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#fff",
     padding: 10,
+  },
+  boxContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 10,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginBottom: 10,
+  },
+  box: {
+    width: '25%', // Adjusts the width of each box in the row
+    aspectRatio: 1, // Ensures boxes are square
+    backgroundColor: '#D3D3D3', // Light grey color
+    borderRadius: 8,
   },
   text1: {
     fontSize: 14,
