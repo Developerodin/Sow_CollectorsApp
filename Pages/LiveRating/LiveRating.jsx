@@ -65,7 +65,7 @@ export const LiveRating = () => {
     try {
       const response = await axios.get(`${Base_url}api/category`);
       setCategoriesData(response.data);
-      console.log("Categories all", response.data);
+      // console.log("Categories all", response.data);
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -94,7 +94,7 @@ export const LiveRating = () => {
       const response = await axios.get(
         `${Base_url}api/mandi_rates/price-difference/${mandiId}/${value}`
       );
-      console.log("Response data:", response.data);
+      // console.log("Response data:", response.data);
       if (response.data) {
         setPriceDifferences((prevState) => ({
           ...prevState,
@@ -120,7 +120,7 @@ export const LiveRating = () => {
       const response = await axios.get(
         `${Base_url}api/mandi_rates/mandi/category/${value}`
       );
-      console.log("Fetched Market Rates:", response.data);
+      // console.log("Fetched Market Rates:", response.data);
       const Data = response.data;
   
       // Step 1: Filter the data based on the category
@@ -191,8 +191,8 @@ export const LiveRating = () => {
   };
 
   const filterData = () => {
-    console.log("Data:", Data);
-    console.log("Search Query:", searchQuery);
+    // console.log("Data:", Data);
+    // console.log("Search Query:", searchQuery);
 
     if (searchQuery.trim() === "") {
       setFilteredData(Data);
@@ -205,13 +205,13 @@ export const LiveRating = () => {
             .toLowerCase()
             .includes(searchQuery.trim().toLowerCase())
       );
-      console.log("Filtered Data:", filtered);
+      // console.log("Filtered Data:", filtered);
       setFilteredData(filtered);
     }
   };
 
   const handleItemPress = (item) => {
-    console.log("Selected Item:", item);
+    // console.log("Selected Item:", item);
     setSelectedItem(item);
     setModalVisible(true);
 

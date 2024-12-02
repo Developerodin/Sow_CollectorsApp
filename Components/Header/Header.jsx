@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -11,12 +11,14 @@ import HamburgerMenu from '../HamburgerMenu/HamburgerMenu ';
 import { useAppContext } from '../../Context/AppContext';
 import { useNavigation } from '@react-navigation/native';
 import { ThemeData } from '../../Theme/Theme';
+import { Base_url } from '../../Config/BaseUrl';
+import axios from 'axios';
 
 export const Header = () => {
   const navigation = useNavigation()
   const [isMenuVisible, setMenuVisible] = useState(false);
-  const {toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible} =useAppContext()
- 
+  const {toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible,userDetails} =useAppContext()
+  const [image, setImage] = useState(null);
   const handelProfileClick = ()=>{
     navigation.navigate('Profile')
   }
@@ -28,16 +30,44 @@ export const Header = () => {
   const handelDailyRatesClick = ()=>{
     navigation.navigate('Daily Rates')
   }
+
+  const getUserImage = async () => {
+    console.log('Getting user image in header')
+    try {
+      // Replace 'yourapiurl' with your actual API endpoint URL
+      const response = await axios.get( `${Base_url}b2bUser/profilepic/${userDetails.id}`);
+  
+      // Assuming the response contains the image data as a base64 string
+      const imageBase64 = response.data.image;
+      setImage(imageBase64)
+      // Log or return the image base64 string
+      console.log('User image fetched successfully:');
+      
+      return imageBase64;
+    } catch (error) {
+      // Handle errors
+      console.error('Error fetching user image:', error.response ? error.response.data : error.message);
+      throw error; // Throw error to be caught by the caller
+    }
+  };
+
+  useEffect(()=>{
+    getUserImage()
+  },[])
   return (
     <View style={[{marginTop:40,padding:10},styles.container]}>
         <Block  style={[styles.Space_Between]}>
 
         <TouchableOpacity activeOpacity={0.9} onPress={handelProfileClick}>
-        <Image
+        
+  {image && image ? <Image source={{ uri: image }} style={{resizeMode: 'contain',width:'100%',height:'100%',borderRadius:100}} />
+  :
+<Image
     
     source={ProfileLogo}
     style={{width:45,height:44}}
   />
+}
           </TouchableOpacity>
 
           <Block style={{marginLeft: 35}}>

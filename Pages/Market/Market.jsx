@@ -156,7 +156,7 @@ export const Market = () => {
     toggleCityAccordion();
   };
   const handelCategory = (data, id) => {
-    console.log("data=== >", data, id);
+    // console.log("data=== >", data, id);
     setselectedCategory(data);
     if (id !== "0") {
       getCategoryById(id);
@@ -173,7 +173,7 @@ export const Market = () => {
   };
 
   const handleCategorySelection = (name, id) => {
-    console.log(`Category selected: ${name}, ID: ${id}`);
+    // console.log(`Category selected: ${name}, ID: ${id}`);
     setSelectedSubCategoriesData([]);
     setSelectedCategory(name);  // Set the selected category name
     setSelectedCategories([id]);  // Store the selected category ID (you can allow multiple selections if needed)
@@ -185,7 +185,7 @@ export const Market = () => {
   
   
   const handleSubCategorySelection = (name, id) => {
-    console.log(`Subcategory selected: ${name}, ID: ${id}`);
+    // console.log(`Subcategory selected: ${name}, ID: ${id}`);
     setSelectedSubCategory(name);  // Set the selected subcategory name
     setSelectedSubCategories([id]);  // Store the selected subcategory ID
     toggleAccordion4();  // Close the subcategory accordion after selection
@@ -196,7 +196,7 @@ export const Market = () => {
   
   const handleSaveCategory = () => {
     if (selectedCategory) {
-      console.log(`Category saved: ${selectedCategory}`);  // Log the category being saved
+      // console.log(`Category saved: ${selectedCategory}`);  // Log the category being saved
       setCategoryModalVisible(false);  // Close the modal
     } else {
       console.log('No category selected to save');
@@ -207,7 +207,7 @@ export const Market = () => {
   
   const handleSaveSubCategory = () => {
     if (selectedSubCategory) {
-      console.log(`Subcategory saved: ${selectedSubCategory}`);
+      // console.log(`Subcategory saved: ${selectedSubCategory}`);
       setSubCategoryModalVisible(false);
     } else {
       console.log('No subcategory selected to save');
@@ -226,12 +226,12 @@ export const Market = () => {
   const fetchCities = async () => {
     try {
       const response = await axios.post(`${Base_url}b2bUser/address/citystate`);
-      console.log("City data before filtering", response.data.data.uniqueCities);
+      // console.log("City data before filtering", response.data.data.uniqueCities);
       
       // Filter out null values
       const filteredCities = response.data.data.uniqueCities.filter(city => city !== null);
       
-      console.log("City data after filtering", filteredCities);
+      // console.log("City data after filtering", filteredCities);
       setCity(filteredCities);
       return filteredCities;
     } catch (error) {
@@ -265,7 +265,7 @@ export const Market = () => {
         const CollectorsData = fetchedB2BUsers.filter((el) => {
           return el.registerAs === "Collectors";
         });
-        console.log("MediatorsData ===>", MediatorsData);
+        // console.log("MediatorsData ===>", MediatorsData);
 
         setMediatorsData(MediatorsData);
         // setWholesalersData(WholesalersData);
@@ -315,7 +315,7 @@ export const Market = () => {
       );
       // console.log("Filter data  cat and subcategory ==>",filteredData)
     }
-    console.log("filer data >>  ", filteredData);
+    // console.log("filer data >>  ", filteredData);
     const MediatorsData = filteredData.filter((el) => {
       return el.registerAs === "Mediators";
     });
@@ -360,11 +360,11 @@ export const Market = () => {
       // console.log("step 6 ===>",Details)
       const ParseData = JSON.parse(Details);
       setUserId(ParseData.id);
-      console.log("User Data 1 ==>", userId);
+      // console.log("User Data 1 ==>", userId);
 
       // console.log("Parse Data of user  ===>", ParseData);
       const data = ParseData;
-      console.log("User Data 2 ==>", data);
+      // console.log("User Data 2 ==>", data);
       if (data) {
         setselectedCity(data.city);
         // handelCategory('Iron','66910a952bc19d639b4f2a9c')
