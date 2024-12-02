@@ -33,9 +33,9 @@ const Marketmodal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
 
     const addMandiToList = async (mandiId, listType) => {
         try {
-            console.log('mandiId:', mandiId);
-            console.log('userId:', userId);
-            console.log('listType:', listType);
+            // console.log('mandiId:', mandiId);
+            // console.log('userId:', userId);
+            // console.log('listType:', listType);
 
             const response = await axios.post(`${Base_url}api/b2b/add-mandi`, {
                 userId,

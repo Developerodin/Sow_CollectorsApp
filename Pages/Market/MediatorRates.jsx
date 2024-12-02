@@ -23,9 +23,9 @@ export const MediatorRates = () => {
 
 
     const handleItemPress = (userId, categoryId, subCategoryId) => {
-    console.log("User ID:", userId);
-    console.log("Category ID:", categoryId);
-    console.log("SubCategory ID:", subCategoryId);
+    // console.log("User ID:", userId);
+    // console.log("Category ID:", categoryId);
+    // console.log("SubCategory ID:", subCategoryId);
     navigation.navigate("Rate Details", { userId, categoryId, subCategoryId });
   };
 
@@ -57,8 +57,8 @@ export const MediatorRates = () => {
       city: city,
       userId: userId
     });
-    console.log('Fetched Filter categoey =>:', response.data.data[0].category);
-    console.log('Fetched Filter User =>:', response.data.data[0].category[0].sub_category);
+    // console.log('Fetched Filter categoey =>:', response.data.data[0].category);
+    // console.log('Fetched Filter User =>:', response.data.data[0].category[0].sub_category);
     const Data = response.data.data;
     const Role = response.data.role;
     setData(Data);

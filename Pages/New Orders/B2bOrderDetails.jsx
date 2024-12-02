@@ -135,7 +135,13 @@ export const B2bOrderDetails = ({route}) => {
             >
               <Ionicons name="people" size={20} color="#000" />
               <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500 }}>
-              {orderDetails?.orderTo?.name || "N/A"}
+              {/* {orderDetails?.orderTo?.name || "N/A"} */}
+              {
+            orderDetails.orderTo && orderDetails.orderTo.id === userDetails.id ?
+            orderDetails.orderBy.name
+            :
+            orderDetails.orderTo.name
+          }
               </Text>
             </Block>
 
@@ -207,17 +213,19 @@ export const B2bOrderDetails = ({route}) => {
               </Text>
             </Block>
           </Block>
-
-          <Text
-            style={{
-              fontSize: 24,
-              fontWeight: 700,
-              color: "#000",
-              marginTop: 25,
-            }}
-          >
-            Photos
-          </Text>
+{
+  images && images.length > 0 && <Text
+  style={{
+    fontSize: 24,
+    fontWeight: 700,
+    color: "#000",
+    marginTop: 25,
+  }}
+>
+  Photos
+</Text>
+}
+          
           <View style={styles.boxContainer}>
            
             <View style={styles.row}>
@@ -235,7 +243,8 @@ export const B2bOrderDetails = ({route}) => {
             
          
           </View>
-
+          {
+        orderDetails.orderBy && orderDetails.orderBy.id !== userDetails.id && 
           <View style={{ marginTop: 20, paddingHorizontal: 15 }}>
             <View style={styles.cardActions}>
               <TouchableOpacity  onPress={() => postUserAccept('Pending')}>
@@ -256,7 +265,7 @@ export const B2bOrderDetails = ({route}) => {
               </TouchableOpacity>
             </View>
           </View>
-
+}
           {/* Modal for Accept Button */}
           <Modal
           animationType="slide"

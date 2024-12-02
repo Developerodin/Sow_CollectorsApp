@@ -41,7 +41,7 @@ export const DailyRates = () => {
   const fetchDailyRates = async () => {
     try {
       const response = await axios.get(`${Base_url}dailyRates`);
-      console.log('Fetched Daily Rates:', response.data);
+      // console.log('Fetched Daily Rates:', response.data);
       const Data = response.data;
       setData(Data);
     } catch (error) {

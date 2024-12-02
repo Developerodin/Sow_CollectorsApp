@@ -57,7 +57,7 @@ export const Profile = () => {
   const getCurrentUser=async()=>{
     const user = await AsyncStorage.getItem('userDetails');
     const ParseUser = JSON.parse(user)
-    console.log(ParseUser);
+    // console.log(ParseUser);
     setUserId(ParseUser.id);
     if(user){
       setuserDetails(ParseUser);
@@ -115,10 +115,10 @@ export const Profile = () => {
       });
       if (result.action === Share.sharedAction) {
         // Share was successful
-        console.log('Shared successfully');
+        // console.log('Shared successfully');
       } else if (result.action === Share.dismissedAction) {
         // Share was dismissed/cancelled
-        console.log('Share dismissed');
+        // console.log('Share dismissed');
       }
     } catch (error) {
       console.error('Error sharing:', error.message);
