@@ -39,15 +39,13 @@ export const PricingHistory = () => {
   const [filteredData, setFilteredData] = useState(data);
   const [Categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState("");
-
-  const [modalVisible, setModalVisible] = useState(false);
-  const [ItemAddStatus, setItemAddStatus] = useState(false);
   const [UserCategoryData, setUserCategoryData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [update, setupdate] = useState(0);
+  const [categoryHistory, setCategoryHistory] = useState([]);
 
-  const [activeTimeFrame, setActiveTimeFrame] = useState("Today");
+  const [activeTimeFrame, setActiveTimeFrame] = useState("today");
 
   const [subAddForm, setsubAddForm] = useState({
     categoryName: "",
@@ -68,24 +66,20 @@ export const PricingHistory = () => {
   const { Cart, setCart } = useAppContext();
   const [CategoriesData, setCategoriesData] = useState([]);
 
-
-
   const filterByTimeFrame = (timeFrame) => {
     console.log("Time Frame ===>", timeFrame);
     setActiveTimeFrame(timeFrame);
-    // Add logic to filter data based on the selected time frame
+    fetchCategoryHistory(userDetails.id, activeCategory, timeFrame);
   };
-
 
   const filterItems = (category) => {
     let filteredItems = data;
     console.log("Category ===>", category);
-    filteredItems = filteredItems.filter(
-      (item) => item.category === category
-    );
+    filteredItems = filteredItems.filter((item) => item.category === category);
 
     setFilteredData(filteredItems);
     setActiveCategory(category);
+    fetchCategoryHistory(userDetails.id, category, activeTimeFrame);
   };
 
   const updateSubcategoryByIndex = async (
@@ -169,6 +163,44 @@ export const PricingHistory = () => {
       setError(error.message || "An error occurred");
       setLoading(false);
     }
+  };
+
+  const fetchCategoryHistory = async (userId, categoryName, timePeriod) => {
+    try {
+      const response = await axios.post(`${Base_url}b2bUser/rateshistory`, {
+        userId,
+        categoryName,
+        timePeriod
+      });
+      console.log("Fetched Filter category =>:", response.data.data);
+      console.log("Fetched Filter User Date =>:", response.data);
+      const historyData = response.data.data.map(item => {
+        return item.history.map(historyItem => ({
+          date: historyItem.updatedAt,
+          price: historyItem.price,
+          subCategoryName: item.subCategoryName
+        }));
+      }).flat();
+  
+      setCategoryHistory(historyData);
+    } catch (error) {
+      console.error("Error fetching Rates:", error);
+    }
+  };
+
+   const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = {
+      timeZone: 'Asia/Kolkata',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      
+      hour12: true,
+    };
+    return date.toLocaleString('en-IN', options);
   };
 
   const getCategories = async () => {
@@ -258,10 +290,10 @@ export const PricingHistory = () => {
         </View>
       </View>
 
-      <Block style={{ paddingHorizontal: 15,paddingVertical: 10 }}>
+      <Block style={{ paddingHorizontal: 15, paddingVertical: 10,marginTop: 10 }}>
         <Block style={styles.Space_Between}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {["Today", "Week", "Month", "3 Months"].map((timeFrame, index) => (
+            {["today", "week", "month", "3month"," 6month","year"].map((timeFrame, index) => (
               <TouchableOpacity
                 key={index}
                 activeOpacity={0.9}
@@ -301,7 +333,7 @@ export const PricingHistory = () => {
         </Text>
       </View>
 
-      <Block style={{ paddingHorizontal: 15,paddingVertical: 5 }}>
+      <Block style={{ paddingHorizontal: 15, paddingVertical: 5 }}>
         <Block style={styles.Space_Between}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {UserCategoryData &&
@@ -340,12 +372,52 @@ export const PricingHistory = () => {
           </ScrollView>
         </Block>
       </Block>
-      
 
       <ScrollView
-        style={{ backgroundColor: ThemeData.containerBackgroundColor }}
+        style={{ backgroundColor: ThemeData.containerBackgroundColor,padding:10 }}
       >
-        <Block
+               {categoryHistory.map((historyItem, index) => (
+          <View
+            key={index}
+            style={{
+              borderRadius: 8,
+              paddingVertical: 10,
+              paddingHorizontal: 10,
+              borderWidth: 1,
+              borderColor: ThemeData.color,
+              backgroundColor: ThemeData.containerBackgroundColor,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginBottom: 10,
+            }}
+          >
+            <Block style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Ionicons name="calendar" size={14} color={ThemeData.color} />
+              <Text
+                style={{
+                  color: ThemeData.textColor,
+                  fontSize: 14,
+                  fontWeight: 600,
+                  marginLeft: 8,
+                }}
+              >
+                {formatDate(historyItem.date)}
+              </Text>
+            </Block>
+            <Text
+              style={{
+                color: ThemeData.textColor,
+                fontSize: 15,
+                fontWeight: 700,
+                marginRight: 10,
+              }}
+            >
+              ₹{historyItem.price}
+            </Text>
+          </View>
+        ))}
+        {/* <Block
           style={{
             backgroundColor: ThemeData.containerBackgroundColor,
             paddingHorizontal: 10,
@@ -373,7 +445,7 @@ export const PricingHistory = () => {
               );
             })}
           </Block>
-        </Block>
+        </Block> */}
       </ScrollView>
     </View>
   );
@@ -528,8 +600,8 @@ const styles3 = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    color: ThemeData.textColor, 
-    fontWeight: "600",  
+    color: ThemeData.textColor,
+    fontWeight: "600",
     marginLeft: 10,
   },
   linkText: {

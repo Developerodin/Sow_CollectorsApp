@@ -1,232 +1,118 @@
-import React, { useEffect, useRef, useState } from "react";
-import {
-  FlatList,
-  RefreshControl,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Dimensions,
-  TouchableOpacity,
-  Image,
-  Animated,
-  TextInput,
-} from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { Block, Text, Input, theme, Button } from "galio-framework";
-
-import { AntDesign, Feather, Ionicons } from "@expo/vector-icons";
-import { Header } from "../../Components/Header/Header";
-import { OrdersCard } from "../../Components/Cards/OrdersCard";
-const { width, height } = Dimensions.get("window");
-import { TabView, SceneMap } from "react-native-tab-view";
-import { PendingOrderCard } from "../../Components/Cards/PendingOrderCard";
-import { Base_url } from "../../Config/BaseUrl";
-import axios from "axios";
-import { useAppContext } from "../../Context/AppContext";
-import { InCommingOrderCard } from "../../Components/Cards/InCommingOrderCard";
-import { RejectedOrderCard } from "../../Components/Cards/RejectedOrderCard";
-import { useNavigation } from "@react-navigation/native";
-import { ThemeData } from "../../Theme/Theme";
+import React, { useEffect, useState } from 'react';
+import { View, ScrollView, StyleSheet, TouchableOpacity, RefreshControl, Image } from 'react-native';
+import { Block, Text } from "galio-framework";
+import { Ionicons, Feather, AntDesign, FontAwesome } from '@expo/vector-icons';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
+import { Base_url } from '../../Config/BaseUrl'; // Ensure this is correctly imported
+import { useAppContext } from '../../Context/AppContext';
+import { ThemeData } from '../../Theme/Theme';
 
 export const Orders = () => {
   const navigation = useNavigation();
-  const { userDetails, update } = useAppContext();
-  const [index, setIndex] = useState(0);
-  const [orders, setOrders] = useState([]);
-  const [InCommingOrders, setInCommingOrders] = useState([]);
+  const { userDetails, update, setUpdate } = useAppContext();
   const [pendingOrders, setPendingOrders] = useState([]);
-  const [completedOrders, setCompletedOrders] = useState([]);
-  const [rejectedOrders, setRejectedOrders] = useState([]);
-  const [InCommingpendingOrders, setInCommingPendingOrders] = useState([]);
-  const [InCommingcompletedOrders, setInCommingCompletedOrders] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedTab, setSelectedTab] = useState('Upcoming');
+  const [selectedAction, setSelectedAction] = useState('Sell');
+  const [errorFetchingOrders, setErrorFetchingOrders] = useState(false);
+
   const onRefresh = () => {
     setRefreshing(true);
-    // Call your functions here
-    getOrders();
-    getInCommingOrders();
-    // After fetching data, set refreshing to false
+    getOrders(selectedTab.toLowerCase(), selectedAction.toLowerCase());
     setRefreshing(false);
   };
-
-  const handleIndexChange = (newIndex) => setIndex(newIndex);
 
   const handleMandiRates = () => {
     navigation.navigate("MandiRates");
   };
 
-  const getOrders = async () => {
+  const handleViewDetail = (id) => {
+    navigation.navigate("Pending Order", { id });
+  }
+
+  const getOrders = async (type, action) => {
     try {
-      const response = await axios.get(
-        `${Base_url}api/b2b_orders/from/${userDetails._id}`
-      );
-      const data = response.data;
-      const Orders = data.orders;
-
-      Orders.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      console.log("All Orders ==>", Orders);
-      setOrders(Orders);
-
-      const PendingOrders = Orders.filter((el) => {
-        return (
-          (el.status === "pending" ||
-            el.status === "in-progress" ||
-            el.status === "canceled") &&
-          el.from !== null &&
-          el.to !== null
-        );
+      console.log("User ID:", userDetails.id, "Type:", type, "Action:", action);
+      const response = await axios.post(`${Base_url}b2bOrder/filterorders`, {
+        userId: userDetails.id,
+        type,
+        action
       });
-      const CompletedOrders = Orders.filter((el) => {
-        return el.status === "completed" && el.from !== null && el.to !== null;
-      });
-      const RejectedOrders = Orders.filter((el) => {
-        return el.status === "rejected" && el.from !== null && el.to !== null;
-      });
-
-      setPendingOrders(PendingOrders);
-      setCompletedOrders(CompletedOrders);
-      setRejectedOrders(RejectedOrders);
+      console.log("Fetched Orders ===>:", response.data);
+      setPendingOrders(response.data);
+      setErrorFetchingOrders(false); // Reset error state on successful fetch
     } catch (error) {
       console.error("Error fetching orders:", error);
+      if (error.response && error.response.status === 404) {
+        setErrorFetchingOrders(true); // Set error state if 404 error occurs
+      }
     }
   };
 
-  const getInCommingOrders = async () => {
-    try {
-      const response = await axios.get(
-        `${Base_url}api/b2b_orders/to/${userDetails._id}`
-      );
-      const data = response.data;
-      const Orders = data.orders;
+  useEffect(() => {
+    getOrders(selectedTab.toLowerCase(), selectedAction.toLowerCase());
+  }, [update]);
 
-      // Sort orders by date and time in descending order
-      Orders.sort((a, b) => new Date(b.date) - new Date(a.date));
+  const renderOrderCard = (data) => (
+    <View key={data._id} style={styles.cardContainer}>
+      
+      <View style={[styles.header, { backgroundColor: data.orderStatus === 'canceled' ? '#FF2020' : (data.orderStatus === 'pending' ? '#FFD12C' : '#FFD12C'), }]}>
+        {data.orderStatus === 'pending' ? (
+          <Feather name="clock" size={18} color={ThemeData.textColor} />
+        ) : data.orderStatus === 'canceled' ? (
+          <Feather name="x-circle" size={18} color={ThemeData.activeColor} />
+        ) : null}
+        <Text style={[styles.statusText, { color: data.orderStatus === 'canceled' ? ThemeData.activeColor : (data.orderStatus === 'pending' ? ThemeData.textColor : ThemeData.textColor), }]}>{data.orderStatus}</Text>
+      </View>
 
-      console.log("Incoming Orders ==>", Orders);
-      setInCommingOrders(Orders);
+      <Block style={styles.row}>
+        <View style={styles.column}>
+          <Text style={{ fontSize: 16, fontWeight: 600 }}>{data.orderTo.name}</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
+            <AntDesign name="calendar" size={20} color={ThemeData.color} />
+            <Text style={[styles.text, { marginLeft: 8 }]}>
+              <Text style={styles.blueText}>{new Date(data.createdAt).toLocaleDateString('en-GB')}</Text>
+            </Text>
+          </View>
+        </View>
 
-      const PendingOrders = Orders.filter((el) => {
-        return el.status === "pending" && el.from !== null && el.to !== null;
-      });
-      const CompletedOrders = Orders.filter((el) => {
-        return el.status === "completed" && el.from !== null && el.to !== null;
-      });
-      const RejectedOrders = Orders.filter((el) => {
-        return el.status === "rejected" && el.from !== null && el.to !== null;
-      });
+        <View style={[styles.column, styles.divider]}>
+          <Text style={{ fontSize: 16, fontWeight: 600 }}>Est. Value</Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
+            <View style={{ backgroundColor: ThemeData.color, borderRadius: 50, padding: 5 }}>
+              <FontAwesome name="rupee" size={10} color={ThemeData.activeColor} />
+            </View>
+            <Text style={styles.amountText}>₹{data.totalPrice}</Text>
+          </View>
+        </View>
 
-      setRejectedOrders(RejectedOrders);
-      setInCommingPendingOrders(PendingOrders);
-      setInCommingCompletedOrders(CompletedOrders);
-    } catch (error) {
-      console.error("Error fetching incoming orders:", error);
-    }
-  };
-
-  const ZeroRoute = () => (
-    <ScrollView style={{ flex: 1 }}>
-      <Block style={{ padding: 10, marginBottom: 60 }}>
-        {InCommingpendingOrders && InCommingpendingOrders.length > 0 ? (
-          InCommingpendingOrders.map((el, index) => {
-            return <InCommingOrderCard key={index} data={el.from && el} />;
-          })
-        ) : (
-          <Block center style={{ marginTop: 40 }}>
-            <Image
-              source={require("../../assets/media/5-dark.png")}
-              style={{
-                width: 300,
-                height: 300,
-                marginRight: 10,
-              }}
-            />
-          </Block>
-        )}
+        <View style={styles.column}>
+          <Text style={[styles.text, { fontSize: 16, fontWeight: 600 }]}>Items</Text>
+          <Text style={[styles.text, { marginTop: 5 }]}>{data.category}</Text>
+        </View>
       </Block>
-    </ScrollView>
-  );
-  const FirstRoute = () => (
-    <ScrollView style={{ flex: 1 }}>
-      <Block style={{ padding: 10, marginBottom: 60 }}>
-        {pendingOrders && pendingOrders.length > 0 ? (
-          pendingOrders.map((el, index) => {
-            return <PendingOrderCard key={index} data={el.from && el} />;
-          })
-        ) : (
-          <Block center style={{ marginTop: 40 }}>
-            <Image
-              source={require("../../assets/media/5-dark.png")}
-              style={{
-                width: 300,
-                height: 300,
-                marginRight: 10,
-              }}
-            />
-          </Block>
-        )}
-      </Block>
-    </ScrollView>
-  );
-  const SecondRoute = () => (
-    <ScrollView style={{ flex: 1 }}>
-      <Block style={{ padding: 10, marginBottom: 60 }}>
-        {completedOrders && completedOrders.length > 0 ? (
-          completedOrders.map((el, index) => {
-            return <OrdersCard key={index} data={el.from && el} />;
-          })
-        ) : (
-          <Block center style={{ marginTop: 40 }}>
-            <Image
-              source={require("../../assets/media/5-dark.png")}
-              style={{
-                width: 300,
-                height: 300,
-                marginRight: 10,
-              }}
-            />
-          </Block>
-        )}
-      </Block>
-    </ScrollView>
+
+      <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: 15 }}>
+        <Ionicons name="location" size={26} color={ThemeData.color} />
+        <Text style={[styles.text, { flex: 1, paddingRight: 24 }]}>
+          Pickup Location: {data.location.city}, {data.location.state}
+        </Text>
+        <TouchableOpacity style={styles.viewDetailsButton} onPress={() => handleViewDetail(data._id)}>
+          <Text style={styles.viewDetailsText}>View Details</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 
-  const ThirdRoute = () => (
-    <ScrollView style={{ flex: 1 }}>
-      <Block style={{ padding: 10, marginBottom: 60 }}>
-        {rejectedOrders && rejectedOrders.length > 0 ? (
-          rejectedOrders.map((el, index) => {
-            return <RejectedOrderCard key={index} data={el.from && el} />;
-          })
-        ) : (
-          <Block center style={{ marginTop: 40 }}>
-            <Image
-              source={require("../../assets/media/5-dark.png")}
-              style={{
-                width: 300,
-                height: 300,
-                marginRight: 10,
-              }}
-            />
-          </Block>
-        )}
-      </Block>
-    </ScrollView>
-  );
-
-  const routes = [
-    { key: "zero", title: "Purchase" },
-    { key: "first", title: "Sell" },
-    // { key: 'second', title: 'Completed' },
-    // { key: 'third', title: 'Rejected' },
-  ];
-
-  const renderTabBar = (props) => {
-    const inputRange = props.navigationState.routes.map((x, i) => i);
-
-    return (
+  return (
+    <ScrollView
+      contentContainerStyle={{ flex: 1, backgroundColor: ThemeData.containerBackgroundColor }}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
+      <Block style={{ marginTop: 30 }}></Block>
       <View>
         <View
           style={{
@@ -238,205 +124,101 @@ export const Orders = () => {
             marginRight: 30,
           }}
         >
-          <Text style={{ fontSize: 22, fontWeight: "bold",color: ThemeData.textColor }}>Your Orders</Text>
+          <Text style={{ fontSize: 22, fontWeight: "bold", color: ThemeData.textColor }}>Your Orders</Text>
           <TouchableOpacity onPress={handleMandiRates}>
-        <Ionicons name="filter" size={26} color={ThemeData.textColor} />
+            <Ionicons name="filter" size={26} color={ThemeData.textColor} />
           </TouchableOpacity>
         </View>
-       <ScrollView >
-        <View style={styles.tabContainer}>
-        <TouchableOpacity
-          style={[styles.tab, selectedTab === 'Upcoming' ? styles.activeTab : styles.inactiveTab]}
-          onPress={() => setSelectedTab('Upcoming')}
-        >
-          <Text style={[styles.tabText, selectedTab === 'Upcoming' ? styles.activeTabText : styles.inactiveTabText]}>
-            Upcoming
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.tab, selectedTab === 'Previous' ? styles.activeTab : styles.inactiveTab]}
-          onPress={() => setSelectedTab('Previous')}
-        >
-          <Text style={[styles.tabText, selectedTab === 'Previous' ? styles.activeTabText : styles.inactiveTabText]}>
-            Previous
-          </Text>
-        </TouchableOpacity>
-      </View>
-
-        <View style={styles.tabBar}>
-          {props.navigationState.routes.map((route, i) => {
-            const isTabActive = i === index;
-            const tabBackgroundColor = isTabActive ? ThemeData.textColor : ThemeData.activeBackgroundColor;
-            const textColor = isTabActive ? ThemeData.color : ThemeData.textColor;
-            const borderWidth = isTabActive ? 2 : 0;
-            const borderColor = isTabActive ? "#239456" : "grey";
-
-            const tabStyle = [
-              styles.tabItem,
-              {
-                borderRadius: 30,
-                padding: 10,
-                backgroundColor: tabBackgroundColor,
-              },
-            ];
-
-            const textStyles = [
-              { color: textColor, fontWeight: "bold", fontSize: 14 },
-            ];
-
-            return (
-              <TouchableOpacity
-                activeOpacity={0.8}
-                key={i}
-                style={tabStyle}
-                onPress={() => setIndex(i)}
-              >
-                <Animated.Text style={[textStyles, { fontSize: 13 }]}>
-                  {route.title}
-                </Animated.Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
+        <ScrollView>
+          <View style={styles.tabContainer}>
+            <TouchableOpacity
+              style={[styles.tab, selectedTab === 'Upcoming' ? styles.activeTab : styles.inactiveTab]}
+              onPress={() => {
+                setSelectedTab('Upcoming');
+                getOrders('upcoming', selectedAction.toLowerCase());
+              }}
+            >
+              <Text style={[styles.tabText, selectedTab === 'Upcoming' ? styles.activeTabText : styles.inactiveTabText]}>
+                Upcoming
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.tab, selectedTab === 'Previous' ? styles.activeTab : styles.inactiveTab]}
+              onPress={() => {
+                setSelectedTab('Previous');
+                getOrders('previous', selectedAction.toLowerCase());
+              }}
+            >
+              <Text style={[styles.tabText, selectedTab === 'Previous' ? styles.activeTabText : styles.inactiveTabText]}>
+                Previous
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.sellTabContainer}>
+            <TouchableOpacity
+              style={[styles.sellTab, selectedAction === 'Sell' ? styles.activeSellTab : styles.inactiveSellTab]}
+              onPress={() => {
+                setSelectedAction('Sell');
+                getOrders(selectedTab.toLowerCase(), 'sell');
+              }}
+            >
+              <Text style={[styles.sellTabText, selectedAction === 'Sell' ? styles.activeSellTabText : styles.inactiveSellTabText]}>
+                Sell
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.sellTab, selectedAction === 'Purchase' ? styles.activeSellTab : styles.inactiveSellTab]}
+              onPress={() => {
+                setSelectedAction('Purchase');
+                getOrders(selectedTab.toLowerCase(), 'purchase');
+              }}
+            >
+              <Text style={[styles.sellTabText, selectedAction === 'Purchase' ? styles.activeSellTabText : styles.inactiveSellTabText]}>
+                Purchase
+              </Text>
+            </TouchableOpacity>
+          </View>
         </ScrollView>
       </View>
-    );
-  };
-
-  const renderScene = SceneMap({
-    zero: ZeroRoute,
-    first: FirstRoute,
-    second: SecondRoute,
-    third: ThirdRoute,
-  });
-
-  useEffect(() => {
-    getOrders();
-    getInCommingOrders();
-  }, [update]);
-
-  return (
-    <ScrollView
-      contentContainerStyle={{ flex: 1, backgroundColor: ThemeData.containerBackgroundColor }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      {/* <Header/> */}
-      <Block style={{ marginTop: 30 }}></Block>
-      <TabView
-        navigationState={{ index, routes }}
-        renderScene={renderScene}
-        renderTabBar={renderTabBar}
-        onIndexChange={handleIndexChange}
-      />
+      <Block style={{ padding: 10, marginBottom: 60 }}>
+        {errorFetchingOrders ? (
+          <Block center style={{ marginTop: 40 }}>
+            <Image
+              source={require("../../assets/media/5-dark.png")}
+              style={{
+                width: 300,
+                height: 300,
+                marginRight: 10,
+              }}
+            />
+          </Block>
+        ) : (
+          pendingOrders && pendingOrders.length > 0 ? (
+            pendingOrders.map((order) => renderOrderCard(order))
+          ) : (
+            <Block center style={{ marginTop: 40 }}>
+              <Image
+                source={require("../../assets/media/5-dark.png")}
+                style={{
+                  width: 300,
+                  height: 300,
+                  marginRight: 10,
+                }}
+              />
+            </Block>
+          )
+        )}
+      </Block>
     </ScrollView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: ThemeData.containerBackgroundColor,
-  },
-  tabBar: {
-    flexDirection: "row",
-    // paddingTop: StatusBar.currentHeight,
-    padding: 10,
-    backgroundColor: ThemeData.containerBackgroundColor,
-    width: "60%",
-    alignSelf: "center",
-  },
-  tabItem: {
-    flex: 1,
-    alignItems: "center",
-    padding: 10,
-    marginTop: 10,
-  },
-  inputContainer: {
-    width: "100%",
-    height: 66,
-    borderBottomWidth: 1,
-    borderColor: "transparent",
-  },
-  input: {
-    flex: 1,
-    textAlign: "center",
-    padding: 0,
-    fontSize: 22,
-    // Remove padding to make it look borderless
-  },
-  subtitle: {
-    color: ThemeData.textColor,
-    fontSize: 20,
-    marginTop: 10,
-
-    textAlign: "left",
-    lineHeight: 23,
-    letterSpacing: 0.3,
-  },
-  title: {
-    color: ThemeData.textColor,
-    fontSize: 22,
-    fontWeight: "bold",
-    marginTop: 20,
-    textAlign: "center",
-  },
-  image: {
-    height: "100%",
-    width: "100%",
-    resizeMode: "contain",
-  },
-  indicator: {
-    height: 10,
-    width: 10,
-    backgroundColor: "grey",
-    marginHorizontal: 3,
-    borderRadius: 52,
-  },
-  btn: {
-    width: "95%",
-    height: 55,
-    borderRadius: 5,
-    backgroundColor: "#40A99E",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  border: {
-    borderWidth: 1,
-    borderColor: "blue",
-  },
-  Center: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  Space_Around: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-  Space_Between: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  shadow: {
-    shadowColor: ThemeData.textColor,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    shadowOpacity: 0.2,
-    elevation: 2,
-  },
-  button: {
-    width: width,
-  },
-
   tabContainer: {
     flexDirection: "row",
     width: "100%",
     borderWidth: 1.5,
-    borderColor: "#000",
+    
     
     
     alignSelf: "center",
@@ -446,17 +228,16 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     paddingVertical: 10,
-    
-    
   },
   activeTab: {
-    backgroundColor: ThemeData.backgroundColor,
+    backgroundColor: ThemeData.textColor,
   },
   inactiveTab: {
-    backgroundColor: ThemeData.cardBackgroundColor,
+    backgroundColor: ThemeData.activeBackgroundColor,
   },
   tabText: {
     fontSize: 16,
+    fontWeight: 'bold',
   },
   activeTabText: {
     color: ThemeData.activeColor,
@@ -464,4 +245,104 @@ const styles = StyleSheet.create({
   inactiveTabText: {
     color: ThemeData.textColor,
   },
+  sellTabContainer: {
+    flexDirection: "row",
+    justifyContent: "center",
+    marginHorizontal: 80,
+    alignItems: "center",
+    marginTop: 15,
+  },
+  sellTab: {
+    flex: 1,
+    alignItems: 'center',
+    paddingVertical: 10,
+    marginTop: 10,
+    marginHorizontal: 5, 
+    borderRadius: 23,
+  },
+  sellTabText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  activeSellTab: {
+    backgroundColor: ThemeData.textColor,
+  },
+  inactiveSellTab: {
+    backgroundColor: ThemeData.activeBackgroundColor,
+  },
+  activeSellTabText: {
+    color: ThemeData.activeColor,
+  },
+  inactiveSellTabText: {
+    color: ThemeData.textColor,
+  },
+  cardContainer: {
+    borderWidth: 1,
+    borderColor: ThemeData.color,
+    borderRadius: 15,
+    paddingVertical: 20,
+    paddingHorizontal: 15,
+    backgroundColor: ThemeData.containerBackgroundColor,
+    marginTop: 20,
+    marginBottom: 15,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 5,
+    paddingHorizontal: 5,
+    borderRadius: 15,
+    width: 110,
+    position: 'absolute',
+    right: 10,
+    top: -15,
+  },
+  statusText: {
+    color: ThemeData.textColor,
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 5,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginVertical: 10,
+  },
+  column: {
+    flex: 1,
+    alignItems: 'center',
+    
+  },
+  divider: {
+    borderRightWidth: 1,
+    borderRightColor: ThemeData.color,
+    borderLeftWidth: 1,
+    borderLeftColor: ThemeData.color,
+    marginHorizontal: 12,
+  },
+  amountText: {
+    fontSize: 18,
+    fontWeight: '500',
+    color: ThemeData.textColor,
+    marginLeft: 5,
+  },
+  text: {
+    fontSize: 14,
+    color: ThemeData.textColor,
+    textAlign: 'center',
+  },
+  blueText: {
+    color: ThemeData.textColor,
+    fontWeight: '500',
+  },
+  viewDetailsButton: {},
+  viewDetailsText: {
+    fontSize: 16,
+    color: ThemeData.color,
+    fontWeight: '600',
+    textDecorationLine: 'underline',
+  },
 });
+
+export default Orders;

@@ -422,7 +422,7 @@ export default function App() {
             name="Pending Order"
             component={PendingOrderDetails}
             options={{
-              headerShown: true,
+              headerShown: false,
             }}
           />
           <Stack.Screen

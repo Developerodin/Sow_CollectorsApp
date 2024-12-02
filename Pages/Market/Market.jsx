@@ -120,12 +120,16 @@ export const Market = () => {
 
   const handelSubmit =( userId, selectedCategory, selectedSubCategory, selectedCity) => {
     console.log("button clicked");
+    
     navigation.navigate("MediatorRates", {
       userId: userId,
       categoryName: selectedCategory,
       subCategoryName: selectedSubCategory,
       city: selectedCity,
     });
+    setSelectedCategory("");
+    setSelectedSubCategory("");
+    setRefreshData((prev) => prev + 1);
   };
 
   //  const data = {
@@ -174,6 +178,8 @@ export const Market = () => {
     setSelectedCategory(name);  // Set the selected category name
     setSelectedCategories([id]);  // Store the selected category ID (you can allow multiple selections if needed)
     getSubCategoryById(id);  // Fetch subcategories after selecting the category
+    toggleAccordion();  // Close the category accordion after selection
+    setCategoryModalVisible(false);
   };
   
   
@@ -182,6 +188,8 @@ export const Market = () => {
     console.log(`Subcategory selected: ${name}, ID: ${id}`);
     setSelectedSubCategory(name);  // Set the selected subcategory name
     setSelectedSubCategories([id]);  // Store the selected subcategory ID
+    toggleAccordion4();  // Close the subcategory accordion after selection
+    setSubCategoryModalVisible(false);
   };
   
   
@@ -443,12 +451,12 @@ export const Market = () => {
 
   return (
     <View style={styles.container}>
-      <Header />
+      
       <ScrollView style={{ flex: 1, backgroundColor: "#fff" }}>
         {/* <Block style={{ padding: 10 }}> */}
           <Block
             style={{
-              
+              marginTop: 40,
               padding: 20,
               borderColor: "#E4E4E4",
             }}
@@ -701,34 +709,9 @@ export const Market = () => {
           </Block>
 
           <Block style={{ marginBottom: 60 }}>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "flex-end",
-                padding: 10,
-                alignItems: "center",
-              }}
-            >
-              <Text style={{ marginRight: 8, fontSize: 16, color: "teal" }}>
-                {/* {sortOrder === 'asc' ? 'Sort' : 'Sort '} */} Sort
-              </Text>
-              <TouchableOpacity
-                onPress={handleSortPress}
-                style={{
-                  padding: 6,
-                  backgroundColor: "teal",
-                  borderRadius: 12,
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: 30,
-                }}
-              >
-                <FontAwesome5 name="sort" size={22} color="#fff" />
-              </TouchableOpacity>
-            </View>
+            
 
-            <Block style={{ marginTop: 20 }}>
+            <Block style={{ marginTop: 40 }}>
               <TouchableOpacity onPress={() => handelSubmit(userId, selectedCategory, selectedSubCategory, selectedCity)}>
               <Block style={styles.btn}>
                 <Text style={{ color: "#fff", fontSize: 18, fontWeight: "bold" }}>

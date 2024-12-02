@@ -77,8 +77,8 @@ export const RateDetails = ({ route }) => {
   
     const Orderdetails = {
       
-      category: details.category._doc._id,
-      subCategory: details.category._doc.sub_category[0]._id,
+      category: details.category._doc.name,
+      subCategory: details.category._doc.sub_category[0].name,
       orderBy: userDetails.id,
       orderTo: userId,
       weight: weight,
@@ -88,7 +88,7 @@ export const RateDetails = ({ route }) => {
       totalPrice: TotalAmount,
       photos: "",
       location: "674950d3390a9600916b98a8",
-      orderStatus: "Pending"
+      
     };
   
     console.log("Order details >>>", Orderdetails);
