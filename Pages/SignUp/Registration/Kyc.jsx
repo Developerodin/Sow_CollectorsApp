@@ -26,6 +26,7 @@ import { ToastAndroid } from "react-native";
 import { CategoryAddModel } from '../../../Components/CategoryAddModel/CategoryAddModel';
 import { Checkbox } from 'galio-framework';
 import { StateSelectModel } from '../../../Components/Model/StateSelectModel';
+import * as ImagePicker from 'expo-image-picker';
 
 // import CheckBox from 'react-native-check-box';
 
@@ -33,10 +34,9 @@ export const Kyc = () => {
     const navigation= useNavigation()
     const [formData, setFormData] = useState({
       // gender:"",
-      email: "",
-      name:"",
-      referralCode:"",
-      businessName:""
+
+      gstinNumber:"",
+
     });
     const [CategoriesData, setCategoriesData] = useState([]);
     const [isFocused, setIsFocused] = useState({
@@ -46,18 +46,13 @@ export const Kyc = () => {
     });
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
     const [ modalVisible,setModalVisible] = useState(false);
-    const [selectedCategories, setSelectedCategories] = useState([]);
+
     const [termandCondition,setTermandCondition] = useState(false);
-    const [selectedState, setSelectedState] = useState("Delhi");
-    const [selectedCity, setSelectedCity] = useState("");
- 
-    const [pincode,setPincode] = useState("")
-    const [isStateModelOpen,setIsStateModelOpen] = useState(false);
-    const [isCityModelOpen,setIsCityModelOpen] = useState(false);
-    const [AddressData,setAddressData] = useState([]);
+    const [privacyPolicy,setprivacyPolicy] = useState(false);
+
     const [loading,setLoading] = useState(false)
-    
-  
+    const [image, setImage] = useState(null);
+    const [image2, setImage2] = useState(null);
     const customStyle ={
       Card1: {
       
@@ -83,12 +78,140 @@ export const Kyc = () => {
     }
 
    
+    const showImagePicker = async (sourceType) => {
+        // Request media library permission
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+        if (permissionResult.granted === false) {
+          alert('Permission to access the gallery is required!');
+          return;
+        }
+      
+        // Launch image picker
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+          sourceType: sourceType,
+          base64: true,  // Request base64 encoding
+        });
+      
+        // Check if the user selected an image
+        if (!result.canceled) {
+          // console.log("URI of image library ==> ", result.assets[0]);
+          const dataImage = result.assets[0]
+    
+          if(dataImage){
+            // console.log("Base64 of selected image ==> ", result.assets[0].base64);
+          const base64data = `data:${dataImage.mimeType};base64,${dataImage.base64}`  // Base64 string
+          setImage(base64data);  // Or you can set the base64 if needed
+        //   updateUserImage(userDetails.id,base64data)
+          }
+          
+        }
+      };
 
+      const showImagePicker2 = async (sourceType) => {
+        // Request media library permission
+        let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+        if (permissionResult.granted === false) {
+          alert('Permission to access the gallery is required!');
+          return;
+        }
+      
+        // Launch image picker
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 1,
+          sourceType: sourceType,
+          base64: true,  // Request base64 encoding
+        });
+      
+        // Check if the user selected an image
+        if (!result.canceled) {
+          // console.log("URI of image library ==> ", result.assets[0]);
+          const dataImage = result.assets[0]
+    
+          if(dataImage){
+            // console.log("Base64 of selected image ==> ", result.assets[0].base64);
+          const base64data = `data:${dataImage.mimeType};base64,${dataImage.base64}`  // Base64 string
+          setImage2(base64data);  // Or you can set the base64 if needed
+        //   updateUserImage(userDetails.id,base64data)
+          }
+          
+        }
+      };
+
+      const handelSubmitData = async (data) => {
+        try {
+          const response = await axios.post(`${Base_url}b2bUser/kyc`, data); // Adjust the endpoint to match your backend route
+          if (response.data.success) {
+            console.log('KYC details added successfully:', response.data.data);
+            navigation.navigate("VerifyProfileStatus")
+            if(image !== ""){
+                handelSubmitWareHouseData()
+            }
+            if(image2 !== ""){
+                handelSubmitOwnerImageData()
+            }
+
+            
+            return { success: true, data: response.data.data };
+          }
+        } catch (error) {
+          console.error('Error adding KYC details:', error.response?.data?.message || error.message);
+          return { success: false, message: error.response?.data?.message || error.message };
+        }
+      };
+
+      const handelSubmitOwnerImageData = async () => {
+        try {
+          const response = await axios.post(`${Base_url}b2bUser/kycOwnerImage`, image2); // Adjust the endpoint to match your backend route
+          if (response.data.success) {
+            console.log('KYC details added successfully:', response.data.data);
+            return { success: true, data: response.data.data };
+          }
+        } catch (error) {
+          console.error('Error adding KYC details:', error.response?.data?.message || error.message);
+          return { success: false, message: error.response?.data?.message || error.message };
+        }
+      };
+
+      const handelSubmitWareHouseData = async () => {
+        try {
+          const response = await axios.post(`${Base_url}b2bUser/kycWareHouseImage`, image); // Adjust the endpoint to match your backend route
+          if (response.data.success) {
+            console.log('KYC details added successfully:', response.data.data);
+            return { success: true, data: response.data.data };
+          }
+        } catch (error) {
+          console.error('Error adding KYC details:', error.response?.data?.message || error.message);
+          return { success: false, message: error.response?.data?.message || error.message };
+        }
+      };
    
     
-    const handelPersonalDetailSubmit=()=>{
-      
-        navigation.navigate("VerifyProfileStatus")
+    const handelPersonalDetailSubmit=async()=>{
+        const UserId = await AsyncStorage.getItem('userID') || null;
+          console.log("User Id in kyc",UserId)
+          const data ={
+            gstinNumber:formData.gstinNumber,
+            userId:UserId,
+            WareHouseImage:"",
+            OwnerImage:""
+          }
+          if(termandCondition && privacyPolicy){
+            handelSubmitData(data)
+          }
+          else{
+            ToastAndroid.show(`Please accept both conditions`, ToastAndroid.SHORT);
+          }
+         
+        // navigation.navigate("VerifyProfileStatus")
     }
 
    
@@ -175,8 +298,8 @@ export const Kyc = () => {
       <TextInput
           style={styles.input}
           placeholder="Enter your GST Number"
-          value={formData.name}
-          onChangeText={(text) => handleInputChange("name", text)}
+          value={formData.gstinNumber}
+          onChangeText={(text) => handleInputChange("gstinNumber", text)}
           placeholderTextColor="#B7B7B7"
          
         //   value={formData.phoneNumber}
@@ -188,8 +311,43 @@ export const Kyc = () => {
 
        
 
+       <Block style={{marginTop:20,padding:10}}>
+       <Text style={styles.sectionTitle}>Upload photo/video</Text>
+        <Text style={styles.label}>Warehouse Live Video</Text>
+        {image && <Image source={{ uri: image }} style={{resizeMode: 'contain',width:80,height:80,borderRadius:8}} />}
+        <TouchableOpacity onPress={() => showImagePicker('camera')}  style={styles.button1}>
+            <Ionicons
+              name="camera"
+              size={24}
+              color="#000"
+              style={styles.icon}
+            />
+            <Text style={{ fontSize: 18, fontWeight: 400, color: "#000", marginLeft:10 }}>
+              Open Camera
+            </Text>
+          </TouchableOpacity>
+
+          <Text style={[styles.label]}>Owner’s photo in workplace</Text>
+          {image2 && <Image source={{ uri: image2 }} style={{resizeMode: 'contain',width:80,height:80,borderRadius:8}} />}
+          <TouchableOpacity onPress={() => showImagePicker2('camera')}  style={styles.button1}>
+            <Ionicons
+              name="camera"
+              size={24}
+              color="#000"
+              style={styles.icon}
+            />
+            <Text style={{ fontSize: 18, fontWeight: 400, color: "#000", marginLeft:10 }}>
+              Open Camera
+            </Text>
+          </TouchableOpacity>
+       </Block>
 
 
+        
+        <Block center>
+            <Text style={{fontSize:16}}>Read the <Text style={{color:"#65C5C4",fontSize:18,textDecorationLine: 'underline'}}>Terms & Condiation</Text> and </Text>
+            <Text style={{color:"#65C5C4",fontSize:18,textDecorationLine: 'underline'}}>Privacy Policy</Text>
+        </Block>
       
         
       
@@ -199,7 +357,7 @@ export const Kyc = () => {
         <Block style={[{flexDirection:"row",justifyContent:"left",alignItems:"center",marginLeft:10}]}>
         <Checkbox
       style={{marginTop:15}}
-      color="black"
+      color="#65C5C4"
       label={"By checking this box, you accept the terms and conditions"}
       initialValue={termandCondition}
         onChange={(el) => {
@@ -207,6 +365,23 @@ export const Kyc = () => {
                 setTermandCondition(el)
         }}
       />
+
+      
+        </Block>
+      
+        <Block style={[{flexDirection:"row",justifyContent:"left",alignItems:"center",marginLeft:10}]}>
+        <Checkbox
+      style={{marginTop:15}}
+      color="#65C5C4"
+      label={"By checking this box, you accept the Privacy Policy"}
+      initialValue={privacyPolicy}
+        onChange={(el) => {
+                console.log("VAlue of checkbox ==>",el)
+                setprivacyPolicy(el)
+        }}
+      />
+
+      
         </Block>
 
        </Block>
@@ -251,6 +426,20 @@ const styles = StyleSheet.create({
       width: width * 0.9,
       height: width * 0.5,
     },
+    label: { fontSize: 14, color: "#000", marginBottom: 0 ,fontWeight: '600',marginTop:20},
+    button1: {
+        borderWidth: 1,
+        width: width * 0.9,
+        height: 60,
+        backgroundColor: "white",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
+        marginVertical: 10,
+        borderColor: "black",
+        borderRadius: 10,
+      },
+      sectionTitle: { fontSize: 24, fontWeight: "700", marginBottom: 10 },
     inputContainer: {
       width: '100%',
       height: 66,
