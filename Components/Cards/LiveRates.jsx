@@ -77,7 +77,7 @@ const LiveRates = () => {
       const response = await axios.get(`${Base_url}categories`);
       setCategoriesData(response.data);
       setselectedCategory(response.data[0].name)
-      console.log("All categorires ===>",response.data )
+      // console.log("All categorires ===>",response.data )
       return response.data;
     } catch (error) {
       throw error.response.data;
@@ -87,7 +87,7 @@ const LiveRates = () => {
 
   const fetchPriceDifference = async (mandiId, category) => {
     try {
-      console.log("Fetching price difference for:", mandiId, category);
+      // console.log("Fetching price difference for:", mandiId, category);
       const response = await axios.get(
         `${Base_url}mandiRates/difference/${mandiId}/${category}`
       );
@@ -129,7 +129,7 @@ const LiveRates = () => {
       const ParseData = JSON.parse(Details);
       const data = ParseData;
       setUserId(data.id);
-      console.log("User ID  ==>", data.id);
+      // console.log("User ID  ==>", data.id);
     } catch (err) {
       console.log("Error in getting user ==.", err);
     }

@@ -32,9 +32,9 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
 
     const addMandiToList = async (mandiId, listType) => {
         try {
-            console.log('mandiId:', mandiId);
-            console.log('userId:', userId);
-            console.log('listType:', listType);
+            // console.log('mandiId:', mandiId);
+            // console.log('userId:', userId);
+            // console.log('listType:', listType);
 
             const response = await axios.post(`${Base_url}b2bUser/add-mandi`, {
                 userId,
@@ -60,7 +60,7 @@ const MarketModal = ({ modalVisible, selectedItem, setModalVisible, formatDate, 
     };
 
     const removeMandiFromList = async (userId, mandiId, listType) => {
-        console.log('Removing Mandi from list:', userId, mandiId, listType);
+        // console.log('Removing Mandi from list:', userId, mandiId, listType);
         try {
             const response = await axios.post(`${Base_url}b2bUser/remove-mandi`, {
                 userId,
@@ -266,9 +266,9 @@ const formatLabel = (date, timeframe) => {
          
         
         const data = ParseData;
-         console.log("User Data 2 ==>",data)
+        //  console.log("User Data 2 ==>",data)
             setUserId(data.id);
-            console.log("User ID ==>",userId)
+            // console.log("User ID ==>",userId)
          
         
         return ;

@@ -166,7 +166,7 @@ export const Address = () => {
  }
 
  const handleNextButton = () => {
-  navigation.navigate("VerifyProfileStatus");
+  navigation.navigate("Almost there");
 };
  
 const setnewAddressinStorage =async(address)=>{

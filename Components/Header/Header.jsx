@@ -32,7 +32,7 @@ export const Header = () => {
   }
 
   const getUserImage = async () => {
-    console.log('Getting user image in header')
+    console.log('Getting user image in header===============================>')
     try {
       // Replace 'yourapiurl' with your actual API endpoint URL
       const response = await axios.get( `${Base_url}b2bUser/profilepic/${userDetails.id}`);
@@ -41,7 +41,7 @@ export const Header = () => {
       const imageBase64 = response.data.image;
       setImage(imageBase64)
       // Log or return the image base64 string
-      console.log('User image fetched successfully:');
+      // console.log('User image fetched successfully:');
       
       return imageBase64;
     } catch (error) {
@@ -54,13 +54,17 @@ export const Header = () => {
   useEffect(()=>{
     getUserImage()
   },[])
+
+  if(image === null){
+    getUserImage()
+  }
   return (
     <View style={[{marginTop:40,padding:10},styles.container]}>
         <Block  style={[styles.Space_Between]}>
 
         <TouchableOpacity activeOpacity={0.9} onPress={handelProfileClick}>
         
-  {image && image ? <Image source={{ uri: image }} style={{resizeMode: 'contain',width:'100%',height:'100%',borderRadius:100}} />
+  { image ? <Image source={{ uri: image }} style={{resizeMode: 'contain',width:50,height:50,borderRadius:100}} />
   :
 <Image
     

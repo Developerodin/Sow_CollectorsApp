@@ -70,6 +70,7 @@ import usePushNotifications from "./usePushNotifications";
 import { ThemeData } from "./Theme/Theme";
 import { AccountSettings } from "./Pages/Profile/ProfileTabs/AccountSettings";
 
+import { Kyc } from "./Pages/SignUp/Registration/Kyc";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -369,6 +370,14 @@ export default function App() {
             component={OrderDetail}
             options={{
               headerShown: true,
+            }}
+          />
+
+<Stack.Screen
+            name="Almost there"
+            component={Kyc}
+            options={{
+              headerShown: false,
             }}
           />
 
