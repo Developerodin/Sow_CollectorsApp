@@ -19,6 +19,8 @@ import { useAppContext } from "../../Context/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { ThemeData } from "../../Theme/Theme";
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { CategoryAddModel3 } from "../CategoryAddModel/CategoryAddModel3";
+import icon2 from "./redIcon.png";
 
 const LiveRates = () => {
   const { favouriteMandi, setFavouriteMandi, updateMandi } = useAppContext();
@@ -34,6 +36,17 @@ const LiveRates = () => {
   const [isEmpty, setIsEmpty] = useState(false);
   const [loading, setLoading] = useState(true);
   const [CategoriesData,setCategoriesData] =useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categoryName , setCategoryName] = useState("Iron")
+  const [subCategoryData, setSubCategoryData] = useState([]);
+
+  const handelCategoryModelOpen=()=>{
+    setModalVisible(true)
+  }
+  const handelCategoryModelClose = ()=>{
+    setModalVisible(false)
+  }
+  
   const getAllData = async () => {
     try {
       const response = await axios.get(`${Base_url}mandiRates`);
@@ -83,6 +96,24 @@ const LiveRates = () => {
       throw error.response.data;
     }
   };
+
+  const getSubCategoriesByCategoryName = async (categoryName) => {
+    console.log('Getting SubCategories', categoryName);
+  try {
+    const response = await axios.post(`${Base_url}subcategories/category`,{
+      categoryName:categoryName
+    });
+    
+
+    console.log("sub category data of selected category ==>",response.data);
+    setSubCategoryData(response.data);
+    return response.data;
+  } catch (error) {
+    console.log("Error getting subcategory ==>",error)
+  }
+};
+
+
 
 
   const fetchPriceDifference = async (mandiId, category) => {
@@ -142,10 +173,19 @@ const LiveRates = () => {
   useEffect(() => {
     if (userId) {
       getAllData();
-      getCategories();
+      
       getUserMandis(userId).then(setFavoriteMandis);
     }
   }, [userId, updateMandi]);
+
+  useEffect(() => {
+    getCategories();
+    
+  }, []);
+
+  useEffect(() => {
+    getSubCategoriesByCategoryName(categoryName);
+  }, [categoryName]);
 
   // Add 'All' to the states array
   const states = [
@@ -236,21 +276,20 @@ const LiveRates = () => {
               borderWidth: 1,
               borderColor: ThemeData.color,
               flexDirection: "row",
-              justifyContent: "flex-start",
+              justifyContent: "space-between",
               alignItems: "center",
               backgroundColor: ThemeData.cardBackgroundColor,
             }}
           >
-            <Block >
+          <Block style={{flexDirection: "row"}}>
               <Image
                 source={logo}
                 style={{ resizeMode: "cover", width: 40, height: 40,marginLeft:5,borderRadius: 8,marginVertical:5 }}
               />
-            </Block>
             <Block style={{ width: "60%", marginLeft: 10 }}>
               <Text
                 style={{ fontWeight: "700", color: ThemeData.textColor, fontSize: 13 }}
-              >
+                >
                 {item.mandi?.mandiname || "Unknown Mandi"}
               </Text>
               <Text style={{ fontSize: 13, fontWeight: "600" }}>
@@ -263,7 +302,8 @@ const LiveRates = () => {
       </Text>
     </View>
             </Block>
-            <Block style={{ textAlign: "right" }}>
+                </Block>
+            <Block style={{ textAlign: "right",marginRight: 10 }}>
               <Text
                 style={{ fontWeight: "700",color: ThemeData.textColor, fontSize: 13 }}
               >
@@ -317,10 +357,13 @@ const LiveRates = () => {
         <View style={{ flex: 1 }}>
 
 <TouchableOpacity
-              
+              onPress={handelCategoryModelOpen} 
                 style={{
-                  
-                  maxWidth:250,
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  // maxWidth: 200,
+                  alignSelf: "flex-start",
                   margin:10,
                   paddingVertical: 10,
                   paddingHorizontal: 15,
@@ -329,7 +372,7 @@ const LiveRates = () => {
                 }}
               >
                 <Text style={{ color:'#fff',fontSize:14 }}>
-                  Select Category : {selectedCategory}
+                  Select Category : {categoryName}
                 </Text>
               </TouchableOpacity>
 
@@ -372,7 +415,7 @@ const LiveRates = () => {
             showsHorizontalScrollIndicator={false}
             style={{ marginVertical: 10, paddingLeft: 10 }}
           >
-            {CategoriesData.map((item,index) => (
+            {subCategoryData.map((item,index) => (
               <TouchableOpacity
                 key={index}
                 onPress={() => handlCategoryPress(item.name)}
@@ -454,6 +497,14 @@ const LiveRates = () => {
             formatDate={formatDate}
             formatTime={formatTime}
           />
+
+<CategoryAddModel3 
+          modalVisible={modalVisible}
+          setModalVisible={setModalVisible}
+          categoriesData={CategoriesData}
+          setCategoryName={setCategoryName}
+            />
+
         </View>
       )}
     </View>
