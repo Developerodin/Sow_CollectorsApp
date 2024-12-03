@@ -39,12 +39,13 @@ const LiveRates = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [categoryName , setCategoryName] = useState("Iron")
   const [subCategoryData, setSubCategoryData] = useState([]);
+  const [categoryModel , setCategoryModel] = useState(false)
 
   const handelCategoryModelOpen=()=>{
-    setModalVisible(true)
+    setCategoryModel(true)
   }
   const handelCategoryModelClose = ()=>{
-    setModalVisible(false)
+    setCategoryModel(false)
   }
   
   const getAllData = async () => {
@@ -324,17 +325,14 @@ const LiveRates = () => {
                   >
                      ₹ {priceDifference.difference}
                   </Text>
-                  <Image
-                    source={icon}
+                                   <Image
+                    source={priceDifference.tag === "Increment" ? icon : icon2}
                     style={{
                       width: 20,
                       height: 20,
                       transform: [
                         {
-                          rotate:
-                            priceDifference.tag === "Increment"
-                              ? "0deg"
-                              : "60deg",
+                          rotate: priceDifference.tag === "Increment" ? "0deg" : "60deg",
                         },
                       ],
                     }}
@@ -499,7 +497,7 @@ const LiveRates = () => {
           />
 
 <CategoryAddModel3 
-          modalVisible={modalVisible}
+          modalVisible={categoryModel}
           setModalVisible={setModalVisible}
           categoriesData={CategoriesData}
           setCategoryName={setCategoryName}

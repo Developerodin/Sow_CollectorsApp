@@ -345,6 +345,8 @@ export const Market = () => {
     setSelectedCategory("");
     setSelectedSubCategory("");
     setselectedCity("");
+    
+    setSelectedCategories([]);
     setMediatorsData([]);
     setWholesalersData([]);
     setFactoryData([]);
@@ -523,15 +525,16 @@ export const Market = () => {
         <View >
 
   <View style={styles.modalContainer}>
+    <Text style={{fontSize:25 ,alignSelf : 'flex-start',marginLeft: 22,fontWeight: 700}}>Select Category</Text>
   <Block right style={{ width: width * 0.8 }}>
             <Ionicons
               onPress={handelClose}
               name="close-circle"
-              size={24}
+              size={26}
               color={ThemeData.textColor} 
+              style={{marginTop: -25}}
             />
           </Block>
-          <Text style={{fontSize:18 ,textAlign : 'center'}}>Select Category</Text>
           <Block
             style={{
              
@@ -543,11 +546,11 @@ export const Market = () => {
               marginBottom: 40,
             }}
           >
-        <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',marginBottom : 50 }}>
+        <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',marginBottom : 30 }}>
       {CategoriesData.map((el, index) => (
         <TouchableOpacity key={index} onPress={() => handleCategorySelection(el.name, el._id)}>
           <View style={[styles.categoryItem, selectedCategories.includes(el._id) && styles.selectedCategory]}>
-            <Text style={{ fontSize: 18, color: selectedCategories.includes(el._id) ? "#fff" : "#000" }}>
+            <Text style={{ fontSize: 14,fontWeight: 500, color: selectedCategories.includes(el._id) ? "#fff" : "#000" }}>
               {el.name}
             </Text>
           </View>
@@ -598,14 +601,15 @@ export const Market = () => {
         <View >
   <View style={styles.modalContainer}>
   <Block right style={{ width: width * 0.8 }}>
+    <Text style={{fontSize: 20,fontWeight: 700,alignSelf : 'flex-start',marginLeft: 20}}>Select Sub Category</Text>
             <Ionicons
               onPress={handelClosetwo}
               name="close-circle"
               size={24}
               color={ThemeData.textColor} 
+              style={{marginTop: -25}}
             />
           </Block>
-          <Text style={{fontSize:18 ,textAlign : 'center'}}>Select Sub Category</Text>
           <Block
             style={{
              
@@ -617,11 +621,11 @@ export const Market = () => {
               marginBottom: 40,
             }}
           >
-        <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',marginBottom : 50 }}>
+        <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',marginBottom : 50 }} showsVerticalScrollIndicator={false}>
       {selectedSubCategoriesData.map((el, index) => (
         <TouchableOpacity key={index} onPress={() => handleSubCategorySelection(el.name, el._id)}>
           <View style={[styles.categoryItem, selectedSubCategories.includes(el._id) && styles.selectedCategory]}>
-            <Text style={{ fontSize: 18, color: selectedSubCategories.includes(el._id) ? ThemeData.activeColor : ThemeData.textColor }}>
+            <Text style={{ fontSize: 14,fontWeight: 600, color: selectedSubCategories.includes(el._id) ? ThemeData.activeColor : ThemeData.textColor }}>
               {el.name}
             </Text>
           </View>
@@ -687,8 +691,8 @@ export const Market = () => {
                   </Block>
                 </TouchableOpacity>
                 {CityExpand && (
-                  <View style={{ height: 200 }}>
-                                       <ScrollView>
+                  <View style={{ height: `${city && city.length < 3 ? 100 : 300}` }}>
+                                       <ScrollView showsVerticalScrollIndicator={false}>
                       {city.map((el, index) => (
                         <TouchableOpacity
                           activeOpacity={0.6}
@@ -1101,10 +1105,9 @@ const styles = StyleSheet.create({
     flexBasis: '30%', // Adjust the percentage to fit the number of items per row
     padding: 10,
     margin: 5,
-    backgroundColor: '#f0f0f0', // Normal box color
+    backgroundColor: '#DBDBDB4D', // Normal box color
     borderRadius: 15,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    
     alignItems: 'center',
   },
   selectedCategory: {

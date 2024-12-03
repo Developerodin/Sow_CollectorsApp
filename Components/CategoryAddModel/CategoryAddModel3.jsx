@@ -48,14 +48,15 @@ export const CategoryAddModel3 = ({
       <View style={[styles.centeredView]}>
         <View style={styles.modalView}>
           <Block right style={{ width: width * 0.8 }}>
+              <Text style={{ fontSize: 25,fontWeight: 700,alignSelf: "flex-start" }}>Select Categories</Text>
             <Ionicons
               onPress={handelClose}
               name="close-circle"
-              size={24}
+              size={25}
               color="black"
+              style={{ alignSelf: "flex-end" ,marginTop: -28}}
             />
           </Block>
-          <Text style={{ fontSize: 17 }}>Select Categories</Text>
           <Block
             style={{
               flexDirection: "row",
@@ -63,6 +64,7 @@ export const CategoryAddModel3 = ({
               alignItems: "start",
               width: width * 0.9,
               padding: 12,
+              marginTop: 10,
             }}
           >
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -93,22 +95,23 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    marginTop: 10,
+    marginTop: 0,
     marginBottom: 50,
+    
   },
   categoryBox: {
     padding: 10,
     margin: 5,
-    backgroundColor: '#f0f0f0', // Normal box color
+    backgroundColor: '#DBDBDB4D', // Normal box color
     borderRadius: 15,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    
   },
   selectedCategoryBox: {
     backgroundColor: 'black', // Grey color when selected
   },
   categoryText: {
-    fontSize: 16,
+    fontSize: 14,
+    fontWeight: "bold",
   },
   viewHalf: {
     justifyContent: "flex-end",

@@ -95,8 +95,8 @@ export const CategoryAddModel2 = ({
               size={26}
               color="#000"
             />
-          </Block>
           <Text style={{fontSize:18}}>Select Categories </Text>
+          </Block>
           <Block
             style={{
              
