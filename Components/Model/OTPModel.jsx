@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Alert, StyleSheet, Pressable, View, Dimensions } from "react-native";
+import { Alert, StyleSheet, Pressable, View, Dimensions, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
 import { useAppContext } from "../../Context/AppContext";
@@ -18,6 +18,7 @@ import Modal from "react-native-modal";
 import axios from "axios";
 import { OTPInput } from "../Otp/OtpInputs";
 import LottieView from 'lottie-react-native';
+import { ThemeData } from "../../Theme/Theme";
 const { width, height } = Dimensions.get("screen");
 export const OTPModel = ({modalVisible,setModalVisible,handelComplete,orderCompleteStatus}) => {
   const navigation = useNavigation();
@@ -177,9 +178,23 @@ export const OTPModel = ({modalVisible,setModalVisible,handelComplete,orderCompl
            
 
           
-            <Block style={{position:"absolute",bottom:60}}>
+            {/* <Block style={{position:"absolute",bottom:60}}>
               <Button onPress={()=>handelComplete(otp)} color="success"> Complete</Button>
+            </Block> */}
+            <Block style={{position:"absolute",bottom:100}}>
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between',backgroundColor: ThemeData.backgroundColor,
+            borderRadius: 30,
+            paddingVertical: 10,
+            paddingHorizontal: 30,
+            justifyContent: 'center', alignItems: 'center',
+            marginHorizontal: 60,
+            }}>
+              <TouchableOpacity onPress={()=>handelComplete(otp)}  >
+              <Text style={{color:"#fff",fontSize: 20}}>Complete</Text>
+              </TouchableOpacity>
+              </View>
             </Block>
+            
 
          
         </View>
@@ -189,10 +204,7 @@ export const OTPModel = ({modalVisible,setModalVisible,handelComplete,orderCompl
         
       </View>
 
-      {/* <View style={styles.content}>
-    <Text style={styles.contentTitle}>Hi 👋!</Text>
-    <Button testID={'close-button'}  title="Close" />
-  </View> */}
+    
     </Modal>
   );
 };

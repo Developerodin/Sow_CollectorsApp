@@ -8,6 +8,7 @@ import axios from "axios";
 import Logo from "../../../assets/addressIcon.png";
 import Logo2 from "../../../assets/bag.png";
 import Logo3 from "../../../assets/logo2.png";
+import { use } from "react";
 
 const { width } = Dimensions.get('window');
 
@@ -21,6 +22,7 @@ export const AccountSettings = () => {
   const [businessName, setBusinessName] = useState("");
   const [address, setAddress] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [kycDetails, setKycDetails] = useState([]);
 
   const handleBack = () => {
     navigation.goBack();
@@ -69,17 +71,33 @@ export const AccountSettings = () => {
     }
   };
 
+  const getUserKycDetails = async () => {
+    try {
+      const response = await axios.get(`${Base_url}b2bUser/kyc/${userDetails.id}`);
+      console.log(response.data);
+      setKycDetails(response.data.data);
+    } catch (error) {
+      console.log("kyc error =>",error);
+    }
+  };
+
   const onRefresh = () => {
     setRefreshing(true);
     getUserDetails();
     getUserAddress();
+    getUserKycDetails();
     setRefreshing(false);
   };
 
   useEffect(() => {
     getUserDetails();
     getUserAddress();
+    
   }, [update]);
+
+  useEffect(() => {
+    getUserKycDetails();
+  }, []);
 
   const renderAddress = ({ item }) => (
     <View style={styles.addressCard}>
@@ -252,6 +270,8 @@ export const AccountSettings = () => {
             <TextInput
               style={styles.input}
               placeholder="Enter your GST Number"
+              value={kycDetails.gstinNumber}
+              onChangeText={(text) => setKycDetails({ ...kycDetails, gstinNumber: text })}
             />
           </View>
         </View>

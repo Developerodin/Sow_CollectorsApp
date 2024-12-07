@@ -123,11 +123,12 @@ export const MarketCard = (props) => {
         borderColor: ThemeData.color,
         backgroundColor: ThemeData.containerBackgroundColor,
         marginTop: 10,
+        
       }}
     >
-      <Block style={{ flexDirection: "row" }} >
+      <Block style={{ flexDirection: "row",justifyContent: "space-between", }} >
       
-        <Block style={[styles.Space_Between, { width: "80%", marginLeft: 10 }]}>
+        <Block style={[styles.Space_Between, { marginLeft: 10 }]}>
           <Block>
             <Block>
               <Text style={{ fontSize: 14, color: ThemeData.textColor, fontWeight: "bold" }}>
@@ -162,6 +163,7 @@ export const MarketCard = (props) => {
             fontSize: 15,
             fontWeight: 700,
             marginTop: 10,
+            marginRight: 10,
           }}
         >
           ₹ {Value}/kg

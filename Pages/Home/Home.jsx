@@ -44,6 +44,8 @@ export const Home = () => {
   const [marketRateLength, setmarketRateLength] = useState(2);
   const [marketRateSeetype, setmarketRateSeetype] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+  
+  const [salesSummary, setSalesSummary] = useState([]);
   const { expoPushToken, notification } = usePushNotifications();
   const data = JSON.stringify(notification, undefined, 2);
   const onRefresh = () => {
@@ -91,6 +93,18 @@ export const Home = () => {
       return filteredCategories;
     } catch (error) {
       throw error.response.data;
+    }
+  };
+
+  const getSalesSummary = async () => {
+    try {
+      const response = await axios.get(`${Base_url}b2bOrder/sale-summary/${userDetails.id}`);
+      const salesSummary = response.data.data;
+      console.log("Sales Summary:", salesSummary);
+      setSalesSummary(salesSummary);
+    }
+    catch (error) {
+      console.error("Error fetching sales summary:", error);
     }
   };
 
@@ -160,7 +174,12 @@ export const Home = () => {
   useEffect(() => {
     getCategories();
     fetchMarketRates();
+    
   }, [update]);
+
+  useEffect(() => {
+    getSalesSummary();
+  }, []);
 
   return (
     <View style={styles.container}>
@@ -179,15 +198,15 @@ export const Home = () => {
                         <View style={styles.cardContainer}>
                           <View style={styles.card1}>
                             <Text style={styles.title1}>Net Amount Earned</Text>
-                            <Text style={styles.amountGreen}>₹ 0</Text>
+                          <Text style={styles.amountGreen}>{salesSummary.netAmountEarned || 0}</Text>
                           </View>
                           <View style={styles.card1}>
                             <Text style={styles.title1}>Net Scrap Sold</Text>
-                            <Text style={styles.amountBlue}>0 Kgs</Text>
+                            <Text style={styles.amountBlue}>{salesSummary.netScrapSold || 0}</Text>
                           </View>
                           <View style={styles.card1}>
                             <Text style={styles.title1}>Net Scrap Pending</Text>
-                            <Text style={styles.amountOrange}>0 Kgs</Text>
+                          <Text style={styles.amountOrange}>{salesSummary.netScrapPending || 0} kgs</Text>
                           </View>
                         </View>
                       </View>

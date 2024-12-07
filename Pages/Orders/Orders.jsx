@@ -7,6 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 import { Base_url } from '../../Config/BaseUrl'; // Ensure this is correctly imported
 import { useAppContext } from '../../Context/AppContext';
 import { ThemeData } from '../../Theme/Theme';
+import icon from "../../assets/filterIcon.png";
+import icon2 from "../../assets/ruppes.png";
 
 export const Orders = () => {
   const navigation = useNavigation();
@@ -57,20 +59,24 @@ export const Orders = () => {
   const renderOrderCard = (data) => (
     <View key={data._id} style={styles.cardContainer}>
       
-      <View style={[styles.header, { backgroundColor: data.orderStatus === 'canceled' ? '#FF2020' : (data.orderStatus === 'pending' ? '#FFD12C' : '#FFD12C'), }]}>
-        {data.orderStatus === 'pending' ? (
+      <View style={[styles.header, { backgroundColor: data.orderStatus === 'Rejected' ? '#FF2020' : (data.orderStatus === 'Pending' ? '#FFD12C' : '#FFD12C'), }]}>
+        {data.orderStatus === 'Pending' ? (
           <Feather name="clock" size={18} color={ThemeData.textColor} />
-        ) : data.orderStatus === 'canceled' ? (
+        ) : data.orderStatus === 'Rejected' ? (
           <Feather name="x-circle" size={18} color={ThemeData.activeColor} />
         ) : null}
-        <Text style={[styles.statusText, { color: data.orderStatus === 'canceled' ? ThemeData.activeColor : (data.orderStatus === 'pending' ? ThemeData.textColor : ThemeData.textColor), }]}>{data.orderStatus}</Text>
+        <Text style={[styles.statusText, { color: data.orderStatus === 'Rejected' ? ThemeData.activeColor : (data.orderStatus === 'Pending' ? ThemeData.textColor : ThemeData.textColor), }]}>{data.orderStatus}</Text>
       </View>
 
       <Block style={styles.row}>
         <View style={styles.column}>
-          <Text style={{ fontSize: 16, fontWeight: 600 }}>{data.orderTo.name}</Text>
+          <Text style={{ fontSize: 16, fontWeight: 600 }}>{data.orderTo && data.orderTo.id === userDetails.id ?
+            data.orderBy.name
+            :
+          data.orderTo?.name
+          }</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <AntDesign name="calendar" size={20} color={ThemeData.color} />
+            <AntDesign name="calendar" size={16} color={ThemeData.color} />
             <Text style={[styles.text, { marginLeft: 8 }]}>
               <Text style={styles.blueText}>{new Date(data.createdAt).toLocaleDateString('en-GB')}</Text>
             </Text>
@@ -78,12 +84,14 @@ export const Orders = () => {
         </View>
 
         <View style={[styles.column, styles.divider]}>
+          <View style={{marginLeft: 15}}>
           <Text style={{ fontSize: 16, fontWeight: 600 }}>Est. Value</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View style={{ backgroundColor: ThemeData.color, borderRadius: 50, padding: 5 }}>
-              <FontAwesome name="rupee" size={10} color={ThemeData.activeColor} />
-            </View>
+           
+              <Image source={icon2} style={{ width: 16, height: 16 }} />
+            
             <Text style={styles.amountText}>₹{data.totalPrice}</Text>
+          </View>
           </View>
         </View>
 
@@ -95,7 +103,7 @@ export const Orders = () => {
 
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: 15 }}>
         <Ionicons name="location" size={26} color={ThemeData.color} />
-        <Text style={[styles.text, { flex: 1, paddingRight: 24 }]}>
+        <Text style={{ flex: 1,fontSize: 14,marginLeft: 8,color: ThemeData.textColor,marginRight:10 }}>
           Pickup Location: {data.location.city}, {data.location.state}
         </Text>
         <TouchableOpacity style={styles.viewDetailsButton} onPress={() => handleViewDetail(data._id)}>
@@ -126,7 +134,7 @@ export const Orders = () => {
         >
           <Text style={{ fontSize: 22, fontWeight: "bold", color: ThemeData.textColor }}>Your Orders</Text>
           <TouchableOpacity onPress={handleMandiRates}>
-            <Ionicons name="filter" size={26} color={ThemeData.textColor} />
+            <Image source={icon} style={{ width: 25, height: 25 }} />
           </TouchableOpacity>
         </View>
         <ScrollView>
@@ -217,7 +225,7 @@ const styles = StyleSheet.create({
   tabContainer: {
     flexDirection: "row",
     width: "100%",
-    borderWidth: 1.5,
+    borderWidth: 1,
     
     
     
@@ -280,11 +288,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: ThemeData.color,
     borderRadius: 15,
-    paddingVertical: 20,
-    paddingHorizontal: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
     backgroundColor: ThemeData.containerBackgroundColor,
     marginTop: 20,
     marginBottom: 15,
+    marginHorizontal: 5,
   },
   header: {
     flexDirection: 'row',
@@ -306,12 +315,12 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    
     marginVertical: 10,
   },
   column: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'left',
     
   },
   divider: {
@@ -319,16 +328,16 @@ const styles = StyleSheet.create({
     borderRightColor: ThemeData.color,
     borderLeftWidth: 1,
     borderLeftColor: ThemeData.color,
-    marginHorizontal: 12,
+    marginHorizontal: 5,
   },
   amountText: {
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: '500',
     color: ThemeData.textColor,
     marginLeft: 5,
   },
   text: {
-    fontSize: 14,
+    fontSize: 13,
     color: ThemeData.textColor,
     textAlign: 'center',
   },

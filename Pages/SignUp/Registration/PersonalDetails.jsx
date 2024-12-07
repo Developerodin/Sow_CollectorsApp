@@ -432,7 +432,7 @@ export const PersonalDetails = () => {
         <Block style={{padding:10}}>
         <Block style={{marginTop:15}}>
 <Block style={[ customStyle.Card1]}>
-          <Text style={{fontSize:16}}>First Name</Text>
+          <Text style={{fontSize:16}}>Name</Text>
       <TextInput
           style={styles.input}
           placeholder="Enter you name"

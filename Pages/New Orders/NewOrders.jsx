@@ -16,6 +16,7 @@ import { ThemeData } from "../../Theme/Theme";
 import { Base_url } from "../../Config/BaseUrl";
 import axios from "axios";
 import { useAppContext } from '../../Context/AppContext';
+import icon from "../../assets/filterIcon.png";
 
 export const NewOrders = () => {
   const [activeTab, setActiveTab] = useState("B2B");
@@ -58,7 +59,7 @@ export const NewOrders = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>New Orders</Text>
-        <Ionicons name="filter-outline" size={24} color="black" />
+       <Image source={icon} style={{width: 25, height: 25}}/>
       </View>
 
       {/* Tabs */}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Dimensions ,Image} from 'react-native';
 import { Block, Text } from "galio-framework";
 import { Ionicons, AntDesign, FontAwesome, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +7,7 @@ import { ThemeData } from '../../Theme/Theme';
 import { Base_url } from '../../Config/BaseUrl';
 import axios from 'axios';
 import { useAppContext } from '../../Context/AppContext';
+import icon from "../../assets/ruppes.png"
 const { width } = Dimensions.get('window');
 
 export const B2bOrderCard = ({ data }) => {
@@ -54,20 +55,22 @@ export const B2bOrderCard = ({ data }) => {
           data.orderTo.name
           }</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <AntDesign name="calendar" size={20} color={ThemeData.color} />
-            <Text style={[styles.text, { marginLeft: 8 }]}>
+            <AntDesign name="calendar" size={18} color={ThemeData.color} />
+            <Text style={[styles.text, { marginLeft: 4 }]}>
               <Text style={styles.blueText}>{new Date(data.createdAt).toLocaleDateString('en-GB')}</Text>
             </Text>
           </View>
         </View>
 
         <View style={[styles.column, styles.divider]}>
-          <Text style={{ fontSize: 16, fontWeight: 600 }}>Est. Value</Text>
+          <View style={{marginLeft: 10}}>
+          <Text style={{ fontSize: 15, fontWeight: 600 }}>Est. Value</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
-            <View style={{ backgroundColor: ThemeData.color, borderRadius: 50, padding: 5 }}>
-              <FontAwesome name="rupee" size={10} color={ThemeData.activeColor} />
-            </View>
+            
+              <Image source={icon} style={{ width: 15, height: 15 }} />
+            
             <Text style={styles.amountText}>₹{data.totalPrice}</Text>
+          </View>
           </View>
         </View>
 
@@ -79,7 +82,7 @@ export const B2bOrderCard = ({ data }) => {
 
       <View style={{ flexDirection: 'row', alignItems: 'center', paddingTop: 15 }}>
         <Ionicons name="location" size={26} color={ThemeData.color} />
-        <Text style={[styles.text, { flex: 1, paddingRight: 24 }]}>
+        <Text style={{ flex: 1,fontSize: 14,marginLeft: 8,color: ThemeData.textColor }}>
           Pickup Location: {data.location.city}, {data.location.state}
         </Text>
         <TouchableOpacity style={styles.viewDetailsButton} onPress={handleViewDetail}>
@@ -141,33 +144,36 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginVertical: 20,
+    
     borderWidth: 1,
     borderColor: ThemeData.color,
     borderRadius: 15,
     padding: 10,
+    
   },
   column: {
     flex: 1,
-    alignItems: 'center',
-    marginHorizontal: 5,
+    alignItems: 'left',
+    marginHorizontal: 2,
+    
   },
   divider: {
     borderRightWidth: 1,
     borderRightColor: ThemeData.color,
     borderLeftWidth: 1,
     borderLeftColor: ThemeData.color,
-    paddingHorizontal: 12,
-    marginHorizontal: 15,
+    marginHorizontal: 5,
+    
   },
   amountText: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: '500',
     color: ThemeData.textColor,
     marginLeft: 5,
   },
   text: {
-    fontSize: 14,
-    color: ThemeData.textColor,
+    fontSize: 13,
+    
     textAlign: 'center',
   },
   blueText: {

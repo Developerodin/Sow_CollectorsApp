@@ -78,6 +78,7 @@ export const B2bOrderDetails = ({route}) => {
       <Block
         style={{ flexDirection: "row", alignItems: "center", marginTop: 55 }}
       >
+        <TouchableOpacity onPress={handleBack} activeOpacity={0.7}>
         <Block
           style={{
             flexDirection: "row",
@@ -89,13 +90,14 @@ export const B2bOrderDetails = ({route}) => {
             style={{ backgroundColor: "#000", borderRadius: 30, padding: 10 }}
           >
             <Ionicons
-              onPress={handleBack}
+              
               name="chevron-back"
               size={20}
               color="#fff"
             />
           </View>
         </Block>
+        </TouchableOpacity>
         <Text
           style={{ marginLeft: 15, fontSize: 25, fontWeight: "500", flex: 1 }}
         >
@@ -208,7 +210,7 @@ export const B2bOrderDetails = ({route}) => {
               }}
             >
               <Ionicons name="location" size={24} color="#000" />
-              <Text style={{ fontSize: 16, marginLeft: 8, fontWeight: 500 }}>
+              <Text style={{ fontSize: 16, marginLeft: 8, fontWeight: 500,paddingRight: 10 }}>
                 Pickup Location : {orderDetails?.location?.googleAddress || "N/A"}
               </Text>
             </Block>

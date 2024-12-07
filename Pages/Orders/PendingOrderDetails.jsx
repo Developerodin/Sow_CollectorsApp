@@ -8,6 +8,8 @@ import { Base_url } from '../../Config/BaseUrl'; // Ensure this is correctly imp
 import { useAppContext } from '../../Context/AppContext';
 import { ThemeData } from '../../Theme/Theme';
 import Logo from "../../assets/user.png";
+import { OTPModel } from '../../Components/Model/OTPModel';
+
 
 const { width } = Dimensions.get('window');
 
@@ -21,11 +23,17 @@ export const PendingOrderDetails = ({ route }) => {
   const [inputFields, setInputFields] = useState([{ value: '', category: 'Category 1' }]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [orderCompleteStatus, setOrderCompleteStatus] = useState(false);
+  const [modelVisible, setModalVisible] = useState(false);
+  
   const [images, setImages] = useState([]);
   const handleBack = () => {
     navigation.goBack();
   };
 
+
+   const modelOpen = () => {
+    setModalVisible(true);
+  };
   const getOrdersById = async () => {
     try {
       const response = await axios.get(`${Base_url}b2bOrder/${id}`);
@@ -43,46 +51,65 @@ export const PendingOrderDetails = ({ route }) => {
     setInputFields(updatedInputFields);
   };
 
-  const handleOrderUpdate = async (orderId, status, quantity) => {
-    try {
-      await axios.put(`${Base_url}api/b2b_orders/orders/${orderId}`, {
-        status,
-        quantity,
-      });
-
-      if (status === "completed") {
-        setOrderCompleteStatus(true);
-      }
-
-      setUpdate((prev) => prev + 1);
-      console.log("Order updated successfully!");
-      ToastAndroid.show("Order successful!", ToastAndroid.SHORT);
-    } catch (error) {
-      ToastAndroid.show("Try Again !!", ToastAndroid.SHORT);
-      console.error("Error updating order:", error.message);
-    }
-  };
-
-  const handelSubmit = () => {
-    console.log("Values", inputFields);
-  };
-
-  const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
-  };
-
-  const handelComplete = (otp) => {
-    console.log("OTP =>", otp);
-    if (otp === "") {
-      ToastAndroid.show('OTP Required', ToastAndroid.SHORT);
-      return;
-    }
-    if (otp === "1234") {
-      setOrderCompleteStatus(true);
-    } else {
-      ToastAndroid.show('Wrong OTP', ToastAndroid.SHORT);
-    }
-  };
+              const handleOrderUpdate = async (orderId, otp) => {
+                try {
+                  const payload = {
+                    orderId,
+                    otp : Number(otp),
+                  };
+                  console.log("Request Payload:", payload);
+              
+                  const response = await axios.post(`${Base_url}b2bOrder/markcomplete`, payload);
+              
+                  if (response.status === 200) {
+                    setUpdate((prev) => prev + 1);
+                    setOrderCompleteStatus(true);
+                    console.log("Order updated successfully!", response.data);
+                    ToastAndroid.show("Order successful!", ToastAndroid.SHORT);
+                  } else {
+                    console.error("Error updating order:", response.data.message);
+                    ToastAndroid.show("Try Again !!", ToastAndroid.SHORT);
+                  }
+                } catch (error) {
+                  if (error.response) {
+                    console.error("Error response data:", error.response.data);
+                    console.error("Error response status:", error.response.status);
+                    console.error("Error response headers:", error.response.headers);
+                    ToastAndroid.show(error.response.data.message || "Try Again !!", ToastAndroid.SHORT);
+                  } else if (error.request) {
+                    // The request was made but no response was received
+                    console.error("Error request data:", error.request);
+                    ToastAndroid.show("No response from server. Try Again !!", ToastAndroid.SHORT);
+                  } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.error("Error message:", error.message);
+                    ToastAndroid.show("Error in request setup. Try Again !!", ToastAndroid.SHORT);
+                  }
+                }
+              };
+              
+              const handelSubmit = () => {
+                console.log("Values", inputFields);
+              };
+              
+              const toggleModal = () => {
+                setIsModalVisible(!isModalVisible);
+              };
+              
+              const handelComplete = (otp) => {
+                console.log("OTP =>", otp, orderDetails.otp);
+                if (otp === "") {
+                  ToastAndroid.show("OTP Required", ToastAndroid.SHORT);
+                  return;
+                }
+                if (orderDetails && parseInt(otp) === orderDetails.otp) {
+                  handleOrderUpdate(orderDetails._id, otp);
+                  setModalVisible(false);
+                  setUpdate((prev) => prev + 1);
+                } else {
+                  ToastAndroid.show("Wrong OTP", ToastAndroid.SHORT);
+                }
+              };
 
   const handelCancel = async () => {
     handleOrderUpdate(orderDetails._id, "canceled", "");
@@ -151,6 +178,14 @@ export const PendingOrderDetails = ({ route }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <Block style={{ padding: 15, backgroundColor: "#fff", marginTop: 0, borderRadius: 10 }}>
           <Block style={{ marginTop: 0 }}>
+          {orderDetails && orderDetails.orderBy.id === userDetails.id && (
+              <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="document" size={20} color={ThemeData.textColor} />
+                <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500, color: ThemeData.textColor }}>
+                  OTP : {orderDetails?.otp || "#0100"}
+                </Text>
+              </Block>
+            )}
             <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
               <Ionicons name="document" size={20} color={ThemeData.textColor} />
               <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500, color: ThemeData.textColor }}>
@@ -159,8 +194,8 @@ export const PendingOrderDetails = ({ route }) => {
             </Block>
             <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
               <Ionicons name="person" size={20} color={ThemeData.textColor} />
-              <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500, color: ThemeData.textColor }}>
-                {orderDetails?.orderTo.name || "N/A"}
+                            <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500, color: ThemeData.textColor }}>
+                {orderDetails?.orderBy.id === userDetails.id ? orderDetails?.orderTo.name : orderDetails?.orderBy.name || "N/A"}
               </Text>
             </Block>
             <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
@@ -239,17 +274,27 @@ export const PendingOrderDetails = ({ route }) => {
           </Block>
         </Block>
 
-        <Block style={[{ marginTop: 30, marginBottom: 30 }, styles.Center]}>
-          {orderDetails && (orderDetails.orderStatus === "in-progress" || orderDetails.orderStatus === "pending") && orderDetails.orderStatus !== "canceled" && (
-            <Block style={[{ marginTop: 30, marginBottom: 30 }, styles.Center]}>
-              <Button color="black" onPress={handelCancel} style={{ height: 63 }}>
-                Cancel Order
-              </Button>
-            </Block>
-          )}
-        </Block>
+        
+        
+        {orderDetails && orderDetails.orderTo && orderDetails.orderTo.id === userDetails.id && !orderCompleteStatus &&(
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between',backgroundColor: ThemeData.backgroundColor,
+            borderRadius: 30,
+            paddingVertical: 10,
+            paddingHorizontal: 30,
+            justifyContent: 'center', alignItems: 'center',
+            marginHorizontal: 60,
+            }}>
+          <TouchableOpacity onPress={modelOpen} >
+            <Text style={{ fontSize: 18
+              ,color: "#fff",justifyContent: "center" }}>
+              Mark as Complete
+            </Text>
+          </TouchableOpacity>
+          </View>
+        )}
+       
 
-        {/* <OTPModel modalVisible={isModalVisible} setModalVisible={setIsModalVisible} handelComplete={handelComplete} orderCompleteStatus={orderCompleteStatus} /> */}
+        <OTPModel modalVisible={modelVisible} setModalVisible={setModalVisible} handelComplete={handelComplete} orderCompleteStatus={orderCompleteStatus} />
 
         <Modal visible={isModalVisible} animationType="slide">
           <View style={styles.modalContainer}>

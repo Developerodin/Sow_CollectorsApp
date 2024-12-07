@@ -293,7 +293,7 @@ export const RateDetails = ({ route }) => {
             </Block>
             <Block>
               <Text style={{ fontSize: 14,fontWeight: 500  }}>
-              {details && details.addresses.length > 0 ? `${details.addresses[0].Address}, ${details.addresses[0].pincode}, ${details.addresses[0].city}, ${details.addresses[0].country}` : "No Address Available"}
+              {details && details.addresses.length > 0 ? `${details.addresses[0].googleAddress}` : "No Address Available"}
               </Text>
             </Block>
           </Block>

@@ -1,62 +1,90 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList,Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, FlatList, Image } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { Block } from 'galio-framework'; // Import Block from the appropriate library
-
-const notifications = [
-    { id: '1', time: '2:45 PM' },
-    { id: '2', time: '2:45 PM' },
-    { id: '3', time: '2:45 PM' },
-    { id: '4', time: '2:45 PM' },
-    { id: '5', time: '2:45 PM' },
-    { id: '6', time: '2:45 PM' },
-    { id: '7', time: '2:45 PM' },
-  // Add more notifications as needed
-];
+import { Block } from 'galio-framework';
+import { useAppContext } from "../../Context/AppContext";
+import { Base_url } from '../../Config/BaseUrl';
+import axios from 'axios';
 
 export const Notification = () => {
+  const { userDetails, update } = useAppContext();
+  const [notifications, setNotifications] = useState([]);
+  const [error, setError] = useState(false);
   const navigation = useNavigation();
+
   const handleBack = () => {
     navigation.goBack();
   };
 
-  const renderItem = ({ item }) => (
-    <View>
+  const getNotifications = async () => {
+    try {
+      const response = await axios.get(`${Base_url}b2b-notifications/${userDetails.id}`);
+      console.log("notifications", response.data);
+      setNotifications(response.data);
+      setError(false); // Reset error state on successful fetch
+    } catch (error) {
+      console.log(error);
+      setError(true); // Set error state if an error occurs
+    }
+  };
 
+  useEffect(() => {
+    getNotifications();
+  }, [update]);
+
+  const formatDate = (date) => {
+    const d = new Date(date);
+    return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+  };
+
+  const renderItem = ({ item }) => (
     <View style={styles.notificationContainer}>
-    <View style={styles.iconContainer}>
-      <Image
-        source={require('./Bell.png')} // Replace with the actual path to your bell icon image
-        style={styles.icon}
-      />
-    </View>
-    <View>
-    <Text style={styles.notificationTitle}>Order Rejected</Text>
-    <Text style={styles.notificationDescription}>Your scrap was rejected.Click to see more</Text>
-    </View>
-    <Text style={styles.timeText}>{item.time}</Text>
-  </View>
+      <View style={styles.iconContainer}>
+        <Image
+          source={require('./Bell.png')} // Replace with the actual path to your bell icon image
+          style={styles.icon}
+        />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Text style={styles.notificationTitle}>{item.notification}</Text>
+        <Text style={styles.notificationDescription}>Status: {item.orderStatus}</Text>
+        <Text style={styles.notificationDescription}>Total Price: ₹{item.totalPrice}</Text>
+      </View>
+      <Text style={styles.timeText}>{formatDate(item.createdAt)}</Text>
     </View>
   );
 
   return (
     <View style={styles.container}>
-      <Block style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center" ,marginTop : 80 ,marginBottom: 20}}>
+      <Block style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginTop: 80, marginBottom: 20 }}>
         <Block style={{ backgroundColor: "black", width: 50, height: 50, flexDirection: "row", justifyContent: "center", alignItems: "center", borderRadius: 150, marginLeft: 20 }}>
           <MaterialIcons onPress={handleBack} name="arrow-back-ios" size={22} style={{ marginLeft: 5 }} color="white" />
         </Block>
         <Text style={{ marginLeft: 15, fontSize: 25, fontWeight: '500' }}>Notifications</Text>
       </Block>
-          <Block style={{ backgroundColor: '#FAFAFA', padding: 5, borderRadius: 30,  width: 100, alignSelf: 'center',margin: 10 }}>
-      <Text style={{ textAlign: 'center',color: '#000' }}>Today</Text>
-    </Block>
-      <FlatList
-        data={notifications}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContainer}
-      />
+      <Block style={{ backgroundColor: '#FAFAFA', padding: 5, borderRadius: 30, width: 100, alignSelf: 'center', margin: 10 }}>
+        <Text style={{ textAlign: 'center', color: '#000' }}>Today</Text>
+      </Block>
+      {error || notifications.length === 0 ? (
+        <Block center style={{ marginTop: 40 }}>
+          <Image
+            source={require("../../assets/media/5-dark.png")}
+            style={{
+              width: 300,
+              height: 300,
+              marginRight: 10,
+            }}
+          />
+        </Block>
+      ) : (
+        <FlatList
+          data={notifications}
+          renderItem={renderItem}
+          keyExtractor={(item) => item._id}
+          contentContainerStyle={styles.listContainer}
+        />
+      )}
     </View>
   );
 };
@@ -65,7 +93,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    
   },
   header: {
     fontSize: 24,
@@ -82,12 +109,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   notificationTitle: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   notificationDescription: {
     fontSize: 14,
-    color: '#666',
+    color: '#000',
   },
   listContainer: {
     paddingHorizontal: 20,
@@ -107,10 +134,12 @@ const styles = StyleSheet.create({
   iconContainer: {
     width: 35,
     height: 35,
-    backgroundColor: '#F0FAFA', 
+    backgroundColor: '#F0FAFA',
     borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: 12,
+    
   },
   icon: {
     width: 24,

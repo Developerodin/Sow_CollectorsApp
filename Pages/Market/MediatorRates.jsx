@@ -12,6 +12,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import logo from "./scrap-img.jpeg";
 import { FontAwesome5, Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { ThemeData } from '../../Theme/Theme';
+import icon from "../../assets/filterIcon.png";
 
 export const MediatorRates = () => {
   const route = useRoute();
@@ -104,18 +105,17 @@ export const MediatorRates = () => {
             borderWidth: 1,
             borderColor: ThemeData.color,
             flexDirection: "row",
-            justifyContent: "flex-start",
+            justifyContent: "space-between",
             alignItems: "center",
             marginHorizontal: 20,
             backgroundColor: ThemeData.cardBackgroundColor,
           }}
         >
-          <Block>
+          <Block style={{flexDirection: 'row'}}>
             <Image
               source={logo}
               style={{ resizeMode: "cover", width: 40, height: 40, marginLeft: 5, borderRadius: 8, marginVertical: 5 }}
             />
-          </Block>
           <Block style={{ width: "60%", marginLeft: 10 }}>
             <Text
               style={{ fontWeight: "700", color: ThemeData.textColor, fontSize: 13 }}
@@ -134,7 +134,8 @@ export const MediatorRates = () => {
               </Text>
             </View>
           </Block>
-          <Block style={{ flexDirection: 'column', justifyContent: 'flex-end' }}>
+          </Block>
+          <Block style={{ flexDirection: 'column', justifyContent: 'flex-end',marginRight: 10 }}>
             <Text
               style={{ fontWeight: "700", color: ThemeData.textColor, fontSize: 13 }}
             >
@@ -142,7 +143,7 @@ export const MediatorRates = () => {
                 ? item.category[0].sub_category.map(sub => sub.price).join(', ')
                 : "N/A"}/kg
             </Text>
-            <Ionicons name='arrow-forward' size={18} color={ThemeData.textColor} style={{ alignSelf: 'flex-end', marginLeft: 5 }} />
+            <Ionicons name='arrow-forward' size={18} color={ThemeData.textColor} style={{ alignSelf: 'flex-end', marginLeft: 5,marginTop: 8 }} />
           </Block>
         </Block>
       </TouchableOpacity>
@@ -199,7 +200,7 @@ export const MediatorRates = () => {
               console.log("Second icon pressed");
             }}
           >
-            <Ionicons name="filter" size={30} color="#000" style={{ marginRight: 10 }} />
+            <Image source={icon} style={{ marginRight: 10 ,width: 25,height: 25}} />
           </TouchableOpacity>
         </View>
       </View>
