@@ -96,9 +96,9 @@ export const Home = () => {
   //   }
   // };
 
-  const getSalesSummary = async () => {
+  const getSalesSummary = async (id) => {
     try {
-      const response = await axios.get(`${Base_url}b2bOrder/sale-summary/${userDetails.id}`);
+      const response = await axios.get(`${Base_url}b2bOrder/sale-summary/${id}`);
       const salesSummary = response.data.data;
       console.log("Sales Summary:", salesSummary);
       setSalesSummary(salesSummary);
@@ -171,15 +171,12 @@ export const Home = () => {
     animationRef.current?.play(10, 80);
   }, []);
 
-  // useEffect(() => {
-  //   getCategories();
-  //   fetchMarketRates();
-    
-  // }, [update]);
-
   useEffect(() => {
-    getSalesSummary();
-  }, []);
+    getSalesSummary(userDetails.id);
+  }, [update]);
+
+  
+ 
 
   return (
     <View style={styles.container}>

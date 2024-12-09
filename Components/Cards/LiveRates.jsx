@@ -111,7 +111,9 @@ const LiveRates = () => {
     setselectedSubCategory(response.data[0].name)
     return response.data;
   } catch (error) {
-    console.log("Error getting subcategory ==>",error)
+    console.log("Error getting subcategory ==>",error);
+    setSubCategoryData([]);
+    setselectedSubCategory("")
   }
 };
 
@@ -361,6 +363,7 @@ const LiveRates = () => {
 
 <TouchableOpacity
               onPress={handelCategoryModelOpen} 
+              activeOpacity={0.8}
                 style={{
                   flexDirection: 'row',
                   flexWrap: 'wrap',
