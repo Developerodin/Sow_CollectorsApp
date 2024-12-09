@@ -37,7 +37,7 @@ import { ThemeData } from "../../Theme/Theme";
 
 export const MyRates = () => {
   const navigation = useNavigation();
-  const { userDetails } = useAppContext();
+  const { userDetails,update,setUpdate } = useAppContext();
   const [expanded, setExpanded] = useState(false);
   const [query, setQuery] = useState("");
   const [data, setData] = useState([]);
@@ -50,7 +50,7 @@ export const MyRates = () => {
   const [UserCategoryData, setUserCategoryData] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [update, setupdate] = useState(0);
+  // const [update, setupdate] = useState(0);
   
   
   const [subAddForm, setsubAddForm] = useState({
@@ -109,7 +109,7 @@ export const MyRates = () => {
         `${Base_url}b2bUser/${userDetails.id}/category/${categoryId}/subcategory/${subcategoryId}`,
         subcategoryData
       );
-      setupdate((prev) => prev + 1);
+      setUpdate((prev) => prev + 1);
       return response.data;
     } catch (error) {
       console.error("Error updating subcategory:", error);
@@ -121,6 +121,10 @@ export const MyRates = () => {
     navigation.navigate("PricingHistory");
   };
 
+  const handelUpdatePricing = () => {
+    navigation.navigate("UpdatePricing");
+  };
+
   const addSubcategory = async (categoryId, subcategoryData) => {
     console.log("Add Subcategory ========>");
     try {
@@ -128,7 +132,7 @@ export const MyRates = () => {
         `${Base_url}b2bUser/${userDetails.id}/category/${categoryId}/subcategory`,
         subcategoryData
       );
-      setupdate((prev) => prev + 1);
+      setUpdate((prev) => prev + 1);
       return response.data;
     } catch (error) {
       console.error("Error adding subcategory:", error);
@@ -215,7 +219,7 @@ export const MyRates = () => {
           id: subCategory._id,
           title: subCategory && subCategory.name.toUpperCase(),
           value: subCategory.price,
-          image: "https://tse4.mm.bing.net/th?id=OIP.OQh1ykyaCVyCvt2aNHJ-LwHaHa&pid=Api&P=0&h=220", // Replace with the actual image URL
+          image: "https://tse4.mm.bing.net/th?id=OIP.OQh1ykyaCVyCvt2aNHJ-LwHaHa&pid=Api&P=0&h=220", 
           category: category.name,
           updatedAt: subCategory.updatedAt,
         }));
@@ -237,14 +241,14 @@ export const MyRates = () => {
     const category = UserCategoryData.filter((el,index)=>{
       return el.name === ItemModelData.category
     })
-    deleteSubcategoryByIndex(category[0]._id,ItemModelData.id)
+    deleteSubcategoryByIndex(category[0]._id,ItemModelData.id,userDetails.id)
     setModalVisible(false)
   }
 
-  const deleteSubcategoryByIndex = async (categoryId, subcategoryId) => {
+  const deleteSubcategoryByIndex = async (categoryId, subcategoryId,userId) => {
     try {
-      const response = await axios.delete(`${Base_url}api/b2b/${categoryId}/subcategories/${subcategoryId}`);
-      setupdate((prev)=>prev+1)
+      const response = await axios.delete(`${Base_url}b2bUser/${userId}/category/${categoryId}/subcategory/${subcategoryId}`);
+      setUpdate((prev)=>prev+1)
       return response.data;
     } catch (error) {
       console.error('Error deleting subcategory:', error);
@@ -307,7 +311,7 @@ export const MyRates = () => {
             }
             
           );
-          setupdate((prev) => prev + 1);
+          setUpdate((prev) => prev + 1);
           setSelectedCategories("")
           setcatModalVisible(false)
           return response.data;
@@ -454,9 +458,13 @@ const handleSubAddChange = (field, value) => {
         <Text style={styles3.linkText}>sub categories</Text> of{' '}
         <Text style={styles3.highlightText}>Aluminium</Text> -
       </Text>
-      <TouchableOpacity style={styles3.button} onPress={handelSubCategoryModelOpen}>
+      <TouchableOpacity style={styles3.button} onPress={handelUpdatePricing}>
         <Text style={styles3.buttonText}>+ Update Pricing</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles3.button} onPress={handelSubCategoryModelOpen}>
+        <Text style={styles3.buttonText}>+ Add Subcategory</Text>
+      </TouchableOpacity>
+
     </View>
 
       <ScrollView style={{ backgroundColor: ThemeData.containerBackgroundColor }}>

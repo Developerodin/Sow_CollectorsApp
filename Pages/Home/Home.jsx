@@ -31,6 +31,7 @@ import LiveRates from "../../Components/Cards/LiveRates";
 import EvilIcons from "@expo/vector-icons/EvilIcons";
 import icon from "./icon.png";
 import { ThemeData } from "../../Theme/Theme";
+import { use } from "react";
 
 export const Home = () => {
   const animationRef = useRef(null);
@@ -51,50 +52,49 @@ export const Home = () => {
   const onRefresh = () => {
     setRefreshing(true);
     // Call your functions here
-    getCategories();
-    fetchMarketRates();
+    getSalesSummary();
     // After fetching data, set refreshing to false
     setRefreshing(false);
   };
 
-  const getAllData = async () => {
-    try {
-      const response = await axios.get(`${Base_url}api/mandi_rates/all-data`);
-      const allData = response.data;
+  // const getAllData = async () => {
+  //   try {
+  //     const response = await axios.get(`${Base_url}api/mandi_rates/all-data`);
+  //     const allData = response.data;
 
-      // Filter out entries where mandi is null and get unique categories
-      const validCategories = new Set();
-      allData.forEach((item) => {
-        if (item.mandi) {
-          item.mandi.categories.forEach((category) => {
-            validCategories.add(category);
-          });
-        }
-      });
+  //     // Filter out entries where mandi is null and get unique categories
+  //     const validCategories = new Set();
+  //     allData.forEach((item) => {
+  //       if (item.mandi) {
+  //         item.mandi.categories.forEach((category) => {
+  //           validCategories.add(category);
+  //         });
+  //       }
+  //     });
 
-      return Array.from(validCategories);
-    } catch (error) {
-      throw error.response.data;
-    }
-  };
+  //     return Array.from(validCategories);
+  //   } catch (error) {
+  //     throw error.response.data;
+  //   }
+  // };
 
-  const getCategories = async () => {
-    try {
-      const response = await axios.get(`${Base_url}api/category`);
-      const allCategories = response.data;
+  // const getCategories = async () => {
+  //   try {
+  //     const response = await axios.get(`${Base_url}api/category`);
+  //     const allCategories = response.data;
 
-      const validCategories = await getAllData();
+  //     const validCategories = await getAllData();
 
-      const filteredCategories = allCategories.filter((category) =>
-        validCategories.includes(category.name)
-      );
+  //     const filteredCategories = allCategories.filter((category) =>
+  //       validCategories.includes(category.name)
+  //     );
 
-      setCategoriesData(filteredCategories);
-      return filteredCategories;
-    } catch (error) {
-      throw error.response.data;
-    }
-  };
+  //     setCategoriesData(filteredCategories);
+  //     return filteredCategories;
+  //   } catch (error) {
+  //     throw error.response.data;
+  //   }
+  // };
 
   const getSalesSummary = async () => {
     try {
@@ -140,15 +140,15 @@ export const Home = () => {
     navigation.navigate("Live Rates");
   };
 
-  const fetchMarketRates = async () => {
-    try {
-      const response = await axios.get(`${Base_url}api/market_rates`);
-      // console.log('Fetched plans:', response.data);
-      setData(response.data);
-    } catch (error) {
-      console.error("Error fetching plans:", error);
-    }
-  };
+  // const fetchMarketRates = async () => {
+  //   try {
+  //     const response = await axios.get(`${Base_url}api/market_rates`);
+  //     // console.log('Fetched plans:', response.data);
+  //     setData(response.data);
+  //   } catch (error) {
+  //     console.error("Error fetching plans:", error);
+  //   }
+  // };
 
   function formatDate(dateString) {
     const date = new Date(dateString);
@@ -171,11 +171,11 @@ export const Home = () => {
     animationRef.current?.play(10, 80);
   }, []);
 
-  useEffect(() => {
-    getCategories();
-    fetchMarketRates();
+  // useEffect(() => {
+  //   getCategories();
+  //   fetchMarketRates();
     
-  }, [update]);
+  // }, [update]);
 
   useEffect(() => {
     getSalesSummary();
@@ -198,11 +198,11 @@ export const Home = () => {
                         <View style={styles.cardContainer}>
                           <View style={styles.card1}>
                             <Text style={styles.title1}>Net Amount Earned</Text>
-                          <Text style={styles.amountGreen}>{salesSummary.netAmountEarned || 0}</Text>
+                          <Text style={styles.amountGreen}>₹ {salesSummary.netAmountEarned || 0}</Text>
                           </View>
                           <View style={styles.card1}>
                             <Text style={styles.title1}>Net Scrap Sold</Text>
-                            <Text style={styles.amountBlue}>{salesSummary.netScrapSold || 0}</Text>
+                            <Text style={styles.amountBlue}>{salesSummary.netScrapSold || 0} kgs</Text>
                           </View>
                           <View style={styles.card1}>
                             <Text style={styles.title1}>Net Scrap Pending</Text>

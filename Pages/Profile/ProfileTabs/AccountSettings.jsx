@@ -9,6 +9,7 @@ import Logo from "../../../assets/addressIcon.png";
 import Logo2 from "../../../assets/bag.png";
 import Logo3 from "../../../assets/logo2.png";
 import { use } from "react";
+import { StatusBar } from "expo-status-bar";
 
 const { width } = Dimensions.get('window');
 
@@ -27,6 +28,12 @@ export const AccountSettings = () => {
   const handleBack = () => {
     navigation.goBack();
   };
+
+
+  
+  const userId = userDetails.id;
+  console.log("User Id =>", userId);
+
 
   const handleAddAddress = () => {
     navigation.navigate("Address", { userId: userDetails.id });
@@ -81,6 +88,25 @@ export const AccountSettings = () => {
     }
   };
 
+
+
+
+
+
+  const updateKycDetails = async () => {
+    try {
+      console.log("Kyc Details =>", kycDetails.gstinNumber);
+      const response = await axios.put(`${Base_url}b2bUser/kyc/user/${userDetails.id}`, {
+        gstinNumber: kycDetails.gstinNumber,
+      });
+      console.log(response.data);
+      ToastAndroid.show("KYC details updated successfully", ToastAndroid.SHORT);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   const onRefresh = () => {
     setRefreshing(true);
     getUserDetails();
@@ -92,12 +118,11 @@ export const AccountSettings = () => {
   useEffect(() => {
     getUserDetails();
     getUserAddress();
+    getUserKycDetails();
     
   }, [update]);
 
-  useEffect(() => {
-    getUserKycDetails();
-  }, []);
+ 
 
   const renderAddress = ({ item }) => (
     <View style={styles.addressCard}>
@@ -111,16 +136,23 @@ export const AccountSettings = () => {
     </View>
   );
 
+  const handleSubmit = async () => {
+    await updateUserDetails();
+    await updateKycDetails();
+  };
+
+
   return (
     <View style={{ flex: 1, backgroundColor: "#fff" }}>
-      {/* Header */}
+      <StatusBar hidden={false} color={"dark"} />
       <View
         style={{
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
           paddingHorizontal: 10,
-          marginVertical: 30,
+          marginBottom: 20,
+          marginTop: 50,
           height: 50,
         }}
       >
@@ -304,7 +336,7 @@ export const AccountSettings = () => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button2} onPress={updateUserDetails} activeOpacity={0.7}>
+        <TouchableOpacity style={styles.button2} onPress={updateKycDetails} activeOpacity={0.7}>
           <Text style={{ fontSize: 18, fontWeight: 400, color: "#fff" }}>
             Update
           </Text>

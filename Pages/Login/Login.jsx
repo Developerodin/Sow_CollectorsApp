@@ -487,26 +487,37 @@ export const Login = ({ navigation }) => {
               </View>
             )}
 
-            <Block center style={[{ marginTop: 40,marginBottom:40 }]}>
+                       <Block center style={[{ marginTop: 40, marginBottom: 40 }]}>
               {showOTP ? (
-                <Button
-                  title="Login"
-                  color="#000000"
-                  style={{ width:width*0.88, padding:10 }}
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#000000',
+                    width: width * 0.88,
+                    padding: 15,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 10,
+                  }}
                   onPress={handelOtpComplete}
-                 
-                  tintColor="#fff"
-                />
+                  activeOpacity={0.8}
+                >
+                  <Text style={{ color: '#fff', fontSize: 16 }}>Login</Text>
+                </TouchableOpacity>
               ) : (
-                <Button
-                  title="Send OTP"
-                  color="#000000"
-                 
-                  style={{ width:width*0.88, padding:10 }}
+                <TouchableOpacity
+                  style={{
+                    backgroundColor: '#000000',
+                    width: width * 0.88,
+                    padding: 15,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: 10,
+                  }}
                   onPress={handelMobileNumber}
-                  
-                  tintColor="#fff"
-                />
+                  activeOpacity={0.8}
+                >
+                  <Text style={{ color: '#fff', fontSize: 16 }}>Send OTP</Text>
+                </TouchableOpacity>
               )}
             </Block>
           </Block>

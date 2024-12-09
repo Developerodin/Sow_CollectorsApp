@@ -69,6 +69,7 @@ import * as Notifications from "expo-notifications";
 import usePushNotifications from "./usePushNotifications";
 import { ThemeData } from "./Theme/Theme";
 import { AccountSettings } from "./Pages/Profile/ProfileTabs/AccountSettings";
+import UpdatePricing from "./Pages/My Rates/UpdatePricing";
 
 import { Kyc } from "./Pages/SignUp/Registration/Kyc";
 const Stack = createNativeStackNavigator();
@@ -401,7 +402,7 @@ export default function App() {
             name="Live Rates"
             component={LiveRatestwo}
             options={{
-              headerShown: true,
+              headerShown: false,
             }}
           />
 
@@ -626,6 +627,13 @@ export default function App() {
           <Stack.Screen
             name="AccountSettings"
             component={AccountSettings}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="UpdatePricing"
+            component={UpdatePricing}
             options={{
               headerShown: false,
             }}

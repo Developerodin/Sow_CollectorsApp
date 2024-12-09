@@ -89,13 +89,14 @@ export const CategoryAddModel2 = ({
       <View >
         <View style={styles.modalView}>
           <Block right style={{ width: width * 0.8 }}>
+            <Text style={{fontSize: 25,fontWeight: 700,alignSelf: "flex-start"}}>Select Categories </Text>
             <Ionicons
               onPress={handelClose}
               name="close-circle"
               size={26}
               color="#000"
+              style={{ alignSelf: "flex-end" ,marginTop: -28}}
             />
-          <Text style={{fontSize:18}}>Select Categories </Text>
           </Block>
           <Block
             style={{
@@ -140,11 +141,12 @@ export const CategoryAddModel2 = ({
           </Block>
 
           
-          <TouchableOpacity onPress={handelComplete}>
+          <TouchableOpacity style={{marginBottom: 50}} onPress={handelComplete}>
             <Text style={{color:"#fff",marginTop:10,backgroundColor: 'black',fontSize: 18,
     borderRadius: 30,
     paddingVertical: 15,
     paddingHorizontal: 40,
+    
     }}>Submit</Text>
           </TouchableOpacity>
         </View>
@@ -238,20 +240,19 @@ const styles = StyleSheet.create({
   categoryContainer: {
     padding: 10,
     margin: 5,
-    borderWidth: 1,
-    borderColor: "#ccc",
     borderRadius: 30,
-    backgroundColor: "#fff",
+    backgroundColor: '#DBDBDB4D',
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: 5,
   },
   selectedCategory: {
     backgroundColor: "#000",
     borderColor: "#000",
   },
   categoryName: {
-    fontSize: 18,
+    fontSize: 15,
     color: "#000",
+    fontWeight: "bold",
   },
   selectedCategoryText: {
     color: "#fff",

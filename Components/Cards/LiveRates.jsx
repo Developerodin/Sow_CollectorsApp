@@ -498,7 +498,7 @@ const LiveRates = () => {
 
 <CategoryAddModel3 
           modalVisible={categoryModel}
-          setModalVisible={setModalVisible}
+          setModalVisible={setCategoryModel}
           categoriesData={CategoriesData}
           setCategoryName={setCategoryName}
             />

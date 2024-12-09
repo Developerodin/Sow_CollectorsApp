@@ -5,6 +5,7 @@ import {
   Image,
   ScrollView,
   FlatList,
+  StyleSheet,
 } from "react-native";
 import { Block, Text } from "galio-framework";
 import axios from "axios";
@@ -16,9 +17,16 @@ import icon from "./trend1.png";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppContext } from "../../Context/AppContext";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { ThemeData } from "../../Theme/Theme";
+import AntDesign from '@expo/vector-icons/AntDesign';
+import { CategoryAddModel3 } from "../CategoryAddModel/CategoryAddModel3";
+import icon2 from "./redIcon.png";
+import { MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 
 const LiveRatestwo = () => {
+  const navigation = useNavigation();
   const { favouriteMandi, setFavouriteMandi, updateMandi } = useAppContext();
   const [selectedState, setSelectedState] = useState("All"); // Default to 'All'
   const [modalVisible, setModalVisible] = useState(false);
@@ -29,6 +37,24 @@ const LiveRatestwo = () => {
   const [priceDifferences, setPriceDifferences] = useState({});
   const [userId, setUserId] = useState(null);
   const [isEmpty, setIsEmpty] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [CategoriesData,setCategoriesData] =useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [categoryName , setCategoryName] = useState("Iron")
+  const [subCategoryData, setSubCategoryData] = useState([]);
+  const [categoryModel , setCategoryModel] = useState(false)
+  const [selectedCategory, setselectedCategory] = useState("Iron");
+
+  const handelCategoryModelOpen=()=>{
+    setCategoryModel(true)
+  }
+  const handelCategoryModelClose = ()=>{
+    setCategoryModel(false)
+  }
+
+  const handleBack = () => {
+    navigation.goBack();
+  };
 
   const getAllData = async () => {
     try {
@@ -103,6 +129,35 @@ const LiveRatestwo = () => {
     }
   };
 
+  const getCategories = async () => {
+      
+    try {
+      const response = await axios.get(`${Base_url}categories`);
+      setCategoriesData(response.data);
+      setselectedCategory(response.data[0].name)
+      // console.log("All categorires ===>",response.data )
+      return response.data;
+    } catch (error) {
+      throw error.response.data;
+    }
+  };
+
+  const getSubCategoriesByCategoryName = async (categoryName) => {
+    console.log('Getting SubCategories', categoryName);
+  try {
+    const response = await axios.post(`${Base_url}subcategories/category`,{
+      categoryName:categoryName
+    });
+    
+
+    console.log("sub category data of selected category ==>",response.data);
+    setSubCategoryData(response.data);
+    return response.data;
+  } catch (error) {
+    console.log("Error getting subcategory ==>",error)
+  }
+};
+
   const userDetailsFromStorage = async () => {
     try {
       const Details = (await AsyncStorage.getItem("userDetails")) || null;
@@ -125,10 +180,19 @@ const LiveRatestwo = () => {
     }
   }, [userId, updateMandi]);
 
+  useEffect(() => {
+    getCategories();
+    
+  }, []);
+
+  useEffect(() => {
+    getSubCategoriesByCategoryName(categoryName);
+  }, [categoryName]);
+
   // Add 'All' to the states array
   const states = [
-    "All",
     "Favourite",
+    "All",
     ...new Set(
       marketRates.map((item) => item.mandi?.state).filter((state) => state)
     ),
@@ -190,6 +254,10 @@ const LiveRatestwo = () => {
     setModalVisible(false);
   };
 
+  const handlCategoryPress = (data) =>{
+    setselectedCategory(data)
+  }
+
   const renderMarketItem = ({ item }) =>
     item.categoryPrices.map((priceItem, index) => {
       const priceDifference =
@@ -208,23 +276,22 @@ const LiveRatestwo = () => {
               borderRadius: 8,
               padding: 5,
               borderWidth: 1,
-              borderColor: "#65C5C4",
+              borderColor: ThemeData.color,
               flexDirection: "row",
-              justifyContent: "flex-start",
+              justifyContent: "space-between",
               alignItems: "center",
-              backgroundColor: "#FFFFFF",
+              backgroundColor: ThemeData.cardBackgroundColor,
             }}
           >
-            <Block>
+            <Block style={{flexDirection: "row"}}>
             <Image
                 source={logo}
                 style={{ resizeMode: "cover", width: 40, height: 40,marginLeft:5,borderRadius: 8,marginVertical:5 }}
               />
-            </Block>
             <Block style={{ width: "60%", marginLeft: 10 }}>
               <Text
                 style={{ fontWeight: "700", color: "#000", fontSize: 13 }}
-              >
+                >
                 {item.mandi?.mandiname || "Unknown Mandi"}
               </Text>
               <Text style={{ fontSize: 13, fontWeight: "600" }}>
@@ -236,8 +303,9 @@ const LiveRatestwo = () => {
         {formatDate(item.updatedAt)}
       </Text>
     </View>
+                </Block>
             </Block>
-            <Block style={{ textAlign: "right" }}>
+            <Block style={{ textAlign: "right" ,marginRight: 10 }}>
               <Text
                 style={{ fontWeight: "700", color: "#000", fontSize: 13 }}
               >
@@ -259,16 +327,13 @@ const LiveRatestwo = () => {
                      ₹ {priceDifference.difference}
                   </Text>
                   <Image
-                    source={icon}
+                    source={priceDifference.tag === "Increment" ? icon : icon2}
                     style={{
                       width: 20,
                       height: 20,
                       transform: [
                         {
-                          rotate:
-                            priceDifference.tag === "Increment"
-                              ? "0deg"
-                              : "60deg",
+                          rotate: priceDifference.tag === "Increment" ? "0deg" : "60deg",
                         },
                       ],
                     }}
@@ -282,8 +347,34 @@ const LiveRatestwo = () => {
     });
 
   return (
-      <ScrollView>
+      <ScrollView style={styles.container}>
+        <View style={{ backgroundColor: "#fff",}}>
+    <Block style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginTop: 60, marginBottom: 20 }}>
+        <Block style={{ backgroundColor: "black", width: 50, height: 50, flexDirection: "row", justifyContent: "center", alignItems: "center", borderRadius: 150, marginLeft: 20 }}>
+          <MaterialIcons onPress={handleBack} name="arrow-back-ios" size={22} style={{ marginLeft: 5 }} color="white" />
+        </Block>
+        <Text style={{ marginLeft: 15, fontSize: 25, fontWeight: '500' }}>Mandi Rates</Text>
+      </Block>
             <View >
+            <TouchableOpacity
+              onPress={handelCategoryModelOpen} 
+                style={{
+                  flexDirection: 'row',
+                  flexWrap: 'wrap',
+                  alignItems: 'center',
+                  // maxWidth: 200,
+                  alignSelf: "flex-start",
+                  margin:10,
+                  paddingVertical: 10,
+                  paddingHorizontal: 15,
+                  backgroundColor: ThemeData.backgroundColor,
+                  borderRadius: 30,
+                }}
+              >
+                <Text style={{ color:'#fff',fontSize:14 }}>
+                  Select Category : {categoryName}
+                </Text>
+              </TouchableOpacity>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
@@ -302,12 +393,41 @@ const LiveRatestwo = () => {
               borderRadius: 30,
             }}
           >
-            <Text style={{ color: selectedState === state ? "#fff" : "black" }}>
-              {state}
-            </Text>
+            {
+                    state === "Favourite" ?
+                    <AntDesign name="hearto" size={18} color={selectedState === state ? ThemeData.activeColor : ThemeData.textColor} />
+                    :
+                    <Text style={{ fontWeight:"bold",color: selectedState === state ? ThemeData.activeColor : ThemeData.textColor }}>
+                    {state}
+                  </Text>
+                  }
           </TouchableOpacity>
         ))}
       </ScrollView>
+
+      <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{ marginBottom: 10, paddingLeft: 10 }}
+          >
+            {subCategoryData.map((item,index) => (
+              <TouchableOpacity
+                key={index}
+                onPress={() => handlCategoryPress(item.name)}
+                style={{
+                  marginRight:3,
+                  paddingVertical: 5,
+                  paddingHorizontal: 15,
+                  backgroundColor: selectedCategory === item.name ? ThemeData.color : "#fff",
+                  borderRadius: 30,
+                }}
+              >
+                <Text style={{fontWeight:500,fontSize:15, color: selectedCategory === item.name ? ThemeData.backgroundColor : ThemeData.textColor }}>
+                  {item.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
 
       {selectedState === "Favourite" && filteredData.length === 0 ? (
         <Image
@@ -373,9 +493,24 @@ const LiveRatestwo = () => {
         formatDate={formatDate}
         formatTime={formatTime}
       />
+
+<CategoryAddModel3 
+          modalVisible={categoryModel}
+          setModalVisible={setCategoryModel}
+          categoriesData={CategoriesData}
+          setCategoryName={setCategoryName}
+            />
+    </View>
     </View>
         </ScrollView>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    
+    backgroundColor: '#fff', // Ensure the entire scrollable area has a white background
+  },
+});
 
 export default LiveRatestwo;

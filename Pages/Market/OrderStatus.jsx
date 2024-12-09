@@ -10,7 +10,7 @@ export const OrderStatus = ({ route }) => {
     const animationRef = useRef(null);
 
     const handelSuccessClick = ()=>{
-        navigation.navigate("Orders");
+        navigation.navigate("New Orders");
     }
 
     const handelTryAgainClick = () => {
@@ -34,7 +34,7 @@ export const OrderStatus = ({ route }) => {
            style={styles.lottie}
           
            
-           source={require('../.././assets/Animations/Animation - 1695899165253.json')}
+           source={require('../.././assets/Animations/Animation - 1733658953722.json')}
            autoPlay={true} loop={true}
          />
               
