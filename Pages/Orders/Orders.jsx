@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity, RefreshControl, Image } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, RefreshControl, Image, ActivityIndicator } from 'react-native';
 import { Block, Text } from "galio-framework";
 import { Ionicons, Feather, AntDesign, FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
@@ -18,6 +18,7 @@ export const Orders = () => {
   const [selectedTab, setSelectedTab] = useState('Upcoming');
   const [selectedAction, setSelectedAction] = useState('Sell');
   const [errorFetchingOrders, setErrorFetchingOrders] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -35,6 +36,7 @@ export const Orders = () => {
 
   const getOrders = async (type, action) => {
     try {
+      setLoading(true); // Set loading to true before API call
       console.log("User ID:", userDetails.id, "Type:", type, "Action:", action);
       const response = await axios.post(`${Base_url}b2bOrder/filterorders`, {
         userId: userDetails.id,
@@ -49,6 +51,8 @@ export const Orders = () => {
       if (error.response && error.response.status === 404) {
         setErrorFetchingOrders(true); // Set error state if 404 error occurs
       }
+    } finally {
+      setLoading(false); // Set loading to false after API call
     }
   };
 
@@ -189,7 +193,11 @@ export const Orders = () => {
         </ScrollView>
       </View>
       <Block style={{ padding: 10, marginBottom: 60 }}>
-        {errorFetchingOrders ? (
+        {loading ? ( // Show loader while loading
+          <Block center style={{ marginTop: 40 }}>
+            <ActivityIndicator size="large" color={ThemeData.color} />
+          </Block>
+        ) : errorFetchingOrders ? (
           <Block center style={{ marginTop: 40 }}>
             <Image
               source={require("../../assets/media/5-dark.png")}
@@ -226,9 +234,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     width: "100%",
     borderWidth: 1,
-    
-    
-    
     alignSelf: "center",
     marginTop: 20,
   },
@@ -315,13 +320,11 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-    
     marginVertical: 10,
   },
   column: {
     flex: 1,
     alignItems: 'left',
-    
   },
   divider: {
     borderRightWidth: 1,

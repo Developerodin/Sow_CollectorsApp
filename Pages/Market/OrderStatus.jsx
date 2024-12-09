@@ -58,9 +58,11 @@ export const OrderStatus = ({ route }) => {
             }
 
 {
-    status === "success" && <Block center style={{marginTop:20}}>
-    <Text style={{fontSize:18,fontWeight:600,marginTop:20,letterSpacing:1}}>Order Placed Successfully</Text>
-                <Button onPress={handelSuccessClick} color='success' style={{marginTop:20}}>Orders</Button>
+    status === "success" && <Block center style={{marginTop:0}}>
+    <Text style={{fontSize:28,fontWeight:600,marginTop:0,letterSpacing:1}}>Scrap listed!</Text>
+    <Text style={{fontSize:16,fontWeight:500,marginTop:20}}>Please wait while we're getting your </Text>
+    <Text style={{fontSize:16,fontWeight:500,marginTop:0}}>pickup ready.</Text>
+                <Button onPress={handelSuccessClick} color='black' style={{marginTop:20}}>Orders</Button>
              </Block>
 }
 
