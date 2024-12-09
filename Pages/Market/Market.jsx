@@ -622,15 +622,28 @@ export const Market = () => {
             }}
           >
         <ScrollView contentContainerStyle={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-between',marginBottom : 50 }} showsVerticalScrollIndicator={false}>
-      {selectedSubCategoriesData.map((el, index) => (
-        <TouchableOpacity key={index} onPress={() => handleSubCategorySelection(el.name, el._id)}>
-          <View style={[styles.categoryItem, selectedSubCategories.includes(el._id) && styles.selectedCategory]}>
-            <Text style={{ fontSize: 14,fontWeight: 600, color: selectedSubCategories.includes(el._id) ? ThemeData.activeColor : ThemeData.textColor }}>
-              {el.name}
-            </Text>
-          </View>
-        </TouchableOpacity>
-      ))}
+          {selectedSubCategoriesData.length > 0 ? (
+        selectedSubCategoriesData.map((el, index) => (
+          <TouchableOpacity key={index} onPress={() => handleSubCategorySelection(el.name, el._id)}>
+            <View style={[styles.categoryItem, selectedSubCategories.includes(el._id) && styles.selectedCategory]}>
+              <Text style={{ fontSize: 14, fontWeight: 600, color: selectedSubCategories.includes(el._id) ? ThemeData.activeColor : ThemeData.textColor }}>
+                {el.name}
+              </Text>
+            </View>
+          </TouchableOpacity>
+        ))
+      ) : (
+        <Block center style={{ marginTop: 40 }}>
+          <Image
+            source={require("../../assets/media/5-dark.png")}
+            style={{
+              width: 300,
+              height: 300,
+              marginRight: 10,
+            }}
+          />
+        </Block>
+      )}
     </ScrollView>
     </Block>
     {/* <TouchableOpacity onPress={handleSaveSubCategory} style={styles.saveButton}>

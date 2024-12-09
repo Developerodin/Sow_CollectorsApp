@@ -44,7 +44,8 @@ export const Orders = () => {
         action
       });
       console.log("Fetched Orders ===>:", response.data);
-      setPendingOrders(response.data);
+      const sortedOrders = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setPendingOrders(sortedOrders);
       setErrorFetchingOrders(false); // Reset error state on successful fetch
     } catch (error) {
       console.error("Error fetching orders:", error);

@@ -231,8 +231,8 @@ export const PendingOrderDetails = ({ route }) => {
           <Block style={styles.tableContainer}>
             <View style={[styles.tableRow, styles.tableHeader]}>
               <Text style={[styles.headerText, styles.tableCell]}>Unit</Text>
-              <Text style={[styles.headerText, styles.tableCell]}>Estimated</Text>
               <Text style={[styles.headerText, styles.tableCell]}>Actual</Text>
+              {/* <Text style={[styles.headerText, styles.tableCell]}>Actual</Text> */}
             </View>
 
             <View style={styles.tableRow}>
@@ -240,17 +240,17 @@ export const PendingOrderDetails = ({ route }) => {
                 {orderDetails?.unit || "-"}
               </Text>
               <Text style={[styles.cellText, styles.tableCell]}>
-                {orderDetails?.weight || "-"}
+                {orderDetails?.weight || "-"} kg
               </Text>
-              <Text style={[styles.cellText, styles.tableCell]}>
+              {/* <Text style={[styles.cellText, styles.tableCell]}>
                 {orderDetails?.actual || "-"}
-              </Text>
+              </Text> */}
             </View>
 
             <View style={styles.tableRow}>
               <Text style={[styles.cellText, styles.tableCell]}>₹</Text>
               <Text style={[styles.cellText, styles.tableCell]}>₹ {orderDetails?.totalPrice || "-"}</Text>
-              <Text style={[styles.cellText, styles.tableCell]}>₹ {orderDetails?.Amount || "-"}</Text>
+              {/* <Text style={[styles.cellText, styles.tableCell]}>₹ {orderDetails?.Amount || "-"}</Text> */}
             </View>
           </Block>
           {

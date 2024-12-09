@@ -23,6 +23,12 @@ import { Base_url } from "../../Config/BaseUrl";
 import axios from "axios";
 import { useAppContext } from '../../Context/AppContext';
 const { width, height } = Dimensions.get("window");
+import userLogo from "../../assets/user.png";
+import catIcon from "../../assets/catIcon.png";
+import weightIcon from "../../assets/weightIcon.png";
+import rupee from "../../assets/ruppee.png";
+import calender from "../../assets/calender.png";
+import location from "../../assets/location.png";
 
 export const B2bOrderDetails = ({route}) => {
   const { orderId } = route.params;
@@ -135,7 +141,7 @@ export const B2bOrderDetails = ({route}) => {
                 alignItems: "center",
               }}
             >
-              <Ionicons name="people" size={20} color="#000" />
+              <Image source={userLogo} style={{ height: 20, width: 20 }} />
               <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500 }}>
               {/* {orderDetails?.orderTo?.name || "N/A"} */}
               {
@@ -154,7 +160,7 @@ export const B2bOrderDetails = ({route}) => {
                 alignItems: "center",
               }}
             >
-              <MaterialIcons name="category" size={20} color="#000" />
+              <Image source={catIcon} style={{ height: 20, width: 20 }} />
               <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500 }}>
               {orderDetails?.category || "N/A"}
               </Text>
@@ -167,12 +173,25 @@ export const B2bOrderDetails = ({route}) => {
                 alignItems: "center",
               }}
             >
-              <FontAwesome
-                name="rupee"
-                size={22}
-                color="#000"
-                style={{ marginLeft: 5 }}
-              />
+              <MaterialIcons name="phone" size={20} color="#000" />
+              <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500 }}>
+              {
+            orderDetails.orderTo && orderDetails.orderTo.id === userDetails.id ?
+            orderDetails.orderBy?.phoneNumber
+            :
+            orderDetails.orderTo?.phoneNumber
+          }
+              </Text>
+            </Block>
+
+            <Block
+              style={{
+                marginTop: 18,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <Image source={rupee} style={{ height: 20, width: 20 }} />
               <Text style={{ fontSize: 20, marginLeft: 10, fontWeight: 700 }}>
                 Est. value : ₹{orderDetails?.totalPrice || "-"}
               </Text>
@@ -185,7 +204,7 @@ export const B2bOrderDetails = ({route}) => {
                 alignItems: "center",
               }}
             >
-              <Ionicons name="square" size={20} color="#000" />
+              <Image source={weightIcon} style={{ height: 20, width: 20 }} />
               <Text style={{ fontSize: 20, marginLeft: 8, fontWeight: 700 }}>
                 Est. weight : {orderDetails?.weight || "-"}kg
               </Text>
@@ -197,7 +216,7 @@ export const B2bOrderDetails = ({route}) => {
                 alignItems: "center",
               }}
             >
-              <Ionicons name="calendar" size={20} color="#000" />
+              <Image source={calender} style={{ height: 20, width: 20 }} />
               <Text style={{ fontSize: 16, marginLeft: 8, fontWeight: 500 }}>
               {orderDetails && new Date(orderDetails.createdAt).toLocaleDateString('en-GB')}
               </Text>
@@ -209,7 +228,7 @@ export const B2bOrderDetails = ({route}) => {
                 alignItems: "center",
               }}
             >
-              <Ionicons name="location" size={24} color="#000" />
+              <Image source={location} style={{ height: 19, width: 16 }} />
               <Text style={{ fontSize: 16, marginLeft: 8, fontWeight: 500,paddingRight: 10 }}>
                 Pickup Location : {orderDetails?.location?.googleAddress || "N/A"}
               </Text>
