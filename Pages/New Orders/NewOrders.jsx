@@ -65,7 +65,7 @@ export const NewOrders = () => {
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>New Orders</Text>
-       <Image source={icon} style={{width: 25, height: 25}}/>
+       {/* <Image source={icon} style={{width: 25, height: 25}}/> */}
       </View>
 
       {/* Tabs */}
@@ -93,6 +93,13 @@ export const NewOrders = () => {
         There are <Text style={{ color: ThemeData.color }}>{b2bOrders.length} New orders</Text> today!
       </Text>
 
+      {activeTab === 'B2C' && (
+        <View style={styles.blurOverlay}>
+          <Ionicons name="alert-circle" size={50} color="#65C5C4" />
+          <Text style={styles.comingSoonText}>Coming Soon</Text>
+        </View>
+      )}
+
       {/* Filter Tabs */}
       <View style={styles.filterTabsContainer}>
         {["All", "Today", "Last week", "Last month"].map((filter) => (
@@ -117,44 +124,44 @@ export const NewOrders = () => {
       </View>
 
       {/* Orders List */}
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        style={{ paddingHorizontal: 16 }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {loading ? ( // Show loader while loading
-          <Block center style={{ marginTop: 40 }}>
-            <ActivityIndicator size="large" color={ThemeData.color} />
-          </Block>
-        ) : errorFetchingOrders ? (
-          <Block center style={{ marginTop: 40 }}>
-            <Image
-              source={require("../../assets/media/5-dark.png")}
-              style={{
-                width: 300,
-                height: 300,
-                marginRight: 10,
-              }}
-            />
-          </Block>
-        ) : (
-          activeTab === "B2B" ? (
+      {activeTab === 'B2B' ? (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          style={{ paddingHorizontal: 16 }}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {loading ? ( // Show loader while loading
+            <Block center style={{ marginTop: 40 }}>
+              <ActivityIndicator size="large" color={ThemeData.color} />
+            </Block>
+          ) : errorFetchingOrders ? (
+            <Block center style={{ marginTop: 40 }}>
+              <Image
+                source={require("../../assets/media/5-dark.png")}
+                style={{
+                  width: 300,
+                  height: 300,
+                  marginRight: 10,
+                }}
+              />
+            </Block>
+          ) : (
             b2bOrders.length > 0 ? (
               b2bOrders.map((order) => <B2bOrderCard key={order._id} data={order} />)
             ) : (
               <Text style={styles.noOrdersText}>No B2B orders available.</Text>
             )
-          ) : (
-            <>
-              <B2cOrderCard />
-              <B2cOrderCard />
-              <B2cOrderCard />
-            </>
-          )
-        )}
-      </ScrollView>
+          )}
+        </ScrollView>
+      ) : (
+        <View style={{ flex: 1 }}>
+          <B2cOrderCard />
+          <B2cOrderCard />
+          <B2cOrderCard />
+        </View>
+      )}
     </View>
   );
 };
@@ -206,6 +213,25 @@ const styles = StyleSheet.create({
   },
   inactiveTabText: {
     color: "#000",
+  },
+  blurOverlay: {
+    position: 'absolute',
+    top: 220, // Adjust this value to cover the content below the tabs
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(255, 255, 255, 0.95)', // Lighter blue effect
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1,
+    marginTop: -60,
+    
+  },
+  comingSoonText: {
+    fontSize: 26,
+    color: '#000',
+    fontWeight: 'bold',
+    marginTop: 10,
   },
   orderInfo: {
     fontSize: 16,

@@ -336,7 +336,7 @@ export const AccountSettings = () => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button2} onPress={updateKycDetails} activeOpacity={0.7}>
+        <TouchableOpacity style={styles.button2} onPress={updateUserDetails} activeOpacity={0.7}>
           <Text style={{ fontSize: 18, fontWeight: 400, color: "#fff" }}>
             Update
           </Text>
