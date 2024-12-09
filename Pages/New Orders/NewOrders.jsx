@@ -42,7 +42,9 @@ export const NewOrders = () => {
         period: period.toLowerCase()
       });
       console.log(response.data);
-      setB2bOrders(response.data);
+      // Sort orders from new to old
+      const sortedOrders = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      setB2bOrders(sortedOrders);
       setErrorFetchingOrders(false); // Reset error state on successful fetch
     } catch (error) {
       console.log(error);
