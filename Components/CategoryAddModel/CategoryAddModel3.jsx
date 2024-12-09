@@ -16,12 +16,14 @@ export const CategoryAddModel3 = ({
   modalVisible,
   setModalVisible,
   categoriesData,
-  setCategoryName
+  setCategoryName,
+  selectedCategorie,
+  setSelectedCategorie
 }) => {
   const animationRef = useRef(null);
 
   const handleCategorySelect = (category) => {
-    setCategoryName(category.name);
+    setSelectedCategorie(category.name);
     setModalVisible(false);
   };
 
@@ -72,10 +74,15 @@ export const CategoryAddModel3 = ({
                 {categoriesData.map((category, index) => (
                   <TouchableOpacity
                     key={index}
-                    style={styles.categoryBox}
+                    style={[
+                      styles.categoryBox,
+                      {backgroundColor: selectedCategorie === category.name ? "black" : '#DBDBDB4D'}
+                    ]}
                     onPress={() => handleCategorySelect(category)}
                   >
-                    <Text style={styles.categoryText}>{category.name}</Text>
+                    <Text style={[styles.categoryText,
+                       {color: selectedCategorie === category.name ? "#fff" : 'black'}
+                    ]}>{category.name}</Text>
                   </TouchableOpacity>
                 ))}
               </View>
