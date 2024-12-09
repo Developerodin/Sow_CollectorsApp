@@ -172,8 +172,12 @@ export const Home = () => {
   }, []);
 
   useEffect(() => {
-    getSalesSummary(userDetails.id);
-  }, [update]);
+    console.log("userID ====>",userDetails.id)
+    if(userDetails.id){
+      getSalesSummary(userDetails.id);
+    }
+ 
+  }, [userDetails,update]);
 
   
  
@@ -194,8 +198,8 @@ export const Home = () => {
                       <View style={styles.middleContainer}>
                         <View style={styles.cardContainer}>
                           <View style={styles.card1}>
-                            <Text style={styles.title1}>Net Amount Earned</Text>
-                          <Text style={styles.amountGreen}>₹ {salesSummary.netAmountEarned || 0}</Text>
+                            <Text style={styles.title1}>Net Scrap Purchas</Text>
+                          <Text style={styles.amountGreen}>{salesSummary.netScrapPurchased || 0} kgs</Text>
                           </View>
                           <View style={styles.card1}>
                             <Text style={styles.title1}>Net Scrap Sold</Text>
