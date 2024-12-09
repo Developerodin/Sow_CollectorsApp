@@ -440,14 +440,14 @@ const handleSubAddChange = (field, value) => {
         ))}
       </ScrollView>
 
-            <TouchableOpacity
+            {/* <TouchableOpacity
               onPress={() => handelCategoryModelOpen(activeCategory)}
               style={[styles.Center, { marginRight: 8 }]}
             >
               <View style={{ backgroundColor: ThemeData.backgroundColor, borderRadius: 35, padding: 10 }}>
                 <Ionicons name="add" size={14} color={ThemeData.activeColor} />
               </View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
     </Block>
       
        
@@ -456,14 +456,18 @@ const handleSubAddChange = (field, value) => {
       <Text style={styles3.text}>
         Add pricing for{' '}
         <Text style={styles3.linkText}>sub categories</Text> of{' '}
-        <Text style={styles3.highlightText}>Aluminium</Text> -
+        <Text style={styles3.highlightText}>{activeCategory}</Text> -
       </Text>
+      <Block style={{flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
       <TouchableOpacity style={styles3.button} onPress={handelUpdatePricing}>
         <Text style={styles3.buttonText}>+ Update Pricing</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles3.button} onPress={handelSubCategoryModelOpen}>
+      <TouchableOpacity style={[styles3.button,{marginLeft:15}]} onPress={handelSubCategoryModelOpen}>
         <Text style={styles3.buttonText}>+ Add Subcategory</Text>
       </TouchableOpacity>
+
+      </Block>
+      
 
     </View>
 
@@ -922,10 +926,10 @@ const styles3 = StyleSheet.create({
     borderColor: ThemeData.color,
     borderWidth: 1,
     borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingVertical:5,
+    paddingHorizontal:15,
     alignItems: 'center',
-    width: 250,
+   
   },
   buttonText: {
     color: ThemeData.color,

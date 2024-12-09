@@ -25,7 +25,7 @@ import icon2 from "./redIcon.png";
 const LiveRates = () => {
   const { favouriteMandi, setFavouriteMandi, updateMandi } = useAppContext();
   const [selectedState, setSelectedState] = useState("All"); // Default to 'All'
-  const [selectedCategory, setselectedCategory] = useState("Iron");
+  const [selectedCategory, setselectedCategory] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [marketRates, setMarketRates] = useState([]);
@@ -37,10 +37,10 @@ const LiveRates = () => {
   const [loading, setLoading] = useState(true);
   const [CategoriesData,setCategoriesData] =useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const [categoryName , setCategoryName] = useState("Iron")
+  const [categoryName , setCategoryName] = useState("")
   const [subCategoryData, setSubCategoryData] = useState([]);
   const [categoryModel , setCategoryModel] = useState(false)
-
+  const[selectedSubCategory,setselectedSubCategory] = useState("")
   const handelCategoryModelOpen=()=>{
     setCategoryModel(true)
   }
@@ -108,9 +108,12 @@ const LiveRates = () => {
 
     console.log("sub category data of selected category ==>",response.data);
     setSubCategoryData(response.data);
+    setselectedSubCategory(response.data[0].name)
     return response.data;
   } catch (error) {
-    console.log("Error getting subcategory ==>",error)
+    console.log("Error getting subcategory ==>",error);
+    setSubCategoryData([]);
+    setselectedSubCategory("")
   }
 };
 
@@ -247,6 +250,10 @@ const LiveRates = () => {
   const handlCategoryPress = (data) =>{
     setselectedCategory(data)
   }
+
+  const handlSubCategoryPress = (data)=>{
+    setselectedSubCategory(data)
+  }
   const handleItemPress = (item) => {
     setSelectedItem(item);
     setModalVisible(true);
@@ -356,6 +363,7 @@ const LiveRates = () => {
 
 <TouchableOpacity
               onPress={handelCategoryModelOpen} 
+              activeOpacity={0.8}
                 style={{
                   flexDirection: 'row',
                   flexWrap: 'wrap',
@@ -370,7 +378,7 @@ const LiveRates = () => {
                 }}
               >
                 <Text style={{ color:'#fff',fontSize:14 }}>
-                  Select Category : {categoryName}
+                  Select Category : {selectedCategory}
                 </Text>
               </TouchableOpacity>
 
@@ -416,16 +424,16 @@ const LiveRates = () => {
             {subCategoryData.map((item,index) => (
               <TouchableOpacity
                 key={index}
-                onPress={() => handlCategoryPress(item.name)}
+                onPress={() => handlSubCategoryPress(item.name)}
                 style={{
                   marginRight:3,
                   paddingVertical: 5,
                   paddingHorizontal: 15,
-                  backgroundColor: selectedCategory === item.name ? ThemeData.color : "#fff",
+                  backgroundColor: selectedSubCategory === item.name ? ThemeData.color : "#fff",
                   borderRadius: 30,
                 }}
               >
-                <Text style={{fontWeight:500,fontSize:15, color: selectedCategory === item.name ? ThemeData.backgroundColor : ThemeData.textColor }}>
+                <Text style={{fontWeight:500,fontSize:15, color: selectedSubCategory === item.name ? ThemeData.backgroundColor : ThemeData.textColor }}>
                   {item.name}
                 </Text>
               </TouchableOpacity>
@@ -501,6 +509,8 @@ const LiveRates = () => {
           setModalVisible={setCategoryModel}
           categoriesData={CategoriesData}
           setCategoryName={setCategoryName}
+          setSelectedCategorie={setselectedCategory}
+          selectedCategorie={selectedCategory}
             />
 
         </View>

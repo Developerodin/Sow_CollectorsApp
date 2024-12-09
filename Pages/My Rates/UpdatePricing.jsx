@@ -39,16 +39,22 @@ const UpdatePricing = () => {
   // const [update, setupdate] = useState(0);
   const [prices, setPrices] = useState({});
 
-  const filterItems = (category, categoryId) => {
+  const filterItems = (category, categoryId,Idata) => {
     let filteredItems = data;
-    console.log("Category ===>", category);
-    if (category !== "All") {
-      filteredItems = filteredItems.filter(
+    console.log("Category 2 ===================================>", category);
+    
+      let filteredItems2 = filteredItems.filter(
         (item) => item.category === category
       );
-    }
-     
-    setFilteredData(filteredItems);
+
+      if(Idata && Idata.length > 0) {
+         filteredItems2 = Idata.filter(
+          (item) => item.category === category
+        );
+      }
+    
+      console.log("Category 2 ===================================>", filteredItems2);
+    setFilteredData(filteredItems2);
     setActiveCategory(category);
     setActiveCategoryId(categoryId); // Set category ID
   };
@@ -58,12 +64,12 @@ const UpdatePricing = () => {
       const response = await axios.get(
         `${Base_url}b2bUser/${userId}/category`
       );
-      console.log("CategoriesData 1 =====================>", response.data)
+      // console.log("CategoriesData 1 =====================>", response.data)
       const CategoriesData = response.data.data.categories
 
-      console.log("CategoriesData 2 =====================>", CategoriesData)
+      // console.log("CategoriesData 2 =====================>", CategoriesData)
       const transformedData = [].concat(...CategoriesData.map(category => {
-        console.log("Category Data ==>", category)
+        // console.log("Category Data ==>", category)
 
         return category.sub_category && category.sub_category.map(subCategory => ({
           id: subCategory._id,
@@ -79,12 +85,14 @@ const UpdatePricing = () => {
       setData(transformedData);
       setFilteredData(transformedData)
       setUserCategoryData(CategoriesData);
+      filterItems(transformedData[0].category, transformedData[0].id,transformedData)
       setLoading(false);
 
       // Set the first category as the active category by default
       if (CategoriesData.length > 0) {
         setActiveCategory(CategoriesData[0].name);
         setActiveCategoryId(CategoriesData[0]._id); // Set category ID
+     
       }
     } catch (error) {
       console.log("error", error);
@@ -276,14 +284,7 @@ const UpdatePricing = () => {
           ))}
         </ScrollView>
 
-        <TouchableOpacity
-          onPress={() => handelCategoryModelOpen(activeCategory)}
-          style={[styles.Center, { marginRight: 8 }]}
-        >
-          <View style={{ backgroundColor: ThemeData.backgroundColor, borderRadius: 35, padding: 10 }}>
-            <Ionicons name="add" size={14} color={ThemeData.activeColor} />
-          </View>
-        </TouchableOpacity>
+   
       </Block>
 
       {/* Subcategories Text */}
