@@ -389,7 +389,7 @@ const LiveRates = () => {
                   marginRight:8,
                   paddingVertical: 5,
                   paddingHorizontal: 15,
-                  backgroundColor: selectedState === state ? ThemeData.backgroundColor : "#fff",
+                  backgroundColor: selectedState === state ? ThemeData.backgroundColor : "#f4f4f4",
                   borderRadius: 30,
                 }}
               >

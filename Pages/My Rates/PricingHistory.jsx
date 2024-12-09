@@ -335,9 +335,8 @@ export const PricingHistory = () => {
 
       <Block style={{ paddingHorizontal: 15, paddingVertical: 5 }}>
         <Block style={styles.Space_Between}>
-          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {UserCategoryData &&
-              UserCategoryData.length > 0 &&
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            {UserCategoryData && UserCategoryData.length > 0 ? (
               UserCategoryData.map((el, index) => (
                 <TouchableOpacity
                   key={index}
@@ -347,7 +346,6 @@ export const PricingHistory = () => {
                     marginRight: 10,
                     paddingVertical: 5,
                     paddingHorizontal: 15,
-
                     backgroundColor:
                       activeCategory === el.name
                         ? ThemeData.textColor
@@ -368,84 +366,80 @@ export const PricingHistory = () => {
                     {el.name}
                   </Text>
                 </TouchableOpacity>
-              ))}
+              ))
+            ) : (
+              <Block center style={{ marginTop: 40 }}>
+                <Image
+                  source={require("../../assets/media/5-dark.png")}
+                  style={{
+                    width: 300,
+                    height: 300,
+                    marginRight: 10,
+                  }}
+                />
+              </Block>
+            )}
           </ScrollView>
         </Block>
       </Block>
 
-      <ScrollView
-        style={{ backgroundColor: ThemeData.containerBackgroundColor,padding:10 }}
+           <ScrollView
+        style={{ backgroundColor: ThemeData.containerBackgroundColor, padding: 10 }}
       >
-               {categoryHistory.map((historyItem, index) => (
-          <View
-            key={index}
-            style={{
-              borderRadius: 8,
-              paddingVertical: 10,
-              paddingHorizontal: 10,
-              borderWidth: 1,
-              borderColor: ThemeData.color,
-              backgroundColor: ThemeData.containerBackgroundColor,
-              flexDirection: 'row',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: 10,
-            }}
-          >
-            <Block style={{ flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="calendar" size={14} color={ThemeData.color} />
+        {categoryHistory.length > 0 ? (
+          categoryHistory.map((historyItem, index) => (
+            <View
+              key={index}
+              style={{
+                borderRadius: 8,
+                paddingVertical: 10,
+                paddingHorizontal: 10,
+                borderWidth: 1,
+                borderColor: ThemeData.color,
+                backgroundColor: ThemeData.containerBackgroundColor,
+                flexDirection: 'row',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginBottom: 10,
+              }}
+            >
+              <Block style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <Ionicons name="calendar" size={14} color={ThemeData.color} />
+                <Text
+                  style={{
+                    color: ThemeData.textColor,
+                    fontSize: 14,
+                    fontWeight: 600,
+                    marginLeft: 8,
+                  }}
+                >
+                  {formatDate(historyItem.date)}
+                </Text>
+              </Block>
               <Text
                 style={{
                   color: ThemeData.textColor,
-                  fontSize: 14,
-                  fontWeight: 600,
-                  marginLeft: 8,
+                  fontSize: 15,
+                  fontWeight: 700,
+                  marginRight: 10,
                 }}
               >
-                {formatDate(historyItem.date)}
+                ₹{historyItem.price}
               </Text>
-            </Block>
-            <Text
+            </View>
+          ))
+        ) : (
+          <Block center style={{ marginTop: 40 }}>
+            <Image
+              source={require("../../assets/media/5-dark.png")}
               style={{
-                color: ThemeData.textColor,
-                fontSize: 15,
-                fontWeight: 700,
+                width: 300,
+                height: 300,
                 marginRight: 10,
               }}
-            >
-              ₹{historyItem.price}
-            </Text>
-          </View>
-        ))}
-        {/* <Block
-          style={{
-            backgroundColor: ThemeData.containerBackgroundColor,
-            paddingHorizontal: 10,
-            marginBottom: 60,
-          }}
-        >
-          <Block style={{ marginBottom: 100 }}>
-            {filteredData.map((el, index) => {
-              return (
-                <MarketCard
-                  key={index}
-                  Id={el.id}
-                  Index={index}
-                  Cart={Cart}
-                  setCart={setCart}
-                  Title={el.title}
-                  Value={el.value}
-                  Img={el.image}
-                  Category={el.category}
-                  Date={el.updatedAt}
-                  setModalVisible={setModalVisible}
-                  setItemModelData={setItemModelData}
-                  ItemAddStatus={ItemAddStatus}
-                />
-              );
-            })}
+            />
           </Block>
-        </Block> */}
+        )}
       </ScrollView>
     </View>
   );
