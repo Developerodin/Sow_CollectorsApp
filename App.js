@@ -426,7 +426,7 @@ export default function App() {
             name="Order Status"
             component={OrderStatus}
             options={{
-              headerShown: true,
+              headerShown: false,
             }}
           />
 

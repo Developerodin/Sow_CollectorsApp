@@ -280,22 +280,31 @@ export const PendingOrderDetails = ({ route }) => {
 
         
         
-        {orderDetails && orderDetails.orderTo && orderDetails.orderTo.id === userDetails.id && !orderCompleteStatus &&(
-          <View style={{ flexDirection: 'row', justifyContent: 'space-between',backgroundColor: ThemeData.backgroundColor,
-            borderRadius: 30,
-            paddingVertical: 10,
-            paddingHorizontal: 30,
-            justifyContent: 'center', alignItems: 'center',
-            marginHorizontal: 60,
+               
+                    {orderDetails && orderDetails?.orderTo && orderDetails?.orderTo.id === userDetails.id && (
+            <View style={{ flexDirection: 'row', justifyContent: 'space-between', backgroundColor: ThemeData.backgroundColor,
+              borderRadius: 30,
+              paddingVertical: 10,
+              paddingHorizontal: 30,
+              justifyContent: 'center', alignItems: 'center',
+              marginHorizontal: 60,
             }}>
-          <TouchableOpacity onPress={modelOpen} >
-            <Text style={{ fontSize: 18
-              ,color: "#fff",justifyContent: "center" }}>
-              Mark as Complete
-            </Text>
-          </TouchableOpacity>
-          </View>
-        )}
+              {orderDetails?.orderStatus === "Completed" ? (
+                <TouchableOpacity>
+                  <Text style={{ fontSize: 18, color: "#fff", justifyContent: "center" }}>
+                    Completed
+                  </Text>
+                </TouchableOpacity>
+              ) : (
+                <TouchableOpacity onPress={modelOpen}>
+                  <Text style={{ fontSize: 18, color: "#fff", justifyContent: "center" }}>
+                    Mark as Complete
+                  </Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+        
        
 
         <OTPModel modalVisible={modelVisible} setModalVisible={setModalVisible} handelComplete={handelComplete} orderCompleteStatus={orderCompleteStatus} />

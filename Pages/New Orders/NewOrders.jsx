@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import {
   View,
-  
   StyleSheet,
   TouchableOpacity,
   ScrollView,
   RefreshControl,
-  Image
+  Image,
+  ActivityIndicator
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { Block, Text } from "galio-framework";
@@ -25,6 +25,7 @@ export const NewOrders = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [b2bOrders, setB2bOrders] = useState([]);
   const [errorFetchingOrders, setErrorFetchingOrders] = useState(false);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const onRefresh = () => {
     setRefreshing(true);
@@ -35,6 +36,7 @@ export const NewOrders = () => {
   const getB2bOrders = async (period) => {
     console.log(userDetails.id, activeFilter.toLowerCase());
     try {
+      setLoading(true); // Set loading to true before API call
       const response = await axios.post(`${Base_url}b2bOrder/getNewOrdersForUser`, {
         userId: userDetails.id,
         period: period.toLowerCase()
@@ -47,6 +49,8 @@ export const NewOrders = () => {
       if (error.response && error.response.status === 404) {
         setErrorFetchingOrders(true); // Set error state if 404 error occurs
       }
+    } finally {
+      setLoading(false); // Set loading to false after API call
     }
   };
 
@@ -118,7 +122,11 @@ export const NewOrders = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
       >
-        {errorFetchingOrders ? (
+        {loading ? ( // Show loader while loading
+          <Block center style={{ marginTop: 40 }}>
+            <ActivityIndicator size="large" color={ThemeData.color} />
+          </Block>
+        ) : errorFetchingOrders ? (
           <Block center style={{ marginTop: 40 }}>
             <Image
               source={require("../../assets/media/5-dark.png")}

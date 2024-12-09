@@ -10,6 +10,7 @@ import {
   Image,
   Animated,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -42,6 +43,7 @@ export const RateDetails = ({ route }) => {
   const [discription, setDiscription] = useState("");
   const [selectedValue, setSelectedValue] = useState("Kg");
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
   const handleInputChange = (text) => {
     setWeight(text);
   };
@@ -99,14 +101,18 @@ export const RateDetails = ({ route }) => {
   };
   
   const createOrder = async (orderDetails) => {
+    setLoading(true);
     try {
       const response = await axios.post(`${Base_url}b2bOrder`, orderDetails);
       navigation.navigate("Order Status", { status: "success" });
       setUpdate((prev) => prev + 1);
       return response.data;
+
     } catch (error) {
       navigation.navigate("Order Status", { status: "fail" });
       console.log("error", error);
+    } finally {
+      setLoading(false);
     }
   };
   const fetchData = async () => {
@@ -486,22 +492,28 @@ export const RateDetails = ({ route }) => {
         </Block>
 
         <Block style={[{ marginTop: 15 }, styles.Center]}>
-          <Button
-            onPress={handleSubmit}
-            color="white"
-            style={{
-              borderWidth: 1,
-              width: width * 0.9,
-              height: 54,
-              borderRadius: 8,
-              backgroundColor: "black",
-            }}
-          >
-            <Text style={{ fontSize: 18, fontWeight: 400, color: "#fff" }}>
-              Sell your Scrap
-            </Text>
-          </Button>
-        </Block>
+      <Button
+        onPress={handleSubmit}
+        color="white"
+        style={{
+          borderWidth: 1,
+          width: width * 0.9,
+          height: 54,
+          borderRadius: 8,
+          backgroundColor: "black",
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={{ fontSize: 18, fontWeight: 400, color: "#fff" }}>
+            Sell your Scrap
+          </Text>
+        )}
+      </Button>
+    </Block>
 
         {/* <Block center style={{marginTop:20,marginBottom:20}}>
         <Text style={styles.text1}>Note : By Proceeding You Accept our <Text style={{color:"#EA5932"}}>Privacy Policy</Text> and </Text>
