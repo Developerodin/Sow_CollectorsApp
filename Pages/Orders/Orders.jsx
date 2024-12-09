@@ -138,9 +138,9 @@ export const Orders = () => {
           }}
         >
           <Text style={{ fontSize: 22, fontWeight: "bold", color: ThemeData.textColor }}>Your Orders</Text>
-          <TouchableOpacity onPress={handleMandiRates}>
+          {/* <TouchableOpacity onPress={handleMandiRates}>
             <Image source={icon} style={{ width: 25, height: 25 }} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
         <ScrollView>
           <View style={styles.tabContainer}>
