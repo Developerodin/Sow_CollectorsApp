@@ -583,7 +583,7 @@ const handleSubAddChange = (field, value) => {
               ))} */}
              {
                 SubCategoriesData && SubCategoriesData.map((item, index) => (
-                  <Picker.Item key={index} label={item.name} value={item.name} />
+                  (item.isTradable || item.isTradable==="true")  && <Picker.Item key={index} label={item.name} value={item.name} />
                 ))
               }
             </Picker> 
