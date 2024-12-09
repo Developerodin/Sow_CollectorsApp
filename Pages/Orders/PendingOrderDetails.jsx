@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet, TouchableOpacity, Modal, ToastAndroid ,Dimensions} from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, Modal, ToastAndroid ,Dimensions, Image} from 'react-native';
 import { Block, Text, Button } from "galio-framework";
 import { Ionicons, MaterialIcons, AntDesign, FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
@@ -9,6 +9,10 @@ import { useAppContext } from '../../Context/AppContext';
 import { ThemeData } from '../../Theme/Theme';
 import Logo from "../../assets/user.png";
 import { OTPModel } from '../../Components/Model/OTPModel';
+import catIcon from "../../assets/catIcon.png";
+import locationIcon from "../../assets/location.png";
+import calenderIcon from "../../assets/calender.png";
+import tagIcon from "../../assets/tag.png";
 
 
 const { width } = Dimensions.get('window');
@@ -180,39 +184,39 @@ export const PendingOrderDetails = ({ route }) => {
           <Block style={{ marginTop: 0 }}>
           {orderDetails && orderDetails.orderBy.id === userDetails.id && (
               <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
-                <Ionicons name="document" size={20} color={ThemeData.textColor} />
+                <Ionicons name="key" size={20} color={ThemeData.textColor} />
                 <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500, color: ThemeData.textColor }}>
                   OTP : {orderDetails?.otp || "#0100"}
                 </Text>
               </Block>
             )}
             <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="document" size={20} color={ThemeData.textColor} />
+              <Ionicons name="document-text" size={20} color={ThemeData.textColor} />
               <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500, color: ThemeData.textColor }}>
                 Order No. : {orderDetails?.orderNo || "#0100"}
               </Text>
             </Block>
             <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="person" size={20} color={ThemeData.textColor} />
+             <Image source={Logo} style={{height:20,width:20}} />
                             <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500, color: ThemeData.textColor }}>
                 {orderDetails?.orderBy.id === userDetails.id ? orderDetails?.orderTo.name : orderDetails?.orderBy.name || "N/A"}
               </Text>
             </Block>
             <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
-              <MaterialIcons name="category" size={20} color={ThemeData.textColor} />
+              <Image source={catIcon} style={{height:20,width:20}} />
               <Text style={{ fontSize: 20, marginLeft: 8, fontWeight: 500 }}>
                 {orderDetails?.category || "N/A"}
               </Text>
             </Block>
             <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="calendar" size={20} color={ThemeData.textColor} />
+              <Image source={calenderIcon} style={{height:20,width:20}} />
               <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500, color: ThemeData.textColor }}>
                 {orderDetails && new Date(orderDetails.createdAt).toLocaleDateString('en-GB')}
               </Text>
             </Block>
             <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
-              <Ionicons name="location" size={20} color="black" />
-              <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500 }}>
+              <Image source={locationIcon} style={{height:19,width:16}} />
+              <Text style={{ fontSize: 18, marginLeft: 10, fontWeight: 500 }}>
                 Pickup Location: {orderDetails?.location?.googleAddress || "N/A"}
               </Text>
             </Block>

@@ -314,7 +314,7 @@ const UpdatePricing = () => {
             paddingVertical: 8,
             paddingHorizontal: 10,
             justifyContent: "space-between",
-            height: 45,
+            height: 55,
 
           }}
         >

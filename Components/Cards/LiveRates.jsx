@@ -185,8 +185,8 @@ const LiveRates = () => {
   }, []);
 
   useEffect(() => {
-    getSubCategoriesByCategoryName(categoryName);
-  }, [categoryName]);
+    getSubCategoriesByCategoryName(selectedCategory);
+  }, [selectedCategory]);
 
   // Add 'All' to the states array
   const states = [
