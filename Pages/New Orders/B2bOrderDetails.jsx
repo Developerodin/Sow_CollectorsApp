@@ -10,6 +10,7 @@ import {
   Image,
   Animated,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -29,6 +30,7 @@ import weightIcon from "../../assets/weightIcon.png";
 import rupee from "../../assets/ruppee.png";
 import calender from "../../assets/calender.png";
 import location from "../../assets/location.png";
+import { Linking } from 'react-native';
 
 export const B2bOrderDetails = ({route}) => {
   const { orderId } = route.params;
@@ -37,6 +39,7 @@ export const B2bOrderDetails = ({route}) => {
   const [orderDetails, setOrderDetails] = useState({});
   const { userDetails, update, setUpdate } = useAppContext();
   const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -54,19 +57,26 @@ export const B2bOrderDetails = ({route}) => {
     }
   };
 
-  const postUserAccept = async ( status) => {
+   const postUserAccept = async (status) => {
     console.log(orderId, status);
+    setLoading(true);
     try {
       const response = await axios.post(`${Base_url}b2bOrder/updateOrderStatus`, {
         orderId: orderId,
         status: status
       });
-      if(status === 'Pending'){
+      if (status === 'Pending') {
         toggleModal();
       }
       console.log(response.data);
       setUpdate(!update); 
+  
+      
+      setTimeout(() => {
+        navigation.goBack();
+      }, 3000); 
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -78,6 +88,22 @@ export const B2bOrderDetails = ({route}) => {
   useEffect(() => {
     getOrdersById();
   }, [update]);
+
+  const openDialPad = () => {
+    const url = `tel:${orderDetails.orderTo && orderDetails.orderTo.id === userDetails.id ?
+      orderDetails.orderBy?.phoneNumber
+      :
+      orderDetails.orderTo?.phoneNumber}`;
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (!supported) {
+          console.log("Error", "Your device does not support this feature.");
+        } else {
+          return Linking.openURL(url);
+        }
+      })
+      .catch((err) => console.error("An error occurred", err));
+  };
 
   return (
     <View style={styles.container}>
@@ -267,19 +293,27 @@ export const B2bOrderDetails = ({route}) => {
           {
         orderDetails.orderBy && orderDetails.orderBy.id !== userDetails.id && 
           <View style={{ marginTop: 20, paddingHorizontal: 15 }}>
-            <View style={styles.cardActions}>
-              <TouchableOpacity  onPress={() => postUserAccept('Pending')}>
+                       <View style={styles.cardActions}>
+              <TouchableOpacity onPress={() => postUserAccept('Pending')} activeOpacity={0.8} disabled={loading}>
                 <View style={styles.acceptButton}>
-                  <View style={{ flexDirection: "row" }}>
-                    <Ionicons name="checkmark" size={18} color="#FF2020" />
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    {loading ? (
+                      <ActivityIndicator size="small" color="#FF2020" />
+                    ) : (
+                      <Ionicons name="checkmark" size={18} color="#FF2020" />
+                    )}
                     <Text style={styles.acceptText}>Accept</Text>
                   </View>
                 </View>
               </TouchableOpacity>
-              <TouchableOpacity  onPress={() => postUserAccept('Rejected')}>
+              <TouchableOpacity onPress={() => postUserAccept('Rejected')} activeOpacity={0.8} disabled={loading}>
                 <View style={styles.declineButton}>
-                  <View style={{ flexDirection: "row" }}>
-                    <Ionicons name="close" size={18} color="#FF2020" />
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    {loading ? (
+                      <ActivityIndicator size="small" color="#FF2020" />
+                    ) : (
+                      <Ionicons name="close" size={18} color="#FF2020" />
+                    )}
                     <Text style={styles.declineText}>Decline</Text>
                   </View>
                 </View>
@@ -292,10 +326,14 @@ export const B2bOrderDetails = ({route}) => {
   new Date() - new Date(orderDetails.createdAt) <= 24 * 60 * 60 * 1000 && (
     <View style={{ marginTop: 20, paddingHorizontal: 15 }}>
       <View style={styles.cardActions}>
-        <TouchableOpacity onPress={() => postUserAccept('Cancelled')}>
+        <TouchableOpacity onPress={() => postUserAccept('Cancelled')}  activeOpacity={0.8} disabled={loading}>
           <View style={styles.acceptButton}>
             <View style={{ flexDirection: "row" }}>
-              <Ionicons name="close" size={18} color="#FF2020" />
+            {loading ? (
+          <ActivityIndicator size="small" color="#FF2020" />
+        ) : (
+          <Ionicons name="close" size={18} color="#FF2020" />
+        )}
               <Text style={styles.declineText}>Cancel</Text>
             </View>
           </View>
@@ -319,7 +357,7 @@ export const B2bOrderDetails = ({route}) => {
 >
   <View style={styles.modalContainer}>
     {/* Call Customer Button */}
-    <TouchableOpacity style={styles.callCustomerButton}>
+    <TouchableOpacity style={styles.callCustomerButton} onPress={openDialPad}>
       <View style={{ flexDirection: "row", alignItems: "center" }}>
         <Ionicons name="call-outline" size={20} color="#fff" />
         <Text style={styles.callCustomerText}>Call Customer</Text>

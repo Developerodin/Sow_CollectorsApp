@@ -135,13 +135,8 @@ export const Orders = () => {
   );
 
   return (
-    <ScrollView
-      contentContainerStyle={{ flex: 1, backgroundColor: ThemeData.containerBackgroundColor }}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }
-    >
-      <Block style={{ marginTop: 30 }}></Block>
+    <View style={{ flex: 1, backgroundColor: ThemeData.containerBackgroundColor }}>
+      <Block style={{ marginTop: 30, backgroundColor: ThemeData.containerBackgroundColor }}></Block>
       <View>
         <View
           style={{
@@ -209,26 +204,18 @@ export const Orders = () => {
           </View>
         </ScrollView>
       </View>
-      <Block style={{ padding: 10, marginBottom: 60 }}>
-        {loading ? ( // Show loader while loading
-          <Block center style={{ marginTop: 40 }}>
-            <ActivityIndicator size="large" color={ThemeData.color} />
-          </Block>
-        ) : errorFetchingOrders ? (
-          <Block center style={{ marginTop: 40 }}>
-            <Image
-              source={require("../../assets/media/5-dark.png")}
-              style={{
-                width: 300,
-                height: 300,
-                marginRight: 10,
-              }}
-            />
-          </Block>
-        ) : (
-          pendingOrders && pendingOrders.length > 0 ? (
-            pendingOrders.map((order) => renderOrderCard(order))
-          ) : (
+      <ScrollView
+        contentContainerStyle={{ backgroundColor: ThemeData.containerBackgroundColor }}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        <Block style={{ padding: 10, marginBottom: 60 }}>
+          {loading ? ( // Show loader while loading
+            <Block center style={{ marginTop: 40 }}>
+              <ActivityIndicator size="large" color={ThemeData.color} />
+            </Block>
+          ) : errorFetchingOrders ? (
             <Block center style={{ marginTop: 40 }}>
               <Image
                 source={require("../../assets/media/5-dark.png")}
@@ -239,10 +226,26 @@ export const Orders = () => {
                 }}
               />
             </Block>
-          )
-        )}
-      </Block>
-    </ScrollView>
+          ) : (
+            pendingOrders && pendingOrders.length > 0 ? (
+              pendingOrders.map((order) => renderOrderCard(order))
+            ) : (
+              <Block center style={{ marginTop: 40 }}>
+                <Image
+                  source={require("../../assets/media/5-dark.png")}
+                  style={{
+                    width: 300,
+                    height: 300,
+                    marginRight: 10,
+                  }}
+                />
+              </Block>
+            )
+          )}
+        </Block>
+      </ScrollView>
+    </View>
+      
   );
 };
 

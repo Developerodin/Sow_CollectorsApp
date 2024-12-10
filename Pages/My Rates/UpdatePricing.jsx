@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, TouchableOpacity, TextInput, ScrollView, StyleSheet, ToastAndroid } from "react-native";
+import { View, TouchableOpacity, TextInput, ScrollView, StyleSheet, ToastAndroid ,ActivityIndicator} from "react-native";
 import { Picker } from '@react-native-picker/picker';
 import { Block, Text, Input, theme, Button } from "galio-framework";
 import { useNavigation } from "@react-navigation/native";
@@ -79,6 +79,7 @@ const UpdatePricing = () => {
           category: category.name,
           categoryId: category._id, // Store category ID
           updatedAt: subCategory.updatedAt,
+          unit: subCategory.unit,
         }));
       }));
 
@@ -147,6 +148,7 @@ const UpdatePricing = () => {
   }
 
   const updateSubCategoryPrices = async (userId, categoryId, subCategories) => {
+    setLoading(true);
     try {
       const response = await axios.put(`${Base_url}b2bUser/${userId}/category/${categoryId}/subcategory`, {
         subCategories: subCategories
@@ -155,6 +157,7 @@ const UpdatePricing = () => {
       ToastAndroid.show("Prices updated successfully!", ToastAndroid.SHORT);
       setUpdate((prev) => prev + 1);
     } catch (error) {
+      setLoading(false);
       console.error("Error updating subcategories:", error);
       ToastAndroid.show("Error updating prices. Try Again !!", ToastAndroid.SHORT);
     }
@@ -322,9 +325,9 @@ const UpdatePricing = () => {
           
           <Text style={{ flex: 2, fontSize: 13 ,alignItems: "center", fontWeight: 600}}>{el.title}</Text>
           
-
+               <Text style={{ flex: 1, fontSize: 13 ,alignItems: "center", fontWeight: 600}}>{el.unit || "Kg" }</Text>
          
-                    <Picker
+                    {/* <Picker
             selectedValue={selectedUnit[el] || "KG"}
             onValueChange={(value) =>
               setSelectedUnit((prev) => ({ ...prev, [el]: value }))
@@ -337,7 +340,7 @@ const UpdatePricing = () => {
           >
             <Picker.Item label="KG" value="KG" />
             <Picker.Item label="TONS" value="TONS" />
-          </Picker>
+          </Picker> */}
           
 
           <View>
@@ -363,7 +366,7 @@ const UpdatePricing = () => {
     </View>
 
       {/* Submit Button */}
-      <TouchableOpacity
+            <TouchableOpacity
         style={{
           backgroundColor: "#000",
           paddingTop: 15,
@@ -374,9 +377,15 @@ const UpdatePricing = () => {
           marginTop: 16,
           height: 55,
         }}
-        onPress={handleSubmit} // Call the function on submit
+        onPress={handleSubmit}
+        activeOpacity={0.8}
+        disabled={loading} // Disable button while loading
       >
-        <Text style={{ color: "#FFF", fontWeight: "bold" }}>Submit</Text>
+        {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+          <Text style={{ color: "#FFF", fontWeight: "bold" }}>Submit</Text>
+        )}
       </TouchableOpacity>
 
       <CategoryAddModel2
