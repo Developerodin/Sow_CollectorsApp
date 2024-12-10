@@ -200,7 +200,7 @@ export const MediatorRates = () => {
               console.log("Second icon pressed");
             }}
           >
-            <Image source={icon} style={{ marginRight: 10 ,width: 25,height: 25}} />
+            {/* <Image source={icon} style={{ marginRight: 10 ,width: 25,height: 25}} /> */}
           </TouchableOpacity>
         </View>
       </View>

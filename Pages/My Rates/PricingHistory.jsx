@@ -1,52 +1,32 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  FlatList,
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
   View,
-  Dimensions,
+  StyleSheet,
   TouchableOpacity,
-  ActivityIndicator,
+  ScrollView,
+  RefreshControl,
   Image,
-  TextInput,
+  ActivityIndicator
 } from "react-native";
-import { StatusBar } from "expo-status-bar";
-import { Block, Text, Input, theme, Button } from "galio-framework";
-
-import { MarketCard } from "../../Components/Cards/MarketCard";
-const { width, height } = Dimensions.get("window");
-import { MaterialIcons } from "@expo/vector-icons";
-import { ItemAddModel } from "../../Components/Model/ItemAddModel";
-import { useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useContext } from "react";
-import { useAppContext } from "../../Context/AppContext";
-import { Ionicons } from "@expo/vector-icons";
-import Modal from "react-native-modal";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
+import { Block, Text } from "galio-framework";
 import axios from "axios";
+import { useAppContext } from '../../Context/AppContext';
+import { ThemeData } from '../../Theme/Theme';
 import { Base_url } from "../../Config/BaseUrl";
-
-import icon from "./icon.png";
-import { ThemeData } from "../../Theme/Theme";
+import { StatusBar } from "expo-status-bar";
+import { useNavigation } from "@react-navigation/native";
 
 export const PricingHistory = () => {
   const navigation = useNavigation();
-  const { userDetails } = useAppContext();
-
-  const [query, setQuery] = useState("");
-  const [data, setData] = useState([]);
-  const [filteredData, setFilteredData] = useState(data);
-  const [Categories, setCategories] = useState([]);
   const [activeCategory, setActiveCategory] = useState("");
-  const [UserCategoryData, setUserCategoryData] = useState({});
+  const [UserCategoryData, setUserCategoryData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [update, setupdate] = useState(0);
   const [categoryHistory, setCategoryHistory] = useState([]);
-
-  const [activeTimeFrame, setActiveTimeFrame] = useState("today");
-
+  const [activeTimeFrame, setActiveTimeFrame] = useState("Today");
+  const [categories, setCategories] = useState([]);
   const [subAddForm, setsubAddForm] = useState({
     categoryName: "",
     name: "",
@@ -63,13 +43,26 @@ export const PricingHistory = () => {
     category: "",
   };
   const [ItemModelData, setItemModelData] = useState(initalModelData);
-  const { Cart, setCart } = useAppContext();
+  const { Cart, setCart, userDetails } = useAppContext();
   const [CategoriesData, setCategoriesData] = useState([]);
+  const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
+  const [query, setQuery] = useState("");
 
+  const timeFrameMapping = {
+    "Today": "today",
+    "Last week": "week",
+    "Last month": "month",
+    "Last 3 month": "3month",
+    "Last 6 month": "6month",
+    "Last year": "year"
+  };
+  
   const filterByTimeFrame = (timeFrame) => {
-    console.log("Time Frame ===>", timeFrame);
+    const apiTimeFrame = timeFrameMapping[timeFrame];
+    console.log("Time Frame ===>", apiTimeFrame);
     setActiveTimeFrame(timeFrame);
-    fetchCategoryHistory(userDetails.id, activeCategory, timeFrame);
+    fetchCategoryHistory(userDetails.id, activeCategory, apiTimeFrame);
   };
 
   const filterItems = (category) => {
@@ -133,7 +126,6 @@ export const PricingHistory = () => {
       const CategoriesData = response.data.data.categories;
 
       console.log("CategoriesData 2 =====================>", CategoriesData);
-      // console.log("res of category and subcategory =>", CategoriesData);
       const transformedData = [].concat(
         ...CategoriesData.map((category) => {
           console.log("Category Data ==>", category);
@@ -153,11 +145,16 @@ export const PricingHistory = () => {
         })
       );
 
-      // console.log("Subcategory Data ==>",transformedData)
       setData(transformedData);
       setFilteredData(transformedData);
       setUserCategoryData(CategoriesData);
       setLoading(false);
+
+      // Set the first category as active
+      if (CategoriesData.length > 0) {
+        setActiveCategory(CategoriesData[0].name);
+        fetchCategoryHistory(userDetails.id, CategoriesData[0].name, activeTimeFrame);
+      }
     } catch (error) {
       console.log("error", error);
       setError(error.message || "An error occurred");
@@ -188,7 +185,7 @@ export const PricingHistory = () => {
     }
   };
 
-   const formatDate = (dateString) => {
+  const formatDate = (dateString) => {
     const date = new Date(dateString);
     const options = {
       timeZone: 'Asia/Kolkata',
@@ -197,7 +194,6 @@ export const PricingHistory = () => {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      
       hour12: true,
     };
     return date.toLocaleString('en-IN', options);
@@ -222,7 +218,6 @@ export const PricingHistory = () => {
     const categories = [...new Set(data.map((item) => item.category))];
     console.log("Updating ===>");
     setCategories(categories);
-    setActiveCategory(categories[0]); // Set the first category as active
   }, [query, update]);
 
   useEffect(() => {
@@ -252,7 +247,6 @@ export const PricingHistory = () => {
             alignItems: "center",
           }}
           onPress={() => {
-            // Add back navigation logic here
             console.log("Back pressed");
           }}
         >
@@ -290,10 +284,10 @@ export const PricingHistory = () => {
         </View>
       </View>
 
-      <Block style={{ paddingHorizontal: 15, paddingVertical: 10,marginTop: 10 }}>
+      <Block style={{ paddingHorizontal: 15, paddingVertical: 10, marginTop: 10 }}>
         <Block style={styles.Space_Between}>
           <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            {["today", "week", "month", "3month"," 6month","year"].map((timeFrame, index) => (
+            {["Today", "Last week", "Last month", "Last 3 month", "Last 6 month", "Last year"].map((timeFrame, index) => (
               <TouchableOpacity
                 key={index}
                 activeOpacity={0.9}
@@ -302,7 +296,6 @@ export const PricingHistory = () => {
                   marginRight: 10,
                   paddingVertical: 5,
                   paddingHorizontal: 15,
-
                   backgroundColor:
                     activeTimeFrame === timeFrame
                       ? ThemeData.textColor
@@ -313,7 +306,7 @@ export const PricingHistory = () => {
                 <Text
                   style={{
                     fontWeight: "500",
-                    fontSize: 18,
+                    fontSize: 15,
                     color:
                       activeTimeFrame === timeFrame
                         ? ThemeData.activeColor
@@ -333,9 +326,9 @@ export const PricingHistory = () => {
         </Text>
       </View>
 
-      <Block style={{ paddingHorizontal: 15, paddingVertical: 5 }}>
+      <Block style={{ paddingHorizontal: 15, paddingVertical: 5,marginTop:5 }}>
         <Block style={styles.Space_Between}>
-                    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
             {UserCategoryData && UserCategoryData.length > 0 ? (
               UserCategoryData.map((el, index) => (
                 <TouchableOpacity
@@ -356,7 +349,7 @@ export const PricingHistory = () => {
                   <Text
                     style={{
                       fontWeight: "500",
-                      fontSize: 18,
+                      fontSize: 15,
                       color:
                         activeCategory === el.name
                           ? ThemeData.activeColor
@@ -382,9 +375,10 @@ export const PricingHistory = () => {
           </ScrollView>
         </Block>
       </Block>
-
-           <ScrollView
+      
+      <ScrollView
         style={{ backgroundColor: ThemeData.containerBackgroundColor, padding: 10 }}
+        showsVerticalScrollIndicator={false}
       >
         {categoryHistory.length > 0 ? (
           categoryHistory.map((historyItem, index) => (
@@ -441,182 +435,39 @@ export const PricingHistory = () => {
           </Block>
         )}
       </ScrollView>
+      
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  topContainer: {
-    flexDirection: "row",
-    backgroundColor: "#f9f9f9",
-    borderRadius: 15,
-    paddingLeft: 20,
-
-    alignItems: "center",
-    justifyContent: "space-between",
-    // adjust size to fit design
-    height: 110,
-  },
-  textContainer: {
-    flex: 1,
-  },
-  mainText: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: ThemeData.textColor,
-  },
-  highlight: {
-    color: "#65c5c4", // matching color for "Selling"
-  },
-  subText: {
-    fontSize: 22,
-    fontWeight: "700",
-    color: ThemeData.textColor,
-  },
-  imageBackground: {
-    backgroundColor: ThemeData.color,
-
-    justifyContent: "center",
-    alignItems: "center",
-    borderTopLeftRadius: 50,
-    borderBottomLeftRadius: 50,
-    borderTopRightRadius: 20,
-    borderBottomRightRadius: 20,
-    width: 150,
-  },
   container: {
     flex: 1,
     backgroundColor: ThemeData.containerBackgroundColor,
-  },
-  container1: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    margin: 10,
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 10,
-    backgroundColor: "#f0f0f0",
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: "bold",
-  },
-  content: {
-    padding: 10,
-  },
-  inputContainer: {
-    width: "100%",
-    height: 66,
-    borderBottomWidth: 1, // Add a bottom border for the input
-    borderColor: "transparent", // Make the border color transparent
-  },
-  input: {
-    flex: 1,
-    textAlign: "center",
-    padding: 0,
-    fontSize: 22,
-    // Remove padding to make it look borderless
-  },
-  subtitle: {
-    color: ThemeData.textColor,
-    fontSize: 20,
-    marginTop: 10,
-
-    textAlign: "left",
-    lineHeight: 23,
-    letterSpacing: 0.3,
-  },
-  title: {
-    color: "black",
-    fontSize: 22,
-    fontWeight: "bold",
-    marginTop: 20,
-    textAlign: "center",
-  },
-  image: {
-    height: "100%",
-    width: "100%",
-    resizeMode: "contain",
-  },
-  indicator: {
-    height: 10,
-    width: 10,
-    backgroundColor: "grey",
-    marginHorizontal: 3,
-    borderRadius: 52,
-  },
-  btn: {
-    width: "95%",
-    height: 55,
-    borderRadius: 5,
-    backgroundColor: "#40A99E",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  border: {
-    borderWidth: 1,
-    borderColor: "blue",
-  },
-  Center: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  Space_Around: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
+    padding: 10
   },
   Space_Between: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
     marginTop: 10,
-  },
-  shadow: {
-    shadowColor: ThemeData.textColor,
-    shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 4,
-    shadowOpacity: 0.2,
-    elevation: 2,
-  },
-  button: {
-    width: width,
+    marginBottom: 5,
   },
 });
 
 const styles3 = StyleSheet.create({
   container: {
-    padding: 10,
+    marginLeft: 25,
+
   },
   text: {
+    fontWeight: "500",
     fontSize: 16,
-    color: ThemeData.textColor,
-    fontWeight: "600",
-    marginLeft: 10,
+    color: ThemeData.textColor, // Black color for the main text
   },
   linkText: {
-    color: ThemeData.color, // Color for "sub categories" text
-  },
-  highlightText: {
-    color: ThemeData.color, // Color for "Aluminium" text
-  },
-  button: {
-    marginTop: 18,
-    borderColor: ThemeData.color,
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    alignItems: "center",
-    width: 250,
-  },
-  buttonText: {
-    color: ThemeData.color,
-    fontSize: 16,
-    fontWeight: "600",
+    color: ThemeData.color // Color for "category" text
   },
 });
+
+export default PricingHistory;

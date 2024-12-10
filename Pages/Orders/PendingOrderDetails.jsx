@@ -203,6 +203,12 @@ export const PendingOrderDetails = ({ route }) => {
               </Text>
             </Block>
             <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
+             <MaterialIcons name="phone" size={20} color={ThemeData.textColor} />
+                            <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 600, color: ThemeData.textColor }}>
+                              Phone No. :  {orderDetails?.orderBy.id === userDetails.id ? orderDetails?.orderTo.phoneNumber : orderDetails?.orderBy.phoneNumber|| "N/A"}
+              </Text>
+            </Block>
+            <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
               <Image source={catIcon} style={{height:20,width:20}} />
               <Text style={{ fontSize: 20, marginLeft: 8, fontWeight: 500 }}>
                 {orderDetails?.category || "N/A"}

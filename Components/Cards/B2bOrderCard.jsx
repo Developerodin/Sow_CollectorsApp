@@ -43,7 +43,7 @@ export const B2bOrderCard = ({ data }) => {
         <Text style={{ marginLeft: 2, fontSize: 16 }}>
           <Text style={{ color: ThemeData.color }}>{data.weight}{data.unit}</Text> scrap for <Text style={{ color: ThemeData.color }}>₹{data.totalPrice}</Text> in {data.location.city}, {data.location.state}
         </Text>
-        <MaterialIcons name="more-vert" size={24} color={ThemeData.textColor} />
+        {/* <MaterialIcons name="more-vert" size={24} color={ThemeData.textColor} /> */}
       </Block>
 
       <Block style={styles.row}>
