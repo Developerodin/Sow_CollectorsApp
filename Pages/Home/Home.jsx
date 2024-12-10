@@ -198,7 +198,7 @@ export const Home = () => {
                       <View style={styles.middleContainer}>
                         <View style={styles.cardContainer}>
                           <View style={styles.card1}>
-                            <Text style={styles.title1}>Net Scrap Purchas</Text>
+                            <Text style={styles.title1}>Net Scrap Purchase</Text>
                           <Text style={styles.amountGreen}>{salesSummary.netScrapPurchased || 0} kgs</Text>
                           </View>
                           <View style={styles.card1}>

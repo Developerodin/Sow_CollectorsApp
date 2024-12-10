@@ -286,7 +286,26 @@ export const B2bOrderDetails = ({route}) => {
               </TouchableOpacity>
             </View>
           </View>
+}            
+{
+  orderDetails.orderTo && orderDetails.orderTo.id !== userDetails.id && 
+  new Date() - new Date(orderDetails.createdAt) <= 24 * 60 * 60 * 1000 && (
+    <View style={{ marginTop: 20, paddingHorizontal: 15 }}>
+      <View style={styles.cardActions}>
+        <TouchableOpacity onPress={() => postUserAccept('Cancelled')}>
+          <View style={styles.acceptButton}>
+            <View style={{ flexDirection: "row" }}>
+              <Ionicons name="close" size={18} color="#FF2020" />
+              <Text style={styles.declineText}>Cancel</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </View>
+  )
 }
+
+
           {/* Modal for Accept Button */}
           <Modal
           animationType="slide"

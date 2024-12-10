@@ -324,7 +324,7 @@ const UpdatePricing = () => {
           
 
          
-          <Picker
+                    <Picker
             selectedValue={selectedUnit[el] || "KG"}
             onValueChange={(value) =>
               setSelectedUnit((prev) => ({ ...prev, [el]: value }))
