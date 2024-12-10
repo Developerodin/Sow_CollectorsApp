@@ -392,8 +392,8 @@ const handleSubAddChange = (field, value) => {
       </View>
     </View>
 
-      <Block style={{ padding: 8 }}>
-        <Input
+      <Block style={{ padding: 8,marginTop: 10 }}>
+        {/* <Input
           placeholder="Search for an item..."
           left
           icon="search1"
@@ -403,7 +403,7 @@ const handleSubAddChange = (field, value) => {
           value={query}
           onChangeText={(text) => setQuery(text)}
           style={{ borderRadius: 16, borderWidth: 1, borderColor: "#A6A6A6",paddingVertical:10 ,paddingHorizontal:20}}
-        />
+        /> */}
         <Block style={styles.Space_Between}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
         <TouchableOpacity
@@ -488,9 +488,9 @@ const handleSubAddChange = (field, value) => {
 </Button>
           </Block> */}
 
-          <Block style={{  marginBottom: 100 , }}>
-            {filteredData.map((el, index) => {
-              return (
+                    <Block style={{ marginBottom: 100 }}>
+            {filteredData.length > 0 ? (
+              filteredData.map((el, index) => (
                 <MarketCard
                   key={index}
                   Id={el.id}
@@ -506,8 +506,19 @@ const handleSubAddChange = (field, value) => {
                   setItemModelData={setItemModelData}
                   ItemAddStatus={ItemAddStatus}
                 />
-              );
-            })}
+              ))
+            ) : (
+              <Block center style={{ marginTop: 40 }}>
+                <Image
+                  source={require("../../assets/media/5-dark.png")}
+                  style={{
+                    width: 300,
+                    height: 300,
+                    marginRight: 10,
+                  }}
+                />
+              </Block>
+            )}
           </Block>
         </Block>
       </ScrollView>
@@ -626,12 +637,14 @@ const handleSubAddChange = (field, value) => {
               
               <Block center style={{ marginTop: 20,marginBottom: 10 }}>
       
-      <TouchableOpacity onPress={handelSubCategoryModelSubmit}>
+      <TouchableOpacity onPress={handelSubCategoryModelSubmit} activeOpacity={0.8} disabled={loading}>
+        { loading ? ( <ActivityIndicator size="small" color="#0000ff" />) : ( 
         <Text style={{ color: "#fff", marginTop: 10,backgroundColor: ThemeData.backgroundColor,
     borderRadius: 30,
     paddingVertical: 12,
     paddingHorizontal: 40,
    }}>Submit</Text>
+        )}
       </TouchableOpacity>
     </Block>
             </View>

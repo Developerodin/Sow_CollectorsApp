@@ -295,10 +295,16 @@ export const PendingOrderDetails = ({ route }) => {
               justifyContent: 'center', alignItems: 'center',
               marginHorizontal: 60,
             }}>
-              {orderDetails?.orderStatus === "Completed" ? (
+                           {orderDetails?.orderStatus === "Completed" ? (
                 <TouchableOpacity>
                   <Text style={{ fontSize: 18, color: "#fff", justifyContent: "center" }}>
                     Completed
+                  </Text>
+                </TouchableOpacity>
+              ) : orderDetails?.orderStatus === "Cancelled" ? (
+                <TouchableOpacity>
+                  <Text style={{ fontSize: 18, color: "#fff", justifyContent: "center" }}>
+                    Cancelled
                   </Text>
                 </TouchableOpacity>
               ) : (
