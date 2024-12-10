@@ -60,7 +60,7 @@ export const Notification = () => {
         />
       </View>
 
-      <View style={{width:"69%",marginLeft:5}}>
+      <View style={{width:"65%",marginLeft:5}}>
         <Text style={styles.notificationTitle}>{item.notification}</Text>
         <Text style={styles.notificationDescription}>Status: {item.orderStatus}</Text>
         <Text style={styles.notificationDescription}>Total Price: ₹{item.totalPrice}</Text>
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   notificationTitle: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 'bold',
   },
   notificationDescription: {
