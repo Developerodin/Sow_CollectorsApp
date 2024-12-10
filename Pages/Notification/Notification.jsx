@@ -52,14 +52,15 @@ export const Notification = () => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.notificationContainer}>
+    <View style={[styles.notificationContainer]}>
       <View style={styles.iconContainer}>
         <Image
           source={require('./Bell.png')} // Replace with the actual path to your bell icon image
           style={styles.icon}
         />
       </View>
-      <View style={{ flex: 1 }}>
+
+      <View style={{width:"69%",marginLeft:5}}>
         <Text style={styles.notificationTitle}>{item.notification}</Text>
         <Text style={styles.notificationDescription}>Status: {item.orderStatus}</Text>
         <Text style={styles.notificationDescription}>Total Price: ₹{item.totalPrice}</Text>
@@ -76,9 +77,9 @@ export const Notification = () => {
         </Block>
         <Text style={{ marginLeft: 15, fontSize: 25, fontWeight: '500' }}>Notifications</Text>
       </Block>
-      <Block style={{ backgroundColor: '#FAFAFA', padding: 5, borderRadius: 30, width: 100, alignSelf: 'center', margin: 10 }}>
+      {/* <Block style={{ backgroundColor: '#FAFAFA', padding: 5, borderRadius: 30, width: 100, alignSelf: 'center', margin: 10 }}>
         <Text style={{ textAlign: 'center', color: '#000' }}>Today</Text>
-      </Block>
+      </Block> */}
       {error || notifications.length === 0 ? (
         <Block center style={{ marginTop: 40 }}>
           <Image
@@ -136,7 +137,7 @@ const styles = StyleSheet.create({
   notificationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    justifyContent: 'left',
     paddingVertical: 10,
     borderColor: '#B3B3B3',
     borderWidth: 1,
