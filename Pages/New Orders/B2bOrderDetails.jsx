@@ -144,7 +144,7 @@ export const B2bOrderDetails = ({route}) => {
         >
           <TouchableOpacity activeOpacity={0.8}>
             <View style={{ flexDirection: "row", marginRight: 15 }}>
-              <Ionicons name="share-social" size={24} color="#000" />
+              {/* <Ionicons name="share-social" size={24} color="#000" /> */}
             </View>
           </TouchableOpacity>
         </Block>
