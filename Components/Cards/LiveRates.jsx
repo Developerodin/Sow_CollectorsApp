@@ -352,6 +352,11 @@ const LiveRates = () => {
       );
     });
 
+    const today = new Date();
+  const formattedDate = `${today.getDate().toString().padStart(2, '0')}.${(today.getMonth() + 1)
+    .toString()
+    .padStart(2, '0')}.${today.getFullYear()}`;
+
    return (
     <View style={{ flex: 1 }}>
       {loading ? (
@@ -454,7 +459,7 @@ const LiveRates = () => {
             <View>
               <View style={{ height: 320,marginTop:10 }}>
                 <Text style={{ fontSize: 15, fontWeight: "500", color: ThemeData.textColor, marginLeft: 15 }}>
-                  Live Market rates as of <Text style={{ color: ThemeData.color }}>12.11.2024</Text>
+                  Live Market rates as of <Text style={{ color: ThemeData.color }}>{formattedDate}</Text>
                 </Text>
   
                 <FlatList
