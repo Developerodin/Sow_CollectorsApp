@@ -126,7 +126,7 @@ const Tabs = ({ navigation }) => {
         />
       )}
 
-      {userDetails.registerAs !== "Collectors" && (
+      {userDetails.registerAs !== "Retailer" && (
         <Tab.Screen
           name="My Rates"
           component={MyRates}

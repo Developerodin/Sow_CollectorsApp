@@ -402,26 +402,26 @@ export const Login = ({ navigation }) => {
                   </Block>
                 </Block>
 
-                {/* <Block center style={{width: "95%",marginTop:30,marginBottom: -40, }}>
+                <Block center style={{width: "95%",marginTop:30,marginBottom: -40, }}>
                   <Text
                     style={{
                       fontSize: 16,
                       fontWeight: "400",
                       
-                      color: "#BDBDBD",
+                      color: "black",
                       marginLeft:-40
                     }}
                   >
                     OTP Not Receive ?{" "}
-                    <Text style={{ color: "black", fontWeight: 500 }}>
+                    <Text style={{ color:"#65C5C4", fontWeight: 500 }}>
                     {canResend ? (
-            <Text onPress={generateOTP}>Resend OTP</Text>
+            <Text style={{color:"#65C5C4"}} onPress={generateOTP}>Resend OTP</Text>
           ) : (
             `Resend OTP in ${countdown} sec`
           )}
                     </Text>
                   </Text>
-                </Block> */}
+                </Block>
               </View>
             ) : (
               <View

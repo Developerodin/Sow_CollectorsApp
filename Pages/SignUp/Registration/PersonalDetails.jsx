@@ -35,7 +35,7 @@ export const PersonalDetails = () => {
       // gender:"",
       email: "",
       name:"",
-      referralCode:"",
+      // referralCode:"",
       businessName:""
     });
     const [CategoriesData, setCategoriesData] = useState([]);
@@ -188,7 +188,7 @@ export const PersonalDetails = () => {
           registerAs: RegisterAs,
           category: categoryNames,
           businessName: formData.businessName,
-          referralCode: formData.referralCode,
+          referralCode:"",
         };
         const UserDetails = JSON.stringify(UserData);
         await AsyncStorage.setItem("UserDetails", UserDetails);
@@ -395,6 +395,13 @@ export const PersonalDetails = () => {
       AddAddressData()
     },[])
 
+    const handelTermCondition = ()=>{
+      const Data={
+        url:"https://www.scraponwheels.com/terms.html"
+        }
+      navigation.navigate("Scrap On Wheels", { Data });
+    }
+
     const uniqueStates = [...new Set(AddressData.map(address => address.state_name))];
     const getUniqueCitiesByName = (addresses) => {
       const uniqueCities = {};
@@ -434,7 +441,7 @@ export const PersonalDetails = () => {
         <Block style={{padding:10}}>
         <Block style={{marginTop:15}}>
 <Block style={[ customStyle.Card1]}>
-          <Text style={{fontSize:16}}>Name</Text>
+          <Text style={{fontSize:16}}>Name <Text style={{color:"red"}}>*</Text></Text>
       <TextInput
           style={styles.input}
           placeholder="Enter you name"
@@ -472,7 +479,7 @@ export const PersonalDetails = () => {
 
         <Block style={{marginTop:10}}>
         <Block style={[ customStyle.Card2]}>
-        <Text style={{fontSize:16}}>Email Address</Text>
+        <Text style={{fontSize:16}}>Email Address <Text style={{color:"red"}}>*</Text></Text>
       <TextInput
           style={styles.input}
           placeholder="Enter your email address"
@@ -487,7 +494,7 @@ export const PersonalDetails = () => {
 
         <Block style={{marginTop:10}}>
         <Block style={[ customStyle.Card2]}>
-        <Text style={{fontSize:16}}>Business Name</Text>
+        <Text style={{fontSize:16}}>Business Name <Text style={{color:"red"}}>*</Text></Text>
       <TextInput
           style={styles.input}
           placeholder="Enter your business name"
@@ -505,7 +512,7 @@ export const PersonalDetails = () => {
        
 
         <Block style={{marginTop:10,padding:10}}>
-        <Text style={{fontSize:16}}>Category</Text>
+        <Text style={{fontSize:16}}>Category <Text style={{color:"red"}}>*</Text></Text>
 <TouchableOpacity activeOpacity={0.9} onPress={handelCategoryModelOpen} style={[{borderWidth:1,padding:18,borderColor:"#A6A6A6",borderRadius:10,marginTop:4}]}>
   
   <Block  style={{width:"95%"}}>
@@ -520,7 +527,7 @@ export const PersonalDetails = () => {
         </Block>
 
 
-        <Block style={{marginTop:10}}>
+       {/* <Block style={{marginTop:10}}>
         <Block style={[ customStyle.Card2]}>
         <Text style={{fontSize:16}}>Referral Code</Text>
       <TextInput
@@ -533,6 +540,7 @@ export const PersonalDetails = () => {
         />
                 </Block>
         </Block>
+        */}
 
         {/* <Block style={{marginTop:10}}>
         <Block style={[ customStyle.Card3]}>
@@ -567,13 +575,14 @@ export const PersonalDetails = () => {
         <Checkbox
       style={{marginTop:15}}
       color="black"
-      label={"By checking this box, you accept the terms and conditions"}
+      label={"By checking this box, you accept the"}
       initialValue={termandCondition}
         onChange={(el) => {
                 console.log("VAlue of checkbox ==>",el)
                 setTermandCondition(el)
         }}
       />
+      <Text onPress={handelTermCondition} style={{marginTop:15,color:"#65C5C4"}}> Terms & Conditions</Text>
         </Block>
 
        </Block>

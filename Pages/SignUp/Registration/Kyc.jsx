@@ -273,6 +273,20 @@ export const Kyc = () => {
     },[])
 
     
+    const handelTermCondition = ()=>{
+      const Data={
+        url:"https://www.scraponwheels.com/terms.html"
+        }
+      navigation.navigate("Scrap On Wheels", { Data });
+    }
+
+    const handelPrivacyPolicy = ()=>{
+      const Data={
+        url:"https://www.scraponwheels.com/privacy.html"
+        }
+      navigation.navigate("Scrap On Wheels", { Data });
+    }
+    
   return (
     <View style={styles.container}>
     <StatusBar style="dark" />
@@ -308,7 +322,7 @@ export const Kyc = () => {
         <Block style={{padding:10}}>
         <Block style={{marginTop:15}}>
 <Block style={[ customStyle.Card1]}>
-          <Text style={{fontSize:16}}>GSTIN *</Text>
+          <Text style={{fontSize:16}}>GSTIN <Text style={{color:"red"}}>*</Text></Text>
       <TextInput
           style={styles.input}
           placeholder="Enter your GST Number"
@@ -326,8 +340,8 @@ export const Kyc = () => {
        
 
        <Block style={{marginTop:20,padding:10}}>
-       <Text style={styles.sectionTitle}>Upload photo/video</Text>
-        <Text style={styles.label}>Warehouse Live Video</Text>
+       <Text style={styles.sectionTitle}>Upload photo</Text>
+        <Text style={styles.label}>Warehouse Live Photo</Text>
         {image && <Image source={{ uri: image }} style={{resizeMode: 'contain',width:80,height:80,borderRadius:8}} />}
         <TouchableOpacity onPress={() => showImagePicker('camera')}  style={styles.button1}>
             <Ionicons
@@ -359,8 +373,8 @@ export const Kyc = () => {
 
         
         <Block center>
-            <Text style={{fontSize:16}}>Read the <Text style={{color:"#65C5C4",fontSize:18,textDecorationLine: 'underline'}}>Terms & Condiation</Text> and </Text>
-            <Text style={{color:"#65C5C4",fontSize:18,textDecorationLine: 'underline'}}>Privacy Policy</Text>
+            <Text style={{fontSize:16}}>Read the <Text onPress={handelTermCondition} style={{color:"#65C5C4",fontSize:18,textDecorationLine: 'underline'}}>Terms & Condiation</Text> and </Text>
+            <Text onPress={handelPrivacyPolicy} style={{color:"#65C5C4",fontSize:18,textDecorationLine: 'underline'}}>Privacy Policy</Text>
         </Block>
       
         

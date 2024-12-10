@@ -60,6 +60,12 @@ export const NewOrders = () => {
     getB2bOrders(activeFilter.toLowerCase());
   }, [activeFilter, update]);
 
+  useEffect(()=>{
+  if(userDetails.registerAs === "Retailer"){
+    setActiveTab("B2C");
+  }
+  },[userDetails])
+
   return (
     <View style={styles.container}>
       {/* Header */}
@@ -70,7 +76,8 @@ export const NewOrders = () => {
 
       {/* Tabs */}
       <View style={styles.tabContainer}>
-        <TouchableOpacity
+        {
+          userDetails.registerAs !== "Retailer" &&  <TouchableOpacity
           style={[styles.tab, activeTab === 'B2B' ? styles.activeTab : styles.inactiveTab]}
           onPress={() => setActiveTab('B2B')}
         >
@@ -78,6 +85,8 @@ export const NewOrders = () => {
             B2B
           </Text>
         </TouchableOpacity>
+        }
+       
         <TouchableOpacity
           style={[styles.tab, activeTab === 'B2C' ? styles.activeTab : styles.inactiveTab]}
           onPress={() => setActiveTab('B2C')}
