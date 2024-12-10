@@ -8,7 +8,7 @@ import { Base_url } from '../../Config/BaseUrl';
 import axios from 'axios';
 
 export const Notification = () => {
-  const { userDetails, update } = useAppContext();
+  const { userDetails, update,notificatoinUpdate,setNotificationsUpdate } = useAppContext();
   const [notifications, setNotifications] = useState([]);
   const [error, setError] = useState(false);
   const navigation = useNavigation();
@@ -17,11 +17,12 @@ export const Notification = () => {
     navigation.goBack();
   };
 
-  const getNotifications = async () => {
+  const getNotifications = async (id) => {
     try {
-      const response = await axios.get(`${Base_url}b2b-notifications/${userDetails.id}`);
+      const response = await axios.get(`${Base_url}b2b-notifications/${id}`);
       console.log("notifications", response.data);
       setNotifications(response.data);
+      markReadNotifications(id);
       setError(false); // Reset error state on successful fetch
     } catch (error) {
       console.log(error);
@@ -29,9 +30,21 @@ export const Notification = () => {
     }
   };
 
+  const markReadNotifications = async (id) => {
+    try {
+      const response = await axios.get(`${Base_url}b2b-notifications/mark-read/${id}`);
+      console.log("notifications", response.data);
+      setNotificationsUpdate((prev)=>prev+1)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
-    getNotifications();
-  }, [update]);
+    if(userDetails.id){
+    getNotifications(userDetails.id);
+    }
+  }, [update,userDetails]);
 
   const formatDate = (date) => {
     const d = new Date(date);

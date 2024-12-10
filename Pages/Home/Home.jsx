@@ -32,7 +32,7 @@ import EvilIcons from "@expo/vector-icons/EvilIcons";
 import icon from "./icon.png";
 import { ThemeData } from "../../Theme/Theme";
 import { use } from "react";
-
+import { Linking } from 'react-native';
 export const Home = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
@@ -164,6 +164,8 @@ export const Home = () => {
     return `${formattedDay}:${formattedMonth}:${formattedYear}`;
   }
 
+  
+
   useEffect(() => {
     animationRef.current?.play();
 
@@ -175,10 +177,23 @@ export const Home = () => {
     console.log("userID ====>",userDetails.id)
     if(userDetails.id){
       getSalesSummary(userDetails.id);
+     
     }
  
   }, [userDetails,update]);
 
+  const openDialPad = () => {
+    const url = `tel:8696527396`;
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (!supported) {
+          console.log("Error", "Your device does not support this feature.");
+        } else {
+          return Linking.openURL(url);
+        }
+      })
+      .catch((err) => console.error("An error occurred", err));
+  };
   
  
 
@@ -490,7 +505,7 @@ export const Home = () => {
         <Block style={[styles.bottomContainer]}>
       <Text style={styles.headerText}>Talk to us for free</Text>
       <Text style={styles.consultationText}>Consultation.</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity onPress={openDialPad} style={styles.button}>
         <Text style={styles.buttonText}>Connect</Text>
       </TouchableOpacity>
     </Block>

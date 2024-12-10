@@ -17,8 +17,9 @@ import axios from 'axios';
 export const Header = () => {
   const navigation = useNavigation()
   const [isMenuVisible, setMenuVisible] = useState(false);
-  const {toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible,userDetails} =useAppContext()
+  const {toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible,userDetails,update,notificatoinUpdate,setNotificationsUpdate} =useAppContext()
   const [image, setImage] = useState(null);
+  const [notificationCount,setNotificationsCount] = useState(0);
   const handelProfileClick = ()=>{
     navigation.navigate('Profile')
   }
@@ -31,11 +32,11 @@ export const Header = () => {
     navigation.navigate('Daily Rates')
   }
 
-  const getUserImage = async () => {
+  const getUserImage = async (id) => {
     console.log('Getting user image in header===============================>')
     try {
       // Replace 'yourapiurl' with your actual API endpoint URL
-      const response = await axios.get( `${Base_url}b2bUser/profilepic/${userDetails.id}`);
+      const response = await axios.get( `${Base_url}b2bUser/profilepic/${id}`);
   
       // Assuming the response contains the image data as a base64 string
       const imageBase64 = response.data.image;
@@ -51,13 +52,30 @@ export const Header = () => {
     }
   };
 
-  useEffect(()=>{
-    getUserImage()
-  },[])
+  const getNotificationsCount = async (id) => {
+    try {
+      const response = await axios.get(`${Base_url}b2b-notifications/count/${id}`);
+      console.log("notifications count on home page ===>", response.data);
+      setNotificationsCount(response.data.unreadCount || 0);
+ // Reset error state on successful fetch
+    } catch (error) {
+      console.log(error);
 
-  if(image === null){
-    getUserImage()
-  }
+    }
+  };
+
+
+
+  useEffect(() => {
+    console.log("userID ====>",userDetails.id)
+    if(userDetails.id){
+      getUserImage(userDetails.id);
+      getNotificationsCount(userDetails.id)
+    }
+ 
+  }, [userDetails,update,notificatoinUpdate]);
+
+  
   return (
     <View style={[{marginTop:40,padding:10},styles.container]}>
         <Block  style={[styles.Space_Between]}>
@@ -83,8 +101,13 @@ export const Header = () => {
           </Block>
 
           <Block style={{flexDirection: 'row',gap: 20}} >
-            <TouchableOpacity activeOpacity={0.9} onPress={handelNotificationClick}>
+            <TouchableOpacity activeOpacity={0.9} onPress={handelNotificationClick} style={{position:"relative"}}>
           <FontAwesome5 name="bell" size={30} color= {ThemeData.textColor}/>
+         {
+          notificationCount !== 0 && <Block  style={{width:18,height:18,borderRadius:100,backgroundColor:"red",position:"absolute",right:-3,top:-3,flexDirection:"row",justifyContent:"center",alignItems:"center"}}>
+          <Text style={{color:"#fff",fontSize:10}}>{notificationCount}</Text>
+        </Block>
+         } 
           </TouchableOpacity>
           <TouchableOpacity activeOpacity={0.9} onPress={handelDailyRatesClick}>
             <FontAwesome5 name="envelope" size={30} color= {ThemeData.textColor}/>
