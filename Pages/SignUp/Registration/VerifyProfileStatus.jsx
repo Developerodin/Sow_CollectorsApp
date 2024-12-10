@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState ,useEffect } from 'react'
 import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -8,8 +8,10 @@ import Img from "../../Images/Onbording.png";
 import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
+import LottieView from 'lottie-react-native';
 
 export const VerifyProfileStatus = () => {
+    const animationRef = useRef(null);
     const navigation= useNavigation()
     const handelProceed=()=>{
          navigation.reset({
@@ -17,6 +19,12 @@ export const VerifyProfileStatus = () => {
           routes: [{ name: 'Login' }],
         });
     }
+    useEffect(() => {
+      animationRef.current?.play();
+  
+      // Or set a specific startFrame and endFrame with:
+      animationRef.current?.play(10, 80);
+    }, []);
   return (
     <View style={styles.container}>
     <StatusBar style="dark" />
@@ -25,22 +33,30 @@ export const VerifyProfileStatus = () => {
        <View style={{alignItems:"left",marginTop:30,width:width}}>
          
        <View style={{alignItems:"center",height:130}}>
-         <Image
+         {/* <Image
            source={Logo}
            style={{resizeMode: 'contain'}}
-         />
+         /> */}
          </View>
          
    
          <View style={{alignItems:"center"}}>
-         <Image
-           source={Img}
-           style={{resizeMode: 'contain'}}
+         <LottieView
+           ref={animationRef}
+           style={styles.lottie}
+          
+           
+           source={require('../../../assets/Animations/Animation - 1733658953722.json')}
+           autoPlay={true} loop={true}
          />
          </View>
      
-         <View style={{alignItems:"left",padding:10,justifyContent:"center",marginTop:80}}>
-         <Text style={{fontSize:25,fontWeight:400}}>We are currently verifying your profile !</Text>
+         <View style={{alignItems:"left",padding:10,justifyContent:"center",marginTop:0, alignSelf: "center"}}>
+         <Text style={{fontSize:24,fontWeight:600}}>Profile Verification </Text>
+          <Text style={{fontSize:24,fontWeight:600,alignSelf: "center",color: "#F7C441"}}>pending...</Text>
+          <Text style={{fontSize:15,fontWeight:400,alignSelf: "center",marginTop: 15}}>Please wait. it usually takes</Text>
+          <Text style={{fontSize:15,fontWeight:400,alignSelf: "center"}}>1-5 hours.</Text>
+
         
          
          
@@ -87,6 +103,10 @@ export const VerifyProfileStatus = () => {
 
 
 const styles = StyleSheet.create({
+  lottie:{
+    width:width*0.9,
+    height:width
+    },
     container:{
       flex: 1,
       backgroundColor:"#FFF",
@@ -136,7 +156,7 @@ const styles = StyleSheet.create({
     btn: {
      width: '95%',
       height: 55,
-      borderRadius: 5,
+      borderRadius: 30,
       backgroundColor: 'black',
       justifyContent: 'center',
       alignItems: 'center',

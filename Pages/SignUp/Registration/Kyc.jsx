@@ -145,8 +145,12 @@ export const Kyc = () => {
           
         }
       };
+      const handelSkip = () => {
+        navigation.navigate("VerifyProfileStatus")
+      };
 
       const handelSubmitData = async (data) => {
+        setLoading(true)
         try {
           const response = await axios.post(`${Base_url}b2bUser/kyc`, data); // Adjust the endpoint to match your backend route
           if (response.data.success) {
@@ -163,12 +167,14 @@ export const Kyc = () => {
             return { success: true, data: response.data.data };
           }
         } catch (error) {
+          setLoading(false)
           console.error('Error adding KYC details:', error.response?.data?.message || error.message);
           return { success: false, message: error.response?.data?.message || error.message };
         }
       };
 
       const handelSubmitOwnerImageData = async () => {
+      
         try {
           const response = await axios.post(`${Base_url}b2bUser/kycOwnerImage`, image2); // Adjust the endpoint to match your backend route
           if (response.data.success) {
@@ -276,17 +282,25 @@ export const Kyc = () => {
        <View style={{alignItems:"left",marginTop:55,width:width}}>
          
        {!isKeyboardOpen &&
-         <Block style={{flexDirection:"row",justifyContent:"left",alignItems:"center"}}>
-              
-              <Block style={{backgroundColor:"black",width:50,height:50,flexDirection:"row",justifyContent:"center",alignItems:"center",borderRadius:150,marginLeft:20}}>
-             
-              <MaterialIcons onPress={handelBack} name="arrow-back-ios" size={22} style={{marginLeft:5}} color="white" />
-              </Block>
-              
+                <Block style={{ flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
+          <Block style={{ flexDirection: "row", alignItems: "center" }}>
+            <TouchableOpacity onPress={handelBack} activeOpacity={0.8}>
+            <Block style={{ backgroundColor: "black", width: 50, height: 50, flexDirection: "row", justifyContent: "center", alignItems: "center", borderRadius: 150, marginLeft: 20 }}>
+              <MaterialIcons name="arrow-back-ios" size={22} style={{ marginLeft: 5 }} color="white" />
+            </Block>
+            </TouchableOpacity>
+            <Text style={{ marginLeft: 15, fontSize: 25, fontWeight: 500 }}>Almost there</Text>
+          </Block>
+          <TouchableOpacity activeOpacity={0.8} onPress={handelSkip}>
+          <Block style={{  flexDirection: "row", justifyContent: "center", alignItems: "center", borderRadius: 30, marginRight: 20 ,padding: 8}}>
+            <Text style={{ color: "#000", marginRight: 5,fontSize: 16,fontWeight:600 }}>Skip</Text>
+            <MaterialIcons name="double-arrow" size={18} color="#000" />
+           
 
-              <Text style={{marginLeft:15,fontSize:25,fontWeight:500}}>Almost there</Text>
             
           </Block>
+          </TouchableOpacity>
+        </Block>
 }
    
        </View>
@@ -392,21 +406,26 @@ export const Kyc = () => {
     <Block right style={[{ padding: 20, marginTop: 20 }]}>
              
                 
-                    {loading ? 
-        <View >
-          <ActivityIndicator size="large"  color="#65be34" />
-        </View>
-        :
-        <Button
-                  title="Next"
-                  color="#000000"
-                 
-                  style={{ width:width*0.88, padding:10 }}
-                  onPress={handelPersonalDetailSubmit}
-                  
-                  tintColor="#fff"
-                />
-      }
+       
+                        <TouchableOpacity
+              style={{
+                backgroundColor: '#000000',
+                width: width * 0.88,
+                padding: 15,
+                alignItems: 'center',
+                justifyContent: 'center',
+                borderRadius: 30,
+              }}
+              onPress={handelPersonalDetailSubmit}
+              activeOpacity={0.8}
+            >
+              {loading ? (
+                <ActivityIndicator size="small" color="#fff" />
+              ) : (
+                <Text style={{ color: '#fff', fontSize: 16 }}>Next</Text>
+              )}
+            </TouchableOpacity>
+      
               
             </Block>
       

@@ -207,6 +207,7 @@ export const PersonalDetails = () => {
       const UserData = JSON.parse(UserDetails);
     
       console.log("Data of user ====>", UserDetails);
+      setLoading(true);
       try {
         const response = await axios.post(`${Base_url}b2bUser`, UserData);
         console.log("Response of user ====>", response.data);
@@ -225,6 +226,7 @@ export const PersonalDetails = () => {
         }
       } catch (error) {
         console.error('Error submitting data:', error);
+        setLoading(false);
       }
     };
     
@@ -527,8 +529,7 @@ export const PersonalDetails = () => {
           value={formData.referralCode}
         onChangeText={(text) => handleInputChange("referralCode", text)}
           placeholderTextColor="#B7B7B7"
-        //   value={formData.phoneNumber}
-        // onChangeText={(text) => handleInputChange("phoneNumber", text)}
+       
         />
                 </Block>
         </Block>
@@ -583,21 +584,13 @@ export const PersonalDetails = () => {
     <Block right style={[{ padding: 20, marginTop: 20 }]}>
              
                 
-                    {loading ? 
-        <View >
-          <ActivityIndicator size="large"  color="#65be34" />
-        </View>
-        :
-        <Button
-                  title="Next"
-                  color="#000000"
-                 
-                  style={{ width:width*0.88, padding:10 }}
-                  onPress={handelPersonalDetailSubmit}
-                  
-                  tintColor="#fff"
-                />
-      }
+   <TouchableOpacity onPress={handelPersonalDetailSubmit} style={[styles.btn,{backgroundColor:"#000"}]} activeOpacity={0.8} disabled={loading}>
+   {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+    <Text style={{color:"#fff",fontSize:18}}>Next</Text>
+    )}
+    </TouchableOpacity>
               
             </Block>
       
@@ -677,10 +670,10 @@ const styles = StyleSheet.create({
       borderRadius: 52,
     },
     btn: {
-     width: '95%',
+     width: '100%',
       height: 55,
-      borderRadius: 5,
-      backgroundColor: '#40A99E',
+      borderRadius: 35,
+      backgroundColor: '#000',
       justifyContent: 'center',
       alignItems: 'center',
     },

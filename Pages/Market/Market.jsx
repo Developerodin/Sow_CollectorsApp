@@ -127,9 +127,7 @@ export const Market = () => {
       subCategoryName: selectedSubCategory,
       city: selectedCity,
     });
-    setSelectedCategory("");
-    setSelectedSubCategory("");
-    setRefreshData((prev) => prev + 1);
+    resetFilterData();
   };
 
   //  const data = {
@@ -180,6 +178,9 @@ export const Market = () => {
     getSubCategoryById(id);  // Fetch subcategories after selecting the category
     toggleAccordion();  // Close the category accordion after selection
     setCategoryModalVisible(false);
+    setSelectedSubCategory("");  // Clear the selected subcategory name
+  setSelectedSubCategories([]);
+
   };
   
   

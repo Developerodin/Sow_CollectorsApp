@@ -64,13 +64,29 @@ export const Orders = () => {
   const renderOrderCard = (data) => (
     <View key={data._id} style={styles.cardContainer}>
       
-      <View style={[styles.header, { backgroundColor: data.orderStatus === 'Rejected' ? '#FF2020' : (data.orderStatus === 'Pending' ? '#FFD12C' : '#FFD12C'), }]}>
+            <View style={[styles.header, { 
+        backgroundColor: 
+          data.orderStatus === 'Rejected' ? '#FF2020' : 
+          data.orderStatus === 'Pending' ? '#FFD12C' : 
+          data.orderStatus === 'Cancelled' ? '#FF2020' : 
+          data.orderStatus === 'Completed' ? '#96DE20' : 
+          '#FFD12C', 
+      }]}>
         {data.orderStatus === 'Pending' ? (
           <Feather name="clock" size={18} color={ThemeData.textColor} />
-        ) : data.orderStatus === 'Rejected' ? (
+        ) : data.orderStatus === 'Rejected' || data.orderStatus === 'Cancelled' ? (
           <Feather name="x-circle" size={18} color={ThemeData.activeColor} />
+        ) : data.orderStatus === 'Completed' ? (
+          <Feather name="check-circle" size={18} color={ThemeData.textColor} />
         ) : null}
-        <Text style={[styles.statusText, { color: data.orderStatus === 'Rejected' ? ThemeData.activeColor : (data.orderStatus === 'Pending' ? ThemeData.textColor : ThemeData.textColor), }]}>{data.orderStatus}</Text>
+        <Text style={[styles.statusText, { 
+          color: 
+            data.orderStatus === 'Rejected' || data.orderStatus === 'Cancelled' ? ThemeData.activeColor : 
+            data.orderStatus === 'Completed' ? ThemeData.textColor : 
+            ThemeData.textColor, 
+        }]}>
+          {data.orderStatus}
+        </Text>
       </View>
 
       <Block style={styles.row}>
@@ -306,7 +322,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 5,
-    paddingHorizontal: 5,
+    paddingHorizontal: 8,
     borderRadius: 15,
     width: 110,
     position: 'absolute',
@@ -315,7 +331,7 @@ const styles = StyleSheet.create({
   },
   statusText: {
     color: ThemeData.textColor,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
     marginLeft: 5,
   },

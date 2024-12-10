@@ -12,7 +12,8 @@ import {
   KeyboardAvoidingView,
   Easing ,
   ActivityIndicator,
-  TextInput
+  TextInput,
+  
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Block, Text, Input, theme } from "galio-framework";
@@ -49,6 +50,7 @@ export const Login = ({ navigation }) => {
   const [loading,setLoading] = useState(false);
   const [countdown, setCountdown] = useState(30); // Initial countdown value
   const [canResend, setCanResend] = useState(false);
+  
   const scaleValue = new Animated.Value(1);
 
   const customStyle ={
@@ -488,7 +490,7 @@ export const Login = ({ navigation }) => {
             )}
 
                        <Block center style={[{ marginTop: 40, marginBottom: 40 }]}>
-              {showOTP ? (
+                          {showOTP ? (
                 <TouchableOpacity
                   style={{
                     backgroundColor: '#000000',
@@ -500,8 +502,13 @@ export const Login = ({ navigation }) => {
                   }}
                   onPress={handelOtpComplete}
                   activeOpacity={0.8}
+                  disabled={loading} // Disable button while loading
                 >
-                  <Text style={{ color: '#fff', fontSize: 16 }}>Login</Text>
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={{ color: '#fff', fontSize: 16 }}>Login</Text>
+                  )}
                 </TouchableOpacity>
               ) : (
                 <TouchableOpacity
@@ -515,8 +522,13 @@ export const Login = ({ navigation }) => {
                   }}
                   onPress={handelMobileNumber}
                   activeOpacity={0.8}
+                  disabled={loading} // Disable button while loading
                 >
-                  <Text style={{ color: '#fff', fontSize: 16 }}>Send OTP</Text>
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Text style={{ color: '#fff', fontSize: 16 }}>Send OTP</Text>
+                  )}
                 </TouchableOpacity>
               )}
             </Block>

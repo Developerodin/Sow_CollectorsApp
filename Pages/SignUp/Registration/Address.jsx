@@ -10,6 +10,7 @@ import {
   Dimensions,
   TextInput,
   Image,
+  ActivityIndicator,
 } from "react-native";
 import { useAppContext } from "../../../Context/AppContext";
 import { useNavigation ,useRoute} from "@react-navigation/native";
@@ -35,6 +36,7 @@ export const Address = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [AllUserAddresses, setAllUsersAddresses] = useState([]);
+  const [loading, setLoading] = useState(false);
   
   const [newAddress, setNewAddress] = useState({
     house: "",
@@ -142,6 +144,7 @@ export const Address = () => {
   }
   console.log("User Address",UserAddress)
 
+  setLoading(true)
   try {
     const response = await axios.post(`${Base_url}b2bUser/address`, UserAddress); // Update the API endpoint accordingly
     console.log("Res ==>",response.data);
@@ -164,6 +167,7 @@ export const Address = () => {
       // ToastAndroid.show("Eroor : Try again", ToastAndroid.SHORT);
     
     // setShowPAN(true);
+    setLoading(false)
   }
  }
 
@@ -297,7 +301,7 @@ const setnewAddressinStorage =async(address)=>{
           alignItems: "center",
           justifyContent: "space-between",
           paddingHorizontal: 0,
-          marginTop: 15,
+          marginTop: 35,
           height: 50,
           marginBottom: 30,
         }}
@@ -397,8 +401,35 @@ const setnewAddressinStorage =async(address)=>{
      
 
       <Block style={styles2.Space_Around}>
-      <Button color="black" title="Add New Address" style={{width:width*0.5}} tintColor="#fff" onPress={toggleModal} />
-      <Button color="black" title="Next" style={{width:width*0.3}} tintColor="#fff"  onPress={handleNextButton} />
+            <TouchableOpacity
+        style={{
+          backgroundColor: 'black',
+          width: width * 0.5,
+          padding: 15,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 30,
+        }}
+        onPress={toggleModal}
+        activeOpacity={0.8}
+      >
+        <Text style={{ color: '#fff', fontSize: 16 }}>Add New Address</Text>
+      </TouchableOpacity>
+      
+      <TouchableOpacity
+        style={{
+          backgroundColor: 'black',
+          width: width * 0.3,
+          padding: 15,
+          alignItems: 'center',
+          justifyContent: 'center',
+          borderRadius: 30,
+        }}
+        onPress={handleNextButton}
+        activeOpacity={0.8}
+      >
+        <Text style={{ color: '#fff', fontSize: 16 }}>Next</Text>
+      </TouchableOpacity>
       </Block>
 
       <Modal visible={isModalVisible} animationType="slide">
@@ -466,7 +497,7 @@ const setnewAddressinStorage =async(address)=>{
    <Block style={[styles2.AlignCenter,{marginTop:20}]}>
   
    {/* <Button color="black" title="CONFIRM LOCATION" style={{width:width*0.9 ,borderRadius: 10,height: 40}} tintColor="#fff" onPress={ConfirmLoction} /> */}
-   <TouchableOpacity onPress={ConfirmLoction} style={{backgroundColor:"#000",width:width*0.9 ,borderRadius: 8,height: 50,justifyContent:"center",alignItems:"center"}}>
+   <TouchableOpacity onPress={ConfirmLoction} style={{backgroundColor:"#000",width:width*0.9 ,borderRadius: 35,height: 50,justifyContent:"center",alignItems:"center"}} activeOpacity={0.8}>
       <Text style={{color:"#fff",fontSize:17,fontWeight:600}}>Confirm Location</Text>
     </TouchableOpacity>
         
@@ -571,8 +602,8 @@ const setnewAddressinStorage =async(address)=>{
 
           <Block style={{marginTop:40}}>
             
-          <Block style={{marginTop:15}}>
-<Block >
+          <Block >
+<Block  >
          
       <TextInput
           style={styles.input}
@@ -668,8 +699,15 @@ const setnewAddressinStorage =async(address)=>{
           {/* Add similar TextInput fields for other address details */}
 
           <Block center style={[styles2.Space_Between, { width:width*0.9,marginTop:60 }]}>
-            <Button color="black" title="save" style={{width:width*0.9}} tintColor="#fff" onPress={SubmitAddressData} />
-            {/* <Button color="black" title="close" style={{width:width*0.4}} tintColor="#fff" onPress={toggleModal2} /> */}
+            
+            <TouchableOpacity style={[styles.btn,{backgroundColor:"#000"}]}  onPress={SubmitAddressData} disabled={loading}>
+            {loading ? (
+          <ActivityIndicator size="small" color="#fff" />
+        ) : (
+            <Text style={{color:"#fff",fontSize:16,fontWeight:500}}>Save</Text>
+        )}
+            </TouchableOpacity>
+           
           </Block>
         </View>
       </Modal>
@@ -700,7 +738,7 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderRadius:8,
     borderColor:"#A6A6A6",
-    width:width*0.9,
+    width:width*0.94,
     marginTop:4,
    
   },
@@ -712,7 +750,7 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderRadius:8,
     borderColor:"#A6A6A6",
-    width:width*0.9,
+    width:width*0.94,
     marginTop:4,
     height:200
    
@@ -777,7 +815,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   addressTitle: { fontWeight: "600", fontSize: 18, color: "#000", marginBottom: 5, marginLeft: 10 },
-  addressDetail: { fontSize: 14, color: "#666" }
+  addressDetail: { fontSize: 14, color: "#666" },
+  btn :{
+    width: '100%',
+    height: 55,
+    borderRadius: 35,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
 
 const styles2 = StyleSheet.create({

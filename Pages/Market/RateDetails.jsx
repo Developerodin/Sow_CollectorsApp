@@ -492,9 +492,8 @@ export const RateDetails = ({ route }) => {
         </Block>
 
         <Block style={[{ marginTop: 15 }, styles.Center]}>
-      <Button
+           <TouchableOpacity
         onPress={handleSubmit}
-        color="white"
         style={{
           borderWidth: 1,
           width: width * 0.9,
@@ -504,6 +503,8 @@ export const RateDetails = ({ route }) => {
           justifyContent: 'center',
           alignItems: 'center',
         }}
+        activeOpacity={0.8}
+        disabled={loading} // Disable button while loading
       >
         {loading ? (
           <ActivityIndicator size="small" color="#fff" />
@@ -512,7 +513,7 @@ export const RateDetails = ({ route }) => {
             Sell your Scrap
           </Text>
         )}
-      </Button>
+      </TouchableOpacity>
     </Block>
 
         {/* <Block center style={{marginTop:20,marginBottom:20}}>
