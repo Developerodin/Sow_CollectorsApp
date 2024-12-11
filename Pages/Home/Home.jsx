@@ -33,6 +33,7 @@ import icon from "./icon.png";
 import { ThemeData } from "../../Theme/Theme";
 import { use } from "react";
 import { Linking } from 'react-native';
+import WholesalerRates from "../../Components/Cards/WholesalerRates";
 export const Home = () => {
   const animationRef = useRef(null);
   const navigation = useNavigation();
@@ -140,6 +141,10 @@ export const Home = () => {
     navigation.navigate("Live Rates");
   };
 
+  const handelWholesalerRates = () => {
+    navigation.navigate("WholesalerRates");
+  };
+
   // const fetchMarketRates = async () => {
   //   try {
   //     const response = await axios.get(`${Base_url}api/market_rates`);
@@ -242,22 +247,23 @@ export const Home = () => {
             <LiveRates />
             <TouchableOpacity
               onPress={handelRatePress}
-              // style={{
-              //   backgroundColor: '#239456',
-              //   width: 150,
-              //   height: 38,
-              //   alignItems: 'center',
-              //   justifyContent: 'center',
-              //   borderRadius: 5,
-              //   marginTop: 10,
-              // }}
+             
             >
-              {/* <EvilIcons
-                name="arrow-down"
-                size={32}
-                color="#239456"
-                style={{ marginTop: 10 }}
-              /> */}
+              
+              <Image
+                source={icon}
+                style={{ width: 27, height: 27 }}
+              />
+            </TouchableOpacity>
+          </View>
+
+          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <WholesalerRates />
+            <TouchableOpacity
+              onPress={handelWholesalerRates}
+             
+            >
+              
               <Image
                 source={icon}
                 style={{ width: 27, height: 27 }}

@@ -70,6 +70,7 @@ import usePushNotifications from "./usePushNotifications";
 import { ThemeData } from "./Theme/Theme";
 import { AccountSettings } from "./Pages/Profile/ProfileTabs/AccountSettings";
 import UpdatePricing from "./Pages/My Rates/UpdatePricing";
+import WholesalerRatestwo from "./Components/Cards/WholesalerRatestwo";
 
 import { Kyc } from "./Pages/SignUp/Registration/Kyc";
 const Stack = createNativeStackNavigator();
@@ -638,6 +639,14 @@ export default function App() {
               headerShown: false,
             }}
           />
+          <Stack.Screen
+            name="WholesalerRates"
+            component={WholesalerRatestwo}
+            options={{
+              headerShown: false,
+            }}
+          />
+          
         </Stack.Navigator>
         {/* } */}
       </NavigationContainer>

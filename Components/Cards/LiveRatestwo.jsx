@@ -350,9 +350,11 @@ const LiveRatestwo = () => {
       <ScrollView style={styles.container}>
         <View style={{ backgroundColor: "#fff",}}>
     <Block style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", marginTop: 60, marginBottom: 20 }}>
+      <TouchableOpacity onPress={handleBack}>
         <Block style={{ backgroundColor: "black", width: 50, height: 50, flexDirection: "row", justifyContent: "center", alignItems: "center", borderRadius: 150, marginLeft: 20 }}>
-          <MaterialIcons onPress={handleBack} name="arrow-back-ios" size={22} style={{ marginLeft: 5 }} color="white" />
+          <MaterialIcons  name="arrow-back-ios" size={22} style={{ marginLeft: 5 }} color="white" />
         </Block>
+      </TouchableOpacity>
         <Text style={{ marginLeft: 15, fontSize: 25, fontWeight: '500' }}>Mandi Rates</Text>
       </Block>
             <View >
