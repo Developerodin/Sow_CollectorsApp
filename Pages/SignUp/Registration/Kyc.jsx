@@ -152,7 +152,7 @@ export const Kyc = () => {
       const handelSubmitData = async (data) => {
         setLoading(true)
         try {
-          const response = await axios.post(`${Base_url}b2bUser/kyc`, data); // Adjust the endpoint to match your backend route
+          const response = await axios.post(`${Base_url}b2bUser/kyc`, data); 
           if (response.data.success) {
             console.log('KYC details added successfully:', response.data.data);
             navigation.navigate("VerifyProfileStatus")

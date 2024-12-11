@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, ToastAndroid, Dimensions, FlatList, Image, RefreshControl } from "react-native";
+import { View, Text, TextInput, ScrollView, TouchableOpacity, StyleSheet, ToastAndroid, Dimensions, FlatList, Image, RefreshControl,ActivityIndicator } from "react-native";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useAppContext } from '../../../Context/AppContext';
@@ -24,6 +24,7 @@ export const AccountSettings = () => {
   const [address, setAddress] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [kycDetails, setKycDetails] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleBack = () => {
     navigation.goBack();
@@ -93,18 +94,57 @@ export const AccountSettings = () => {
 
 
 
-  const updateKycDetails = async () => {
-    try {
-      console.log("Kyc Details =>", kycDetails.gstinNumber);
-      const response = await axios.put(`${Base_url}b2bUser/kyc/user/${userDetails.id}`, {
-        gstinNumber: kycDetails.gstinNumber,
-      });
-      console.log(response.data);
-      ToastAndroid.show("KYC details updated successfully", ToastAndroid.SHORT);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+         const updateKycDetails = async () => {
+        try {
+          // Assuming you have a function to fetch the KYC details first
+          const kycResponse = await axios.get(`${Base_url}b2bUser/kyc/${userDetails.id}`);
+          const kycId = kycResponse.data.data._id;
+      
+          const url = `${Base_url}b2bUser/kyc/${kycId}`;
+          console.log("Kyc Details =>", kycDetails.gstinNumber);
+          console.log("Request URL =>", url);
+      
+          const response = await axios.put(url, {
+            gstinNumber: kycDetails.gstinNumber,
+          });
+      
+          if (response.data.success) {
+            console.log(response.data);
+            ToastAndroid.show("KYC details updated successfully", ToastAndroid.SHORT);
+          } else if (response.data.message === 404) {
+            // Call handelSubmitData if KYC details are not found
+            const submitResponse = await handelSubmitData({
+              gstinNumber: kycDetails.gstinNumber,
+              userId: userDetails.id,
+            });
+      
+            if (submitResponse.success) {
+              ToastAndroid.show("KYC details added successfully", ToastAndroid.SHORT);
+            } else {
+              console.error("Error adding KYC details:", submitResponse.message);
+            }
+          }
+        } catch (error) {
+          console.log("Error updating KYC details =>", error);
+        }
+      };
+      
+      const handelSubmitData = async (data) => {
+        
+        try {
+          const response = await axios.post(`${Base_url}b2bUser/kyc`, data);
+          if (response.data.success) {
+            console.log('KYC details added successfully:', response.data.data);
+            
+          
+            return { success: true, data: response.data.data };
+          }
+        } catch (error) {
+        
+          console.error('Error adding KYC details:', error.response?.data?.message || error.message);
+          return { success: false, message: error.response?.data?.message || error.message };
+        }
+      };
 
 
   const onRefresh = () => {
@@ -137,8 +177,15 @@ export const AccountSettings = () => {
   );
 
   const handleSubmit = async () => {
-    await updateUserDetails();
-    await updateKycDetails();
+    setLoading(true);
+    try {
+      await updateUserDetails();
+      await updateKycDetails();
+    } catch (error) {
+      console.error("Error in handleSubmit:", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -336,10 +383,12 @@ export const AccountSettings = () => {
           </Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.button2} onPress={updateUserDetails} activeOpacity={0.7}>
+        <TouchableOpacity style={styles.button2} onPress={handleSubmit} activeOpacity={0.7} disabled={loading}>
+          {loading ? ( <ActivityIndicator size="small" color="#fff" /> ) : (
           <Text style={{ fontSize: 18, fontWeight: 400, color: "#fff" }}>
             Update
           </Text>
+          )}
         </TouchableOpacity>
       </ScrollView>
     </View>

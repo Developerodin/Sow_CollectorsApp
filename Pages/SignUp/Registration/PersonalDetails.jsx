@@ -188,7 +188,7 @@ export const PersonalDetails = () => {
           registerAs: RegisterAs,
           category: categoryNames,
           businessName: formData.businessName,
-          referralCode:"",
+          referralCode:"SOW123",
         };
         const UserDetails = JSON.stringify(UserData);
         await AsyncStorage.setItem("UserDetails", UserDetails);
@@ -571,20 +571,28 @@ export const PersonalDetails = () => {
 
                
 
-        <Block style={[{flexDirection:"row",justifyContent:"left",alignItems:"center",marginLeft:10}]}>
-        <Checkbox
-      style={{marginTop:15}}
-      color="black"
-      label={"By checking this box, you accept the"}
-      initialValue={termandCondition}
-        onChange={(el) => {
-                console.log("VAlue of checkbox ==>",el)
-                setTermandCondition(el)
-        }}
-      />
-      <Text onPress={handelTermCondition} style={{marginTop:15,color:"#65C5C4"}}> Terms & Conditions</Text>
-        </Block>
+<Block style={{ flexDirection: "row", flexWrap: "wrap", alignItems: "center", marginHorizontal: 10 }}>
+  <Checkbox
+    style={{ marginTop: 15 }}
+    color="black"
+    label={"By checking this box, you accept the"}
+    initialValue={termandCondition}
+    onChange={(el) => {
+      console.log("Value of checkbox ==>", el);
+      setTermandCondition(el);
+    }}
+  />
+  <Text onPress={handelTermCondition} style={{  color: "#65C5C4", marginLeft: 5 }}>
+  Terms &
+  </Text>
+  <Text onPress={handelTermCondition} style={{  color: "#65C5C4", marginLeft: 30 }}>
+  Conditions
+  </Text>
 
+</Block>
+      
+
+       
        </Block>
     {/* } */}
 
