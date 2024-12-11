@@ -167,7 +167,7 @@ export const RateDetails = ({ route }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.5,
       sourceType: sourceType,
       base64: true,  // Request base64 encoding
     });

@@ -29,7 +29,7 @@ export const Profile = () => {
   const [userDetails,setuserDetails] = useState({})
   const [userId, setUserId] = useState(null);
   const [updated, setUpdated] = useState(0);
-  const {CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion} = useAppContext()
+  const {setProfilneImageUpdate,CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion} = useAppContext()
   const ProfileTabs=[
     
     // {icon:<FontAwesome name="address-book" size={24} color="#2dd36f" />,title:"Manage Address",link:"Address",color:"dark"},
@@ -162,9 +162,9 @@ export const Profile = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-      sourceType: sourceType,
+      aspect: [1, 1],
+      quality: 0.5,
+      // sourceType: 'camera',
       base64: true,  // Request base64 encoding
     });
   
@@ -198,6 +198,7 @@ export const Profile = () => {
         }
       );
       setUpdated((prev)=>prev+1)
+      setProfilneImageUpdate((prev)=>prev+1)
       // console.log('Image updated successfully:', response.data);
     } catch (error) {
       console.error('Error updating image:', error.response ? error.response.data : error.message);

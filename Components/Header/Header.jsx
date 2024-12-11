@@ -17,7 +17,7 @@ import axios from 'axios';
 export const Header = () => {
   const navigation = useNavigation()
   const [isMenuVisible, setMenuVisible] = useState(false);
-  const {toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible,userDetails,update,notificatoinUpdate,setNotificationsUpdate} =useAppContext()
+  const {ProfilneImageUpdate,setProfilneImageUpdate,toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible,userDetails,update,notificatoinUpdate,setNotificationsUpdate} =useAppContext()
   const [image, setImage] = useState(null);
   const [notificationCount,setNotificationsCount] = useState(0);
   const handelProfileClick = ()=>{
@@ -75,7 +75,11 @@ export const Header = () => {
  
   }, [userDetails,update,notificatoinUpdate]);
 
-  
+  useEffect(()=>{
+    if(userDetails.id){
+      getUserImage(userDetails.id);
+    }
+  },[ProfilneImageUpdate])
   return (
     <View style={[{marginTop:40,padding:10},styles.container]}>
         <Block  style={[styles.Space_Between]}>

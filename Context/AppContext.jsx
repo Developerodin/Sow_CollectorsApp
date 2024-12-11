@@ -21,6 +21,7 @@ export const AppProvider = ({ children }) => {
   const [favouriteMandi, setFavouriteMandi] = useState(null); 
   const [updateMandi,setUpdateMandi] = useState(0);
   const [notificatoinUpdate,setNotificationsUpdate] = useState(0);
+  const [ProfilneImageUpdate,setProfilneImageUpdate] = useState(0);
   const toggleDrwerMenu = () => {
     setDrawerMenuVisible(!isDrwerMenuVisible);
   };
@@ -116,7 +117,7 @@ setShowCartSuggestion(true)
 //   },[selectedTabs])
 
   return (
-    <AppContext.Provider value={{notificatoinUpdate,setNotificationsUpdate,updateMandi,setUpdateMandi,userDetails,setuserDetails,SelectedAddressFromMap,setSelectedAddressFromMap,CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion,Cart,setCart,update,setUpdate,toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible ,selectedMarker, setSelectedMarker,isMarkerModalVisible, setMarkerModalVisible,selectedTabs,setSelectedTabs, isLoggedIn, toggleLogin,modalVisible,setModalVisible,isLoggedIn,setIsLoggedIn,favouriteMandi,setFavouriteMandi }}>
+    <AppContext.Provider value={{ProfilneImageUpdate,setProfilneImageUpdate,notificatoinUpdate,setNotificationsUpdate,updateMandi,setUpdateMandi,userDetails,setuserDetails,SelectedAddressFromMap,setSelectedAddressFromMap,CartInStorage,CartTotalAmount,CartTotalWeight,showCartSuggestion,setShowCartSuggestion,Cart,setCart,update,setUpdate,toggleDrwerMenu,isDrwerMenuVisible, setDrawerMenuVisible ,selectedMarker, setSelectedMarker,isMarkerModalVisible, setMarkerModalVisible,selectedTabs,setSelectedTabs, isLoggedIn, toggleLogin,modalVisible,setModalVisible,isLoggedIn,setIsLoggedIn,favouriteMandi,setFavouriteMandi }}>
       {children}
     </AppContext.Provider>
   );

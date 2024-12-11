@@ -239,9 +239,23 @@ export const Home = () => {
      
         
        
-
-        
-          <View
+{
+ userDetails && userDetails.registerAs === "Retailer" ?
+ <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <WholesalerRates />
+            <TouchableOpacity
+              onPress={handelWholesalerRates}
+             
+            >
+              
+              <Image
+                source={icon}
+                style={{ width: 27, height: 27 }}
+              />
+            </TouchableOpacity>
+          </View>
+          :
+<View
             style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
           >
             <LiveRates />
@@ -256,20 +270,11 @@ export const Home = () => {
               />
             </TouchableOpacity>
           </View>
+}
+        
+          
 
-          <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-            <WholesalerRates />
-            <TouchableOpacity
-              onPress={handelWholesalerRates}
-             
-            >
-              
-              <Image
-                source={icon}
-                style={{ width: 27, height: 27 }}
-              />
-            </TouchableOpacity>
-          </View>
+          
 
           {/* <Block style={{ marginTop: 10, width: width * 0.93 }}>
             <Block>
