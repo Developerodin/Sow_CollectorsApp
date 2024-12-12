@@ -65,8 +65,10 @@ export const AccountSettings = () => {
       ToastAndroid.show("User details updated successfully", ToastAndroid.SHORT);
       setUpdate(!update); 
     } catch (error) {
-      setLoading(false);
+      
       console.log(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -140,8 +142,8 @@ export const AccountSettings = () => {
           }}
         >
           <TouchableOpacity onPress={handleBack} activeOpacity={0.9}>
-            <View style={{ padding: 10, backgroundColor: '#000', borderRadius: 30, width: 50, height: 50, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-              <MaterialIcons name="arrow-back-ios" size={22} color="#fff" style={{ marginLeft: 5 }} />
+            <View style={{ padding: 10, backgroundColor: '#000', borderRadius: 30, width: 40, height: 40, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+              <MaterialIcons name="arrow-back-ios" size={18} color="#fff" style={{ marginLeft: 5 }} />
             </View>
           </TouchableOpacity>
           <Text

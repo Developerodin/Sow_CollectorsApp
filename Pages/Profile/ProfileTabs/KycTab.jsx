@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
   TextInput,
   StyleSheet,
-    Keyboard,
+  Keyboard,
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Block, Text } from "galio-framework";
@@ -41,6 +41,7 @@ export const KycTab = () => {
   const [image, setImage] = useState(null);
   const [image2, setImage2] = useState(null);
   const [kycDetails, setKycDetails] = useState(null);
+  const [kycId, setKycId] = useState(null);
 
   const showImagePicker = async (sourceType) => {
     let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -102,9 +103,10 @@ export const KycTab = () => {
       const response = await axios.post(`${Base_url}b2bUser/kyc`, data);
       if (response.data.success) {
         console.log("KYC details added successfully:", response.data.data);
-        setLoading(false);
+        
         setUpdate(!update);
-       
+        setKycId(response.data.data._id);
+
         if (image !== "") {
           handelSubmitWareHouseData();
         }
@@ -116,12 +118,14 @@ export const KycTab = () => {
     } catch (error) {
       console.error("Error adding KYC details:", error.response?.data?.message || error.message);
       return { success: false, message: error.response?.data?.message || error.message };
-    }
+    } finally {
+        setLoading(false);
+        }
   };
 
   const handelSubmitOwnerImageData = async () => {
     try {
-      const response = await axios.post(`${Base_url}b2bUser/kycOwnerImage`, image2);
+      const response = await axios.post(`${Base_url}b2bUser/kycOwnerImage`, { ownerImage: image2 });
       if (response.data.success) {
         console.log("KYC details added successfully:", response.data.data);
         return { success: true, data: response.data.data };
@@ -134,7 +138,7 @@ export const KycTab = () => {
 
   const handelSubmitWareHouseData = async () => {
     try {
-      const response = await axios.post(`${Base_url}b2bUser/kycWareHouseImage`, image);
+      const response = await axios.post(`${Base_url}b2bUser/kycWareHouseImage`, { warehouseImage: image });
       if (response.data.success) {
         console.log("KYC details added successfully:", response.data.data);
         return { success: true, data: response.data.data };
@@ -147,11 +151,12 @@ export const KycTab = () => {
 
   const getUserKycDetails = async () => {
     try {
-    
+      const userDetails = JSON.parse(await AsyncStorage.getItem("userDetails"));
       const response = await axios.get(`${Base_url}b2bUser/kyc/${userDetails.id}`);
       console.log(response.data);
       setKycDetails(response.data.data);
       setFormData({ gstinNumber: response.data.data.gstinNumber });
+      setKycId(response.data.data._id);
     } catch (error) {
       console.log("kyc error =>", error);
     }
@@ -160,25 +165,24 @@ export const KycTab = () => {
   const updateKycDetails = async () => {
     setLoading(true);
     try {
-      const userDetails = JSON.parse(await AsyncStorage.getItem("userDetails"));
+    
       const kycResponse = await axios.get(`${Base_url}b2bUser/kyc/${userDetails.id}`);
       const kycId = kycResponse.data.data._id;
-  
+
       const url = `${Base_url}b2bUser/kyc/${kycId}`;
       console.log("Kyc Details =>", formData.gstinNumber);
       console.log("Request URL =>", url);
-  
+
       const response = await axios.put(url, {
         gstinNumber: formData.gstinNumber,
       });
-  
+
       if (response.data.success) {
         console.log("KYC details updated successfully:", response.data.data);
         ToastAndroid.show("KYC details updated successfully", ToastAndroid.SHORT);
       }
       setUpdate(!update);
     } catch (error) {
-        
       if (error.response && error.response.status === 404) {
         console.log("KYC details not found, creating new KYC details");
         const data = {
@@ -192,14 +196,64 @@ export const KycTab = () => {
         console.log("Error updating KYC details =>", error);
       }
     } finally {
-        setLoading(false);
+      setLoading(false);
+    }
+  };
+
+  const getOwnerImage = async () => {
+    try {
+      const response = await axios.get(`${Base_url}b2bUser/kycOwnerImage/${kycId}`);
+      setImage2(response.data.ownerImage);
+    } catch (error) {
+      console.log("Error getting owner image =>", error);
+    }
+  };
+
+  const updateOwnerImage = async () => {
+    try {
+      const response = await axios.put(`${Base_url}b2bUser/kycOwnerImage/${kycId}`, { ownerImage: image2 });
+      if (response.data.success) {
+        console.log("Owner image updated successfully:", response.data.data);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.log("Owner image not found, creating new owner image");
+        handelSubmitOwnerImageData();
+      } else {
+        console.log("Error updating owner image =>", error);
+      }
+    }
+  };
+
+  const getWarehouseImage = async () => {
+    try {
+      const response = await axios.get(`${Base_url}b2bUser/kycWareHouseImage/${kycId}`);
+      setImage(response.data.warehouseImage);
+    } catch (error) {
+      console.log("Error getting warehouse image =>", error);
+    }
+  };
+
+  const updateWarehouseImage = async () => {
+    try {
+      const response = await axios.put(`${Base_url}b2bUser/kycWareHouseImage/${kycId}`, { warehouseImage: image });
+      if (response.data.success) {
+        console.log("Warehouse image updated successfully:", response.data.data);
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        console.log("Warehouse image not found, creating new warehouse image");
+        handelSubmitWareHouseData();
+      } else {
+        console.log("Error updating warehouse image =>", error);
+      }
     }
   };
 
   const handelPersonalDetailSubmit = async () => {
-    
-      updateKycDetails();
-   
+    updateKycDetails();
+    updateWarehouseImage();
+    updateOwnerImage();
   };
 
   const handleInputChange = (fieldName, value) => {
@@ -222,7 +276,7 @@ export const KycTab = () => {
       setIsKeyboardOpen(false);
     });
 
-    
+    getUserKycDetails();
 
     return () => {
       keyboardDidShowListener.remove();
@@ -230,10 +284,12 @@ export const KycTab = () => {
     };
   }, []);
 
-    useEffect(() => {
-    getUserKycDetails();
-    },
-     [update]);
+  useEffect(() => {
+    if (kycId) {
+      getOwnerImage();
+      getWarehouseImage();
+    }
+  }, [kycId]);
 
   return (
     <View style={styles.container}>
