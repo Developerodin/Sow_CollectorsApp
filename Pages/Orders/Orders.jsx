@@ -20,6 +20,14 @@ export const Orders = () => {
   const [errorFetchingOrders, setErrorFetchingOrders] = useState(false);
   const [loading, setLoading] = useState(true); // Add loading state
 
+
+  const formatPrice = (price) => {
+    if (price >= 100000) {
+      return `₹${(price / 100000).toFixed(2)} Lakh`;
+    }
+    return `₹${price}`;
+  };
+
   const onRefresh = () => {
     setRefreshing(true);
     getOrders(selectedTab.toLowerCase(), selectedAction.toLowerCase());
@@ -90,7 +98,7 @@ export const Orders = () => {
       </View>
 
       <Block style={styles.row}>
-        <View style={styles.column}>
+        <View style={[styles.column,{marginRight: -25}]}>
           <Text style={{ fontSize: 16, fontWeight: 600 }}>{data.orderTo && data.orderTo.id === userDetails.id ?
             data.orderBy.name
             :
@@ -104,14 +112,14 @@ export const Orders = () => {
           </View>
         </View>
 
-        <View style={[styles.column, styles.divider]}>
+        <View style={[styles.column,styles.divider, { marginRight: -45 }]}>
           <View style={{marginLeft: 15}}>
           <Text style={{ fontSize: 16, fontWeight: 600 }}>Est. Value</Text>
           <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
            
               <Image source={icon2} style={{ width: 16, height: 16 }} />
             
-            <Text style={styles.amountText}>₹{data.totalPrice}</Text>
+            <Text style={styles.amountText}>{formatPrice(data.totalPrice)}</Text>
           </View>
           </View>
         </View>
@@ -354,7 +362,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   amountText: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '500',
     color: ThemeData.textColor,
     marginLeft: 5,
@@ -363,6 +371,8 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: ThemeData.textColor,
     textAlign: 'center',
+    marginLeft: 35,
+    
   },
   blueText: {
     color: ThemeData.textColor,

@@ -256,8 +256,8 @@ export const PricingHistory = () => {
                 padding: 10,
                 backgroundColor: "#000",
                 borderRadius: 30,
-                width: 50,
-                height: 50,
+                width: 40,
+                height: 40,
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
@@ -265,7 +265,7 @@ export const PricingHistory = () => {
             >
               <MaterialIcons
                 name="arrow-back-ios"
-                size={22}
+                size={18}
                 color="#fff"
                 style={{ marginLeft: 5 }}
               />

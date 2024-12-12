@@ -73,6 +73,7 @@ import UpdatePricing from "./Pages/My Rates/UpdatePricing";
 import WholesalerRatestwo from "./Components/Cards/WholesalerRatestwo";
 
 import { Kyc } from "./Pages/SignUp/Registration/Kyc";
+import { KycTab } from "./Pages/Profile/ProfileTabs/KycTab";
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -126,6 +127,23 @@ const Tabs = ({ navigation }) => {
           }}
         />
       )}
+
+
+{userDetails.registerAs === "Retailer" && (
+  <Tab.Screen
+    name="Pricing"
+    component={MandiRates} // Replace with your actual component
+    options={{
+      tabBarIcon: ({ color, size }) => (
+        <Image
+          source={require('./assets/media/rates_1.png')} // Replace with your actual icon
+          style={{ width: 21, height: 21, tintColor: color }}
+        />
+      ),
+      headerShown: false,
+    }}
+  />
+)}
 
       {userDetails.registerAs !== "Retailer" && (
         <Tab.Screen
@@ -642,6 +660,13 @@ export default function App() {
           <Stack.Screen
             name="WholesalerRates"
             component={WholesalerRatestwo}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="KYCTAB"
+            component={KycTab}
             options={{
               headerShown: false,
             }}

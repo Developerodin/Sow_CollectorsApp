@@ -14,6 +14,13 @@ export const B2bOrderCard = ({ data }) => {
   const navigation = useNavigation();
   const { userDetails, update, setUpdate } = useAppContext();
 
+  const formatPrice = (price) => {
+    if (price >= 100000) {
+      return `₹${(price / 100000).toFixed(2)} Lakh`;
+    }
+    return `₹${price}`;
+  };
+
   const postUserAccept = async (orderId, status) => {
     console.log(orderId, status);
     try {
@@ -40,14 +47,14 @@ export const B2bOrderCard = ({ data }) => {
   return (
     <View style={styles.cardContainer}>
       <Block style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }} >
-        <Text style={{ marginLeft: 2, fontSize: 16 }}>
-          <Text style={{ color: ThemeData.color }}>{data.weight}{data.unit}</Text> scrap for <Text style={{ color: ThemeData.color }}>₹{data.totalPrice}</Text> in {data.location.city}, {data.location.state}
+        <Text style={{ marginLeft: 2, fontSize: 15 }}>
+          <Text style={{ color: ThemeData.color }}>{data.weight}{data.unit}</Text> scrap for <Text style={{ color: ThemeData.color }}>{formatPrice(data.totalPrice)}</Text> in {data.location.city}, {data.location.state}
         </Text>
         {/* <MaterialIcons name="more-vert" size={24} color={ThemeData.textColor} /> */}
       </Block>
 
       <Block style={styles.row}>
-        <View style={styles.column}>
+        <View style={[styles.column, { marginRight: -15 }]}>
           <Text style={{ fontSize: 14, fontWeight: 600 }}>{
             data.orderTo && data.orderTo.id === userDetails.id ?
             data.orderBy.name
@@ -69,14 +76,14 @@ export const B2bOrderCard = ({ data }) => {
             
               <Image source={icon} style={{ width: 15, height: 15 }} />
             
-            <Text style={styles.amountText}>₹{data.totalPrice}</Text>
+              <Text style={styles.amountText}>{formatPrice(data.totalPrice)}</Text>
           </View>
           </View>
         </View>
 
-        <View style={styles.column}>
-          <Text style={[styles.text, { fontSize: 16, fontWeight: 600 }]}>Items</Text>
-          <Text style={[styles.text, { marginTop: 5 }]}>{data.category}</Text>
+                <View style={[styles.column, { marginHorizontal: -20 }]}>
+          <Text style={[styles.text, { fontSize: 16, fontWeight: '600' }]}>Items</Text>
+          <Text style={[styles.text, { marginTop: 2 }]}>{data.category}</Text>
         </View>
       </Block>
 
@@ -166,7 +173,7 @@ const styles = StyleSheet.create({
     
   },
   amountText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '500',
     color: ThemeData.textColor,
     marginLeft: 5,

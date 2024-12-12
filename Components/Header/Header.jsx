@@ -112,10 +112,13 @@ export const Header = () => {
           <Text style={{color:"#fff",fontSize:10}}>{notificationCount}</Text>
         </Block>
          } 
+
           </TouchableOpacity>
+          {userDetails.registerAs !== "Retailer" && (
           <TouchableOpacity activeOpacity={0.9} onPress={handelDailyRatesClick}>
             <FontAwesome5 name="envelope" size={30} color= {ThemeData.textColor}/>
           </TouchableOpacity>
+          )}
           </Block>
         </Block>
        <HamburgerMenu/>
