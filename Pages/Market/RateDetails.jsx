@@ -11,6 +11,7 @@ import {
   Animated,
   TextInput,
   ActivityIndicator,
+  Alert
 } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { Block, Text, Input, theme, Button } from "galio-framework";
@@ -152,47 +153,80 @@ export const RateDetails = ({ route }) => {
     return `${day}-${month}-${year} ${timeString}`;
   };
 
-  const showImagePicker = async (sourceType) => {
-    // Request media library permission
-    if(images.length < 1){
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-  
-    if (permissionResult.granted === false) {
-      alert('Permission to access the gallery is required!');
-      return;
-    }
-  
-    // Launch image picker
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 0.5,
-      sourceType: sourceType,
-      base64: true,  // Request base64 encoding
-    });
-  
-    // Check if the user selected an image
-    if (!result.canceled) {
-      // console.log("URI of image library ==> ", result.assets[0]);
-      const dataImage = result.assets[0]
 
-      if(dataImage){
-        // console.log("Base64 of selected image ==> ", result.assets[0].base64);
-      const base64data = `data:${dataImage.mimeType};base64,${dataImage.base64}`  // Base64 string
-      setImages((prev)=>[...prev,base64data]); 
-     
+
+  const handelImaageClick = ()=>{
+    Alert.alert(
+      "Choose an Option",
+      "Would you like to take a new photo or select one from your gallery?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "Camera",
+          onPress: () => showImagePicker("camera"),
+          style: "destructive"
+        },
+        {
+          text: "Gallery",
+          onPress: () => showImagePicker("library"),
+          style: "destructive"
+        }
+      ],
+      { cancelable: false }
+    );
+  }
+  
+  
+    const showImagePicker = async (sourceType) => {
       
-        // Or you can set the base64 if needed
-      // updateUserImage(userDetails.id,base64data)
+      try {
+       
+        // Request camera and media library permissions
+        const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+        const mediaLibraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+        if (!cameraPermission.granted || !mediaLibraryPermission.granted) {
+          alert('Permission to access the camera and media library is required!');
+          return;
+        }
+    
+        // Define common options for ImagePicker
+        const options = {
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 0,
+          base64: true, // Request base64 encoding
+        };
+    
+        let result;
+        if (sourceType === 'camera') {
+          // Launch the camera
+          result = await ImagePicker.launchCameraAsync(options);
+        } else {
+          // Launch the image library
+          result = await ImagePicker.launchImageLibraryAsync(options);
+        }
+    
+        // Handle the result
+        if (!result.canceled && result.assets && result.assets.length > 0) {
+          const dataImage = result.assets[0];
+          
+          const base64data = `data:${dataImage.mimeType};base64,${dataImage.base64}`;
+    
+          // Update image state and backend
+          setImages((prev)=>[...prev,base64data]);
+         return; // Call the API to update user image
+        }
+      } catch (error) {
+        console.error('Error using ImagePicker:', error.message);
+        alert('An error occurred while accessing the camera or media library. Please try again.');
       }
-      
-    }
-  }
-  else{
-    ToastAndroid.show("You can uplode only 1 Image", ToastAndroid.SHORT);
-  }
-  };
+    };
 
   const deleteImage = (index) => {
     setImages((prevImages) => prevImages.filter((_, i) => i !== index));
@@ -467,7 +501,7 @@ export const RateDetails = ({ route }) => {
           <Text style={{ fontSize: 22, padding: 10, fontWeight: 600 }}>
             Upload Photos
           </Text>
-          <Button onPress={() => showImagePicker('camera')} color="white" style={styles.button1}>
+          <Button onPress={() => handelImaageClick()} color="white" style={styles.button1}>
             <Ionicons
               name="camera"
               size={24}

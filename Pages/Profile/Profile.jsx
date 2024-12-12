@@ -189,8 +189,36 @@ export const Profile = () => {
     );
   };
 
+const handelImaageClick = ()=>{
+  Alert.alert(
+    "Choose an Option",
+    "Would you like to take a new photo or select one from your gallery?",
+    [
+      {
+        text: "Cancel",
+        onPress: () => console.log("Cancel Pressed"),
+        style: "cancel"
+      },
+      {
+        text: "Camera",
+        onPress: () => showImagePicker("camera"),
+        style: "destructive"
+      },
+      {
+        text: "Gallery",
+        onPress: () => showImagePicker("library"),
+        style: "destructive"
+      }
+    ],
+    { cancelable: false }
+  );
+}
+
+
   const showImagePicker = async (sourceType) => {
+    
     try {
+     
       // Request camera and media library permissions
       const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
       const mediaLibraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -308,7 +336,7 @@ export const Profile = () => {
           {image && <Image source={{ uri: image }} style={{resizeMode: 'contain',width:'100%',height:'100%',borderRadius:100}} />}
           
           
-          <TouchableOpacity activeOpacity={0.8} onPress={() => showImagePicker('camera')} center style={{width:25,height:25,borderRadius:100,position:'absolute',bottom:2,right:5,display:'flex',justifyContent:"center",alignItems:'center',backgroundColor:'#65C5C4'}}>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => handelImaageClick()} center style={{width:25,height:25,borderRadius:100,position:'absolute',bottom:2,right:5,display:'flex',justifyContent:"center",alignItems:'center',backgroundColor:'#65C5C4'}}>
           <Feather name="edit-2" size={14}  color={ThemeData.textColor} />
           </TouchableOpacity>
           

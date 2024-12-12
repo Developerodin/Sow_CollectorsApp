@@ -44,13 +44,15 @@ export const KycTab = () => {
   const [kycId, setKycId] = useState(null);
 
   const showImagePicker = async (sourceType) => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      alert("Permission to access the gallery is required!");
-      return;
-    }
+   const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+  const mediaLibraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+        if (!cameraPermission.granted || !mediaLibraryPermission.granted) {
+          alert('Permission to access the camera and media library is required!');
+          return;
+        }
 
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
@@ -69,13 +71,15 @@ export const KycTab = () => {
   };
 
   const showImagePicker2 = async (sourceType) => {
-    let permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permissionResult.granted === false) {
-      alert("Permission to access the gallery is required!");
-      return;
-    }
+    const cameraPermission = await ImagePicker.requestCameraPermissionsAsync();
+  const mediaLibraryPermission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+        if (!cameraPermission.granted || !mediaLibraryPermission.granted) {
+          alert('Permission to access the camera and media library is required!');
+          return;
+        }
 
-    let result = await ImagePicker.launchImageLibraryAsync({
+    let result = await ImagePicker.launchCameraAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
