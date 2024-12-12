@@ -54,6 +54,7 @@ export const AccountSettings = () => {
   };
 
   const updateUserDetails = async () => {
+    setLoading(true);
     try {
       const response = await axios.put(`${Base_url}b2bUser/${userDetails.id}`, {
         name: name,
@@ -64,6 +65,7 @@ export const AccountSettings = () => {
       ToastAndroid.show("User details updated successfully", ToastAndroid.SHORT);
       setUpdate(!update); 
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
@@ -79,86 +81,21 @@ export const AccountSettings = () => {
     }
   };
 
-  const getUserKycDetails = async () => {
-    try {
-      const response = await axios.get(`${Base_url}b2bUser/kyc/${userDetails.id}`);
-      console.log(response.data);
-      setKycDetails(response.data.data);
-    } catch (error) {
-      console.log("kyc error =>",error);
-    }
-  };
-
-
-
-
-
-
-         const updateKycDetails = async () => {
-        try {
-          // Assuming you have a function to fetch the KYC details first
-          const kycResponse = await axios.get(`${Base_url}b2bUser/kyc/${userDetails.id}`);
-          const kycId = kycResponse.data.data._id;
-      
-          const url = `${Base_url}b2bUser/kyc/${kycId}`;
-          console.log("Kyc Details =>", kycDetails.gstinNumber);
-          console.log("Request URL =>", url);
-      
-          const response = await axios.put(url, {
-            gstinNumber: kycDetails.gstinNumber,
-          });
-      
-          if (response.data.success) {
-            console.log(response.data);
-            ToastAndroid.show("KYC details updated successfully", ToastAndroid.SHORT);
-          } else if (response.data.message === 404) {
-            // Call handelSubmitData if KYC details are not found
-            const submitResponse = await handelSubmitData({
-              gstinNumber: kycDetails.gstinNumber,
-              userId: userDetails.id,
-            });
-      
-            if (submitResponse.success) {
-              ToastAndroid.show("KYC details added successfully", ToastAndroid.SHORT);
-            } else {
-              console.error("Error adding KYC details:", submitResponse.message);
-            }
-          }
-        } catch (error) {
-          console.log("Error updating KYC details =>", error);
-        }
-      };
-      
-      const handelSubmitData = async (data) => {
-        
-        try {
-          const response = await axios.post(`${Base_url}b2bUser/kyc`, data);
-          if (response.data.success) {
-            console.log('KYC details added successfully:', response.data.data);
-            
-          
-            return { success: true, data: response.data.data };
-          }
-        } catch (error) {
-        
-          console.error('Error adding KYC details:', error.response?.data?.message || error.message);
-          return { success: false, message: error.response?.data?.message || error.message };
-        }
-      };
+  
 
 
   const onRefresh = () => {
     setRefreshing(true);
     getUserDetails();
     getUserAddress();
-    getUserKycDetails();
+    
     setRefreshing(false);
   };
 
   useEffect(() => {
     getUserDetails();
     getUserAddress();
-    getUserKycDetails();
+    
     
   }, [update]);
 
@@ -176,17 +113,7 @@ export const AccountSettings = () => {
     </View>
   );
 
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      await updateUserDetails();
-      await updateKycDetails();
-    } catch (error) {
-      console.error("Error in handleSubmit:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+ 
 
 
   return (
@@ -344,46 +271,13 @@ export const AccountSettings = () => {
               onChangeText={setBusinessName}
             />
           </View>
-          <Text style={styles.label}>GSTIN</Text>
-          <View style={styles.row}>
-            <TextInput
-              style={styles.input}
-              placeholder="Enter your GST Number"
-              value={kycDetails.gstinNumber}
-              onChangeText={(text) => setKycDetails({ ...kycDetails, gstinNumber: text })}
-            />
-          </View>
+          
+          
         </View>
 
-        {/* Upload Photo/Video */}
-        <Text style={styles.sectionTitle}>Upload photo/video</Text>
-        <Text style={styles.label}>Warehouse Live Video</Text>
-        <TouchableOpacity style={styles.button1}>
-          <Ionicons
-            name="camera"
-            size={24}
-            color="#000"
-            style={styles.icon}
-          />
-          <Text style={{ fontSize: 18, fontWeight: 400, color: "#000" }}>
-            Open Camera
-          </Text>
-        </TouchableOpacity>
+        
 
-        <Text style={styles.label}>Owner’s photo in workplace</Text>
-        <TouchableOpacity style={styles.button1}>
-          <Ionicons
-            name="camera"
-            size={24}
-            color="#000"
-            style={styles.icon}
-          />
-          <Text style={{ fontSize: 18, fontWeight: 400, color: "#000" }}>
-            Open Camera
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.button2} onPress={handleSubmit} activeOpacity={0.7} disabled={loading}>
+        <TouchableOpacity style={styles.button2} onPress={updateUserDetails} activeOpacity={0.7} disabled={loading}>
           {loading ? ( <ActivityIndicator size="small" color="#fff" /> ) : (
           <Text style={{ fontSize: 18, fontWeight: 400, color: "#fff" }}>
             Update

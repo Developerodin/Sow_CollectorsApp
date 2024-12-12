@@ -210,7 +210,7 @@ export const RateDetails = ({ route }) => {
         alignItems: "center",
         justifyContent: "space-between",
         paddingHorizontal: 10,
-        marginTop: 65,
+        marginTop: 55,
         height: 50,
       }}
     >
@@ -226,9 +226,9 @@ export const RateDetails = ({ route }) => {
         }}
       >  
       <TouchableOpacity onPress={handleBack} activeOpacity={0.9}>
-        <View style={{padding: 10,backgroundColor:'#000',borderRadius:30,width: 50, height: 50,flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+        <View style={{padding: 10,backgroundColor:'#000',borderRadius:30,width: 40, height: 40,flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
 
-        <MaterialIcons name="arrow-back-ios" size={22} color="#fff" style={{ marginLeft: 5 }}/>
+        <MaterialIcons name="arrow-back-ios" size={18} color="#fff" style={{ marginLeft: 5 }}/>
         </View>
       </TouchableOpacity>
         <Text

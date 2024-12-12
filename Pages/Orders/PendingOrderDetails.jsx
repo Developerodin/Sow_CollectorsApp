@@ -13,6 +13,7 @@ import catIcon from "../../assets/catIcon.png";
 import locationIcon from "../../assets/location.png";
 import calenderIcon from "../../assets/calender.png";
 import tagIcon from "../../assets/tag.png";
+import rupee from "../../assets/ruppee.png";
 
 
 const { width } = Dimensions.get('window');
@@ -152,8 +153,8 @@ export const PendingOrderDetails = ({ route }) => {
                 padding: 10,
                 backgroundColor: "#000",
                 borderRadius: 30,
-                width: 50,
-                height: 50,
+                width: 40,
+                height: 40,
                 flexDirection: "row",
                 justifyContent: "center",
                 alignItems: "center",
@@ -161,7 +162,7 @@ export const PendingOrderDetails = ({ route }) => {
             >
               <MaterialIcons
                 name="arrow-back-ios"
-                size={22}
+                size={18}
                 color="#fff"
                 style={{ marginLeft: 5 }}
               />
@@ -214,6 +215,13 @@ export const PendingOrderDetails = ({ route }) => {
                 {orderDetails?.category || "N/A"}
               </Text>
             </Block>
+            <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
+              <Image source={rupee} style={{height:20,width:20}} />
+              <Text style={{ fontSize: 20, marginLeft: 8, fontWeight: 500 }}>
+              Total Price : ₹ {orderDetails?.totalPrice || "N/A"}
+              </Text>
+            </Block>
+
             <Block style={{ marginTop: 18, flexDirection: 'row', alignItems: 'center' }}>
               <Image source={calenderIcon} style={{height:20,width:20}} />
               <Text style={{ fontSize: 18, marginLeft: 8, fontWeight: 500, color: ThemeData.textColor }}>

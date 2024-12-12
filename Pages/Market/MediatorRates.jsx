@@ -158,7 +158,7 @@ export const MediatorRates = () => {
           alignItems: "center",
           justifyContent: "space-between",
           paddingHorizontal: 10,
-          marginTop: 65,
+          marginTop: 55,
           height: 50,
         }}
       >
@@ -172,8 +172,8 @@ export const MediatorRates = () => {
           }}
         >
           <TouchableOpacity onPress={handleBack} activeOpacity={0.9}>
-            <View style={{ padding: 10, backgroundColor: '#000', borderRadius: 30, width: 50, height: 50, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
-              <MaterialIcons name="arrow-back-ios" size={22} color="#fff" style={{ marginLeft: 5 }} />
+            <View style={{ padding: 10, backgroundColor: '#000', borderRadius: 30, width: 40, height: 40, flexDirection: "row", justifyContent: "center", alignItems: "center" }}>
+              <MaterialIcons name="arrow-back-ios" size={18} color="#fff" style={{ marginLeft: 5 }} />
             </View>
           </TouchableOpacity>
           <Text
@@ -220,9 +220,18 @@ export const MediatorRates = () => {
         />
       </View>
       <View style={{ padding: 5 }}>
-        <Text style={{ marginLeft: 20, fontSize: 17, fontWeight: 600, color: '#000' }}>
-          <Text style={{ color: ThemeData.color }}>{Data ? Data.length : 0} Buyers</Text> available for <Text style={{ color: ThemeData.color }}>{categoryName}</Text> Purchase in <Text style={{ color: ThemeData.color }}>{city}</Text> area.
-        </Text>
+                {loading ? (
+          <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          
+            <Text style={{ marginTop: 10, fontSize: 16, color: ThemeData.color }}>
+              Please wait, loading buyers...
+            </Text>
+          </View>
+        ) : (
+          <Text style={{ marginLeft: 20, fontSize: 17, fontWeight: '600', color: '#000' }}>
+            <Text style={{ color: ThemeData.color }}>{Data ? Data.length : 0} Buyers</Text> available for <Text style={{ color: ThemeData.color }}>{categoryName}</Text> Purchase in <Text style={{ color: ThemeData.color }}>{city}</Text> area.
+          </Text>
+        )}
       </View>
       <View style={{ paddingVertical: 7, paddingHorizontal: 13, backgroundColor: "#000", justifyContent: 'flex-start', borderRadius: 30, alignSelf: 'flex-start', marginLeft: 20, marginTop: 10 }}>
         <Text style={{ color: "#fff" }}>{subCategoryName}</Text>
@@ -230,6 +239,9 @@ export const MediatorRates = () => {
 
       {loading ? (
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ marginTop: 10, fontSize: 16, color: "#000" }}>
+      Please wait, loading buyers...
+      </Text>
           <ActivityIndicator size="large" color={ThemeData.color} />
         </View>
       ) : Data && Data.length === 0

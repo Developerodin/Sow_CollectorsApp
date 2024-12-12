@@ -300,7 +300,7 @@ const WholesalerRatestwo = () => {
               </View>
             </Block>
           </Block>
-          <Block style={{ textAlign: "right", marginRight: 10, width: 60 }}>
+          <Block style={{ textAlign: "right", marginRight: 10 }}>
             <Text style={{ fontWeight: "700", color: ThemeData.textColor, fontSize: 13 }}>
               ₹ {subCategory.price}
             </Text>

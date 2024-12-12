@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput,Share } from 'react-native'
+import { FlatList, SafeAreaView, StyleSheet,ScrollView,  View,Dimensions,TouchableOpacity, Image,Animated, TextInput,Share ,Alert } from 'react-native'
 import { StatusBar } from 'expo-status-bar';
 import { Block, Text, Input, theme, Button } from "galio-framework";
 import { Header } from '../../Components/Header/Header';
@@ -34,7 +34,7 @@ export const Profile = () => {
     
     // {icon:<FontAwesome name="address-book" size={24} color="#2dd36f" />,title:"Manage Address",link:"Address",color:"dark"},
     {icon:<AntDesign name="setting" size={24} color="#65C5C4" />,title:"Account Settings",link:"AccountSettings"},
-    // {icon:<AntDesign name="idcard" size={24} color="#65C5C4" />,title:"Kyc",link:"Update Kyc"},
+    {icon:<AntDesign name="idcard" size={24} color="#65C5C4" />,title:"Kyc",link:"KYCTAB"},
     {icon:<FontAwesome name="history" size={24} color="#65C5C4" />,title:"Order History",link:"Orders"},
     {icon:<MaterialIcons name="pending-actions" size={24} color="#65C5C4" />,title:"Pending Orders",link:"Orders"},
     {icon:<FontAwesome name="building" size={24} color="#65C5C4" />,title:"About Comapny",link:"About Company"},
@@ -125,6 +125,30 @@ export const Profile = () => {
     }
   };
 
+  const deleteAccount = async () => {
+    try {
+      // Replace 'yourapiurl' with your actual API endpoint URL
+      const response = await axios.delete(`${Base_url}b2bUser/${userDetails.id}`);
+
+      // Assuming the response contains a success message
+      console.log('Account deleted successfully:', response.data);
+
+      // Clear AsyncStorage
+      await AsyncStorage.removeItem("userDetails");
+      await AsyncStorage.setItem("Auth", 'false');
+      console.log('AsyncStorage cleared successfully');
+
+      // Navigate to login screen
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Login' }],
+      });
+    } catch (error) {
+      // Handle errors
+      console.error('Error deleting account:', error.response ? error.response.data : error.message);
+    }
+  };
+
   const handelLogout=async()=>{
    console.log("Log out");
    try {
@@ -145,9 +169,25 @@ export const Profile = () => {
     console.log("handel Rate Appliction")
   }
 
-  const handelDeleteAccount=()=>{
-    console.log("Delete Account")
-  }
+  const handelDeleteAccount = () => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete your account?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel"
+        },
+        {
+          text: "Delete",
+          onPress: () => deleteAccount(),
+          style: "destructive"
+        }
+      ],
+      { cancelable: false }
+    );
+  };
 
   const showImagePicker = async (sourceType) => {
     // Request media library permission
