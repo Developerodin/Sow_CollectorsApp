@@ -23,7 +23,7 @@ export const Orders = () => {
 
   const formatPrice = (price) => {
     if (price >= 100000) {
-      return `₹${(price / 100000).toFixed(2)} Lakh`;
+      return `₹${(price / 100000).toFixed(2)} Lac`;
     }
     return `₹${price}`;
   };
@@ -362,7 +362,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   amountText: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '500',
     color: ThemeData.textColor,
     marginLeft: 5,

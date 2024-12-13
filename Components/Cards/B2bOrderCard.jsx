@@ -16,7 +16,7 @@ export const B2bOrderCard = ({ data }) => {
 
   const formatPrice = (price) => {
     if (price >= 100000) {
-      return `₹${(price / 100000).toFixed(2)} Lakh`;
+      return `₹${(price / 100000).toFixed(2)} Lac`;
     }
     return `₹${price}`;
   };

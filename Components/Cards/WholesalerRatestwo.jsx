@@ -430,7 +430,7 @@ const WholesalerRatestwo = () => {
             <View>
               <View >
                 <Text style={{ fontSize: 15, fontWeight: "500", color: ThemeData.textColor, marginLeft: 15 }}>
-                  Live Market rates as of <Text style={{ color: ThemeData.color }}>{formattedDate}</Text>
+                  Showing you the <Text style={{ color: ThemeData.color }}>Best Wholesaler Prices</Text>
                 </Text>
   
                 <FlatList

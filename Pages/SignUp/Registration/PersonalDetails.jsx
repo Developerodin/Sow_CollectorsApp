@@ -448,6 +448,7 @@ export const PersonalDetails = () => {
           value={formData.name}
           onChangeText={(text) => handleInputChange("name", text)}
           placeholderTextColor="#B7B7B7"
+          editable={!loading}
         //   value={formData.phoneNumber}
         // onChangeText={(text) => handleInputChange("phoneNumber", text)}
         />
@@ -486,6 +487,7 @@ export const PersonalDetails = () => {
           value={formData.email}
         onChangeText={(text) => handleInputChange("email", text)}
           placeholderTextColor="#B7B7B7"
+          editable={!loading}
         //   value={formData.phoneNumber}
         // onChangeText={(text) => handleInputChange("phoneNumber", text)}
         />
@@ -501,6 +503,7 @@ export const PersonalDetails = () => {
           value={formData.businessName}
         onChangeText={(text) => handleInputChange("businessName", text)}
           placeholderTextColor="#B7B7B7"
+          editable={!loading}
         //   value={formData.phoneNumber}
         // onChangeText={(text) => handleInputChange("phoneNumber", text)}
         />

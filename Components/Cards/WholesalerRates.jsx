@@ -282,7 +282,7 @@ const WholesalerRates = () => {
                 {item.name || "Unknown Wholesaler"}
               </Text>
               <Text style={{ fontSize: 12, fontWeight: "600" }}>
-                {subCategory.name}
+                {item.businessName || "Unknown Business"}
               </Text>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <Ionicons name="calendar" size={14} color={ThemeData.color} />
@@ -410,9 +410,9 @@ const WholesalerRates = () => {
             />
           ) : (
             <View>
-              <View style={{ height: 320,marginTop:10 }}>
+              <View style={{ height: 310,marginTop:10 }}>
                 <Text style={{ fontSize: 15, fontWeight: "500", color: ThemeData.textColor, marginLeft: 15 }}>
-                  Live Market rates as of <Text style={{ color: ThemeData.color }}>{formattedDate}</Text>
+                Showing you the <Text style={{ color: ThemeData.color }}>Best Wholesaler Prices</Text>
                 </Text>
   
                 <FlatList

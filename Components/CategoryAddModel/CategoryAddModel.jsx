@@ -7,7 +7,7 @@ import {
   ScrollView,
   TouchableOpacity
 } from "react-native";
-import { Block, Text, Input, theme,Button } from "galio-framework";
+import { Block, Text, Input, theme, Button } from "galio-framework";
 
 import { Ionicons } from "@expo/vector-icons";
 
@@ -28,45 +28,36 @@ export const CategoryAddModel = ({
 
   const animationRef = useRef(null);
 
-
   const handleCategorySelect = (category) => {
-    // console.log("Category selected", selectedCategories)
-    // selectedCategories.map((el)=>{
-    //     console.log(el.name)
-    //     return ;
-    // })
-
     setSelectedCategories((prevSelectedCategories) => {
-      const isCategorySelected = prevSelectedCategories.includes(category);
+      const isCategorySelected = prevSelectedCategories.some((c) => c.name === category.name);
       if (isCategorySelected) {
-        return prevSelectedCategories.filter((c) => c !== category);
+        return prevSelectedCategories.filter((c) => c.name !== category.name);
       } else {
         return [...prevSelectedCategories, category];
       }
     });
   };
 
-  useEffect(() => {
-    // console.log(ItemModelData)
-    animationRef.current?.play();
+  const handleSubmit = () => {
+    setModalVisible(false);
+  };
 
-    // Or set a specific startFrame and endFrame with:
+  useEffect(() => {
+    animationRef.current?.play();
     animationRef.current?.play(10, 80);
   }, []);
 
   const handleInputChange = (name, value) => {
     setFormData({ ...formData, [name]: value });
-  
   };
 
   const handelClose = () => {
     setModalVisible(false);
-    // setFormData(initalValuesForm);
   };
 
   return (
     <Modal
-   
       animationType="slide"
       transparent={true}
       isVisible={modalVisible}
@@ -79,18 +70,17 @@ export const CategoryAddModel = ({
       <View style={[styles.centeredView]}>
         <View style={styles.modalView}>
           <Block right style={{ width: width * 0.8 }}>
-            <Text style={{fontSize: 25,fontWeight: 700,alignSelf: "flex-start"}}>Select Categories</Text>
+            <Text style={{ fontSize: 25, fontWeight: 700, alignSelf: "flex-start" }}>Select Categories</Text>
             <Ionicons
               onPress={handelClose}
               name="close-circle"
               size={24}
               color="black"
-              style={{ alignSelf: "flex-end" ,marginTop: -28}}
+              style={{ alignSelf: "flex-end", marginTop: -28 }}
             />
           </Block>
           <Block
             style={{
-             
               flexDirection: "row",
               justifyContent: "left",
               alignItems: "start",
@@ -99,65 +89,61 @@ export const CategoryAddModel = ({
             }}
           >
             <ScrollView>
-            <View style={styles.container}>
-  
-  {categoriesData.map((category, index) => (
-<TouchableOpacity
-  key={index}
-  style={[
-    styles.categoryBox,
-    selectedCategories.some(selected => selected.name === category.name) && styles.selectedCategoryBox
-  ]}
-  onPress={() => handleCategorySelect(category)}
->
-  <Text style={[styles.categoryText,selectedCategories.some(selected => selected.name === category.name) && {color:"white"}]}>{category.name}</Text>
-</TouchableOpacity>
-))}
-
-
-
-</View>
+              <View style={styles.container}>
+                {categoriesData.map((category, index) => (
+                  <TouchableOpacity
+                    key={index}
+                    style={[
+                      styles.categoryBox,
+                      selectedCategories.some(selected => selected.name === category.name) && styles.selectedCategoryBox
+                    ]}
+                    onPress={() => handleCategorySelect(category)}
+                  >
+                    <Text style={[
+                      styles.categoryText,
+                      selectedCategories.some(selected => selected.name === category.name) && { color: "white" }
+                    ]}>
+                      {category.name}
+                    </Text>
+                  </TouchableOpacity>
+                ))}
+              </View>
             </ScrollView>
-       
-            
           </Block>
-         
-          
+          <TouchableOpacity onPress={handleSubmit} style={styles.submitButton}>
+            <Text style={styles.submitButtonText}>Submit</Text>
+          </TouchableOpacity>
         </View>
       </View>
-
-    
     </Modal>
   );
 };
 
 const styles = StyleSheet.create({
-    checkboxContainer:{
-        flexDirection:"row"
-    },
-    container: {
-      flexDirection: 'row',
-      flexWrap: 'wrap',
-      justifyContent: 'space-between',
-      marginTop: 10,
-      marginBottom: 50,
-    },
-    categoryBox: {
-      padding: 10,
-      margin: 5,
-      backgroundColor: '#DBDBDB4D', // Normal box color
-      borderRadius: 15,
-      
-    },
-    selectedCategoryBox: {
-      backgroundColor: 'black', // Grey color when selected
-    },
-    categoryText: {
-      fontSize: 14,
-      fontWeight: 'bold',
-    },
+  checkboxContainer: {
+    flexDirection: "row"
+  },
+  container: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    marginBottom: 50,
+  },
+  categoryBox: {
+    padding: 10,
+    margin: 5,
+    backgroundColor: '#DBDBDB4D', // Normal box color
+    borderRadius: 15,
+  },
+  selectedCategoryBox: {
+    backgroundColor: 'black', // Grey color when selected
+  },
+  categoryText: {
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
   viewHalf: {
-    
     justifyContent: "flex-end",
     margin: 0,
   },
@@ -199,7 +185,7 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
     width: width,
-    height: height - 500,
+    height: height - 350,
   },
   button: {
     borderRadius: 20,
@@ -238,6 +224,18 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
   },
+  submitButton: {
+    backgroundColor: 'black',
+    padding: 10,
+    borderRadius: 8,
+    marginTop: -10,
+    alignSelf: 'center',
+    width: width * 0.8,
+    
+  },
+  submitButtonText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+  },
 });
-
-

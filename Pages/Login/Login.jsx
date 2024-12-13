@@ -475,15 +475,19 @@ export const Login = ({ navigation }) => {
         
       /> */}
 
-<TextInput
-        style={styles.input}
-        placeholder="+ 91"
-        keyboardType="numeric"
-        placeholderTextColor="black"
-        value={`+91 ${formData.phoneNumber}`}
-        onChangeText={(text) => handleInputChange("phoneNumber", text)}
-        maxLength={14} // to account for "+91 " plus 10 digits
-      />
+<View style={{ flexDirection: 'row', alignItems: 'center', borderWidth: 1, borderColor: '#ccc', borderRadius: 5, paddingHorizontal: 10,paddingVertical: 12,width: width * 0.9 }}>
+  <Text style={{ fontSize: 16, color: 'black', marginRight: 5 }}>+ 91</Text>
+  <TextInput
+    style={{ flex: 1, fontSize: 16, color: 'black' }}
+    keyboardType="numeric"
+    placeholder="Phone Number"
+    placeholderTextColor="black"
+    value={formData.phoneNumber}
+    onChangeText={(text) => handleInputChange("phoneNumber", text)}
+    maxLength={10} // Limiting to 10 digits for the phone number
+    editable={!loading} // Disable input while loading
+  />
+</View>
                 </Block>
       
               </View>

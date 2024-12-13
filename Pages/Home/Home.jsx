@@ -712,8 +712,8 @@ const styles = StyleSheet.create({
   },
   card1: {
     backgroundColor: '#fafafa',
-    borderRadius: 10,
-    padding: 20,
+    borderRadius: 12,
+    padding: 16,
     width: 170, // Adjust card width as needed
     alignItems: 'center',
    
