@@ -45,6 +45,7 @@ export const RateDetails = ({ route }) => {
   const [selectedValue, setSelectedValue] = useState("Kg");
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [activeAddress, setActiveAddress] = useState(null)
   const handleInputChange = (text) => {
     setWeight(text);
   };
@@ -92,7 +93,7 @@ export const RateDetails = ({ route }) => {
       value: details.category._doc.sub_category[0].price,
       totalPrice: TotalAmount,
       photos: JSON.stringify(images),
-      location: "674950d3390a9600916b98a8",
+      location: activeAddress ? activeAddress._id : "None",
       
     };
   
@@ -100,6 +101,22 @@ export const RateDetails = ({ route }) => {
   
     createOrder(Orderdetails);
   };
+
+
+  const getActiveAddress = async (id) => {
+    try {
+      console.log("Get active address', id: " + id);
+      const response = await axios.get(`${Base_url}b2bUser/${id}/active`);
+      // console.log("Active Address: " + response.data)
+      setActiveAddress(response.data)
+      return response.data; // Returns the active address data
+    } catch (error) {
+      console.error('Error fetching active address:', error.response?.data || error.message);
+      throw error;
+    }
+  };
+
+
   
   const createOrder = async (orderDetails) => {
     setLoading(true);
@@ -117,15 +134,18 @@ export const RateDetails = ({ route }) => {
     }
   };
   const fetchData = async () => {
+    console.log("Fetching data...",userId,
+      categoryId,
+      subCategoryId);
     try {
       const response = await axios.post(`${Base_url}b2bOrder/getratedetails`, {
         userId,
         categoryId,
         subCategoryId
       });
-
+      
       if (response.status === 200) {
-        console.log("Data of vendor =====>", response.data);
+        console.log("Data of vendor =====>", response.data.data);
         setDetails(response.data.data);
       } else {
         console.log("Error fetching data =>>:", response.data.message);
@@ -236,6 +256,17 @@ export const RateDetails = ({ route }) => {
     console.log("Id ===>", userId, categoryId, subCategoryId);
     fetchData();
   }, [update]);
+
+
+  useEffect(()=>{
+   if(userDetails){
+    getActiveAddress(userDetails.id)
+   }
+  },[update,userDetails])
+
+  const handelEditAddressPess=()=>{
+    navigation.navigate("Address", { userId: userDetails.id });
+  }
   return (
     <View style={styles.container}>
       <View
@@ -290,7 +321,7 @@ export const RateDetails = ({ route }) => {
           <Block>
             <Block>
               <Text style={{ fontSize: 22, fontWeight: 700 }}>
-                {details && details.category._doc.name}
+                {details && details.category.name}
               </Text>
             </Block>
           </Block>
@@ -323,20 +354,7 @@ export const RateDetails = ({ route }) => {
             </Block>
           </Block>
 
-          <Block
-            style={[
-              { marginTop: 15, flexDirection: "row", alignItems: "center" },
-            ]}
-          >
-            <Block style={{ marginRight: 8 }}>
-            <Image source={icon6} style={{height:16,width:13}} />
-            </Block>
-            <Block>
-              <Text style={{ fontSize: 14,fontWeight: 500  }}>
-              {details && details.addresses.length > 0 ? `${details.addresses[0].googleAddress}` : "No Address Available"}
-              </Text>
-            </Block>
-          </Block>
+         
 
           <Block
             style={[
@@ -348,7 +366,7 @@ export const RateDetails = ({ route }) => {
             </Block>
             <Block>
               <Text style={{ fontSize: 15,fontWeight: 500  }}>
-              {details && details.category._doc.sub_category.length > 0 ? details.category._doc.sub_category[0].name : "No Subcategory Available"}
+              {details && details.category.sub_category.length > 0 ? details.category.sub_category[0].name : "No Subcategory Available"}
               </Text>
             </Block>
           </Block>
@@ -363,8 +381,8 @@ export const RateDetails = ({ route }) => {
             </Block>
             <Block>
               <Text style={{ fontSize: 15,fontWeight: 700 }}> ₹
-              {details && details.category._doc.sub_category.length > 0 ? details.category._doc.sub_category[0].price : "N/A"}
-                /KG
+              {details && details.category.sub_category.length > 0 ? details.category.sub_category[0].price : "N/A"}
+                /{details && details.category.sub_category.length > 0 ? details.category.sub_category[0].unit : ""}
               </Text>
             </Block>
           </Block>
@@ -379,9 +397,32 @@ export const RateDetails = ({ route }) => {
             </Block>
             <Block>
               <Text style={{ fontSize: 15,fontWeight: 500  }}>
-                               {details && convertUTCToIST(details.category._doc.sub_category[0].updatedAt)}
+                               {details && convertUTCToIST(details.category.sub_category[0].updatedAt)}
               </Text>
             </Block>
+          </Block>
+
+          <Block
+            style={[
+              { marginTop: 15, flexDirection: "row", alignItems: "center" },
+            ]}
+          >
+            <Block style={{ marginRight: 8 }}>
+            <Image source={icon6} style={{height:16,width:13}} />
+            </Block>
+            <TouchableOpacity activeOpacity={0.8} onPress={handelEditAddressPess}>
+              <Text style={{ fontSize: 14,fontWeight: 500  }}>
+                Pick up from -
+              {activeAddress  ? `${activeAddress.googleAddress}` : "No Address Available"}
+
+             
+              {"  "}<AntDesign name="edit" size={16} color="#65C5C4"/>
+             
+              </Text>
+
+              
+              
+            </TouchableOpacity>
           </Block>
 
           <Block style={{ marginTop: 20 }}>

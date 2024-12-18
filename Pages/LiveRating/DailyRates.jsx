@@ -115,7 +115,7 @@ export const DailyRates = () => {
             fontWeight: 500,
           }}
         >
-          Message
+          Daily Rates
         </Text>
       </View>
 
@@ -126,7 +126,7 @@ export const DailyRates = () => {
           alignItems: "center",
         }}
       >
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             // Add action for first icon
             console.log("First icon pressed");
@@ -134,16 +134,16 @@ export const DailyRates = () => {
           style={{ marginHorizontal: 10 }}
         >
           <Ionicons name="search" size={30} color="#000" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => {
             // Add action for second icon
             console.log("Second icon pressed");
           }}
         >
           <Ionicons name="notifications" size={30} color="#000" style={{marginRight: 10}} />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
     </View>
   

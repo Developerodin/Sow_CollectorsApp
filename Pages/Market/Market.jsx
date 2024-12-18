@@ -153,22 +153,7 @@ export const Market = () => {
     setselectedCity(city);
     toggleCityAccordion();
   };
-  const handelCategory = (data, id) => {
-    // console.log("data=== >", data, id);
-    setselectedCategory(data);
-    if (id !== "0") {
-      getCategoryById(id);
-    }
-    setselectedSubCategory("");
-    setSelectedSubCategoriesData([]);
-    toggleAccordion();
-  };
 
-  const handelSubCategory = (data) => {
-    setselectedSubCategory(data);
-
-    toggleAccordion4();
-  };
 
   const handleCategorySelection = (name, id) => {
     // console.log(`Category selected: ${name}, ID: ${id}`);
@@ -192,28 +177,7 @@ export const Market = () => {
     toggleAccordion4();  // Close the subcategory accordion after selection
     setSubCategoryModalVisible(false);
   };
-  
-  
-  
-  const handleSaveCategory = () => {
-    if (selectedCategory) {
-      // console.log(`Category saved: ${selectedCategory}`);  // Log the category being saved
-      setCategoryModalVisible(false);  // Close the modal
-    } else {
-      console.log('No category selected to save');
-    }
-  };
-  
-  
-  
-  const handleSaveSubCategory = () => {
-    if (selectedSubCategory) {
-      // console.log(`Subcategory saved: ${selectedSubCategory}`);
-      setSubCategoryModalVisible(false);
-    } else {
-      console.log('No subcategory selected to save');
-    }
-  };
+
 
 
   const handelClose = () => {

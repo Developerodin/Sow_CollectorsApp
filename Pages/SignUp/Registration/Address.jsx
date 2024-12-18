@@ -55,6 +55,18 @@ export const Address = () => {
     saveSelectedAddress(address);
   };
 
+  const handelAddressSetActive = async(id)=>{
+    console.log("Id  ==>", id )
+    try {
+     const response = await axios.put(`${Base_url}/b2bUser/${userId}/${id}/active`);
+     setUpdate((prev)=>prev+1);
+     return response.data; // Returns the updated address data
+   } catch (error) {
+     console.error('Error setting active address:', error.response?.data || error.message);
+     throw error;
+   }
+ }
+
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
@@ -279,7 +291,7 @@ const setnewAddressinStorage =async(address)=>{
 
 
   useEffect(()=>{
-    if(AllUserAddresses.length<1){
+    if(AllUserAddresses && AllUserAddresses.length<0){
       setIsModalVisible(true);
     }
   },[AllUserAddresses])
@@ -292,6 +304,22 @@ const setnewAddressinStorage =async(address)=>{
     // Or set a specific startFrame and endFrame with:
     animationRef.current?.play(10, 80);
   }, []);
+
+  const renderAddress = ({ item }) => (
+      <TouchableOpacity onPress={()=>handelAddressSetActive(item._id)}>
+  
+      
+      <View style={[styles.addressCard,{borderColor:`${item.activeAddress && item.activeAddress ? "green" : "#b3b3b3" }`}]}>
+        <View>
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Image source={Logo} style={{ width: 15, height: 15 }} />
+            <Text style={styles.addressTitle}>{item.buildingName}</Text>
+          </View>
+          <Text style={styles.addressDetail}>{item.googleAddress}</Text>
+        </View>
+      </View>
+      </TouchableOpacity>
+    );
   return (
     <View style={styles.container}>
       {/* <Text style={styles.heading}>Your Addresses</Text> */}
@@ -339,51 +367,7 @@ const setnewAddressinStorage =async(address)=>{
             data={AllUserAddresses}
             keyExtractor={(item) => item.id}
             extraData={selectedAddress}
-            renderItem={({ item }) => (
-              
-              <TouchableHighlight
-                onPress={() => selectAddress(item)}
-                underlayColor="#fff"
-                style={[
-                  styles.addressContainer,
-                  selectedAddress && selectedAddress.id === item.id
-                    && styles.selectedAddress
-                    ,
-                ]}
-              >
-                {/* <View style={{ backgroundColor: "#fff", padding: 15, borderRadius: 25 }}>
-                  <Block style={styles2.Space_Between}>
-                    <Text style={{ fontSize: 16, fontWeight: 500, letterSpacing: 1 }}>{item.buildingName}</Text>
-                    <Ionicons onPress={() => DeleteAddress(item.name)} name="close-circle" size={20} color="crimson" />
-                  </Block>
-      
-                  {item.roadArea !== "null" && (
-                    <Text style={{ fontSize: 12, fontWeight: 500, marginTop: 5, letterSpacing: 1 }}>
-                      {item.roadArea}
-                    </Text>
-                  )}
-                  {item.googleAddress !== "null" && (
-                    <Text style={{ fontSize: 12, fontWeight: 500, marginTop: 5, letterSpacing: 1 }}>
-                      {item.googleAddress}
-                    </Text>
-                  )}
-                  {item.note !== "null" && (
-                    <Text style={{ fontSize: 12, fontWeight: 500, marginTop: 5, letterSpacing: 1 }}>
-                      {item.note}
-                    </Text>
-                  )}
-                </View> */}
-                <View style={styles.addressCard}>
-      <View>
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <Image source={Logo} style={{ width: 15, height: 15 }} />
-          <Text style={styles.addressTitle}>{item.buildingName}</Text>
-        </View>
-        <Text style={styles.addressDetail}>{item.googleAddress}</Text>
-      </View>
-    </View>
-              </TouchableHighlight>
-            )}
+            renderItem={renderAddress}
           />
         ) : (
           <Block style={{ flex: 0.9, justifyContent: "center", alignItems: "center" }}>

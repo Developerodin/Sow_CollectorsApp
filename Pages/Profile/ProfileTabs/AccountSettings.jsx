@@ -63,7 +63,7 @@ export const AccountSettings = () => {
       });
       console.log(response.data);
       ToastAndroid.show("User details updated successfully", ToastAndroid.SHORT);
-      setUpdate(!update); 
+      setUpdate((prev)=>prev+1); 
     } catch (error) {
       
       console.log(error);
@@ -77,6 +77,7 @@ export const AccountSettings = () => {
       const response = await axios.get(`${Base_url}b2bUser/address/${userDetails.id}`);
       console.log("Addres =>", response.data.data);
       setAddress(response.data.data);
+      
     } catch (error) {
       setAddress([]);
       console.log("Error retrieving data from api", error);
@@ -101,10 +102,25 @@ export const AccountSettings = () => {
     
   }, [update]);
 
+  const handelAddressSetActive = async(id)=>{
+     console.log("Id  ==>", id )
+     try {
+      const response = await axios.put(`${Base_url}/b2bUser/${userId}/${id}/active`);
+      setUpdate((prev)=>prev+1);
+      return response.data; // Returns the updated address data
+    } catch (error) {
+      console.error('Error setting active address:', error.response?.data || error.message);
+      throw error;
+    }
+  }
+
  
 
   const renderAddress = ({ item }) => (
-    <View style={styles.addressCard}>
+    <TouchableOpacity onPress={()=>handelAddressSetActive(item._id)}>
+
+    
+    <View style={[styles.addressCard,{borderColor:`${item.activeAddress && item.activeAddress ? "green" : "#b3b3b3" }`}]}>
       <View>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Image source={Logo} style={{ width: 15, height: 15 }} />
@@ -113,6 +129,7 @@ export const AccountSettings = () => {
         <Text style={styles.addressDetail}>{item.googleAddress}</Text>
       </View>
     </View>
+    </TouchableOpacity>
   );
 
  
